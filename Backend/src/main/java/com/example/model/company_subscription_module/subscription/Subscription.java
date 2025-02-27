@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "subscription", indexes = {
@@ -38,14 +39,14 @@ public class Subscription {
     private int maxOperators;
 
     @Column(nullable = false)
-    private Date startSubscription;
+    private LocalDateTime startSubscription;
 
     @Column(nullable = false)
-    private Date endSubscription;
+    private LocalDateTime endSubscription;
 
     @Column(nullable = false)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 }

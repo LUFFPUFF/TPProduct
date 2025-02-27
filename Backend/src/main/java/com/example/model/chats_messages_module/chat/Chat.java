@@ -1,12 +1,18 @@
 package com.example.model.chats_messages_module.chat;
 
 import com.example.model.company_subscription_module.user_roles.user.User;
-import com.example.model.crm_modle.client.Client;
+import com.example.model.crm_module.client.Client;
 import jakarta.persistence.*;
+import lombok.Data;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "chats", indexes = {
+        @Index(name = "idx_chats_status", columnList = "status"),
+        @Index(name = "idx_chats_created_at", columnList = "created_at")
+})
+@Data
 public class Chat {
 
     @Id
@@ -26,9 +32,8 @@ public class Chat {
     private ChatChannel chatChannel;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "status", length = 50, nullable = false)
-    private String status;
+    private LocalDateTime status;
 }

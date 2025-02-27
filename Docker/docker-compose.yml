@@ -11,8 +11,6 @@ services:
       POSTGRES_DB: ans_machine_db
     ports:
       - "5432:5432"
-    volumes:
-      - ./db_data:/var/lib/postgresql/data
 
 volumes:
   pgdata:
