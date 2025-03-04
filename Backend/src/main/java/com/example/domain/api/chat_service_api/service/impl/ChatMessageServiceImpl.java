@@ -3,8 +3,8 @@ package com.example.domain.api.chat_service_api.service.impl;
 import com.example.database.model.chats_messages_module.ChatMessage;
 import com.example.database.repository.chats_messages_module.ChatMessageRepository;
 import com.example.domain.api.chat_service_api.service.ChatMessageService;
-import com.example.domain.dto.MessageDto;
-import com.example.domain.api.chat_service_api.mapper.ChatMapper;
+import com.example.domain.dto.chat_module.MessageDto;
+import com.example.domain.dto.mapper.MapperDto;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.Data;
@@ -22,15 +22,15 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     private static final Logger logger = LoggerFactory.getLogger(ChatMessageServiceImpl.class);
 
     private final ChatMessageRepository chatMessageRepository;
-    private final ChatMapper chatMapper;
+    private final MapperDto mapperDto;
 
     @Override
     @Transactional
     public MessageDto createMessage(@Valid MessageDto messageDto) {
         logger.info("Creating message: {}", messageDto);
-        ChatMessage chatMessage = chatMapper.toEntityChatMessage(messageDto);
+        ChatMessage chatMessage = mapperDto.toEntityChatMessage(messageDto);
         ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
-        return chatMapper.toDtoChatMessage(savedMessage);
+        return mapperDto.toDtoChatMessage(savedMessage);
     }
 
     @Override
@@ -38,14 +38,14 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         logger.info("Fetching message by id: {}", id);
         ChatMessage chatMessage = chatMessageRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Message not found"));
-        return chatMapper.toDtoChatMessage(chatMessage);
+        return mapperDto.toDtoChatMessage(chatMessage);
     }
 
     @Override
     public List<MessageDto> getAllMessages() {
         logger.info("Fetching all messages");
         return chatMessageRepository.findAll().stream()
-                .map(chatMapper::toDtoChatMessage)
+                .map(mapperDto::toDtoChatMessage)
                 .collect(Collectors.toList());
     }
 
@@ -54,9 +54,9 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         logger.info("Updating message with id: {}", id);
         ChatMessage existingMessage = chatMessageRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Message not found"));
-        chatMapper.toEntityChatMessage(messageDto);
+        mapperDto.toEntityChatMessage(messageDto);
         ChatMessage updatedMessage = chatMessageRepository.save(existingMessage);
-        return chatMapper.toDtoChatMessage(updatedMessage);
+        return mapperDto.toDtoChatMessage(updatedMessage);
     }
 
     @Override

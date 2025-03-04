@@ -4,7 +4,6 @@ import com.example.database.model.company_subscription_module.Company;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
 
 @Table(name = "users", indexes = {
@@ -34,7 +33,7 @@ public class User {
     private UserStatus status;
 
     @Column(name = "date_of_birth")
-    private Date dateOfBirth;
+    private LocalDateTime dateOfBirth;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")

@@ -2,8 +2,8 @@ package com.example.domain.api.chat_service_api.service.impl;
 
 import com.example.database.model.chats_messages_module.chat.Chat;
 import com.example.database.repository.chats_messages_module.ChatRepository;
-import com.example.domain.dto.ChatDto;
-import com.example.domain.api.chat_service_api.mapper.ChatMapper;
+import com.example.domain.dto.chat_module.ChatDto;
+import com.example.domain.dto.mapper.MapperDto;
 import com.example.domain.api.chat_service_api.service.ChatService;
 import lombok.Data;
 import org.slf4j.Logger;
@@ -21,15 +21,15 @@ public class ChatServiceImpl implements ChatService {
     private static final Logger logger = LoggerFactory.getLogger(ChatServiceImpl.class);
 
     private final ChatRepository chatRepository;
-    private final ChatMapper chatMapper;
+    private final MapperDto mapperDto;
 
 
     @Override
     public ChatDto createChat(ChatDto chatDto) {
         logger.info("Creating chat: {}", chatDto);
-        Chat chat = chatMapper.toEntityChat(chatDto);
+        Chat chat = mapperDto.toEntityChat(chatDto);
         Chat savedChat = chatRepository.save(chat);
-        return chatMapper.toDtoChat(savedChat);
+        return mapperDto.toDtoChat(savedChat);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class ChatServiceImpl implements ChatService {
         logger.info("Fetching chat by id: {}", id);
         Chat chat = chatRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Chat not found"));
-        return chatMapper.toDtoChat(chat);
+        return mapperDto.toDtoChat(chat);
     }
 
     @Cacheable("chats")
@@ -45,7 +45,7 @@ public class ChatServiceImpl implements ChatService {
     public List<ChatDto> getAllChats() {
         logger.info("Fetching all chats");
         return chatRepository.findAll().stream()
-                .map(chatMapper::toDtoChat)
+                .map(mapperDto::toDtoChat)
                 .collect(Collectors.toList());
     }
 
@@ -54,9 +54,9 @@ public class ChatServiceImpl implements ChatService {
         logger.info("Updating chat with id: {}", id);
         Chat existingChat = chatRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Chat not found"));
-        chatMapper.toEntityChat(chatDto);
+        mapperDto.toEntityChat(chatDto);
         Chat updatedChat = chatRepository.save(existingChat);
-        return chatMapper.toDtoChat(updatedChat);
+        return mapperDto.toDtoChat(updatedChat);
     }
 
     @Override

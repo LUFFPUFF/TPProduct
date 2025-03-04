@@ -4,8 +4,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/ans_machine_db
-    username: Nikita
-    password: DialogX
+    username: postgres
+    password: nikita090504
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20

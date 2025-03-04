@@ -3,11 +3,11 @@ package com.example.domain.api.chat_service_api.service.impl;
 import com.example.database.model.chats_messages_module.ChatAttachment;
 import com.example.database.repository.chats_messages_module.ChatAttachmentRepository;
 import com.example.domain.api.chat_service_api.config.FileUploadConfig;
-import com.example.domain.dto.ChatAttachmentDto;
+import com.example.domain.dto.chat_module.ChatAttachmentDto;
 import com.example.domain.api.chat_service_api.service.ChatAttachmentService;
 import com.example.domain.api.chat_service_api.service.file_service.AntivirusService;
 import com.example.domain.api.chat_service_api.service.file_service.FileUploadService;
-import com.example.domain.api.chat_service_api.mapper.ChatMapper;
+import com.example.domain.dto.mapper.MapperDto;
 import com.example.domain.exception_handler.chat_module.ChatAttachmentException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class ChatAttachmentServiceImpl implements ChatAttachmentService {
 
     private final ChatAttachmentRepository chatAttachmentRepository;
-    private final ChatMapper chatMapper;
+    private final MapperDto mapperDto;
     private final AntivirusService antivirusService;
     private final FileUploadService fileUploadService;
     private final FileUploadConfig fileUploadConfig;
@@ -47,9 +47,9 @@ public class ChatAttachmentServiceImpl implements ChatAttachmentService {
 
         fileUploadService.validateFile(filePath);
 
-        ChatAttachment chatAttachment = chatMapper.toEntityChatAttachment(attachmentDto);
+        ChatAttachment chatAttachment = mapperDto.toEntityChatAttachment(attachmentDto);
         ChatAttachment savedAttachment = chatAttachmentRepository.save(chatAttachment);
-        return chatMapper.toDtoChatAttachment(savedAttachment);
+        return mapperDto.toDtoChatAttachment(savedAttachment);
     }
 
     @Override
@@ -57,14 +57,14 @@ public class ChatAttachmentServiceImpl implements ChatAttachmentService {
         log.info("Fetching attachment by id: {}", id);
         ChatAttachment chatAttachment = chatAttachmentRepository.findById(id)
                 .orElseThrow(() -> new ChatAttachmentException("Attachment not found"));
-        return chatMapper.toDtoChatAttachment(chatAttachment);
+        return mapperDto.toDtoChatAttachment(chatAttachment);
     }
 
     @Override
     public List<ChatAttachmentDto> getAllAttachments() {
         log.info("Fetching all attachments");
         return chatAttachmentRepository.findAll().stream()
-                .map(chatMapper::toDtoChatAttachment)
+                .map(mapperDto::toDtoChatAttachment)
                 .collect(Collectors.toList());
     }
 
@@ -73,9 +73,9 @@ public class ChatAttachmentServiceImpl implements ChatAttachmentService {
         log.info("Updating attachment with id: {}", id);
         ChatAttachment existingAttachment = chatAttachmentRepository.findById(id)
                 .orElseThrow(() -> new ChatAttachmentException("Attachment not found"));
-        chatMapper.toEntityChatAttachment(attachmentDto);
+        mapperDto.toEntityChatAttachment(attachmentDto);
         ChatAttachment updatedAttachment = chatAttachmentRepository.save(existingAttachment);
-        return chatMapper.toDtoChatAttachment(updatedAttachment);
+        return mapperDto.toDtoChatAttachment(updatedAttachment);
     }
 
     @Override

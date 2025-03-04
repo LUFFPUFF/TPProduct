@@ -1,11 +1,14 @@
 package com.example.database.model.chats_messages_module.chat;
 
+import com.example.database.model.chats_messages_module.ChatMessage;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.model.crm_module.client.Client;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "chats", indexes = {

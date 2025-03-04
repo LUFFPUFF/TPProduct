@@ -1,6 +1,6 @@
 package com.example.domain.api.chat_service_api.controller;
 
-import com.example.domain.dto.ChatDto;
+import com.example.domain.dto.chat_module.ChatDto;
 import com.example.domain.api.chat_service_api.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

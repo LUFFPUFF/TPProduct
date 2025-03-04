@@ -1,7 +1,7 @@
 package com.example.domain.api.chat_service_api.service;
 
 
-import com.example.domain.dto.ChatDto;
+import com.example.domain.dto.chat_module.ChatDto;
 
 import java.util.List;
 

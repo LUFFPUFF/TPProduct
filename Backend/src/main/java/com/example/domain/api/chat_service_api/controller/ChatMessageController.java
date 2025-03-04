@@ -1,6 +1,6 @@
 package com.example.domain.api.chat_service_api.controller;
 
-import com.example.domain.dto.MessageDto;
+import com.example.domain.dto.chat_module.MessageDto;
 import com.example.domain.api.chat_service_api.service.ChatMessageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
