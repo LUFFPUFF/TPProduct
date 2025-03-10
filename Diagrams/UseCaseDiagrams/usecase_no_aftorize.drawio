@@ -1,0 +1,84 @@
+<mxfile host="Electron" modified="2025-03-09T19:17:27.079Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.0.2 Chrome/114.0.5735.289 Electron/25.8.4 Safari/537.36" etag="1yixUcXZc24felfgEH4l" version="22.0.2" type="device">
+  <diagram name="Страница — 1" id="ChlOyaUJoBtfQH3fyjQC">
+    <mxGraphModel dx="1299" dy="828" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="VPmSCRmdd0gdMW3EENGz-1" value="Неавторизованный&lt;br&gt;пользователь" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry y="360" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="VPmSCRmdd0gdMW3EENGz-2" value="Восстановить пароль" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="160" y="200" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="VPmSCRmdd0gdMW3EENGz-3" value="Зарегистрироваться" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="160" y="360" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="VPmSCRmdd0gdMW3EENGz-5" value="Авторизироваться" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="160" y="510" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="VPmSCRmdd0gdMW3EENGz-6" value="Ввести личные&lt;br&gt;данные" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="390" y="360" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="VPmSCRmdd0gdMW3EENGz-7" value="Ввести логин и пароль" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="390" y="515" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="VPmSCRmdd0gdMW3EENGz-9" value="&quot;include&quot;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;" parent="1" source="VPmSCRmdd0gdMW3EENGz-6" target="VPmSCRmdd0gdMW3EENGz-7" edge="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="210" y="430" as="sourcePoint" />
+            <mxPoint x="370" y="430" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VPmSCRmdd0gdMW3EENGz-11" value="&quot;include&quot;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;" parent="1" source="VPmSCRmdd0gdMW3EENGz-5" target="VPmSCRmdd0gdMW3EENGz-7" edge="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="260" y="310" as="sourcePoint" />
+            <mxPoint x="140" y="310" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VPmSCRmdd0gdMW3EENGz-12" value="&quot;include&quot;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;" parent="1" source="VPmSCRmdd0gdMW3EENGz-3" target="VPmSCRmdd0gdMW3EENGz-6" edge="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="320" y="405" as="sourcePoint" />
+            <mxPoint x="200" y="405" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VPmSCRmdd0gdMW3EENGz-17" value="Получить ошибку о неверных данных" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="677" y="440" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="VPmSCRmdd0gdMW3EENGz-18" value="&quot;extend&quot;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;" parent="1" source="VPmSCRmdd0gdMW3EENGz-17" target="VPmSCRmdd0gdMW3EENGz-7" edge="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="180" y="490" as="sourcePoint" />
+            <mxPoint x="60" y="490" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VPmSCRmdd0gdMW3EENGz-19" value="&quot;extend&quot;" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;" parent="1" source="VPmSCRmdd0gdMW3EENGz-17" target="VPmSCRmdd0gdMW3EENGz-6" edge="1">
+          <mxGeometry width="160" relative="1" as="geometry">
+            <mxPoint x="446" y="536" as="sourcePoint" />
+            <mxPoint x="360" y="450" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VPmSCRmdd0gdMW3EENGz-20" value="" style="endArrow=none;html=1;rounded=0;" parent="1" source="VPmSCRmdd0gdMW3EENGz-1" target="VPmSCRmdd0gdMW3EENGz-2" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="510" y="360" as="sourcePoint" />
+            <mxPoint x="560" y="310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VPmSCRmdd0gdMW3EENGz-21" value="" style="endArrow=none;html=1;rounded=0;" parent="1" source="VPmSCRmdd0gdMW3EENGz-1" target="VPmSCRmdd0gdMW3EENGz-5" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="40" y="389" as="sourcePoint" />
+            <mxPoint x="195" y="275" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VPmSCRmdd0gdMW3EENGz-22" value="" style="endArrow=none;html=1;rounded=0;" parent="1" source="VPmSCRmdd0gdMW3EENGz-1" target="VPmSCRmdd0gdMW3EENGz-3" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="50" y="399" as="sourcePoint" />
+            <mxPoint x="205" y="285" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
