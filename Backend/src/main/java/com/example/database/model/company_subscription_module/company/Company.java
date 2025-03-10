@@ -1,9 +1,12 @@
-package com.example.database.model.company_subscription_module;
+package com.example.database.model.company_subscription_module.company;
 
+import com.example.database.model.company_subscription_module.user_roles.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "company", indexes = {
@@ -28,5 +31,8 @@ public class Company {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<User> users = new ArrayList<>();
 
 }

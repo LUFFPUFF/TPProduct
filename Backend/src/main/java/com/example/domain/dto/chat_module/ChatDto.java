@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 
 @Data
 public class ChatDto {
-    private Integer id;
 
     @NotNull(message = "Client ID не может быть пустым")
     private Integer clientId;

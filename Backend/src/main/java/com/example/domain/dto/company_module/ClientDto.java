@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 @Data
 public class ClientDto {
-    private Integer id;
 
     @NotNull(message = "User ID не может быть пустым")
     private Integer userId;

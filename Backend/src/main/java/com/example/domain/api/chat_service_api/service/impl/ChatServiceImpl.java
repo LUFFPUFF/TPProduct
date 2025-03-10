@@ -9,10 +9,10 @@ import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +40,15 @@ public class ChatServiceImpl implements ChatService {
         Chat chat = chatRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Chat not found"));
         return mapperDto.toDtoChat(chat);
+    }
+
+    public Optional<ChatDto> getClientAndChatChannel(Integer clientId, String chatChannel) {
+        return chatRepository.findByClientAndChatChannel(clientId, chatChannel);
+    }
+
+    @Override
+    public Optional<Chat> findByClient(Integer clientId) {
+        return chatRepository.findByClient(clientId);
     }
 
     @Override

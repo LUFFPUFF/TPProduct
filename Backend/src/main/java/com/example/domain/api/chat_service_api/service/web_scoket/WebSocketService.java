@@ -31,8 +31,6 @@ public class WebSocketService {
      * @param chatId идентификатор чата
      * @param messageDto DTO сообщения
      */
-
-
     public void sendMessageToChat(Integer chatId, MessageDto messageDto) {
         try {
             messagingTemplate.convertAndSend("/topic/chats/" + chatId, messageDto);
@@ -88,7 +86,6 @@ public class WebSocketService {
      */
 
     public void sendAttachment(Integer chatId, ChatAttachmentDto attachmentDto) {
-        // Преобразуем DTO в сущность перед сохранением
         chatAttachmentService.createAttachment(attachmentDto);
         messagingTemplate.convertAndSend("/topic/chats/" + chatId + "/attachments", attachmentDto);
     }
@@ -99,7 +96,6 @@ public class WebSocketService {
      */
 
     public void closeChat(Integer chatId) {
-        // Получаем чат, изменяем его статус и сохраняем
         ChatDto chatDto = chatService.getChatById(chatId);
         chatDto.setStatus("CLOSED");
         chatService.updateChat(chatId, chatDto);

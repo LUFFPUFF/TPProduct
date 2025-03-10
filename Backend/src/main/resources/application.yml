@@ -66,3 +66,4 @@ notification:
   templates:
     new-message: "Новое сообщение от %s: %s"
     operator-typing: "Оператор печатает..."
+

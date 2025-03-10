@@ -1,6 +1,6 @@
 package com.example.database.model.company_subscription_module.user_roles.user;
 
-import com.example.database.model.company_subscription_module.Company;
+import com.example.database.model.company_subscription_module.company.Company;
 import jakarta.persistence.*;
 import lombok.Data;
 

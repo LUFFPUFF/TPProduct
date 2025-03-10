@@ -29,16 +29,12 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     @Override
     public MessageDto createMessage(@Valid MessageDto messageDto) {
         try {
-            // Преобразуем DTO в сущность
             ChatMessage chatMessage = mapperDto.toEntityChatMessage(messageDto);
 
-            // Сохраняем сообщение в базу данных
             ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
 
-            // Преобразуем сохраненную сущность обратно в DTO
             return mapperDto.toDtoChatMessage(savedMessage);
         } catch (Exception e) {
-            // Логирование ошибки
             System.out.println("Error while creating message: " + e);
             throw e;
         }

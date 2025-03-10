@@ -1,6 +1,6 @@
 package com.example.domain.api.company_api_test.service.impl;
 
-import com.example.database.model.company_subscription_module.Company;
+import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.repository.company_subscription_module.CompanyRepository;
 import com.example.domain.api.company_api_test.service.CompanyService;
 import com.example.domain.dto.company_module.CompanyDto;
