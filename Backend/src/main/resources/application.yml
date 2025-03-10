@@ -28,6 +28,12 @@ spring:
       max-file-size: 10MB
       max-request-size: 20MB
 
+  websocket:
+    endpoint: /test_endpoint_ans
+    allowed-origin-patterns: "*"
+    application-destination-prefix: /app
+    user-destination-prefix: /user
+
 
 validation:
   file-upload:
@@ -41,3 +47,22 @@ file-upload:
   location: /uploads
   clamav-host: localhost
   clamav-port: 3310
+
+# Настройки чатов
+chat:
+  limits:
+    max-messages-per-chat: 1000
+    max-attachments-per-message: 5
+  lifetime:
+    inactive-chat-close-time: 24h
+  status:
+    active: ACTIVE
+    closed: CLOSED
+    pending: PENDING
+
+# Настройки уведомлений
+notification:
+  interval: 5s
+  templates:
+    new-message: "Новое сообщение от %s: %s"
+    operator-typing: "Оператор печатает..."

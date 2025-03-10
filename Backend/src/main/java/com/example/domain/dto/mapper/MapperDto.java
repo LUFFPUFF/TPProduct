@@ -13,13 +13,14 @@ import com.example.domain.dto.chat_module.MessageDto;
 import com.example.domain.dto.chat_module.ChatDto;
 import com.example.domain.dto.company_module.*;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
 
-@Mapper(componentModel = "spring", imports = {java.util.Date.class})
+@Mapper(componentModel = "spring", imports = {java.util.Date.class}, uses = {ChatMapperHelper.class})
 public interface MapperDto {
 
     // Chat mapping
@@ -27,7 +28,14 @@ public interface MapperDto {
     ChatDto toDtoChat(Chat chat);
 
     // Message mapping
+    @Mapping(source = "chatId", target = "chat")
+    @Mapping(source = "content", target = "content")
+    @Mapping(source = "sentAt", target = "sentAt")
     ChatMessage toEntityChatMessage(MessageDto messageDto);
+
+    @Mapping(source = "chat.id", target = "chatId")
+    @Mapping(source = "content", target = "content")
+    @Mapping(source = "sentAt", target = "sentAt")
     MessageDto toDtoChatMessage(ChatMessage chatMessage);
 
     // ChatAttachment mapping

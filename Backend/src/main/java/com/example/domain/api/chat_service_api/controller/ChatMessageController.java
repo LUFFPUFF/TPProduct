@@ -17,12 +17,6 @@ public class ChatMessageController {
 
     private final ChatMessageService chatMessageService;
 
-    @PostMapping
-    public ResponseEntity<MessageDto> createMessage(@Valid @RequestBody MessageDto messageDto) {
-        MessageDto createdMessage = chatMessageService.createMessage(messageDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdMessage);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<MessageDto> getMessageById(@PathVariable Integer id) {
         try {
@@ -37,21 +31,5 @@ public class ChatMessageController {
     public ResponseEntity<List<MessageDto>> getAllMessages() {
         List<MessageDto> messages = chatMessageService.getAllMessages();
         return ResponseEntity.ok(messages);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<MessageDto> updateMessage(@PathVariable Integer id, @Valid @RequestBody MessageDto messageDto) {
-        try {
-            MessageDto updatedMessage = chatMessageService.updateMessage(id, messageDto);
-            return ResponseEntity.ok(updatedMessage);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMessage(@PathVariable Integer id) {
-        chatMessageService.deleteMessage(id);
-        return ResponseEntity.noContent().build();
     }
 }

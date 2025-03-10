@@ -5,6 +5,7 @@ import com.example.database.repository.chats_messages_module.ChatRepository;
 import com.example.domain.dto.chat_module.ChatDto;
 import com.example.domain.dto.mapper.MapperDto;
 import com.example.domain.api.chat_service_api.service.ChatService;
+import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Data
+@Transactional
 public class ChatServiceImpl implements ChatService {
 
     private static final Logger logger = LoggerFactory.getLogger(ChatServiceImpl.class);
@@ -40,7 +42,6 @@ public class ChatServiceImpl implements ChatService {
         return mapperDto.toDtoChat(chat);
     }
 
-    @Cacheable("chats")
     @Override
     public List<ChatDto> getAllChats() {
         logger.info("Fetching all chats");

@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 })
 @Data
 public class ChatMessage {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

@@ -9,6 +9,7 @@ import com.example.domain.api.chat_service_api.service.file_service.AntivirusSer
 import com.example.domain.api.chat_service_api.service.file_service.FileUploadService;
 import com.example.domain.dto.mapper.MapperDto;
 import com.example.domain.exception_handler.chat_module.ChatAttachmentException;
+import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,7 +33,6 @@ public class ChatAttachmentServiceImpl implements ChatAttachmentService {
     private final FileUploadConfig fileUploadConfig;
 
     @Override
-    @Async
     public ChatAttachmentDto createAttachment(ChatAttachmentDto attachmentDto) throws ChatAttachmentException {
         log.info("Creating attachment: {}", attachmentDto);
         Path filePath = Path.of(fileUploadConfig.getLocation(), attachmentDto.getFileUrl());

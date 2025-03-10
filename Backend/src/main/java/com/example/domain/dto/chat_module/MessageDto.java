@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 
 @Data
 public class MessageDto {
-    private Integer id;
 
     @NotNull(message = "Chat ID не может быть пустым")
     private Integer chatId;

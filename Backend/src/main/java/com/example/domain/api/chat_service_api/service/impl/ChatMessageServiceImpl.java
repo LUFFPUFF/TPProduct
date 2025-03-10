@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Data
+@Transactional
 public class ChatMessageServiceImpl implements ChatMessageService {
 
     private static final Logger logger = LoggerFactory.getLogger(ChatMessageServiceImpl.class);
@@ -25,12 +27,21 @@ public class ChatMessageServiceImpl implements ChatMessageService {
     private final MapperDto mapperDto;
 
     @Override
-    @Transactional
     public MessageDto createMessage(@Valid MessageDto messageDto) {
-        logger.info("Creating message: {}", messageDto);
-        ChatMessage chatMessage = mapperDto.toEntityChatMessage(messageDto);
-        ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
-        return mapperDto.toDtoChatMessage(savedMessage);
+        try {
+            // Преобразуем DTO в сущность
+            ChatMessage chatMessage = mapperDto.toEntityChatMessage(messageDto);
+
+            // Сохраняем сообщение в базу данных
+            ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
+
+            // Преобразуем сохраненную сущность обратно в DTO
+            return mapperDto.toDtoChatMessage(savedMessage);
+        } catch (Exception e) {
+            // Логирование ошибки
+            System.out.println("Error while creating message: " + e);
+            throw e;
+        }
     }
 
     @Override
@@ -54,7 +65,9 @@ public class ChatMessageServiceImpl implements ChatMessageService {
         logger.info("Updating message with id: {}", id);
         ChatMessage existingMessage = chatMessageRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Message not found"));
-        mapperDto.toEntityChatMessage(messageDto);
+
+        existingMessage.setContent(messageDto.getContent());
+
         ChatMessage updatedMessage = chatMessageRepository.save(existingMessage);
         return mapperDto.toDtoChatMessage(updatedMessage);
     }
