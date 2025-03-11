@@ -67,3 +67,9 @@ notification:
     new-message: "Новое сообщение от %s: %s"
     operator-typing: "Оператор печатает..."
 
+telegram:
+  bot:
+    username: dialog_x_qanswer_bot
+    token: 7520341907:AAFkCZPkx7d676-qwLMuAhfL4jaXWlU_Blg
+
+

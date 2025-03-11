@@ -12,10 +12,11 @@ import java.time.LocalDateTime;
 
 @Data
 public class UserDto {
+
     private Integer id;
 
     @NotNull(message = "Company ID не может быть пустым")
-    private Integer companyId;
+    private CompanyDto companyDto;
 
     @NotNull(message = "Имя не может быть пустым")
     @Size(max = 50)

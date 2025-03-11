@@ -28,6 +28,12 @@ public class CompanyServiceImpl implements CompanyService {
         return mapperDto.toDtoCompany(savedCompany);
     }
 
+    public CompanyDto getCompanyDtoById(Integer companyId) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("Company not found"));
+        return mapperDto.toDtoCompany(company); // Маппим сущность в DTO
+    }
+
     @Override
     public CompanyDto getCompanyById(Integer id) {
         Optional<Company> companyOptional = companyRepository.findById(id);

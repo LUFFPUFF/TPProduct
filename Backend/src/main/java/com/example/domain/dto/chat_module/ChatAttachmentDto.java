@@ -6,7 +6,6 @@ import lombok.Data;
 
 @Data
 public class ChatAttachmentDto {
-    private Integer id;
 
     @NotNull(message = "Message ID не может быть пустым")
     private Integer messageId;

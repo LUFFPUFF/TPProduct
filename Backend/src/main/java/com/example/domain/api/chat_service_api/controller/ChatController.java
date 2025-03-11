@@ -67,7 +67,7 @@ public class ChatController {
 
             MessageDto savedMessage = chatMessageService.createMessage(messageDto);
 
-            webSocketService.sendMessageToChat(savedMessage.getChatId(), savedMessage);
+            webSocketService.sendMessageToChat(savedMessage.getChatDto().getId(), savedMessage);
         } catch (Exception e) {
             System.out.println("Error while sending message: " + e);
         }
@@ -118,7 +118,7 @@ public class ChatController {
         MessageDto message = chatMessageService.getMessageById(attachmentDto.getMessageId());
 
         if (message != null) {
-            webSocketService.sendAttachment(message.getChatId(), attachmentDto);
+            webSocketService.sendAttachment(message.getChatDto().getId(), attachmentDto);
         } else {
             throw new IllegalArgumentException("Message not found for ID: " + attachmentDto.getMessageId());
         }

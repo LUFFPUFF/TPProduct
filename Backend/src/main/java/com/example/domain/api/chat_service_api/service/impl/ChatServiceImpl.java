@@ -1,7 +1,10 @@
 package com.example.domain.api.chat_service_api.service.impl;
 
 import com.example.database.model.chats_messages_module.chat.Chat;
+import com.example.database.model.chats_messages_module.chat.ChatChannel;
+import com.example.database.model.crm_module.client.Client;
 import com.example.database.repository.chats_messages_module.ChatRepository;
+import com.example.database.repository.crm_module.ClientRepository;
 import com.example.domain.dto.chat_module.ChatDto;
 import com.example.domain.dto.mapper.MapperDto;
 import com.example.domain.api.chat_service_api.service.ChatService;
@@ -23,6 +26,7 @@ public class ChatServiceImpl implements ChatService {
     private static final Logger logger = LoggerFactory.getLogger(ChatServiceImpl.class);
 
     private final ChatRepository chatRepository;
+    private final ClientRepository clientRepository;
     private final MapperDto mapperDto;
 
 
@@ -42,13 +46,13 @@ public class ChatServiceImpl implements ChatService {
         return mapperDto.toDtoChat(chat);
     }
 
-    public Optional<ChatDto> getClientAndChatChannel(Integer clientId, String chatChannel) {
-        return chatRepository.findByClientAndChatChannel(clientId, chatChannel);
+    public Optional<ChatDto> getClientAndChatChannel(Client Client, ChatChannel chatChannel) {
+        return chatRepository.findByClientAndChatChannel(Client, chatChannel).map(mapperDto::toDtoChat);
     }
 
     @Override
-    public Optional<Chat> findByClient(Integer clientId) {
-        return chatRepository.findByClient(clientId);
+    public Optional<Client> findByClient(Client client) {
+        return chatRepository.findByClient(client);
     }
 
     @Override

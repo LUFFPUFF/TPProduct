@@ -1,10 +1,13 @@
 package com.example.database.model.company_subscription_module.user_roles.user;
 
 import com.example.database.model.company_subscription_module.company.Company;
+import com.example.database.model.crm_module.client.Client;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "users", indexes = {
         @Index(name = "idx_users_email", columnList = "email"),
@@ -51,4 +54,23 @@ public class User {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Client> clients = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", company=" + company +
+                ", fullName='" + fullName + '\'' +
+                ", email='" + email + '\'' +
+                ", status=" + status +
+                ", dateOfBirth=" + dateOfBirth +
+                ", gender=" + gender +
+                ", password='" + password + '\'' +
+                ", profilePicture='" + profilePicture + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

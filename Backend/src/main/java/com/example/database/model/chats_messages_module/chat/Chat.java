@@ -39,4 +39,16 @@ public class Chat {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "id=" + id +
+                ", client=" + client +
+                ", user=" + user +
+                ", chatChannel=" + chatChannel +
+                ", status='" + status + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

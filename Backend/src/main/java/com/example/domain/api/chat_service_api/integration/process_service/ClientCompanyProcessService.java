@@ -1,42 +1,46 @@
-package com.example.domain.api.chat_service_api.integration.telegram;
+package com.example.domain.api.chat_service_api.integration.process_service;
 
 import com.example.database.model.chats_messages_module.chat.ChatChannel;
 import com.example.database.model.company_subscription_module.company.CompanyTelegramConfiguration;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
-import com.example.database.repository.chats_messages_module.ChatMessageRepository;
-import com.example.database.repository.chats_messages_module.ChatRepository;
 import com.example.database.repository.chats_messages_module.CompanyTelegramConfigurationRepository;
-import com.example.database.repository.crm_module.ClientRepository;
+import com.example.database.repository.company_subscription_module.UserRepository;
+import com.example.domain.api.chat_service_api.integration.telegram.TelegramResponse;
 import com.example.domain.api.chat_service_api.service.ChatMessageService;
 import com.example.domain.api.chat_service_api.service.ChatService;
 import com.example.domain.api.company_api_test.service.ClientService;
 import com.example.domain.dto.chat_module.ChatDto;
 import com.example.domain.dto.chat_module.MessageDto;
 import com.example.domain.dto.company_module.ClientDto;
-import lombok.RequiredArgsConstructor;
+import com.example.domain.dto.company_module.UserDto;
+import com.example.domain.dto.mapper.MapperDto;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class ClientCompanyProcessService {
 
     private final CompanyTelegramConfigurationRepository telegramConfigurationRepository;
+    private final UserRepository userRepository;
     private final ClientService clientService;
     private final ChatService chatService;
     private final ChatMessageService chatMessageService;
+    private final MapperDto mapperDto;
 
     private static final String chatChannelTelegram = "Telegram";
 
     public ClientCompanyProcessService(CompanyTelegramConfigurationRepository telegramConfigurationRepository,
+                                       UserRepository userRepository,
                                        ClientService clientService,
                                        ChatService chatService,
-                                       ChatMessageService chatMessageService) {
+                                       ChatMessageService chatMessageService, MapperDto mapperDto) {
         this.telegramConfigurationRepository = telegramConfigurationRepository;
+        this.userRepository = userRepository;
         this.clientService = clientService;
         this.chatService = chatService;
         this.chatMessageService = chatMessageService;
+        this.mapperDto = mapperDto;
     }
 
     public void processTelegram(TelegramResponse telegramResponse) {
@@ -44,44 +48,50 @@ public class ClientCompanyProcessService {
         CompanyTelegramConfiguration configuration =
                 telegramConfigurationRepository.findByBotUsername(telegramResponse.getBotUsername()).get();
 
-        //TODO продумать назначение юзера
-        List<User> users = configuration.getCompany().getUsers();
+        User leastBusyUser = userRepository.findLeastBusyUser(configuration.getCompany().getId())
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
 
-        ClientDto clientDto = clientService.findByName(telegramResponse.getUsername())
+        UserDto userDto = mapperDto.toDtoUser(leastBusyUser);
+        System.out.println(userDto);
+
+
+        String username = telegramResponse.getUsername();
+        System.out.println("Поиск клиента с именем: " + username);
+
+        ClientDto clientDto = clientService.findByName(username)
                 .orElseGet(() -> {
+                    System.out.println("Клиент " + username + " не найден, создаем нового");
+
                     ClientDto newClient = new ClientDto();
-                    newClient.setUserId(1);
-                    newClient.setName(telegramResponse.getUsername());
+                    newClient.setName(username);
                     newClient.setCreatedAt(LocalDateTime.now());
                     newClient.setUpdatedAt(LocalDateTime.now());
+                    newClient.setUserDto(mapperDto.toDtoUser(leastBusyUser));
+
                     return clientService.createClient(newClient);
                 });
 
-        Integer clientId = clientService.findByNameClient(telegramResponse.getUsername())
-                .orElseThrow(() -> new RuntimeException("Клиент не найден"))
-                .getId();
 
-        ChatDto chatDto = chatService.getClientAndChatChannel(clientId, "Telegram")
+        ChatDto chatDto = chatService.getClientAndChatChannel(mapperDto.toEntityClient(clientDto), ChatChannel.Telegram)
                 .orElseGet(() -> {
                     ChatDto newChat = new ChatDto();
-                    newChat.setClientId(clientId);
-                    newChat.setUserId(1);
-                    newChat.setChatChannel(chatChannelTelegram);
+                    newChat.setClientDto(clientDto);
+                    newChat.setUserDto(userDto);
+                    newChat.setChatChannel(ChatChannel.Telegram);
                     newChat.setStatus("ACTIVE");
                     newChat.setCreatedAt(LocalDateTime.now());
                     return chatService.createChat(newChat);
                 });
 
-        Integer chatId = chatService.findByClient(clientId)
-                .orElseThrow(() -> new RuntimeException("Чат не найден"))
-                .getId();
+        System.out.println(chatDto);
 
         MessageDto messageDto = new MessageDto();
-        messageDto.setChatId(chatId);
+        messageDto.setChatDto(chatDto);
         messageDto.setContent(telegramResponse.getText());
         messageDto.setSentAt(LocalDateTime.now());
-
         chatMessageService.createMessage(messageDto);
+
+        System.out.println(messageDto);
 
     }
 }

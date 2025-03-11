@@ -24,16 +24,21 @@ import java.util.Date;
 public interface MapperDto {
 
     // Chat mapping
+    @Mapping(source = "userDto", target = "user")
+    @Mapping(source = "clientDto", target = "client")
     Chat toEntityChat(ChatDto chatDto);
+
+    @Mapping(source = "user", target = "userDto")
+    @Mapping(source = "client", target = "clientDto")
     ChatDto toDtoChat(Chat chat);
 
     // Message mapping
-    @Mapping(source = "chatId", target = "chat")
+    @Mapping(source = "chatDto", target = "chat")
     @Mapping(source = "content", target = "content")
     @Mapping(source = "sentAt", target = "sentAt")
     ChatMessage toEntityChatMessage(MessageDto messageDto);
 
-    @Mapping(source = "chat.id", target = "chatId")
+    @Mapping(source = "chat", target = "chatDto")
     @Mapping(source = "content", target = "content")
     @Mapping(source = "sentAt", target = "sentAt")
     MessageDto toDtoChatMessage(ChatMessage chatMessage);
@@ -43,15 +48,18 @@ public interface MapperDto {
     ChatAttachmentDto toDtoChatAttachment(ChatAttachment chatAttachment);
 
     // Client mapping
+    @Mapping(source = "userDto", target = "user")
     Client toEntityClient(ClientDto clientDto);
+    @Mapping(source = "user", target = "userDto")
     ClientDto toDtoClient(Client client);
 
     // Company mapping
     Company toEntityCompany(CompanyDto companyDto);
     CompanyDto toDtoCompany(Company company);
 
-    // User mapping
+    @Mapping(source = "companyDto", target = "company")
     User toEntityUser(UserDto userDto);
+    @Mapping(source = "company", target = "companyDto")
     UserDto toDtoUser(User user);
 
     // Role mapping

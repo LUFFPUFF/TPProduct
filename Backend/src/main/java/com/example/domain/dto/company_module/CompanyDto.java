@@ -11,6 +11,7 @@ import java.util.List;
 
 @Data
 public class CompanyDto {
+
     private Integer id;
 
     @NotNull(message = "Имя компании не может быть пустым")

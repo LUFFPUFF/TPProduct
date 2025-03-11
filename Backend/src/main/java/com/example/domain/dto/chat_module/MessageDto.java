@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class MessageDto {
 
     @NotNull(message = "Chat ID не может быть пустым")
-    private Integer chatId;
+    private ChatDto chatDto;
 
     @NotNull(message = "Content не может быть пустым")
     @Size(max = 500, message = "Сообщение не должно превышать 500 символов")
