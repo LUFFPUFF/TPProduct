@@ -18,7 +18,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 @Component
-public class DialogBot extends TelegramLongPollingBot {
+public class TelegramDialogBot extends TelegramLongPollingBot {
 
     private final BlockingQueue<TelegramResponse> messageQueue = new LinkedBlockingQueue<>();
     private final SimpMessagingTemplate messagingTemplate;
@@ -26,10 +26,10 @@ public class DialogBot extends TelegramLongPollingBot {
 
     private final String botUsername;
 
-    public DialogBot(@Value("${telegram.bot.token}") String botToken,
-                     SimpMessagingTemplate messagingTemplate,
-                     ClientCompanyProcessService clientCompanyProcessService,
-                     @Value("${telegram.bot.username}") String botUsername) {
+    public TelegramDialogBot(@Value("${telegram.bot.token}") String botToken,
+                             SimpMessagingTemplate messagingTemplate,
+                             ClientCompanyProcessService clientCompanyProcessService,
+                             @Value("${telegram.bot.username}") String botUsername) {
         super(botToken);
         this.messagingTemplate = messagingTemplate;
         this.clientCompanyProcessService = clientCompanyProcessService;

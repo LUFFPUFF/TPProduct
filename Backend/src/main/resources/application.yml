@@ -1,6 +1,9 @@
 spring:
   application:
     name: Backend
+  devtools:
+    livereload:
+      enabled: false
 
   datasource:
     url: jdbc:postgresql://localhost:5432/ans_machine_db
@@ -22,6 +25,7 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
+    open-in-view: false
 
   servlet:
     multipart:
@@ -71,5 +75,23 @@ telegram:
   bot:
     username: dialog_x_qanswer_bot
     token: 7520341907:AAFkCZPkx7d676-qwLMuAhfL4jaXWlU_Blg
+
+vk:
+  bot:
+    token:
+  group:
+    id:
+  api:
+    version: 5.199
+
+email:
+  test_user:
+    host: "imap.gmail.com"
+    port: 993
+    username: "beatsluffi3@gmail.com"
+    password: "qbks wtqy cndc omfz"
+    protocol: "imaps"
+    folder: "INBOX"
+
 
 

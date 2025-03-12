@@ -1,4 +1,4 @@
-package com.example.database.repository.chats_messages_module;
+package com.example.database.repository.company_subscription_module;
 
 import com.example.database.model.company_subscription_module.company.CompanyTelegramConfiguration;
 import org.springframework.data.jpa.repository.JpaRepository;
