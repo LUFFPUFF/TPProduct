@@ -1,7 +1,7 @@
 package com.example.domain.api.chat_service_api.service.file_service;
 
 import com.example.domain.api.chat_service_api.config.ValidationConfig;
-import com.example.domain.exception_handler.chat_module.FileValidationException;
+import com.example.domain.api.chat_service_api.exception_handler.exception.service.FileValidationException;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;

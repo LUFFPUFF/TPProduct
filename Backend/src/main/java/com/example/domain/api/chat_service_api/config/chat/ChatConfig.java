@@ -5,8 +5,6 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Map;
-
 @Configuration
 @Getter @Setter
 public class ChatConfig {
@@ -29,4 +27,19 @@ public class ChatConfig {
 
     @Value("${chat.status.pending}")
     private String pendingStatus;
+
+    @Value("${chat.limits.max-message-length}")
+    private int maxMessageLength;
+
+    @Value("${chat.limits.max-chats-per-user}")
+    private int maxChatsPerUser;
+
+    @Value("${chat.limits.max-users-per-chat}")
+    private int maxUsersPerChat;
+
+    @Value("${chat.limits.message-rate-limit}")
+    private int messageRateLimit;
+
+    @Value("${chat.limits.attachment-max-size}")
+    private String attachmentMaxSize;
 }

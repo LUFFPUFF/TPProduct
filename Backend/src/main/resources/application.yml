@@ -57,8 +57,13 @@ chat:
   limits:
     max-messages-per-chat: 1000
     max-attachments-per-message: 5
+    max-message-length: 1000
+    max-chats-per-user: 10
+    max-users-per-chat: 5
+    message-rate-limit: 60
+    attachment-max-size: 10MB
   lifetime:
-    inactive-chat-close-time: 24h
+    inactive-chat-close-time: PT24H
   status:
     active: ACTIVE
     closed: CLOSED
@@ -72,7 +77,7 @@ notification:
     operator-typing: "Оператор печатает..."
 
 telegram:
-  bot:
+  test_bot:
     username: dialog_x_qanswer_bot
     token: 7520341907:AAFkCZPkx7d676-qwLMuAhfL4jaXWlU_Blg
 
@@ -85,13 +90,13 @@ vk:
     version: 5.199
 
 email:
-  test_user:
-    host: "imap.gmail.com"
-    port: 993
-    username: "beatsluffi3@gmail.com"
-    password: "qbks wtqy cndc omfz"
-    protocol: "imaps"
-    folder: "INBOX"
+  imap_host:
+    yandex: "imap.yandex.com"
+    gmail: "imap.gmail.com"
+  imap_port: 993
+  imap_ssl_enable: true
+  imap_store: "imaps"
+  imap_folder: "INBOX"
 
 
 

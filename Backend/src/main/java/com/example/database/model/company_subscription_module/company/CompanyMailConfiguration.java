@@ -6,11 +6,11 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "company_gmail_configuration", indexes = {
-        @Index(name = "idx_gmail_company_id", columnList = "company_id")
+@Table(name = "company_mail_configuration", indexes = {
+        @Index(name = "idx_mail_company_id", columnList = "company_id")
 })
 @Data
-public class CompanyGmailConfiguration {
+public class CompanyMailConfiguration {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +27,13 @@ public class CompanyGmailConfiguration {
     private String appPassword;
 
     @Column(name = "imap_server", nullable = false)
-    private String imapServer = "imap.gmail.com";
+    private String imapServer;
 
     @Column(name = "imap_port", nullable = false)
     private Integer imapPort = 993;
+
+    @Column(name = "folder")
+    private String folder;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

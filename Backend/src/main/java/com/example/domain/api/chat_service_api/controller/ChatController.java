@@ -1,7 +1,6 @@
 package com.example.domain.api.chat_service_api.controller;
 
-import com.example.database.model.chats_messages_module.ChatMessage;
-import com.example.domain.api.chat_service_api.service.ChatAttachmentService;
+import com.example.domain.api.chat_service_api.exception_handler.exception.controller.ChatControllerException;
 import com.example.domain.api.chat_service_api.service.ChatMessageService;
 import com.example.domain.api.chat_service_api.service.web_scoket.WebSocketService;
 import com.example.domain.dto.chat_module.ChatAttachmentDto;
@@ -12,9 +11,6 @@ import com.example.domain.dto.chat_module.web_socket.NotificationDTO;
 import com.example.domain.dto.chat_module.web_socket.ReadStatusDTO;
 import com.example.domain.dto.chat_module.web_socket.TypingStatusDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.*;
@@ -68,8 +64,8 @@ public class ChatController {
             MessageDto savedMessage = chatMessageService.createMessage(messageDto);
 
             webSocketService.sendMessageToChat(savedMessage.getChatDto().getId(), savedMessage);
-        } catch (Exception e) {
-            System.out.println("Error while sending message: " + e);
+        } catch (ChatControllerException e) {
+            throw new ChatControllerException("Error while sending message: ", e);
         }
     }
 
@@ -120,7 +116,7 @@ public class ChatController {
         if (message != null) {
             webSocketService.sendAttachment(message.getChatDto().getId(), attachmentDto);
         } else {
-            throw new IllegalArgumentException("Message not found for ID: " + attachmentDto.getMessageId());
+            throw new ChatControllerException("Message not found for ID: " +  attachmentDto.getMessageId());
         }
     }
 

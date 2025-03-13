@@ -1,8 +1,8 @@
 package com.example.domain.api.chat_service_api.controller;
 
+import com.example.domain.api.chat_service_api.exception_handler.exception.controller.ChatMessageControllerException;
 import com.example.domain.dto.chat_module.MessageDto;
 import com.example.domain.api.chat_service_api.service.ChatMessageService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class ChatMessageController {
         try {
             MessageDto messageDto = chatMessageService.getMessageById(id);
             return ResponseEntity.ok(messageDto);
-        } catch (RuntimeException e) {
+        } catch (ChatMessageControllerException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }

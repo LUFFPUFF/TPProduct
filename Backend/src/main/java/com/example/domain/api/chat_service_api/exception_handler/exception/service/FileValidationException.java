@@ -1,4 +1,4 @@
-package com.example.domain.exception_handler.chat_module;
+package com.example.domain.api.chat_service_api.exception_handler.exception.service;
 
 public class FileValidationException extends RuntimeException {
 

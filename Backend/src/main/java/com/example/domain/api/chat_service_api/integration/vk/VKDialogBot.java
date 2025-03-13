@@ -11,6 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class VKDialogBot {
 
+    //TODO Пробелма в вытягивании API
 
     @Value("${vk.api.version}")
     private static String API_VERSION;

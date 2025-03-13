@@ -1,4 +1,4 @@
-package com.example.domain.api.chat_service_api.integration.mail.email;
+package com.example.domain.api.chat_service_api.integration.mail.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +11,7 @@ public class EmailResponse {
 
     private String subject;
     private String from;
+    private String to;
     private String content;
     private Date receivedDate;
 
@@ -19,7 +20,8 @@ public class EmailResponse {
         return "EmailResponse{" +
                 "subject='" + subject + '\'' +
                 ", from='" + from + '\'' +
-                ", content=" + content +
+                ", to='" + to + '\'' +
+                ", content='" + content + '\'' +
                 ", receivedDate=" + receivedDate +
                 '}';
     }

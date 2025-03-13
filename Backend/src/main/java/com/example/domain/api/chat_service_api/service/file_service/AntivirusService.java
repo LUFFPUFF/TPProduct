@@ -1,7 +1,8 @@
 package com.example.domain.api.chat_service_api.service.file_service;
 
-import com.example.domain.exception_handler.chat_module.AntivirusException;
+import com.example.domain.api.chat_service_api.exception_handler.exception.service.AntivirusException;
 import fi.solita.clamav.ClamAVClient;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,10 @@ import java.util.concurrent.CompletableFuture;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class AntivirusService {
 
     private final ClamAVClient clamAVClient;
-
-    public AntivirusService(ClamAVClient clamAVClient) {
-        this.clamAVClient = clamAVClient;
-    }
 
     @Async
     public CompletableFuture<Boolean> scanFile(Path filePath) {

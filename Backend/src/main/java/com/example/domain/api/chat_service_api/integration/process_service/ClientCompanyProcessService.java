@@ -1,13 +1,13 @@
 package com.example.domain.api.chat_service_api.integration.process_service;
 
 import com.example.database.model.chats_messages_module.chat.ChatChannel;
-import com.example.database.model.company_subscription_module.company.CompanyGmailConfiguration;
+import com.example.database.model.company_subscription_module.company.CompanyMailConfiguration;
 import com.example.database.model.company_subscription_module.company.CompanyTelegramConfiguration;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
-import com.example.database.repository.company_subscription_module.CompanyGmailConfigurationRepository;
+import com.example.database.repository.company_subscription_module.CompanyMailConfigurationRepository;
 import com.example.database.repository.company_subscription_module.CompanyTelegramConfigurationRepository;
 import com.example.database.repository.company_subscription_module.UserRepository;
-import com.example.domain.api.chat_service_api.integration.mail.email.EmailResponse;
+import com.example.domain.api.chat_service_api.integration.mail.response.EmailResponse;
 import com.example.domain.api.chat_service_api.integration.telegram.TelegramResponse;
 import com.example.domain.api.chat_service_api.service.ChatMessageService;
 import com.example.domain.api.chat_service_api.service.ChatService;
@@ -25,16 +25,14 @@ import java.time.LocalDateTime;
 public class ClientCompanyProcessService {
 
     private final CompanyTelegramConfigurationRepository telegramConfigurationRepository;
-    private final CompanyGmailConfigurationRepository gmailConfigurationRepository;
+    private final CompanyMailConfigurationRepository gmailConfigurationRepository;
     private final UserRepository userRepository;
     private final ClientService clientService;
     private final ChatService chatService;
     private final ChatMessageService chatMessageService;
     private final MapperDto mapperDto;
 
-    private static final String chatChannelTelegram = "Telegram";
-
-    public ClientCompanyProcessService(CompanyTelegramConfigurationRepository telegramConfigurationRepository, CompanyGmailConfigurationRepository gmailConfigurationRepository,
+    public ClientCompanyProcessService(CompanyTelegramConfigurationRepository telegramConfigurationRepository, CompanyMailConfigurationRepository gmailConfigurationRepository,
                                        UserRepository userRepository,
                                        ClientService clientService,
                                        ChatService chatService,
@@ -109,15 +107,15 @@ public class ClientCompanyProcessService {
 
     }
 
-    public void processGmail(String companyGmailUsername, EmailResponse emailResponse) {
-        CompanyGmailConfiguration gmailConfiguration =
+    public void processEmail(String companyGmailUsername, EmailResponse emailResponse) {
+        CompanyMailConfiguration gmailConfiguration =
                 gmailConfigurationRepository.findByEmailAddress(companyGmailUsername)
                         .orElseThrow(() -> new RuntimeException("Gmail конфигурация не найдена"));
 
         System.out.println(gmailConfiguration);
 
         User leastBusyUser = userRepository.findLeastBusyUser(gmailConfiguration.getCompany().getId())
-                        .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
 
         UserDto userDto = mapperDto.toDtoUser(leastBusyUser);
 
@@ -156,7 +154,6 @@ public class ClientCompanyProcessService {
 
         System.out.println("Созданный чат: ");
         System.out.println(chatDto);
-
 
         MessageDto messageDto = new MessageDto();
         messageDto.setChatDto(chatDto);

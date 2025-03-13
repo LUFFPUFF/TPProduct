@@ -26,10 +26,10 @@ public class TelegramDialogBot extends TelegramLongPollingBot {
 
     private final String botUsername;
 
-    public TelegramDialogBot(@Value("${telegram.bot.token}") String botToken,
+    public TelegramDialogBot(@Value("${telegram.test_bot.token}") String botToken,
                              SimpMessagingTemplate messagingTemplate,
                              ClientCompanyProcessService clientCompanyProcessService,
-                             @Value("${telegram.bot.username}") String botUsername) {
+                             @Value("${telegram.test_bot.username}") String botUsername) {
         super(botToken);
         this.messagingTemplate = messagingTemplate;
         this.clientCompanyProcessService = clientCompanyProcessService;
