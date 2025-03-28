@@ -4,6 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+echo "src/main/java/com/example/domain/api/chat_service_api/" >> .gitignore
+
 ### STS ###
 .apt_generated
 .classpath

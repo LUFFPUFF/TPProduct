@@ -16,6 +16,14 @@ spring:
       idle-timeout: 30000
       max-lifetime: 1800000
 
+  task:
+    execution:
+      pool:
+        core-size: 10
+        max-size: 20
+        queue-capacity: 50
+        keep-alive: 30s
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
@@ -97,6 +105,30 @@ email:
   imap_ssl_enable: true
   imap_store: "imaps"
   imap_folder: "INBOX"
+
+
+ans_machine:
+  npl:
+    speller:
+      yandex_speller_url: "https://speller.yandex.net/services/spellservice.json/checkText"
+
+correction:
+  enabled: true
+  rules:
+    active: commaBeforeConjunction, commaAfterAddress,commaListCorrection, fixCommaSpacingCorrection, removeExtraCorrection
+    order: abbreviationDotCorrection, sentenceEndingDotCorrection, exclamationMarkCorrection, questionMarkCorrection
+
+  stats:
+    directory: stats
+    flush-interval: 1m
+    metrics:
+      file: stats/metrics/metrics.log
+      log-interval: 1m
+
+
+
+
+
 
 
 
