@@ -1,7 +1,0 @@
-FROM postgres:17
-
-ENV POSTGRES_USER=Nikita
-ENV POSTGRES_PASSWORD=DialogX
-ENV POSTGRES_DB=ans_machine_db
-
-EXPOSE 5432
