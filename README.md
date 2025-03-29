@@ -64,6 +64,8 @@ DialogX - это интеллектуальный автоответчик но�
 ### Инструменты разработки
 - **[Jira](https://tpdialogx.atlassian.net/jira/software/projects/DX/boards/1?atlOrigin=eyJpIjoiN2M3YzFjMGE5ZTdjNDZiMDhhYjlmZmM2MzBmYjA2ZWEiLCJwIjoiaiJ9)** - управление задачами (Scrum/Kanban)
 #### Аккаунт для просмотра:
+Продемонстрирована роль каждого члена команды
+
 **Login:** caxa.fen@mail.ru 
 
 **Password:** ASzxqw1234
