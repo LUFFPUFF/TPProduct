@@ -95,18 +95,21 @@ DialogX - это интеллектуальный автоответчик но�
 ## 📚 Документация
 
 ### Основные документы
-- [Техническое задание](docs/SRS.md)
-- [API Reference](docs/API.md)
-- [Архитектура системы](docs/ARCHITECTURE.md)
+- [Техническое задание](docs/Documentation/TZ.pdf)
+- [Предпроектное иследование](docs/Documentation/Predproektnoe_issledovanie.pdf)
+- [API Reference (скоро будет)](docs/API.md)
+- [Архитектура системы](docs/Diagrams/SchemesAPI/SchemeProject.png)
 
 ### Дополнительно
-- [Диаграммы](docs/Diagrams)
-- [Презентация](presentation.pdf)
+- [Диаграммы и схемы](docs/Diagrams)
+- [Презентация проекта](docs/Documentation/presentation.pptx)
+- [Видеопрезентация защиты ТЗ](https://rutube.ru/video/32e6b72270bb88000cd0a0b1ea7d3aeb/)
 
-### Руководства
+### Руководства (Скоро будет, предназначено для компаний)
 - [Настройка IMAP](docs/IMAP_GUIDE.md)
 - [Интеграция Telegram](docs/TELEGRAM_SETUP.md)
 - [Настройка VK Bot](docs/VK_INTEGRATION.md)
+- [Настройка WhatsApp Business API](docs/VK_INTEGRATION.md)
 
 ---
 
