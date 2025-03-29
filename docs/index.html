@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DialogX - Документация</title>
+    <style>
+        :root {
+            --blue-100: #ebf8ff;
+            --blue-200: #bee3f8;
+            --blue-500: #4299e1;
+            --blue-600: #3182ce;
+            --blue-700: #2b6cb0;
+            --purple-100: #faf5ff;
+            --purple-500: #9f7aea;
+            --green-100: #f0fff4;
+            --green-500: #48bb78;
+            --red-100: #fff5f5;
+            --red-500: #f56565;
+            --orange-100: #fffaf0;
+            --orange-500: #ed8936;
+            --gray-100: #f8fafc;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e0;
+            --gray-500: #a0aec0;
+            --gray-600: #4a5568;
+            --gray-700: #2d3748;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-700);
+            background-color: var(--gray-100);
+            padding: 2em 1em;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 3em 2em;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        /* Header styles */
+        .header {
+            text-align: center;
+            margin-bottom: 2em;
+        }
+
+        .logo-container {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #f6f9fc 0%, #eef2f6 100%);
+            padding: 1em 2em;
+            border-radius: 50px;
+            margin-bottom: 1.5em;
+        }
+
+        .logo-emoji {
+            font-size: 2.2em;
+            margin-right: 0.3em;
+        }
+
+        .title {
+            margin: 0;
+            font-size: 2.4em;
+            font-weight: 800;
+            color: var(--gray-700);
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: var(--gray-600);
+            max-width: 600px;
+            margin: 0 auto 1.8em;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .badges {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.8em;
+            margin-bottom: 1em;
+        }
+
+        .badge {
+            padding: 0.5em 1em;
+            border-radius: 50px;
+            font-size: 0.9em;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .badge-blue {
+            background: var(--blue-100);
+            color: var(--blue-700);
+        }
+
+        .badge-orange {
+            background: var(--orange-100);
+            color: #9c4221;
+        }
+
+        /* Content section */
+        .content-section {
+            border-radius: 12px;
+            padding: 1.5em;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #f0f0f0;
+            margin-bottom: 2em;
+        }
+
+        .section-title {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 1em;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .section-icon {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .content-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .content-link {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: var(--gray-700);
+        }
+
+        .content-link:hover {
+            background: #f0f0f0;
+        }
+
+        .link-icon {
+            margin-right: 12px;
+            font-size: 1.1em;
+        }
+
+        .link-text {
+            font-weight: 500;
+            flex-grow: 1;
+        }
+
+        .link-arrow {
+            color: var(--gray-500);
+        }
+
+        /* Feature sections */
+        .feature-section {
+            border-radius: 16px;
+            padding: 2.5em;
+            margin: 3em 0;
+            scroll-margin-top: 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 2.5em;
+        }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #f6f9fc 0%, #eef2f6 100%);
+            padding: 0.8em 1.5em;
+            border-radius: 50px;
+            margin-bottom: 1em;
+        }
+
+        .section-badge-icon {
+            font-size: 1.4em;
+            margin-right: 0.5em;
+        }
+
+        .section-heading {
+            margin: 0;
+            font-size: 1.4em;
+            font-weight: 700;
+            color: var(--gray-700);
+        }
+
+        .section-description {
+            color: var(--gray-600);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-size: 1.05em;
+        }
+
+        .feature-group {
+            margin-bottom: 3em;
+        }
+
+        .feature-group-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5em;
+            padding: 0.8em 1.2em;
+            border-radius: 8px;
+            width: fit-content;
+        }
+
+        .feature-group-icon {
+            background: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1em;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .feature-group-title {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .feature-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5em;
+        }
+
+        .feature-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 12px;
+            padding: 1.8em;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card-blue {
+            border-top: 4px solid var(--blue-500);
+        }
+
+        .feature-card-purple {
+            border-top: 4px solid var(--purple-500);
+        }
+
+        .feature-card-red {
+            border-top: 4px solid var(--red-500);
+        }
+
+        .feature-card-green {
+            border-top: 4px solid var(--green-500);
+        }
+
+        .feature-card-orange {
+            border-top: 4px solid var(--orange-500);
+        }
+
+        .feature-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1em;
+        }
+
+        .feature-card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1em;
+        }
+
+        .feature-card-icon-blue {
+            background: var(--blue-100);
+        }
+
+        .feature-card-icon-purple {
+            background: var(--purple-100);
+        }
+
+        .feature-card-icon-red {
+            background: var(--red-100);
+        }
+
+        .feature-card-icon-green {
+            background: var(--green-100);
+        }
+
+        .feature-card-icon-orange {
+            background: var(--orange-100);
+        }
+
+        .feature-card-title {
+            margin: 0;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .feature-card-description {
+            margin: 0;
+            color: var(--gray-600);
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        /* Accordion */
+        .accordion {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 12px;
+            padding: 2em;
+            margin-top: 2em;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+        }
+
+        .accordion-summary {
+            font-weight: 600;
+            color: var(--gray-700);
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            align-items: center;
+            font-size: 1.1em;
+        }
+
+        .accordion-icon {
+            background: var(--blue-100);
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1em;
+        }
+
+        .accordion-content {
+            margin-top: 1.5em;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5em;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .benefit-icon {
+            font-size: 1.2em;
+            margin-right: 0.8em;
+            color: var(--blue-500);
+        }
+
+        .benefit-text h4 {
+            margin: 0 0 0.3em 0;
+            font-size: 1em;
+            color: var(--gray-700);
+        }
+
+        .benefit-text p {
+            margin: 0;
+            color: var(--gray-600);
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        /* Tools section */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.8em;
+            align-items: stretch;
+            margin-bottom: 2em;
+        }
+
+        .tool-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 12px;
+            padding: 1.8em;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .tool-card-blue {
+            border-top: 4px solid #0052CC;
+        }
+
+        .tool-card-red {
+            border-top: 4px solid #FF0000;
+        }
+
+        .tool-card-purple {
+            border-top: 4px solid #6e5494;
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.2em;
+        }
+
+        .tool-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1em;
+            flex-shrink: 0;
+        }
+
+        .tool-icon-blue {
+            background: #DEEBFF;
+        }
+
+        .tool-icon-red {
+            background: #FFE6E6;
+        }
+
+        .tool-icon-purple {
+            background: #f0e6ff;
+        }
+
+        .tool-title {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .tool-description {
+            color: var(--gray-600);
+            margin-bottom: 1em;
+            font-size: 0.95em;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .tool-list {
+            color: var(--gray-600);
+            padding-left: 1.2em;
+            margin: 0;
+            font-size: 0.95em;
+            line-height: 1.8;
+        }
+
+        .tool-list a {
+            color: var(--blue-700);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .tool-list a:hover {
+            color: var(--blue-500);
+        }
+
+        /* Tech stack section */
+        .tech-stack-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2em;
+            margin-bottom: 3em;
+        }
+
+        .tech-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 12px;
+            padding: 2em;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .tech-card-blue {
+            border-top: 4px solid var(--blue-500);
+        }
+
+        .tech-card-purple {
+            border-top: 4px solid var(--purple-500);
+        }
+
+        .tech-card-red {
+            border-top: 4px solid var(--red-500);
+        }
+
+        .tech-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.2em;
+        }
+
+        .tech-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1em;
+        }
+
+        .tech-icon-blue {
+            background: var(--blue-100);
+        }
+
+        .tech-icon-purple {
+            background: var(--purple-100);
+        }
+
+        .tech-icon-red {
+            background: var(--red-100);
+        }
+
+        .tech-title {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8em;
+            margin-bottom: 1.5em;
+        }
+
+        .tech-description {
+            margin: 0;
+            color: var(--gray-600);
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        /* Team section */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.8em;
+        }
+
+        .team-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 12px;
+            padding: 1.8em;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .team-photo {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 1.2em;
+            border: 4px solid var(--blue-100);
+            box-shadow: 0 4px 12px rgba(66,153,225,0.15);
+        }
+
+        .team-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .team-name {
+            margin: 0 0 0.3em 0;
+            font-size: 1.2em;
+            color: var(--gray-700);
+        }
+
+        .team-role {
+            color: var(--blue-500);
+            margin: 0 0 1em 0;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .team-bio {
+            color: var(--gray-600);
+            margin: 0 0 1.2em 0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .team-links {
+            display: flex;
+            justify-content: center;
+            gap: 0.8em;
+        }
+
+        .team-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: #f6f8fa;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .team-link:hover {
+            background: #e2e8f0;
+        }
+
+        /* Documentation section */
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.8em;
+        }
+
+        .docs-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 12px;
+            padding: 1.8em;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+        }
+
+        .docs-card-blue {
+            border-top: 4px solid var(--blue-500);
+        }
+
+        .docs-card-purple {
+            border-top: 4px solid var(--purple-500);
+        }
+
+        .docs-card-green {
+            border-top: 4px solid var(--green-500);
+        }
+
+        .docs-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.2em;
+        }
+
+        .docs-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1em;
+        }
+
+        .docs-icon-blue {
+            background: var(--blue-100);
+        }
+
+        .docs-icon-purple {
+            background: var(--purple-100);
+        }
+
+        .docs-icon-green {
+            background: var(--green-100);
+        }
+
+        .docs-title {
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .docs-list {
+            color: var(--gray-600);
+            padding-left: 1.2em;
+            margin: 0;
+            font-size: 0.95em;
+            line-height: 1.8;
+        }
+
+        .docs-list a {
+            color: var(--blue-700);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .docs-list a:hover {
+            color: var(--blue-500);
+        }
+
+        /* Button styles */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            padding: 0.8em 1.8em;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0ACF83 0%, #07b377 100%);
+            box-shadow: 0 4px 12px rgba(10,207,131,0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--gray-700);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid var(--gray-200);
+        }
+
+        .btn-icon {
+            font-size: 1.2em;
+            margin-right: 0.6em;
+        }
+
+        .btn-arrow {
+            margin-left: 0.6em;
+            font-size: 1.1em;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 2em 1em;
+            }
+
+            .title {
+                font-size: 2em;
+            }
+
+            .subtitle {
+                font-size: 1.1em;
+            }
+
+            .feature-section {
+                padding: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Первый блок (заголовок) -->
+    <header class="header">
+        <!-- Логотип и название -->
+        <div class="logo-container">
+            <span class="logo-emoji">🤖</span>
+            <h1 class="title">DialogX</h1>
+        </div>
+        <!-- Описание -->
+        <p class="subtitle">Интеллектуальный автоответчик нового поколения для бизнес-коммуникаций</p>
+        <!-- Бейджи -->
+        <div class="badges">
+                <span class="badge badge-blue">
+                    <span style="margin-right: 0.4em;">📦</span> v1.0.0
+                </span>
+            <span class="badge badge-orange">
+                    <span style="margin-right: 0.4em;">👥</span> 6 Человек
+                </span>
+        </div>
+    </header>
+
+    <!-- Второй блок (содержание) -->
+    <section class="content-section">
+        <h2 class="section-title">
+            <span class="section-icon">📋</span>
+            Содержание
+        </h2>
+        <div class="content-links">
+            <a href="#ключевые-возможности" class="content-link">
+                <span class="link-icon">✨</span>
+                <span class="link-text">Возможности</span>
+                <span class="link-arrow">→</span>
+            </a>
+            <a href="#средства-реализации" class="content-link">
+                <span class="link-icon">🛠️</span>
+                <span class="link-text">Средства реализации</span>
+                <span class="link-arrow">→</span>
+            </a>
+            <a href="#технологии" class="content-link">
+                <span class="link-icon">🔧️</span>
+                <span class="link-text">Технологии</span>
+                <span class="link-arrow">→</span>
+            </a>
+            <a href="#макеты" class="content-link">
+                <span class="link-icon">🎨</span>
+                <span class="link-text">Интерфейс</span>
+                <span class="link-arrow">→</span>
+            </a>
+            <a href="#команда" class="content-link">
+                <span class="link-icon">👥</span>
+                <span class="link-text">Команда</span>
+                <span class="link-arrow">→</span>
+            </a>
+            <a href="#документация" class="content-link">
+                <span class="link-icon">📚</span>
+                <span class="link-text">Документация</span>
+                <span class="link-arrow">→</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Блок "Ключевые возможности" -->
+    <section id="ключевые-возможности" class="feature-section">
+        <!-- Заголовок раздела -->
+        <div class="section-header">
+            <div class="section-badge">
+                <span class="section-badge-icon">✨</span>
+                <h2 class="section-heading">Ключевые возможности</h2>
+            </div>
+            <p class="section-description">Инновационные решения для автоматизации коммуникаций и управления диалогами</p>
+        </div>
+
+        <!-- Умный автоответчик -->
+        <div class="feature-group">
+            <div class="feature-group-header" style="background: linear-gradient(90deg, var(--blue-100) 0%, rgba(235,248,255,0.3) 100%);">
+                <div class="feature-group-icon" style="box-shadow: 0 2px 8px rgba(66,153,225,0.2);">
+                    <span style="font-size: 1.4em; color: var(--blue-500);">📨</span>
+                </div>
+                <h3 class="feature-group-title">Умный автоответчик</h3>
+            </div>
+            <div class="feature-cards">
+                <div class="feature-card feature-card-blue">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon feature-card-icon-blue">
+                            <span style="font-size: 1.4em; color: var(--blue-600);">🤖</span>
+                        </div>
+                        <h4 class="feature-card-title">AI-генерация ответов</h4>
+                    </div>
+                    <p class="feature-card-description">Генерация естественных, контекстных ответов на базе нейросети Qwen с поддержкой 15+ языков</p>
+                </div>
+                <div class="feature-card feature-card-purple">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon feature-card-icon-purple">
+                            <span style="font-size: 1.4em; color: #805ad5;">🎭</span>
+                        </div>
+                        <h4 class="feature-card-title">Персонализация</h4>
+                    </div>
+                    <p class="feature-card-description">Автоматическая адаптация под стиль общения и тон каждого клиента для более персонализированного опыта</p>
+                </div>
+                <div class="feature-card feature-card-red">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon feature-card-icon-red">
+                            <span style="font-size: 1.4em; color: #e53e3e;">⚡</span>
+                        </div>
+                        <h4 class="feature-card-title">Быстрые ответы</h4>
+                    </div>
+                    <p class="feature-card-description">Готовые шаблоны и быстрые ответы для часто задаваемых вопросов с возможностью быстрого выбора</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Централизованное управление -->
+        <div class="feature-group">
+            <div class="feature-group-header" style="background: linear-gradient(90deg, var(--green-100) 0%, rgba(240,255,244,0.3) 100%);">
+                <div class="feature-group-icon" style="box-shadow: 0 2px 8px rgba(72,187,120,0.2);">
+                    <span style="font-size: 1.4em; color: var(--green-500);">🌐</span>
+                </div>
+                <h3 class="feature-group-title">Централизованное управление</h3>
+            </div>
+            <div class="feature-cards">
+                <div class="feature-card feature-card-green">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon feature-card-icon-green">
+                            <span style="font-size: 1.4em; color: #38a169;">📥</span>
+                        </div>
+                        <h4 class="feature-card-title">Единый инбокс</h4>
+                    </div>
+                    <p class="feature-card-description">Все диалоги из разных платформ собраны в одном удобном интерфейсе с единой системой уведомлений</p>
+                </div>
+                <div class="feature-card feature-card-orange">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon feature-card-icon-orange">
+                            <span style="font-size: 1.4em; color: #dd6b20;">🔄</span>
+                        </div>
+                        <h4 class="feature-card-title">Сквозная история</h4>
+                    </div>
+                    <p class="feature-card-description">Полная история всех коммуникаций с каждым клиентом в хронологическом порядке с тегами и метками</p>
+                </div>
+                <div class="feature-card feature-card-blue">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon feature-card-icon-blue">
+                            <span style="font-size: 1.4em; color: #5a67d8;">🏷️</span>
+                        </div>
+                        <h4 class="feature-card-title">Умная сортировка</h4>
+                    </div>
+                    <p class="feature-card-description">Автоматическая категоризация входящих сообщений по темам, важности и другим параметрам</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Интеграции -->
+        <div class="feature-group">
+            <div class="feature-group-header" style="background: linear-gradient(90deg, var(--purple-100) 0%, rgba(250,245,255,0.3) 100%);">
+                <div class="feature-group-icon" style="box-shadow: 0 2px 8px rgba(159,122,234,0.2);">
+                    <span style="font-size: 1.4em; color: var(--purple-500);">🔌</span>
+                </div>
+                <h3 class="feature-group-title">Интеграции с платформами</h3>
+            </div>
+            <div class="feature-cards">
+                <div class="feature-card feature-card-blue">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon feature-card-icon-blue">
+                            <span style="font-size: 1.4em; color: var(--blue-600);">📧</span>
+                        </div>
+                        <h4 class="feature-card-title">Email</h4>
+                    </div>
+                    <p class="feature-card-description">Поддержка Gmail, Yandex, Outlook с обработкой вложений и HTML-писем</p>
+                </div>
+                <div class="feature-card feature-card-purple">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon feature-card-icon-purple">
+                            <span style="font-size: 1.4em; color: #805ad5;">💬</span>
+                        </div>
+                        <h4 class="feature-card-title">Мессенджеры</h4>
+                    </div>
+                    <p class="feature-card-description">Telegram, WhatsApp, VK с поддержкой групповых чатов и медиафайлов</p>
+                </div>
+                <div class="feature-card feature-card-red">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon feature-card-icon-red">
+                            <span style="font-size: 1.4em; color: #e53e3e;">🌐</span>
+                        </div>
+                        <h4 class="feature-card-title">Виджет для сайта</h4>
+                    </div>
+                    <p class="feature-card-description">Настраиваемый дизайн, JS API и интеграция с аналитическими системами</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Дополнительные инструменты -->
+        <div class="feature-group">
+            <div class="feature-group-header" style="background: linear-gradient(90deg, var(--orange-100) 0%, rgba(255,250,240,0.3) 100%);">
+                <div class="feature-group-icon" style="box-shadow: 0 2px 8px rgba(237,137,54,0.2);">
+                    <span style="font-size: 1.4em; color: var(--orange-500);">📊</span>
+                </div>
+                <h3 class="feature-group-title">Дополнительные инструменты</h3>
+            </div>
+            <div class="feature-cards">
+                <div class="feature-card feature-card-green">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon feature-card-icon-green">
+                            <span style="font-size: 1.4em; color: #38a169;">📊</span>
+                        </div>
+                        <h4 class="feature-card-title">CRM-система</h4>
+                    </div>
+                    <p class="feature-card-description">Управление клиентской базой, сделками и воронками продаж с автоматическим созданием карточек</p>
+                </div>
+                <div class="feature-card feature-card-orange">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon feature-card-icon-orange">
+                            <span style="font-size: 1.4em; color: #dd6b20;">📈</span>
+                        </div>
+                        <h4 class="feature-card-title">Аналитика</h4>
+                    </div>
+                    <p class="feature-card-description">Детальная статистика по ответам, клиентам и эффективности работы команды с графиками</p>
+                </div>
+                <div class="feature-card feature-card-blue">
+                    <div class="feature-card-header">
+                        <div class="feature-card-icon feature-card-icon-blue">
+                            <span style="font-size: 1.4em; color: #5a67d8;">🛡️</span>
+                        </div>
+                        <h4 class="feature-card-title">Безопасность</h4>
+                    </div>
+                    <p class="feature-card-description">End-to-end шифрование, двухфакторная аутентификация и контроль доступа на основе ролей</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Почему эффективен -->
+        <div class="accordion">
+            <details>
+                <summary class="accordion-summary">
+                    <div class="accordion-icon">
+                        <span style="font-size: 1.3em; color: var(--blue-600);">💡</span>
+                    </div>
+                    <span>Почему DialogX - это эффективное решение?</span>
+                </summary>
+                <div class="accordion-content">
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✓</span>
+                            <div class="benefit-text">
+                                <h4>Экономия времени</h4>
+                                <p><strong>80% времени</strong> за счет автоматизации рутинных ответов</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✓</span>
+                            <div class="benefit-text">
+                                <h4>Скорость реакции</h4>
+                                <p><strong>На 40% быстрее</strong> обработка запросов клиентов</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✓</span>
+                            <div class="benefit-text">
+                                <h4>Командная работа</h4>
+                                <p><strong>Единое пространство</strong> для всей команды</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✓</span>
+                            <div class="benefit-text">
+                                <h4>Быстрая интеграция</h4>
+                                <p><strong>5 минут</strong> для подключения популярных платформ</p>
+                            </div>
+                        </div>
+                        <div class="benefit-item">
+                            <span class="benefit-icon">✓</span>
+                            <div class="benefit-text">
+                                <h4>Гибкость</h4>
+                                <p><strong>Настройка под специфику</strong> вашего бизнеса</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <!-- Блок "Средства реализации" -->
+    <section id="средства-реализации" class="feature-section">
+        <!-- Заголовок раздела -->
+        <div class="section-header">
+            <div class="section-badge">
+                <span class="section-badge-icon">🛠️</span>
+                <h2 class="section-heading">Средства реализации</h2>
+            </div>
+            <p class="section-description">Инструменты и платформы, используемые для разработки и развертывания проекта</p>
+        </div>
+
+        <!-- Карточки инструментов -->
+        <div class="tools-grid">
+            <!-- Таск-трекер -->
+            <a href="https://www.atlassian.com/software/jira" target="_blank" class="tool-card tool-card-blue">
+                <div class="tool-header">
+                    <div class="tool-icon tool-icon-blue">
+                        <img src="https://simpleicons.org/icons/jira.svg" width="24" style="filter: invert(32%) sepia(99%) saturate(1038%) hue-rotate(191deg) brightness(97%) contrast(101%);">
+                    </div>
+                    <h3 class="tool-title">Таск-трекер</h3>
+                </div>
+            </a>
+
+            <!-- Облачная платформа -->
+            <a href="https://cloud.yandex.ru/" target="_blank" class="tool-card tool-card-red">
+                <div class="tool-header">
+                    <div class="tool-icon tool-icon-red">
+                        <img src="https://simpleicons.org/icons/yandexcloud.svg" width="24" style="filter: invert(16%) sepia(99%) saturate(7404%) hue-rotate(359deg) brightness(101%) contrast(112%);">
+                    </div>
+                    <h3 class="tool-title">Облачная платформа</h3>
+                </div>
+            </a>
+
+            <!-- Другие инструменты -->
+            <div class="tool-card tool-card-purple">
+                <div class="tool-header">
+                    <div class="tool-icon tool-icon-purple">
+                        <span style="font-size: 1.4em; color: #6e5494;">🧰</span>
+                    </div>
+                    <h3 class="tool-title">Другие инструменты</h3>
+                </div>
+                <p class="tool-description">Дополнительные средства разработки:</p>
+                <ul class="tool-list">
+                    <li><a href="https://github.com/" target="_blank">GitHub</a> - система контроля версий</li>
+                    <li><a href="https://www.docker.com/" target="_blank">Docker</a> - контейнеризация приложений</li>
+                    <li><a href="https://www.figma.com/" target="_blank">Figma</a> - дизайн интерфейсов</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Дополнительная информация -->
+        <div class="feature-card" style="margin-top: 1em;">
+            <h3 class="section-title" style="margin-bottom: 1em;">
+                <span class="section-icon">ℹ️</span>
+                Почему мы выбрали эти инструменты?
+            </h3>
+            <p class="feature-card-description">
+                Наш выбор основан на требованиях к масштабируемости, безопасности и удобству разработки.
+                <a href="https://cloud.yandex.ru/" target="_blank" style="color: var(--blue-700); text-decoration: none; font-weight: 600; transition: color 0.2s;">Yandex Cloud</a> предоставляет надежную инфраструктуру с локализацией данных в России,
+                <a href="https://www.atlassian.com/software/jira" target="_blank" style="color: var(--blue-700); text-decoration: none; font-weight: 600; transition: color 0.2s;">Jira</a> обеспечивает прозрачность разработки, а дополнительные инструменты создают
+                полноценную экосистему для эффективной работы команды.
+            </p>
+        </div>
+    </section>
+
+    <!-- Блок "Технологии" -->
+    <section id="технологии" class="feature-section">
+        <div class="section-header">
+            <div class="section-badge">
+                <span class="section-badge-icon">🛠</span>
+                <h2 class="section-heading">Технологический стек</h2>
+            </div>
+            <p class="section-description">Мы используем передовые технологии для создания высокопроизводительных и масштабируемых решений</p>
+        </div>
+
+        <div class="tech-stack-grid">
+            <!-- Backend Card -->
+            <div class="tech-card tech-card-blue">
+                <div class="tech-header">
+                    <div class="tech-icon tech-icon-blue">
+                        <span style="font-size: 1.6em; color: var(--blue-600);">🔧</span>
+                    </div>
+                    <h3 class="tech-title">Backend</h3>
+                </div>
+                <div class="tech-badges">
+                    <img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat-square&logo=spring-boot&logoColor=white" alt="Spring Boot">
+                    <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL">
+                    <img src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white" alt="Redis">
+                </div>
+                <p class="tech-description">Мощная серверная часть с автоматическим масштабированием и высокой отказоустойчивостью</p>
+            </div>
+
+            <!-- Frontend Card -->
+            <div class="tech-card tech-card-purple">
+                <div class="tech-header">
+                    <div class="tech-icon tech-icon-purple">
+                        <span style="font-size: 1.6em; color: #805ad5;">🎨</span>
+                    </div>
+                    <h3 class="tech-title">Frontend</h3>
+                </div>
+                <div class="tech-badges">
+                    <img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React">
+                    <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript">
+                    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="TailwindCSS">
+                </div>
+                <p class="tech-description">Современный отзывчивый интерфейс с продуманным UX и мгновенной загрузкой</p>
+            </div>
+
+            <!-- AI Card -->
+            <div class="tech-card tech-card-red">
+                <div class="tech-header">
+                    <div class="tech-icon tech-icon-red">
+                        <span style="font-size: 1.6em; color: #e53e3e;">🧠</span>
+                    </div>
+                    <h3 class="tech-title">AI & ML</h3>
+                </div>
+                <div class="tech-badges">
+                    <img src="https://img.shields.io/badge/Qwen-AI-FF6600?style=flat-square&logo=openai&logoColor=white" alt="Qwen">
+                    <img src="https://img.shields.io/badge/Hugging_Face-FFD21E?style=flat-square&logo=huggingface&logoColor=black" alt="HuggingFace">
+                    <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=white" alt="PyTorch">
+                </div>
+                <p class="tech-description">Передовые алгоритмы искусственного интеллекта для умной обработки диалогов</p>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 3em 0 2em;">
+            <h3 style="color: var(--gray-600); font-weight: 500; margin-bottom: 1.5em;">Технологии в действии</h3>
+            <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 2em;">
+                <div style="text-align: center;">
+                    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/spring/spring-original-wordmark.svg" width="80" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;">
+                    <p style="margin-top: 0.8em; font-size: 0.9em; color: var(--gray-600);">Spring</p>
+                </div>
+                <div style="text-align: center;">
+                    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original-wordmark.svg" width="80" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;">
+                    <p style="margin-top: 0.8em; font-size: 0.9em; color: var(--gray-600);">PostgreSQL</p>
+                </div>
+                <div style="text-align: center;">
+                    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" width="80" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;">
+                    <p style="margin-top: 0.8em; font-size: 0.9em; color: var(--gray-600);">React</p>
+                </div>
+                <div style="text-align: center;">
+                    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" width="80" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;">
+                    <p style="margin-top: 0.8em; font-size: 0.9em; color: var(--gray-600);">JavaScript</p>
+                </div>
+                <div style="text-align: center;">
+                    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/pytorch/pytorch-original.svg" width="80" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease;">
+                    <p style="margin-top: 0.8em; font-size: 0.9em; color: var(--gray-600);">PyTorch</p>
+                </div>
+            </div>
+        </div>
+
+        <details class="accordion">
+            <summary class="accordion-summary">
+                <div class="accordion-icon">
+                    <span style="font-size: 1.2em;">📚</span>
+                </div>
+                <span>Технические детали и преимущества</span>
+            </summary>
+            <div class="accordion-content">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5em;">
+                    <div>
+                        <h4 style="color: var(--gray-700); margin-bottom: 0.5em; font-size: 1em;">Spring Boot</h4>
+                        <ul style="color: var(--gray-600); padding-left: 1.2em; margin: 0; font-size: 0.95em; line-height: 1.6;">
+                            <li>Автоконфигурация компонентов</li>
+                            <li>Встроенный сервер Tomcat</li>
+                            <li>Готовность к production</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--gray-700); margin-bottom: 0.5em; font-size: 1em;">React + JavaScript</h4>
+                        <ul style="color: var(--gray-600); padding-left: 1.2em; margin: 0; font-size: 0.95em; line-height: 1.6;">
+                            <li>Типобезопасность кода</li>
+                            <li>Переиспользуемые компоненты</li>
+                            <li>Оптимизированный рендеринг</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="color: var(--gray-700); margin-bottom: 0.5em; font-size: 1em;">Qwen AI</h4>
+                        <ul style="color: var(--gray-600); padding-left: 1.2em; margin: 0; font-size: 0.95em; line-height: 1.6;">
+                            <li>Поддержка 15+ языков</li>
+                            <li>Контекстные диалоги</li>
+                            <li>Быстрая генерация</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </details>
+    </section>
+
+    <!-- Блок "Макеты интерфейса" -->
+    <section id="макеты" class="feature-section">
+        <!-- Заголовок раздела -->
+        <div class="section-header">
+            <div class="section-badge">
+                <span class="section-badge-icon">🎨</span>
+                <h2 class="section-heading">Макеты интерфейса</h2>
+            </div>
+            <p class="section-description">Изучите дизайн DialogX</p>
+        </div>
+
+        <!-- Кнопка Figma -->
+        <div style="text-align: center; margin: 2em 0 3em;">
+            <a href="https://www.figma.com/design/THqEowgsaIE7EqGseqkRMC/DialogX?node-id=26-157&p=f&t=m6Moh4no6GOvx01c-0" class="btn btn-primary">
+                <span class="btn-icon">🚀</span>
+                Посмотреть в Figma
+                <span class="btn-arrow">→</span>
+            </a>
+        </div>
+
+        <!-- Карточки интерфейсов -->
+        <div class="feature-cards">
+            <!-- Центр управления -->
+            <div class="feature-card feature-card-blue">
+                <div class="feature-card-header">
+                    <div class="feature-card-icon feature-card-icon-blue">
+                        <span style="font-size: 1.4em; color: #5a67d8;">📊</span>
+                    </div>
+                    <h4 class="feature-card-title">Центр управления</h4>
+                </div>
+                <p class="feature-card-description">Единая панель для контроля всех коммуникаций</p>
+                <ul style="color: var(--gray-600); padding-left: 1.2em; margin: 0; font-size: 0.95em; line-height: 1.8;">
+                    <li>Мониторинг активных диалогов</li>
+                    <li>Аналитика скорости ответов</li>
+                    <li>Управление правами операторов</li>
+                    <li>Настройка рабочих процессов</li>
+                </ul>
+            </div>
+
+            <!-- Интеграции -->
+            <div class="feature-card feature-card-purple">
+                <div class="feature-card-header">
+                    <div class="feature-card-icon feature-card-icon-purple">
+                        <span style="font-size: 1.4em; color: #805ad5;">🔌</span>
+                    </div>
+                    <h4 class="feature-card-title">Интеграции</h4>
+                </div>
+                <ul style="color: var(--gray-600); padding-left: 1.2em; margin: 0; font-size: 0.95em; line-height: 1.8;">
+                    <li>Поддержка популярных мессенджеров</li>
+                    <li>Виджет для сайта</li>
+                </ul>
+            </div>
+
+            <!-- Умный инбокс -->
+            <div class="feature-card feature-card-blue">
+                <div class="feature-card-header">
+                    <div class="feature-card-icon feature-card-icon-blue">
+                        <span style="font-size: 1.4em; color: var(--blue-600);">📬</span>
+                    </div>
+                    <h4 class="feature-card-title">Умный инбокс</h4>
+                </div>
+                <p class="feature-card-description">Все сообщения в одном месте</p>
+                <ul style="color: var(--gray-600); padding-left: 1.2em; margin: 0; font-size: 0.95em; line-height: 1.8;">
+                    <li>Автосортировка по важности</li>
+                    <li>Группировка по клиентам</li>
+                    <li>Быстрые фильтры</li>
+                    <li>Настраиваемые представления</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Блок "Команда" -->
+    <section id="команда" class="feature-section">
+        <!-- Заголовок раздела -->
+        <div class="section-header">
+            <div class="section-badge">
+                <span class="section-badge-icon">👥</span>
+                <h2 class="section-heading">Наша команда</h2>
+            </div>
+            <p class="section-description">Команда, создающее инновационные решения для вашего бизнеса</p>
+        </div>
+
+        <!-- Карточки команды -->
+        <div class="team-grid">
+            <!-- Карточка 1 -->
+            <div class="team-card">
+                <div class="team-photo">
+                    <img src="team-images/team-lead-photo.jpg" alt="Флейшман Никита">
+                </div>
+                <h3 class="team-name">Флейшман Никита</h3>
+                <p class="team-role">Team Lead / Backend Dev</p>
+                <p class="team-bio">Архитектура системы и разработка backend-решений</p>
+                <div class="team-links">
+                    <a href="https://github.com/LUFFPUFF" class="team-link">
+                        <img src="https://simpleicons.org/icons/github.svg" width="18" style="filter: invert(11%) sepia(13%) saturate(950%) hue-rotate(169deg) brightness(93%) contrast(93%);">
+                    </a>
+                    <a href="https://vk.com/olegnichiparenko" class="team-link">
+                        <img src="https://simpleicons.org/icons/vk.svg" width="18" style="filter: invert(39%) sepia(97%) saturate(1733%) hue-rotate(189deg) brightness(97%) contrast(107%);">
+                    </a>
+                </div>
+            </div>
+
+            <!-- Карточка 2 -->
+            <div class="team-card">
+                <div class="team-photo">
+                    <img src="team-images/backend-dev.jpg" alt="Сидоренко Игорь">
+                </div>
+                <h3 class="team-name">Сидоренко Игорь</h3>
+                <p class="team-role">Backend Dev / DevOps</p>
+                <p class="team-bio">Разработка API и инфраструктурные решения</p>
+                <div class="team-links">
+                    <a href="https://github.com/Sdr3nko" class="team-link">
+                        <img src="https://simpleicons.org/icons/github.svg" width="18" style="filter: invert(11%) sepia(13%) saturate(950%) hue-rotate(169deg) brightness(93%) contrast(93%);">
+                    </a>
+                    <a href="https://vk.com/id718859915" class="team-link">
+                        <img src="https://simpleicons.org/icons/vk.svg" width="18" style="filter: invert(39%) sepia(97%) saturate(1733%) hue-rotate(189deg) brightness(97%) contrast(107%);">
+                    </a>
+                </div>
+            </div>
+
+            <!-- Карточка 3 -->
+            <div class="team-card">
+                <div class="team-photo">
+                    <img src="team-images/front.jpg" alt="Давыдов Игорь">
+                </div>
+                <h3 class="team-name">Давыдов Игорь</h3>
+                <p class="team-role">Frontend Developer</p>
+                <p class="team-bio">Разработка пользовательских интерфейсов</p>
+                <div class="team-links">
+                    <a href="https://github.com/C0r1e0ne" class="team-link">
+                        <img src="https://simpleicons.org/icons/github.svg" width="18" style="filter: invert(11%) sepia(13%) saturate(950%) hue-rotate(169deg) brightness(93%) contrast(93%);">
+                    </a>
+                    <a href="https://vk.com/steaach" class="team-link">
+                        <img src="https://simpleicons.org/icons/vk.svg" width="18" style="filter: invert(39%) sepia(97%) saturate(1733%) hue-rotate(189deg) brightness(97%) contrast(107%);">
+                    </a>
+                </div>
+            </div>
+
+            <!-- Карточка 4 -->
+            <div class="team-card">
+                <div class="team-photo">
+                    <img src="team-images/analyzis-photo.jpg" alt="Баранник Данил">
+                </div>
+                <h3 class="team-name">Баранник Данил</h3>
+                <p class="team-role">Аналитик & PM</p>
+                <p class="team-bio">Анализ требований и бизнес стратегия проекта</p>
+                <div class="team-links">
+                    <a href="https://github.com/Danil200405" class="team-link">
+                        <img src="https://simpleicons.org/icons/github.svg" width="18" style="filter: invert(11%) sepia(13%) saturate(950%) hue-rotate(169deg) brightness(93%) contrast(93%);">
+                    </a>
+                    <a href="https://vk.com/danil_barannik" class="team-link">
+                        <img src="https://simpleicons.org/icons/vk.svg" width="18" style="filter: invert(39%) sepia(97%) saturate(1733%) hue-rotate(189deg) brightness(97%) contrast(107%);">
+                    </a>
+                </div>
+            </div>
+
+            <!-- Карточка 5 -->
+            <div class="team-card">
+                <div class="team-photo">
+                    <img src="team-images/designer-photo.jpg" alt="Гончаров Вадим">
+                </div>
+                <h3 class="team-name">Гончаров Вадим</h3>
+                <p class="team-role">UX/UI Designer</p>
+                <p class="team-bio">Дизайн интерфейсов и пользовательский опыт</p>
+                <div class="team-links">
+                    <a href="https://github.com/username5" class="team-link">
+                        <img src="https://simpleicons.org/icons/github.svg" width="18" style="filter: invert(11%) sepia(13%) saturate(950%) hue-rotate(169deg) brightness(93%) contrast(93%);">
+                    </a>
+                    <a href="https://vk.com/vadikgoncharov" class="team-link">
+                        <img src="https://simpleicons.org/icons/vk.svg" width="18" style="filter: invert(39%) sepia(97%) saturate(1733%) hue-rotate(189deg) brightness(97%) contrast(107%);">
+                    </a>
+                </div>
+            </div>
+
+            <!-- Карточка 6 -->
+            <div class="team-card">
+                <div class="team-photo">
+                    <img src="team-images/qa-photo.jpg" alt="Кузнецов Валерий">
+                </div>
+                <h3 class="team-name">Кузнецов Валерий</h3>
+                <p class="team-role">QA Engineer</p>
+                <p class="team-bio">Тестирование и обеспечение качества</p>
+                <div class="team-links">
+                    <a href="https://github.com/valer4ik57" class="team-link">
+                        <img src="https://simpleicons.org/icons/github.svg" width="18" style="filter: invert(11%) sepia(13%) saturate(950%) hue-rotate(169deg) brightness(93%) contrast(93%);">
+                    </a>
+                    <a href="https://vk.com/awkward666" class="team-link">
+                        <img src="https://simpleicons.org/icons/vk.svg" width="18" style="filter: invert(39%) sepia(97%) saturate(1733%) hue-rotate(189deg) brightness(97%) contrast(107%);">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Блок "Документация" -->
+    <section id="документация" class="feature-section">
+        <!-- Заголовок раздела -->
+        <div class="section-header">
+            <div class="section-badge">
+                <span class="section-badge-icon">📚</span>
+                <h2 class="section-heading">Документация</h2>
+            </div>
+            <p class="section-description">Полный набор документации для разработчиков и пользователей</p>
+        </div>
+
+        <!-- Категории документов -->
+        <div class="docs-grid">
+            <!-- Основные документы -->
+            <div class="docs-card docs-card-blue">
+                <div class="docs-header">
+                    <div class="docs-icon docs-icon-blue">
+                        <span style="font-size: 1.4em; color: var(--blue-600);">📄</span>
+                    </div>
+                    <h3 class="docs-title">Основные документы</h3>
+                </div>
+                <ul class="docs-list">
+                    <li style="margin-bottom: 0.6em;"><a href="docs/SRS.md">Техническое задание</a></li>
+                    <li style="margin-bottom: 0.6em;"><a href="docs/SRS.md">Предпроектное исследование</a></li>
+                    <li style="margin-bottom: 0.6em;"><a href="docs/API.md">API Reference</a></li>
+                    <li><a href="docs/ARCHITECTURE.md">Архитектура системы</a></li>
+                </ul>
+            </div>
+
+            <!-- Визуальные материалы -->
+            <div class="docs-card docs-card-purple">
+                <div class="docs-header">
+                    <div class="docs-icon docs-icon-purple">
+                        <span style="font-size: 1.4em; color: #805ad5;">🎨</span>
+                    </div>
+                    <h3 class="docs-title">Визуальные материалы</h3>
+                </div>
+                <ul class="docs-list">
+                    <li style="margin-bottom: 0.6em;"><a href="docs/DIAGRAMS/">Диаграммы и схемы</a></li>
+                    <li style="margin-bottom: 0.6em;"><a href="presentation.pdf">Презентация проекта</a></li>
+                    <li><a href="https://youtu.be/demo">Видеопрезентация</a></li>
+                </ul>
+            </div>
+
+            <!-- Технические руководства -->
+            <div class="docs-card docs-card-green">
+                <div class="docs-header">
+                    <div class="docs-icon docs-icon-green">
+                        <span style="font-size: 1.4em; color: #38a169;">🛠</span>
+                    </div>
+                    <h3 class="docs-title">Технические руководства</h3>
+                </div>
+                <ul class="docs-list">
+                    <li style="margin-bottom: 0.6em;"><a href="docs/INSTALL.md">Руководство по IMAP</a></li>
+                    <li style="margin-bottom: 0.6em;"><a href="docs/SETUP.md">Руководство по настройке Telegram Bot</a></li>
+                    <li style="margin-bottom: 0.6em;"><a href="docs/TESTING.md">Руководство по настройке VK Bot</a></li>
+                    <li><a href="docs/TESTING.md">Руководство по WhatsApp Business API</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Дополнительная кнопка -->
+        <div style="text-align: center; margin-top: 2.5em;">
+            <a href="#" class="btn btn-secondary">
+                <span class="btn-icon">📂</span>
+                Полная документация
+                <span class="btn-arrow">→</span>
+            </a>
+        </div>
+    </section>
+</div>
+</body>
+</html>
