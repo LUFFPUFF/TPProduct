@@ -104,7 +104,7 @@ DialogX - это интеллектуальный автоответчик но�
 ### Основные документы
 - [Техническое задание](docs/Documentation/TZ.pdf)
 - [Предпроектное иследование](docs/Documentation/Predproektnoe_issledovanie.pdf)
-- [API Reference (скоро будет)](docs/API.md)
+- [API Reference ](docs/referense-api/ReadmeAPI.md)
 - [Архитектура системы](docs/Diagrams/SchemesAPI/SchemeProject.png)
 
 ### Дополнительно

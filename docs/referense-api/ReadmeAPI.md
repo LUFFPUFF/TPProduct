@@ -1,7 +1,5 @@
 # DialogX Reference API
 
-![Логотип API](https://via.placeholder.com/800x200?text=Unified+Business+Platform+API)
-
 ## 📌 Обзор
 
 API для комплексной бизнес-платформы с функциями:
