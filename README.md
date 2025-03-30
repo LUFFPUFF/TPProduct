@@ -118,6 +118,13 @@ DialogX - это интеллектуальный автоответчик но�
 - [Настройка VK Bot](docs/VK_INTEGRATION.md)
 - [Настройка WhatsApp Business API](docs/VK_INTEGRATION.md)
 
+## ✅ Чек-листы
+- [Наш чек-лист](ВГУ-ТП.%20Чеклист201%20этап.pdf)
+### Кто нас оценивал?
+-9 группа 3 команда [Git](https://github.com/slash0t/travel-planner)
+-3 группа 1 команда [Git]((https://github.com/Shao-Lin/Music-dating)
+-10 группа 1 команда [Git](https://github.com/git-company-tp10-1/main)
+-10 группа 3 команда [Git](https://github.com/Storix2025/Storix)
 ---
 
 ## 🎨 Интерфейс
