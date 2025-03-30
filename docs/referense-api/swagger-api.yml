@@ -1,0 +1,1221 @@
+openapi: 3.0.0
+info:
+  title: DialogX Reference API
+  version: 1.0.0
+  description: |
+    Полное API для системы управления чатами, AI, CRM и бизнес-процессами.
+    Включает все CRUD операции.
+  license:
+    name: Proprietary
+
+servers:
+  - url: https://api.dialogx.com/v1
+    description: Production server
+  - url: wss://api.dialogx.com/v1/ws
+    description: WebSocket endpoint for real-time communication
+
+tags:
+  - name: AI
+    description: Операции с искусственным интеллектом и автоматическими ответами
+  - name: Chat
+    description: Управление чатами, сообщениями и вложениями
+  - name: Company
+    description: Управление компаниями, пользователями и подписками
+  - name: CRM
+    description: Управление клиентами, сделками и задачами
+  - name: Auth
+    description: Аутентификация и авторизация
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: >
+        Используйте JWT токен полученный при аутентификации.
+        Формат: `Bearer {token}`
+    WebSocketAuth:
+      type: apiKey
+      in: header
+      name: Sec-WebSocket-Protocol
+      description: Используйте 'Bearer {token}' для аутентификации WebSocket
+
+  schemas:
+    # ===================== AI Schemas =====================
+    AIResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        chatMessage:
+          $ref: '#/components/schemas/ChatMessage'
+        client:
+          $ref: '#/components/schemas/Client'
+        chat:
+          $ref: '#/components/schemas/Chat'
+        responseText:
+          type: string
+          example: "Наши условия доставки: 3-5 рабочих дней"
+        confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          example: 0.95
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-01-26T10:00:00Z"
+      required:
+        - chatMessage
+        - client
+        - chat
+        - responseText
+        - createdAt
+
+    PredefinedAnswer:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        company:
+          $ref: '#/components/schemas/Company'
+        category:
+          type: string
+          example: "delivery"
+        title:
+          type: string
+          example: "Условия доставки"
+        answer:
+          type: string
+          example: "Доставка осуществляется в течение 3-5 рабочих дней"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-01-26T10:00:00Z"
+      required:
+        - company
+        - title
+        - answer
+        - createdAt
+
+    # ===================== Chat Schemas =====================
+    Chat:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        client:
+          $ref: '#/components/schemas/Client'
+        user:
+          $ref: '#/components/schemas/User'
+        channel:
+          type: string
+          enum: [email, telegram, vk, whatsapp]
+          example: "telegram"
+        status:
+          type: string
+          enum: [active, closed, archived]
+          example: "active"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-01-26T10:00:00Z"
+      required:
+        - client
+        - user
+        - channel
+        - status
+        - createdAt
+
+    ChatMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        chat:
+          $ref: '#/components/schemas/Chat'
+        content:
+          type: string
+          example: "Здравствуйте, интересуют условия доставки"
+        sentAt:
+          type: string
+          format: date-time
+          example: "2025-01-26T10:05:00Z"
+      required:
+        - chat
+        - sentAt
+
+    ChatAttachment:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        chatMessage:
+          $ref: '#/components/schemas/ChatMessage'
+        fileUrl:
+          type: string
+          format: uri
+          example: "https://storage.example.com/files/doc123.pdf"
+        fileType:
+          type: string
+          example: "pdf"
+      required:
+        - chatMessage
+        - fileUrl
+        - fileType
+
+    # ===================== Company Schemas =====================
+    Company:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "ООО Технологии Будущего"
+        contactEmail:
+          type: string
+          format: email
+          example: "info@futuretech.ru"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-01-01T00:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2025-01-26T10:00:00Z"
+      required:
+        - name
+        - createdAt
+
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        company:
+          $ref: '#/components/schemas/Company'
+        status:
+          type: string
+          enum: [active, suspended, canceled, expired]
+          example: "active"
+        cost:
+          type: number
+          format: float
+          example: 9990.99
+        countOperators:
+          type: integer
+          example: 5
+        maxOperators:
+          type: integer
+          example: 10
+        startSubscription:
+          type: string
+          format: date-time
+          example: "2025-01-01T00:00:00Z"
+        endSubscription:
+          type: string
+          format: date-time
+          example: "2026-01-01T00:00:00Z"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-01-01T00:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2025-01-26T10:00:00Z"
+      required:
+        - company
+        - status
+        - cost
+        - startSubscription
+        - endSubscription
+        - createdAt
+
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          enum: [ROLE_ADMIN, ROLE_MANAGER, ROLE_OPERATOR, ROLE_ANALYST]
+          example: "ROLE_MANAGER"
+        description:
+          type: string
+          example: "Менеджер по работе с клиентами"
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        company:
+          $ref: '#/components/schemas/Company'
+        fullName:
+          type: string
+          example: "Иванова Мария Сергеевна"
+        email:
+          type: string
+          format: email
+          example: "m.ivanova@example.com"
+        status:
+          type: string
+          enum: [active, inactive, suspended]
+          example: "active"
+        dateOfBirth:
+          type: string
+          format: date-time
+          example: "1990-05-15T00:00:00Z"
+        gender:
+          type: string
+          enum: [male, female, other]
+          example: "female"
+        password:
+          type: string
+          format: password
+          writeOnly: true
+        profilePicture:
+          type: string
+          format: uri
+          example: "https://storage.example.com/avatars/user1.jpg"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-01-01T00:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2025-01-26T10:00:00Z"
+      required:
+        - company
+        - fullName
+        - email
+        - createdAt
+
+    # ===================== CRM Schemas =====================
+    Client:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        user:
+          $ref: '#/components/schemas/User'
+        name:
+          type: string
+          example: "Александр Петров"
+        type:
+          type: string
+          enum: [individual, business]
+          example: "individual"
+        tag:
+          type: string
+          example: "vip"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-01-01T00:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2025-01-26T10:00:00Z"
+      required:
+        - name
+        - createdAt
+
+    Deal:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        client:
+          $ref: '#/components/schemas/Client'
+        user:
+          $ref: '#/components/schemas/User'
+        stage:
+          $ref: '#/components/schemas/DealStage'
+        content:
+          type: string
+          example: "Поставка оборудования"
+        amount:
+          type: number
+          format: float
+          example: 150000.50
+        status:
+          type: string
+          enum: [draft, negotiation, won, lost]
+          example: "negotiation"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-01-01T00:00:00Z"
+      required:
+        - client
+        - stage
+        - createdAt
+
+    DealStage:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Первичный контакт"
+        description:
+          type: string
+          example: "Клиент проявил интерес"
+        orderIndex:
+          type: integer
+          example: 1
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        deal:
+          $ref: '#/components/schemas/Deal'
+        user:
+          $ref: '#/components/schemas/User'
+        title:
+          type: string
+          example: "Подготовить КП"
+        status:
+          type: string
+          enum: [pending, in_progress, completed, canceled]
+          example: "pending"
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+          example: "high"
+        dueDate:
+          type: string
+          format: date-time
+          example: "2025-02-01T18:00:00Z"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-01-01T00:00:00Z"
+      required:
+        - title
+        - status
+        - priority
+        - createdAt
+
+    ClientContact:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        client:
+          $ref: '#/components/schemas/Client'
+        type:
+          type: string
+          enum: [phone, email, social, other]
+          example: "phone"
+        value:
+          type: string
+          example: "+79161234567"
+      required:
+        - client
+        - type
+        - value
+
+    ClientNote:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        client:
+          $ref: '#/components/schemas/Client'
+        note:
+          type: string
+          example: "Клиент интересуется оптовыми ценами"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-01-01T00:00:00Z"
+      required:
+        - client
+        - note
+        - createdAt
+
+  parameters:
+    idPathParameter:
+      name: id
+      in: path
+      description: ID ресурса
+      required: true
+      schema:
+        type: integer
+        format: int64
+    chatIdPathParameter:
+      name: chatId
+      in: path
+      description: ID чата
+      required: true
+      schema:
+        type: integer
+    statusQueryParameter:
+      name: status
+      in: query
+      description: Фильтр по статусу
+      schema:
+        type: string
+    channelQueryParameter:
+      name: channel
+      in: query
+      description: Фильтр по каналу связи
+      schema:
+        type: string
+
+security:
+  - BearerAuth: []
+
+paths:
+  # ===================== AI Endpoints =====================
+  /ai/responses:
+    post:
+      tags: [AI]
+      summary: Создать ответ ИИ
+      description: Генерирует автоматический ответ на основе входящего сообщения
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIResponse'
+      responses:
+        '201':
+          description: Ответ ИИ успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIResponse'
+        '400':
+          description: Неверные входные данные
+        '401':
+          description: Не авторизован
+
+    get:
+      tags: [AI]
+      summary: Получить все ответы ИИ
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/statusQueryParameter'
+      responses:
+        '200':
+          description: Список ответов ИИ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AIResponse'
+
+  /ai/responses/{id}:
+    get:
+      tags: [AI]
+      summary: Получить ответ ИИ по ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        '200':
+          description: Ответ ИИ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIResponse'
+        '404':
+          description: Ответ ИИ не найден
+
+    put:
+      tags: [AI]
+      summary: Обновить ответ ИИ
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIResponse'
+      responses:
+        '200':
+          description: Ответ ИИ обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIResponse'
+
+    delete:
+      tags: [AI]
+      summary: Удалить ответ ИИ
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        '204':
+          description: Ответ ИИ удален
+        '404':
+          description: Ответ ИИ не найден
+
+  # ===================== Chat Endpoints =====================
+  /chats:
+    post:
+      tags: [Chat]
+      summary: Создать новый чат
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Chat'
+      responses:
+        '201':
+          description: Чат создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chat'
+
+    get:
+      tags: [Chat]
+      summary: Получить все чаты
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/statusQueryParameter'
+        - $ref: '#/components/parameters/channelQueryParameter'
+      responses:
+        '200':
+          description: Список чатов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chat'
+
+  /chats/{id}:
+    get:
+      tags: [Chat]
+      summary: Получить чат по ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        '200':
+          description: Информация о чате
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chat'
+
+    put:
+      tags: [Chat]
+      summary: Обновить чат
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Chat'
+      responses:
+        '200':
+          description: Чат обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chat'
+
+    delete:
+      tags: [Chat]
+      summary: Удалить чат
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        '204':
+          description: Чат удален
+
+  /chats/{chatId}/messages:
+    post:
+      tags: [Chat]
+      summary: Отправить сообщение в чат
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/chatIdPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatMessage'
+      responses:
+        '201':
+          description: Сообщение отправлено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatMessage'
+
+    get:
+      tags: [Chat]
+      summary: Получить сообщения чата
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/chatIdPathParameter'
+      responses:
+        '200':
+          description: Список сообщений
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatMessage'
+
+  # ===================== WebSocket Endpoint =====================
+  /ws/chat:
+    get:
+      tags: [Chat]
+      summary: Установить WebSocket соединение для чата
+      description: |
+        Для установки соединения необходимо отправить JWT токен
+        в заголовке Sec-WebSocket-Protocol в формате 'Bearer {token}'
+      security:
+        - WebSocketAuth: []
+      parameters:
+        - name: chatId
+          in: query
+          description: ID чата для подключения
+          required: true
+          schema:
+            type: integer
+      responses:
+        '101':
+          description: Switching Protocols to WebSocket
+        '401':
+          description: Unauthorized - invalid or missing token
+
+  # ===================== Auth Endpoints =====================
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Аутентификация пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "securePassword123"
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Успешная аутентификация
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Неверные учетные данные
+
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Обновить JWT токен
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Токен обновлен
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        '401':
+          description: Неверный или истекший токен
+
+  # ===================== Company Endpoints =====================
+  /companies:
+    post:
+      tags: [Company]
+      summary: Создать новую компанию
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+      responses:
+        '201':
+          description: Компания создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+
+    get:
+      tags: [Company]
+      summary: Получить все компании
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Список компаний
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Company'
+
+  /companies/{id}:
+    get:
+      tags: [Company]
+      summary: Получить компанию по ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        '200':
+          description: Информация о компании
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+
+    put:
+      tags: [Company]
+      summary: Обновить компанию
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+      responses:
+        '200':
+          description: Компания обновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+
+    delete:
+      tags: [Company]
+      summary: Удалить компанию
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        '204':
+          description: Компания удалена
+
+  # ===================== User Endpoints =====================
+  /users:
+    post:
+      tags: [Company]
+      summary: Создать нового пользователя
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: Пользователь создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    get:
+      tags: [Company]
+      summary: Получить всех пользователей
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Список пользователей
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /users/{id}:
+    get:
+      tags: [Company]
+      summary: Получить пользователя по ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        '200':
+          description: Информация о пользователе
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    put:
+      tags: [Company]
+      summary: Обновить пользователя
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: Пользователь обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    delete:
+      tags: [Company]
+      summary: Удалить пользователя
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        '204':
+          description: Пользователь удален
+
+  # ===================== CRM Endpoints =====================
+  /clients:
+    post:
+      tags: [CRM]
+      summary: Создать нового клиента
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+      responses:
+        '201':
+          description: Клиент создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+
+    get:
+      tags: [CRM]
+      summary: Получить всех клиентов
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Список клиентов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Client'
+
+  /clients/{id}:
+    get:
+      tags: [CRM]
+      summary: Получить клиента по ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        '200':
+          description: Информация о клиенте
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+
+    put:
+      tags: [CRM]
+      summary: Обновить клиента
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+      responses:
+        '200':
+          description: Клиент обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Client'
+
+    delete:
+      tags: [CRM]
+      summary: Удалить клиента
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        '204':
+          description: Клиент удален
+
+  # ===================== Deal Endpoints =====================
+  /deals:
+    post:
+      tags: [CRM]
+      summary: Создать новую сделку
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Deal'
+      responses:
+        '201':
+          description: Сделка создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deal'
+
+    get:
+      tags: [CRM]
+      summary: Получить все сделки
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/statusQueryParameter'
+      responses:
+        '200':
+          description: Список сделок
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Deal'
+
+  /deals/{id}:
+    get:
+      tags: [CRM]
+      summary: Получить сделку по ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        '200':
+          description: Информация о сделке
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deal'
+
+    put:
+      tags: [CRM]
+      summary: Обновить сделку
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Deal'
+      responses:
+        '200':
+          description: Сделка обновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deal'
+
+    delete:
+      tags: [CRM]
+      summary: Удалить сделку
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        '204':
+          description: Сделка удалена
+
+  # ===================== Task Endpoints =====================
+  /tasks:
+    post:
+      tags: [CRM]
+      summary: Создать новую задачу
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '201':
+          description: Задача создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+    get:
+      tags: [CRM]
+      summary: Получить все задачи
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/statusQueryParameter'
+      responses:
+        '200':
+          description: Список задач
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+
+  /tasks/{id}:
+    get:
+      tags: [CRM]
+      summary: Получить задачу по ID
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        '200':
+          description: Информация о задаче
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+    put:
+      tags: [CRM]
+      summary: Обновить задачу
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: Задача обновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+    delete:
+      tags: [CRM]
+      summary: Удалить задачу
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/idPathParameter'
+      responses:
+        '204':
+          description: Задача удалена
