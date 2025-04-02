@@ -31,7 +31,7 @@ public class CompanyServiceImpl implements CompanyService {
     public CompanyDto getCompanyDtoById(Integer companyId) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
-        return mapperDto.toDtoCompany(company); // Маппим сущность в DTO
+        return mapperDto.toDtoCompany(company);
     }
 
     @Override
