@@ -1,0 +1,26 @@
+[2025-03-07T21:55:21.578Z] 🚀 Sending message: {
+  "content": "Hello, this is a test message",
+  "sentAt": "2025-03-07T21:55:21.578Z",
+  "chatId": 2
+}
+[2025-03-07T21:55:21.583Z] 🖊️ Sending typing status: {
+  "chatId": 2,
+  "typingUserId": 42
+}
+[2025-03-07T21:55:21.588Z] 🔔 Sending notification: {
+  "userId": 1,
+  "notification": "You have a new message!"
+
+
+[2025-03-07T21:55:21.599Z] 👁️ Sending read status: {
+  "chatId": 2,
+  "messageId": 123
+}
+[2025-03-07T21:55:21.601Z] ❌ Closing chat with ID: {
+  "chatId": 2
+}
+[2025-03-07T21:55:21.921Z] 💬 Message received: {
+  "chatId": 2,
+  "content": "Hello, this is a test message",
+  "sentAt": "2025-03-07T21:55:21.578"
+}

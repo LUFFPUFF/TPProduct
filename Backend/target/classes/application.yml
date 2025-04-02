@@ -1,0 +1,134 @@
+spring:
+  application:
+    name: Backend
+  devtools:
+    livereload:
+      enabled: false
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ans_machine_db
+    username: postgres
+    password: nikita090504
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 10
+      idle-timeout: 30000
+      max-lifetime: 1800000
+
+  task:
+    execution:
+      pool:
+        core-size: 10
+        max-size: 20
+        queue-capacity: 50
+        keep-alive: 30s
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+    open-in-view: false
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+  websocket:
+    endpoint: /test_endpoint_ans
+    allowed-origin-patterns: "*"
+    application-destination-prefix: /app
+    user-destination-prefix: /user
+
+
+validation:
+  file-upload:
+    max-file-size: 10MB
+    allowed-file-types:
+      - "image/png"
+      - "image/jpeg"
+      - "application/pdf"
+
+file-upload:
+  location: /uploads
+  clamav-host: localhost
+  clamav-port: 3310
+
+# Настройки чатов
+chat:
+  limits:
+    max-messages-per-chat: 1000
+    max-attachments-per-message: 5
+    max-message-length: 1000
+    max-chats-per-user: 10
+    max-users-per-chat: 5
+    message-rate-limit: 60
+    attachment-max-size: 10MB
+  lifetime:
+    inactive-chat-close-time: PT24H
+  status:
+    active: ACTIVE
+    closed: CLOSED
+    pending: PENDING
+
+# Настройки уведомлений
+notification:
+  interval: 5s
+  templates:
+    new-message: "Новое сообщение от %s: %s"
+    operator-typing: "Оператор печатает..."
+
+telegram:
+  test_bot:
+    username: dialog_x_qanswer_bot
+    token: 7520341907:AAFkCZPkx7d676-qwLMuAhfL4jaXWlU_Blg
+
+vk:
+  bot:
+    token:
+  group:
+    id:
+  api:
+    version: 5.199
+
+email:
+  imap_host:
+    yandex: "imap.yandex.com"
+    gmail: "imap.gmail.com"
+  imap_port: 993
+  imap_ssl_enable: true
+  imap_store: "imaps"
+  imap_folder: "INBOX"
+
+
+ans_machine:
+  npl:
+    speller:
+      yandex_speller_url: "https://speller.yandex.net/services/spellservice.json/checkText"
+
+correction:
+  enabled: true
+  rules:
+    active: commaBeforeConjunction, commaAfterAddress,commaListCorrection, fixCommaSpacingCorrection, removeExtraCorrection
+    order: abbreviationDotCorrection, sentenceEndingDotCorrection, exclamationMarkCorrection, questionMarkCorrection
+
+  stats:
+    directory: stats
+    flush-interval: 1m
+    metrics:
+      file: stats/metrics/metrics.log
+      log-interval: 1m
+
+
+
+
+
+
+
+
