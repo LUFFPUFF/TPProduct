@@ -1,5 +1,6 @@
-package com.example.domain.dto.company_module;
+package com.example.domain.dto;
 
+import com.example.database.model.company_subscription_module.user_roles.user.Role;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -10,5 +11,5 @@ public class UserRoleDto {
     private Integer userId;
 
     @NotNull(message = "Role ID не может быть пустым")
-    private Integer roleId;
+    private Role role;
 }

@@ -1,7 +1,7 @@
 package com.example.domain.api.company_api_test.controller;
 
 import com.example.domain.api.company_api_test.service.CompanyService;
-import com.example.domain.dto.company_module.CompanyDto;
+import com.example.domain.dto.CompanyDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

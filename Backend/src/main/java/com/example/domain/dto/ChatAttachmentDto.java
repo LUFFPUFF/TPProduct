@@ -1,10 +1,11 @@
-package com.example.domain.dto.chat_module;
+package com.example.domain.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
+
 public class ChatAttachmentDto {
     private Integer id;
 

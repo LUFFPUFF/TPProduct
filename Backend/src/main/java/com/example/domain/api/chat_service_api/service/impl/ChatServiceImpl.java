@@ -2,7 +2,7 @@ package com.example.domain.api.chat_service_api.service.impl;
 
 import com.example.database.model.chats_messages_module.chat.Chat;
 import com.example.database.repository.chats_messages_module.ChatRepository;
-import com.example.domain.dto.chat_module.ChatDto;
+import com.example.domain.dto.ChatDto;
 import com.example.domain.dto.mapper.MapperDto;
 import com.example.domain.api.chat_service_api.service.ChatService;
 import lombok.Data;

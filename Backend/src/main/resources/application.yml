@@ -5,13 +5,18 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/ans_machine_db
     username: postgres
-    password: nikita090504
+    password: 11119999
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
       minimum-idle: 10
       idle-timeout: 30000
       max-lifetime: 1800000
+
+  data:
+    redis:
+      host: "localhost"
+      port: 6379
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -28,6 +33,10 @@ spring:
       max-file-size: 10MB
       max-request-size: 20MB
 
+  security:
+    user:
+      name: admin
+      password: admin
 
 validation:
   file-upload:
@@ -41,3 +50,11 @@ file-upload:
   location: /uploads
   clamav-host: localhost
   clamav-port: 3310
+server:
+  error:
+    include-stacktrace: never
+
+jwt:
+  secret: "sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3"
+  access-expiration: 100000
+  refresh-expiration: 86400000

@@ -3,7 +3,7 @@ package com.example.domain.api.chat_service_api.service.impl;
 import com.example.database.model.chats_messages_module.ChatMessage;
 import com.example.database.repository.chats_messages_module.ChatMessageRepository;
 import com.example.domain.api.chat_service_api.service.ChatMessageService;
-import com.example.domain.dto.chat_module.MessageDto;
+import com.example.domain.dto.MessageDto;
 import com.example.domain.dto.mapper.MapperDto;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;

@@ -5,13 +5,10 @@ import com.example.database.model.chats_messages_module.ChatMessage;
 import com.example.database.model.chats_messages_module.chat.Chat;
 import com.example.database.model.company_subscription_module.Company;
 import com.example.database.model.company_subscription_module.user_roles.UserRole;
-import com.example.database.model.company_subscription_module.user_roles.role.Role;
+import com.example.database.model.company_subscription_module.user_roles.user.Role;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.model.crm_module.client.Client;
-import com.example.domain.dto.chat_module.ChatAttachmentDto;
-import com.example.domain.dto.chat_module.MessageDto;
-import com.example.domain.dto.chat_module.ChatDto;
-import com.example.domain.dto.company_module.*;
+import com.example.domain.dto.*;
 import org.mapstruct.Mapper;
 
 import java.time.LocalDateTime;
@@ -44,15 +41,13 @@ public interface MapperDto {
 
     // User mapping
     User toEntityUser(UserDto userDto);
+    User toEntityUser(RegistrationDto registrationDto);
     UserDto toDtoUser(User user);
 
-    // Role mapping
-    Role toEntityRole(RoleDto roleDto);
-    RoleDto toDtoRole(Role role);
-
     // UserRole mapping
-    UserRole toEntityUserRole(UserRoleDto userRoleDto);
+    UserRole toEntityUserRole(User user, Role role);
     UserRoleDto toDtoUserRole(UserRole userRole);
+
 
     // Преобразование LocalDateTime -> Date
     default Date map(LocalDateTime value) {

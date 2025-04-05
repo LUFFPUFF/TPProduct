@@ -1,6 +1,5 @@
-package com.example.domain.dto.company_module;
+package com.example.domain.dto;
 
-import com.example.database.model.crm_module.client.TypeClient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;

@@ -1,4 +1,4 @@
-package com.example.domain.dto.company_module;
+package com.example.domain.dto;
 
 
 import jakarta.validation.constraints.Email;

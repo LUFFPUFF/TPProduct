@@ -2,6 +2,7 @@ package com.example.database.model.company_subscription_module.user_roles.user;
 
 import com.example.database.model.company_subscription_module.Company;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,7 +14,6 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -50,6 +50,5 @@ public class User {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
 
 }

@@ -1,7 +1,5 @@
-package com.example.domain.dto.company_module;
+package com.example.domain.dto;
 
-import com.example.database.model.company_subscription_module.user_roles.user.Gender;
-import com.example.database.model.company_subscription_module.user_roles.user.UserStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

@@ -1,4 +1,4 @@
-package com.example.domain.dto.chat_module;
+package com.example.domain.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
