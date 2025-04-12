@@ -6,8 +6,8 @@ import com.example.database.repository.ai_module.PredefinedAnswerRepository;
 import com.example.database.repository.company_subscription_module.CompanyRepository;
 import com.example.domain.api.ans_api_module.template.mapper.PredefinedAnswerMapper;
 import com.example.domain.api.ans_api_module.template.services.answer.PredefinedAnswerService;
-import com.example.domain.dto.ans_module.predefined_answer.request.PredefinedAnswerUploadDto;
-import com.example.domain.dto.ans_module.predefined_answer.response.AnswerResponse;
+import com.example.domain.api.ans_api_module.template.dto.request.PredefinedAnswerUploadDto;
+import com.example.domain.api.ans_api_module.template.dto.response.AnswerResponse;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -20,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,16 +37,17 @@ public class PredefinedAnswerServiceImpl implements PredefinedAnswerService {
     @Override
     @Transactional
     public AnswerResponse createAnswer(PredefinedAnswerUploadDto dto) {
-        Company company = companyRepository.findById(dto.getCompanyId())
+        Company company = companyRepository.findById(dto.getCompanyDto().getId())
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("Company with id %d not found", dto.getCompanyId())));
+                        String.format("Company with id %d not found", dto.getCompanyDto().getId())));
 
         PredefinedAnswer predefinedAnswer = answerMapper.toEntity(dto);
         predefinedAnswer.setCompany(company);
+        predefinedAnswer.setCreatedAt(LocalDateTime.now());
 
         PredefinedAnswer savedAnswer = answerRepository.save(predefinedAnswer);
 
-        return answerMapper.toResponseDto(savedAnswer);
+        return buildResponseFromEntity(savedAnswer);
 
     }
 
@@ -59,7 +62,7 @@ public class PredefinedAnswerServiceImpl implements PredefinedAnswerService {
 
         PredefinedAnswer updatedAnswer = answerRepository.save(existingAnswer);
 
-        return answerMapper.toResponseDto(updatedAnswer);
+        return buildResponseFromEntity(updatedAnswer);
     }
 
     @Override
@@ -75,7 +78,7 @@ public class PredefinedAnswerServiceImpl implements PredefinedAnswerService {
     @Override
     public AnswerResponse getAnswerById(Integer id) {
         return answerRepository.findById(id)
-                .map(answerMapper::toResponseDto)
+                .map(this::buildResponseFromEntity)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Answer with id %d not found", id)));
     }
 
@@ -101,7 +104,7 @@ public class PredefinedAnswerServiceImpl implements PredefinedAnswerService {
                     return cb.and(predicates.toArray(new Predicate[0]));
                 },
                 pageable
-        ).map(answerMapper::toResponseDto);
+        ).map(this::buildResponseFromEntity);
     }
 
     @Override
@@ -111,7 +114,7 @@ public class PredefinedAnswerServiceImpl implements PredefinedAnswerService {
         }
 
         return answerRepository.findByCategoryIgnoreCase(category).stream()
-                .map(answerMapper::toResponseDto)
+                .map(this::buildResponseFromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -122,5 +125,22 @@ public class PredefinedAnswerServiceImpl implements PredefinedAnswerService {
         }
 
         return answerRepository.deleteByCompanyIdAndCategory(companyId, category);
+    }
+
+    @Override
+    public List<AnswerResponse> getAllAnswers() {
+        return answerRepository.findAll().stream().map(this::buildResponseFromEntity).collect(Collectors.toList());
+    }
+
+    private AnswerResponse buildResponseFromEntity(PredefinedAnswer entity) {
+        return new AnswerResponse(
+                entity.getId(),
+                entity.getTitle(),
+                entity.getAnswer(),
+                entity.getCategory(),
+                entity.getCompany().getName(),
+                entity.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant(),
+                true
+        );
     }
 }

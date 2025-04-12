@@ -3,6 +3,7 @@ package com.example.database.model.ai_module;
 import com.example.database.model.company_subscription_module.company.Company;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -31,5 +32,6 @@ public class PredefinedAnswer {
     private String answer;
 
     @Column(name = "created_at")
+    @CreationTimestamp
     private LocalDateTime createdAt;
 }

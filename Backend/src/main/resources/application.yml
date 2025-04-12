@@ -46,6 +46,15 @@ spring:
     application-destination-prefix: /app
     user-destination-prefix: /user
 
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
+
+  main:
+    allow-bean-definition-overriding: true
+
 
 validation:
   file-upload:

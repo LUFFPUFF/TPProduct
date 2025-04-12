@@ -2,7 +2,7 @@ package com.example.domain.api.ans_api_module.template.batch.reader;
 
 import com.example.database.model.ai_module.PredefinedAnswer;
 import com.example.domain.api.ans_api_module.template.mapper.PredefinedAnswerMapper;
-import com.example.domain.dto.ans_module.predefined_answer.request.PredefinedAnswerUploadDto;
+import com.example.domain.api.ans_api_module.template.dto.request.PredefinedAnswerUploadDto;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.stereotype.Component;

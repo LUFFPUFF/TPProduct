@@ -2,7 +2,7 @@ package com.example.domain.api.ans_api_module.template.services;
 
 import com.example.database.repository.company_subscription_module.CompanyRepository;
 import com.example.domain.api.ans_api_module.template.exception.ValidationException;
-import com.example.domain.dto.ans_module.predefined_answer.request.PredefinedAnswerUploadDto;
+import com.example.domain.api.ans_api_module.template.dto.request.PredefinedAnswerUploadDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,9 +19,9 @@ public class AnswerValidationService {
 
         validateBusinessRules(dto);
 
-        if (!companyRepository.existsById(dto.getCompanyId())) {
+        if (!companyRepository.existsById(dto.getCompanyDto().getId())) {
             throw new ValidationException(
-                    String.format("Company with id %d not found", dto.getCompanyId()));
+                    String.format("Company with id %d not found", dto.getCompanyDto().getId()));
         }
     }
 

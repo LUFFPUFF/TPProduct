@@ -1,13 +1,12 @@
 package com.example.domain.api.ans_api_module.template.services.answer.impl;
 
 import com.example.database.repository.ai_module.PredefinedAnswerRepository;
-import com.example.domain.api.ans_api_module.template.exception.FileProcessingException;
 import com.example.domain.api.ans_api_module.template.exception.InvalidFileFormatException;
 import com.example.domain.api.ans_api_module.template.services.answer.FileProcessorService;
 import com.example.domain.api.ans_api_module.template.util.FileType;
 import com.example.domain.api.ans_api_module.template.util.FileTypeDetector;
-import com.example.domain.dto.ans_module.predefined_answer.request.UploadFileRequest;
-import com.example.domain.dto.ans_module.predefined_answer.response.UploadResultResponse;
+import com.example.domain.api.ans_api_module.template.dto.request.UploadFileRequest;
+import com.example.domain.api.ans_api_module.template.dto.response.UploadResultResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -65,7 +64,7 @@ public class FileProcessorServiceImpl implements FileProcessorService {
 
     private JobParameters buildJobParameters(UploadFileRequest request) {
         return new JobParametersBuilder()
-                .addString("filePath", request.getFile().getOriginalFilename())
+                .addString("filePath", request.getFile().getName())
                 .addLong("companyId", Long.valueOf(request.getCompanyId()))
                 .addString("category", request.getCategory())
                 .addLong("timestamp", System.currentTimeMillis())
@@ -87,6 +86,10 @@ public class FileProcessorServiceImpl implements FileProcessorService {
     }
 
     private int getSafeInteger(Map<String, Object> map, String key) {
+        if (map == null) {
+            System.out.println("map is null");
+        }
+
         try {
             Object value = map.getOrDefault(key, 0);
             return value instanceof Integer ? (Integer) value : 0;
@@ -122,18 +125,17 @@ public class FileProcessorServiceImpl implements FileProcessorService {
 
     @Override
     public void validateFile(MultipartFile file) {
-        if (file == null || file.isEmpty()) {
-            throw new InvalidFileFormatException("File is empty or not provided");
-        }
-
-        if (file.getSize() > 10 * 1024 * 1024) {
-            throw new InvalidFileFormatException("File size exceeds maximum limit of 10MB");
-        }
+        //TODO требует реализации
     }
 
     @Override
     public FileType detectFileType(MultipartFile file) {
         try {
+
+            FileType fileType = fileTypeDetector.detect(file);
+
+            System.out.println(fileType.name());
+
             return fileTypeDetector.detect(file);
         } catch (Exception e) {
             throw new InvalidFileFormatException("Unsupported file type", e);

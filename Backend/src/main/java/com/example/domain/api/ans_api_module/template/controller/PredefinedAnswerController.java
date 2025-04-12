@@ -2,13 +2,20 @@ package com.example.domain.api.ans_api_module.template.controller;
 
 import com.example.domain.api.ans_api_module.template.services.answer.FileProcessorService;
 import com.example.domain.api.ans_api_module.template.services.answer.PredefinedAnswerService;
-import com.example.domain.dto.ans_module.predefined_answer.request.PredefinedAnswerUploadDto;
-import com.example.domain.dto.ans_module.predefined_answer.request.UploadFileRequest;
-import com.example.domain.dto.ans_module.predefined_answer.response.AnswerResponse;
-import com.example.domain.dto.ans_module.predefined_answer.response.UploadResultResponse;
+import com.example.domain.api.ans_api_module.template.dto.request.PredefinedAnswerUploadDto;
+import com.example.domain.api.ans_api_module.template.dto.request.UploadFileRequest;
+import com.example.domain.api.ans_api_module.template.dto.response.AnswerResponse;
+import com.example.domain.api.ans_api_module.template.dto.response.UploadResultResponse;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.persistence.StepExecution;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -17,21 +24,35 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/answers")
 @RequiredArgsConstructor
+@Slf4j
 public class PredefinedAnswerController {
 
     private final PredefinedAnswerService answerService;
-    private final FileProcessorService fileProcessorService;
+    private final JobLauncher jobLauncher;
+    private final Job answerUploadJob;
 
     @PostMapping
     @Transactional
     public ResponseEntity<AnswerResponse> createAnswer(@Valid @RequestBody PredefinedAnswerUploadDto dto) {
         AnswerResponse response = answerService.createAnswer(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<AnswerResponse>> getAllAnswers() {
+        List<AnswerResponse> response = answerService.getAllAnswers();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PutMapping("/{id}")
@@ -78,22 +99,72 @@ public class PredefinedAnswerController {
     @PostMapping("/upload")
     public ResponseEntity<UploadResultResponse> uploadAnswers(
             @RequestParam("file") MultipartFile file,
-            @RequestParam Integer companyId,
+            @RequestParam Long companyId,
             @RequestParam String category,
-            @RequestParam(defaultValue = "false") boolean overwrite) {
+            @RequestParam(defaultValue = "false") String overwrite) {
 
-        UploadFileRequest request = UploadFileRequest.builder()
-                .file(file)
-                .companyId(companyId)
-                .category(category)
-                .overwriteExisting(overwrite)
-                .build();
+        try {
+            if (file.isEmpty()) {
+                throw new IllegalArgumentException("Файл не может быть пустым");
+            }
+            if (companyId == null || companyId <= 0) {
+                throw new IllegalArgumentException("Некорректный companyId");
+            }
+            if (category == null || category.isBlank()) {
+                throw new IllegalArgumentException("Категория не может быть пустой");
+            }
 
-        UploadResultResponse response = fileProcessorService.processFileUpload(request);
+            Path tempDir = Files.createTempDirectory("upload_");
+            Path tempFilePath = tempDir.resolve(file.getOriginalFilename());
+            file.transferTo(tempFilePath);
 
-        return response.getStatus().equals("FAILED")
-                ? ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response)
-                : ResponseEntity.ok(response);
+            if (!Files.exists(tempFilePath) || Files.size(tempFilePath) == 0) {
+                throw new IllegalStateException("Не удалось сохранить временный файл");
+            }
+
+            JobParameters jobParameters = new JobParametersBuilder()
+                    .addString("inputFilePath", tempFilePath.toAbsolutePath().toString())
+                    .addString("originalFileName", file.getOriginalFilename())
+                    .addString("contentType", Objects.requireNonNull(file.getContentType()))
+                    .addLong("companyId", companyId)
+                    .addString("category", category)
+                    .addLong("timestamp", System.currentTimeMillis())
+                    .addString("overwrite", overwrite)
+                    .toJobParameters();
+
+            log.info("Запуск job с параметрами: {}", jobParameters);
+
+            JobExecution jobExecution = jobLauncher.run(answerUploadJob, jobParameters);
+
+            long writeCount = jobExecution.getStepExecutions().stream()
+                    .mapToLong(org.springframework.batch.core.StepExecution::getWriteCount)
+                    .sum();
+
+            UploadResultResponse response = UploadResultResponse.builder()
+                    .status("SUCCESS")
+                    .processedCount((int) writeCount)
+                    .build();
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            log.error("Ошибка при загрузке файла", e);
+
+            UploadResultResponse response = UploadResultResponse.builder()
+                    .status("FAILED")
+                    .globalErrors(Collections.singletonList(
+                            e.getMessage() != null ? e.getMessage() : "Произошла неизвестная ошибка"))
+                    .build();
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    private File saveFileToTempDirectory(MultipartFile file) throws IOException {
+        Path tempDir = Files.createTempDirectory("upload-");
+        Path tempFile = tempDir.resolve(Objects.requireNonNull(file.getOriginalFilename()));
+        file.transferTo(tempFile.toFile());
+        return tempFile.toFile();
     }
 
     @DeleteMapping("/batch")

@@ -1,59 +1,84 @@
 package com.example.domain.api.ans_api_module.template.batch.item;
 
+import com.example.database.model.company_subscription_module.company.Company;
+import com.example.database.repository.company_subscription_module.CompanyRepository;
 import com.example.domain.api.ans_api_module.template.exception.FileProcessingException;
 import com.example.domain.api.ans_api_module.template.exception.TextProcessingException;
 import com.example.domain.api.ans_api_module.template.util.FileType;
 import com.example.domain.api.ans_api_module.template.util.ValidationUtils;
-import com.example.domain.dto.ans_module.predefined_answer.request.PredefinedAnswerUploadDto;
+import com.example.domain.api.ans_api_module.template.dto.request.PredefinedAnswerUploadDto;
+import com.example.domain.dto.company_module.CompanyDto;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@StepScope
 public class TxtAnswerReader implements AnswerFileReader {
 
     private static final Pattern TXT_LINE_PATTERN = Pattern.compile(
-            "^([^|]+)\\|([^|]+)\\|([^|]+)\\|([^|]+)\\|([^|]*)\\|([^|]*)$"
+            "^(\\d+)\\|([^|]+)\\|([^|]+)\\|([^|]+)\\|?.*$"
     );
     private static final int MAX_LINE_LENGTH = 10_000;
-    private static final int MAX_TAGS = 10;
 
     private final ValidationUtils validationUtils;
+    private final CompanyRepository companyRepository;
+
+    @Value("#{jobParameters['companyId']}")
+    private Long jobCompanyId;
+
+    @Value("#{jobParameters['category']}")
+    private String jobCategory;
 
     @Override
-    public List<PredefinedAnswerUploadDto> read(MultipartFile file) {
+    public List<PredefinedAnswerUploadDto> read(File file) {
         List<PredefinedAnswerUploadDto> result = new ArrayList<>(500);
         long lineNumber = 0;
 
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
+                new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
+
+            Company company = companyRepository.findById(Math.toIntExact(jobCompanyId))
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            STR."Company with id \{jobCompanyId} not found"));
+
+            CompanyDto companyDto = CompanyDto.builder()
+                    .id(company.getId())
+                    .name(company.getName())
+                    .contactEmail(company.getContactEmail())
+                    .createdAt(company.getCreatedAt())
+                    .updatedAt(company.getUpdatedAt())
+                    .build();
 
             String line;
             while ((line = reader.readLine()) != null) {
                 lineNumber++;
-                if (line.length() > MAX_LINE_LENGTH) {
-                    throw new TextProcessingException(
-                            "Line too long at " + lineNumber + ", max allowed: " + MAX_LINE_LENGTH);
-                }
+                try {
+                    if (line.length() > MAX_LINE_LENGTH) {
+                        throw new TextProcessingException(
+                                "Line too long at " + lineNumber + ", max allowed: " + MAX_LINE_LENGTH);
+                    }
 
-                if (!line.trim().isEmpty()) {
-                    try {
-                        PredefinedAnswerUploadDto dto = parseLine(line);
+                    if (!line.trim().isEmpty()) {
+                        PredefinedAnswerUploadDto dto = parseLine(line, companyDto);
                         validationUtils.validateAnswerDto(dto);
                         result.add(dto);
-                    } catch (Exception e) {
-                        throw new TextProcessingException(
-                                "Error processing line " + lineNumber + ": " + line, e);
                     }
+                } catch (Exception e) {
+                    throw new TextProcessingException(
+                            "Error processing line " + lineNumber + ": " + line, e);
                 }
             }
         } catch (TextProcessingException e) {
@@ -65,32 +90,23 @@ public class TxtAnswerReader implements AnswerFileReader {
         return result;
     }
 
-    private PredefinedAnswerUploadDto parseLine(String line) {
+    private PredefinedAnswerUploadDto parseLine(String line, CompanyDto companyDto) {
         var matcher = TXT_LINE_PATTERN.matcher(line);
         if (!matcher.matches()) {
-            throw new TextProcessingException("Invalid line format");
+            throw new TextProcessingException("Invalid line format. Expected: companyId|category|question|answer");
         }
 
-        return new PredefinedAnswerUploadDto(
-                Integer.parseInt(matcher.group(1).trim()),
-                matcher.group(2).trim(),
-                matcher.group(3).trim(),
-                matcher.group(4).trim(),
-                matcher.group(5).isBlank() ? null : matcher.group(5).trim().toUpperCase(),
-                parseTags(matcher.group(6))
-        );
-    }
-
-    private Set<String> parseTags(String tagsString) {
-        if (tagsString == null || tagsString.isBlank()) {
-            return Collections.emptySet();
+        String category = matcher.group(2).trim();
+        if (category.isEmpty() && StringUtils.hasText(jobCategory)) {
+            category = jobCategory;
         }
 
-        return Arrays.stream(tagsString.split("\\|"))
-                .map(String::trim)
-                .filter(tag -> !tag.isEmpty())
-                .limit(MAX_TAGS)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+        return PredefinedAnswerUploadDto.builder()
+                .companyDto(companyDto)
+                .category(category)
+                .title(matcher.group(3).trim())
+                .answer(matcher.group(4).trim())
+                .build();
     }
 
     @Override

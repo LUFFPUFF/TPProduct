@@ -1,45 +1,68 @@
 package com.example.domain.api.ans_api_module.template.batch.item;
 
+import com.example.database.model.company_subscription_module.company.Company;
+import com.example.database.repository.company_subscription_module.CompanyRepository;
 import com.example.domain.api.ans_api_module.template.exception.CsvProcessingException;
 import com.example.domain.api.ans_api_module.template.exception.FileProcessingException;
+import com.example.domain.api.ans_api_module.template.exception.TextProcessingException;
 import com.example.domain.api.ans_api_module.template.exception.ValidationException;
 import com.example.domain.api.ans_api_module.template.util.FileType;
 import com.example.domain.api.ans_api_module.template.util.ValidationUtils;
-import com.example.domain.dto.ans_module.predefined_answer.request.PredefinedAnswerUploadDto;
+import com.example.domain.api.ans_api_module.template.dto.request.PredefinedAnswerUploadDto;
+import com.example.domain.dto.company_module.CompanyDto;
+import io.micrometer.common.util.StringUtils;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@StepScope
 public class CsvAnswerReader implements AnswerFileReader {
 
     private static final String[] HEADERS = {
-            "companyId", "category", "title", "answer",
-            "templateCode", "tags"
+            "category", "title", "answer", "templateCode", "tags"
     };
 
-    private static final String TAG_DELIMITER = "\\|";
-    private static final int MAX_TAGS = 10;
-
     private final ValidationUtils validationUtils;
+    private final CompanyRepository companyRepository;
+
+    @Value("#{jobParameters['companyId']}")
+    private Long jobCompanyId;
+
+    @Value("#{jobParameters['category']}")
+    private String jobCategory;
 
     @Override
-    public List<PredefinedAnswerUploadDto> read(MultipartFile file) {
+    public List<PredefinedAnswerUploadDto> read(File file) {
         List<PredefinedAnswerUploadDto> result = new ArrayList<>(500);
 
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
+        Company company = companyRepository.findById(Math.toIntExact(jobCompanyId))
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Company with id " + jobCompanyId + " not found"));
 
+        CompanyDto companyDto = CompanyDto.builder()
+                .id(company.getId())
+                .name(company.getName())
+                .contactEmail(company.getContactEmail())
+                .createdAt(company.getCreatedAt())
+                .updatedAt(company.getUpdatedAt())
+                .build();
+
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
              CSVParser parser = CSVFormat.DEFAULT.builder()
                      .setHeader(HEADERS)
                      .setSkipHeaderRecord(true)
@@ -51,15 +74,29 @@ public class CsvAnswerReader implements AnswerFileReader {
 
             for (CSVRecord record : parser) {
                 try {
-                    PredefinedAnswerUploadDto dto = mapRecordToDto(record);
+                    PredefinedAnswerUploadDto dto = mapRecordToDto(record, companyDto);
+
+                    if (StringUtils.isBlank(dto.getTitle())) {
+                        throw new TextProcessingException(
+                                "Title is required for answer at record #" + record.getRecordNumber());
+                    }
+
+                    if (StringUtils.isBlank(dto.getAnswer())) {
+                        throw new TextProcessingException(
+                                "Answer is required for answer at record #" + record.getRecordNumber());
+                    }
+
+                    if (StringUtils.isBlank(dto.getCategory()) && StringUtils.isNotBlank(jobCategory)) {
+                        dto.setCategory(jobCategory);
+                    }
+
                     validationUtils.validateAnswerDto(dto);
                     result.add(dto);
                 } catch (Exception e) {
                     throw new CsvProcessingException(
-                            STR."Error processing CSV record #\{record.getRecordNumber()}",
+                            "Error processing CSV record #" + record.getRecordNumber(),
                             record.toMap(),
-                            e
-                    );
+                            e);
                 }
             }
         } catch (CsvProcessingException e) {
@@ -71,42 +108,21 @@ public class CsvAnswerReader implements AnswerFileReader {
         return result;
     }
 
-    private PredefinedAnswerUploadDto mapRecordToDto(CSVRecord record) {
-        return new PredefinedAnswerUploadDto(
-                parseCompanyId(record.get("companyId")),
-                record.get("category"),
-                record.get("title"),
-                record.get("answer"),
-                parseTemplateCode(record.get("templateCode")),
-                parseTags(record.get("tags"))
-        );
+    private PredefinedAnswerUploadDto mapRecordToDto(CSVRecord record, CompanyDto companyDto) {
+        return PredefinedAnswerUploadDto.builder()
+                .companyDto(companyDto)
+                .category(getCsvValue(record, "category"))
+                .title(getCsvValue(record, "title"))
+                .answer(getCsvValue(record, "answer"))
+                .build();
     }
 
-    private Integer parseCompanyId(String value) {
+    private String getCsvValue(CSVRecord record, String column) {
         try {
-            return Integer.parseInt(value.trim());
-        } catch (NumberFormatException e) {
-            throw new ValidationException(STR."Invalid companyId: \{value}");
-        }
-    }
-
-    private String parseTemplateCode(String value) {
-        if (value == null || value.isBlank()) {
+            return record.get(column);
+        } catch (IllegalArgumentException e) {
             return null;
         }
-        return value.trim().toUpperCase();
-    }
-
-    private Set<String> parseTags(String value) {
-        if (value == null || value.isBlank()) {
-            return Collections.emptySet();
-        }
-
-        return Arrays.stream(value.split(TAG_DELIMITER))
-                .map(String::trim)
-                .filter(tag -> !tag.isEmpty())
-                .limit(MAX_TAGS)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     @Override

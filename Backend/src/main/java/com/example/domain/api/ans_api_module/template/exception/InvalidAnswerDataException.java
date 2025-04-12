@@ -1,6 +1,6 @@
 package com.example.domain.api.ans_api_module.template.exception;
 
-import com.example.domain.dto.ans_module.predefined_answer.request.PredefinedAnswerUploadDto;
+import com.example.domain.api.ans_api_module.template.dto.request.PredefinedAnswerUploadDto;
 import lombok.Getter;
 
 @Getter
