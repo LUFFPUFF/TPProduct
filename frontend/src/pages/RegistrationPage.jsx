@@ -44,10 +44,8 @@ export const RegistrationPage = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-[#E6E5EA] p-4">
-            {/* Логотип */}
             <a href="/" className="absolute top-6 left-6 text-2xl md:text-3xl font-bold text-[#092155]">DialogX</a>
 
-            {/* Форма регистрации */}
             <div className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl p-6 sm:p-8 rounded-lg">
                 <h2 className="text-3xl sm:text-4xl font-bold text-center text-black mb-6">Регистрация</h2>
 
@@ -90,7 +88,6 @@ export const RegistrationPage = () => {
                 </form>
             </div>
 
-            {/* Футер */}
             <footer className="text-sm text-gray-600 py-6 mt-6 text-center">
                 © 2025 DialogX. Все права защищены.
             </footer>

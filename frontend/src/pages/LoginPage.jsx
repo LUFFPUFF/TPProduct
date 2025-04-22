@@ -13,24 +13,49 @@ export const LoginPage = () => {
             setMessage("Пожалуйста, заполните все поля.");
             return;
         }
+
         if (!/\S+@\S+\.\S+/.test(email)) {
             setMessage("Введите корректный email.");
             return;
         }
 
+        // 🔧 Тестовые данные
+        const testUser = {
+            email: "test@example.com",
+            password: "123456",
+        };
+
+        // Проверка тестового логина
+        if (email === testUser.email && password === testUser.password) {
+            localStorage.setItem("email", testUser.email); // сохраняем сессию
+            setMessage("Вход выполнен успешно!");
+            setEmail("");
+            setPassword("");
+
+            // редирект на главную
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 1000);
+            return;
+        }
+
         try {
-            // Ссылка на API
-            const response = await fetch("http://localhost:8080/auth/login ", {
+            const response = await fetch("http://localhost:8080/auth/login", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({email, password}),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
             });
 
             if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem("email:", data.email); // если у тебя возвращается username
                 setMessage("Вход выполнен успешно!");
                 setEmail("");
                 setPassword("");
-                // Можно добавить редирект: window.location.href = "/dashboard";
+
+                setTimeout(() => {
+                    window.location.href = "/";
+                }, 1000);
             } else {
                 setMessage("Неверный email или пароль.");
             }
@@ -41,10 +66,8 @@ export const LoginPage = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-[#E6E5EA] p-4">
-            {/* Логотип */}
             <a href="/" className="absolute top-6 left-6 text-2xl md:text-3xl font-bold text-[#092155]">DialogX</a>
 
-            {/* Форма входа */}
             <div className="w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl p-6 sm:p-8 rounded-lg">
                 <h2 className="text-3xl sm:text-4xl font-bold text-center text-black mb-6">Авторизация</h2>
 
@@ -86,7 +109,6 @@ export const LoginPage = () => {
                     </button>
                 </form>
 
-                {/* Ссылки */}
                 <div className="text-center mt-6">
                     <a href="#" className="text-blue-600 hover:text-blue-800 hover:underline transition">
                         Забыли пароль?
@@ -99,7 +121,6 @@ export const LoginPage = () => {
                 </div>
             </div>
 
-            {/* Футер */}
             <footer className="text-sm text-gray-600 py-6 mt-6 text-center">
                 © 2025 DialogX. Все права защищены.
             </footer>
