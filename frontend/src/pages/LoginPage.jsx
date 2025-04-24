@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import API from "../config/api";
 
 export const LoginPage = () => {
     const [email, setEmail] = useState("");
@@ -25,14 +26,12 @@ export const LoginPage = () => {
             password: "123456",
         };
 
-        // Проверка тестового логина
         if (email === testUser.email && password === testUser.password) {
-            localStorage.setItem("email", testUser.email); // сохраняем сессию
+            localStorage.setItem("email", testUser.email);
             setMessage("Вход выполнен успешно!");
             setEmail("");
             setPassword("");
 
-            // редирект на главную
             setTimeout(() => {
                 window.location.href = "/";
             }, 1000);
@@ -40,7 +39,7 @@ export const LoginPage = () => {
         }
 
         try {
-            const response = await fetch("http://localhost:8080/auth/login", {
+            const response = await fetch(API.auth.login, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
@@ -48,7 +47,7 @@ export const LoginPage = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                localStorage.setItem("email:", data.email); // если у тебя возвращается username
+                localStorage.setItem("email:", data.email);
                 setMessage("Вход выполнен успешно!");
                 setEmail("");
                 setPassword("");

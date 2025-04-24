@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import API from "../config/api";
 
 export const RegistrationPage = () => {
     const [email, setEmail] = useState("");
@@ -24,7 +25,7 @@ export const RegistrationPage = () => {
 
         try {
             // Ссылка на API
-            const response = await fetch("http://localhost:8080/registration/register", {
+            const response = await fetch(API.auth.register, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
