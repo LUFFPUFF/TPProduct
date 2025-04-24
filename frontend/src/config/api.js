@@ -1,4 +1,3 @@
-
 const API_BASE_URL = "/api";
 
 const API = {
@@ -18,7 +17,9 @@ const API = {
     },
     templates: {
         getAll: `${API_BASE_URL}/templates`,
-        save: `${API_BASE_URL}/templates/save`,
+        create: `${API_BASE_URL}/templates/save`,
+        update: `${API_BASE_URL}/templates/save`,
+        uploadMany: `${API_BASE_URL}/templates/save`,
         delete: (id) => `${API_BASE_URL}/templates/${id}`,
     },
 };
