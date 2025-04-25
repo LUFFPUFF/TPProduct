@@ -22,6 +22,12 @@ const API = {
         uploadMany: `${API_BASE_URL}/templates/save`,
         delete: (id) => `${API_BASE_URL}/templates/${id}`,
     },
+    dialogs: {
+        getAll: `${API_BASE_URL}/dialogs`,
+        getById: (id) => `${API_BASE_URL}/dialogs/${id}`,
+        sendMessage: (id) => `${API_BASE_URL}/dialogs/${id}/messages`,
+        updateStatus: (id) => `${API_BASE_URL}/dialogs/${id}/status`,
+    },
 };
 
 export default API;
