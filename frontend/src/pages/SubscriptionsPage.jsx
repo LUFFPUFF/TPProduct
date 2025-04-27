@@ -1,56 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar.jsx";
+import API from "../config/api.js";
 
 export default function SubscriptionsPage() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [soloMonths, setSoloMonths] = useState(1);
     const [teamMonths, setTeamMonths] = useState(1);
     const [teamUsers, setTeamUsers] = useState(2);
+    const [soloPrice, setSoloPrice] = useState(null);
+    const [teamPrice, setTeamPrice] = useState(null);
 
-    const calculateDiscountedPrice = (months, monthlyRate) => {
-        const validMonths = Math.max(1, Math.min(months, 240));
-        const discountMonths = (validMonths / 12) * 0.25;
-        const totalDiscount = Math.min(discountMonths, 0.25);
-        const finalPricePerUserPerMonth = monthlyRate * (1 - totalDiscount);
-        const totalPrice = finalPricePerUserPerMonth * validMonths;
-        return {
-            totalPrice: Math.round(totalPrice),
-            discountRate: totalDiscount,
-            validMonths,
-        };
-    };
-    const calculateTeamDiscountedPrice = (months, users, monthlyRate) => {
-        const validMonths = Math.max(1, Math.min(months, 240));
-        const validUsers = Math.max(2, Math.min(users, 500));
+    const fetchSoloPrice = async (months) => {
+        try {
+            const response = await fetch(API.subscriptions.profile, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ months }),
+            });
 
-        const discountMonths = (validMonths / 12) * 0.25;
+            if (!response.ok) {
+                throw new Error("Ошибка сети");
+            }
 
-        const discountUsers = (validUsers / 10) * 0.25;
-
-        const totalDiscount = Math.min(discountMonths + discountUsers, 0.5);
-
-        const finalPricePerUserPerMonth = monthlyRate * (1 - totalDiscount);
-
-        const totalPrice = finalPricePerUserPerMonth * validUsers * validMonths;
-
-        return {
-            totalPrice: Math.round(totalPrice),
-            discountRate: totalDiscount,
-            validMonths,
-            validUsers,
-        };
+            const data = await response.json();
+            setSoloPrice(data.price);
+        } catch (error) {
+            console.error("Ошибка при получении цены соло-подписки:", error);
+            setSoloPrice("Ошибка");
+        }
     };
 
-    const getSoloPrice = (months) => {
-        const { totalPrice, discountRate, validMonths } = calculateDiscountedPrice(months, 790);
-        return `${totalPrice} Р / ${validMonths} мес.${discountRate > 0 ? ` (скидка ${Math.round(discountRate * 100)}%)` : ''}`;
+    const fetchTeamPrice = async (months, users) => {
+        try {
+            const response = await fetch(API.subscriptions.update, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ months, users }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Ошибка сети");
+            }
+
+            const data = await response.json();
+            setTeamPrice(data.price);
+        } catch (error) {
+            console.error("Ошибка при получении цены командной подписки:", error);
+            setTeamPrice("Ошибка");
+        }
     };
 
-    const getTeamPrice = (months, users) => {
-        const { totalPrice, discountRate, validMonths, validUsers } = calculateTeamDiscountedPrice(months, users, 790);
-        return `${totalPrice} Р / ${validMonths} мес. для ${validUsers} чел.${discountRate > 0 ? ` (скидка ${Math.round(discountRate * 100)}%)` : ''}`;
-    };
+    useEffect(() => {
+        fetchSoloPrice(soloMonths);
+    }, [soloMonths]);
 
+    useEffect(() => {
+        fetchTeamPrice(teamMonths, teamUsers);
+    }, [teamMonths, teamUsers]);
 
     const plans = [
         {
@@ -63,7 +73,7 @@ export default function SubscriptionsPage() {
         {
             title: "Соло",
             subtitle: "Для одного человека",
-            price: getSoloPrice(soloMonths),
+            price: soloPrice !== null ? `${soloPrice} Р` : "Загрузка...",
             features: [
                 "1 пользователь",
                 "1 оператор",
@@ -88,12 +98,11 @@ export default function SubscriptionsPage() {
                     />
                 </label>
             ),
-
         },
         {
             title: "Команда",
             subtitle: "Скидка растет с числом пользователей",
-            price: getTeamPrice(teamMonths, teamUsers),
+            price: teamPrice !== null ? `${teamPrice} Р` : "Загрузка...",
             features: [
                 "От 2 пользователей",
                 "Гибкая цена",
@@ -123,7 +132,7 @@ export default function SubscriptionsPage() {
                         <input
                             type="number"
                             min="2"
-                            max="100"
+                            max="500"
                             value={teamUsers}
                             onChange={(e) => {
                                 const value = Math.max(2, parseInt(e.target.value) || 2);
@@ -135,8 +144,7 @@ export default function SubscriptionsPage() {
                     </label>
                 </>
             ),
-
-        }
+        },
     ];
 
     return (

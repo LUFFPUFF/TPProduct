@@ -15,6 +15,10 @@ const API = {
         profile: `${API_BASE_URL}/users/profile`,
         update: `${API_BASE_URL}/users/update`,
     },
+    subscriptions: {
+        profile: `${API_BASE_URL}/users/profile`,
+        update: `${API_BASE_URL}/users/update`,
+    },
     templates: {
         getAll: `${API_BASE_URL}/templates`,
         create: `${API_BASE_URL}/templates/save`,
