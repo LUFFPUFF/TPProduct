@@ -3,9 +3,11 @@ package com.example.domain.dto.mapper;
 import com.example.database.model.chats_messages_module.ChatAttachment;
 import com.example.database.model.chats_messages_module.ChatMessage;
 import com.example.database.model.chats_messages_module.chat.Chat;
+import com.example.database.model.company_subscription_module.Company;
+import com.example.database.model.company_subscription_module.subscription.Subscription;
 import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.company_subscription_module.user_roles.UserRole;
-import com.example.database.model.company_subscription_module.user_roles.role.Role;
+import com.example.database.model.company_subscription_module.user_roles.user.Role;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.model.crm_module.client.Client;
 import com.example.domain.dto.chat_module.ChatAttachmentDto;
@@ -22,7 +24,9 @@ import java.util.Date;
 
 @Mapper(componentModel = "spring", imports = {java.util.Date.class}, uses = {ChatMapperHelper.class})
 public interface MapperDto {
-
+    //Subscription mapping
+    //
+    SubscriptionDto toSubscriptionDto(Subscription subscription);
     // Chat mapping
     @Mapping(source = "userDto", target = "user")
     @Mapping(source = "clientDto", target = "client")
@@ -60,15 +64,13 @@ public interface MapperDto {
     @Mapping(source = "companyDto", target = "company")
     User toEntityUser(UserDto userDto);
     @Mapping(source = "company", target = "companyDto")
+    User toEntityUser(RegistrationDto registrationDto);
     UserDto toDtoUser(User user);
 
-    // Role mapping
-    Role toEntityRole(RoleDto roleDto);
-    RoleDto toDtoRole(Role role);
-
     // UserRole mapping
-    UserRole toEntityUserRole(UserRoleDto userRoleDto);
+    UserRole toEntityUserRole(User user, Role role);
     UserRoleDto toDtoUserRole(UserRole userRole);
+
 
     // Преобразование LocalDateTime -> Date
     default Date map(LocalDateTime value) {

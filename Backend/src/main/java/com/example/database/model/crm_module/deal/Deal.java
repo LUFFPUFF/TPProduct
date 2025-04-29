@@ -46,6 +46,4 @@ public class Deal {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-
-
 }

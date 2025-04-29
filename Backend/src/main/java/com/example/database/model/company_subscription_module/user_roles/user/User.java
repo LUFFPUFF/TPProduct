@@ -3,6 +3,7 @@ package com.example.database.model.company_subscription_module.user_roles.user;
 import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.crm_module.client.Client;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,6 @@ import java.util.List;
 @Entity
 @Data
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
