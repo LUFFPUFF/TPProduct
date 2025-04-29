@@ -26,8 +26,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-03-31T20:04:21+0300",
-    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 22.0.1 (Oracle Corporation)"
+    date = "2025-04-29T20:56:25+0300",
+    comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 22.0.2 (Amazon.com Inc.)"
 )
 @Component
 public class MapperDtoImpl implements MapperDto {
@@ -191,15 +191,15 @@ public class MapperDtoImpl implements MapperDto {
             return null;
         }
 
-        CompanyDto companyDto = new CompanyDto();
+        CompanyDto.CompanyDtoBuilder companyDto = CompanyDto.builder();
 
-        companyDto.setId( company.getId() );
-        companyDto.setName( company.getName() );
-        companyDto.setContactEmail( company.getContactEmail() );
-        companyDto.setCreatedAt( company.getCreatedAt() );
-        companyDto.setUpdatedAt( company.getUpdatedAt() );
+        companyDto.id( company.getId() );
+        companyDto.name( company.getName() );
+        companyDto.contactEmail( company.getContactEmail() );
+        companyDto.createdAt( company.getCreatedAt() );
+        companyDto.updatedAt( company.getUpdatedAt() );
 
-        return companyDto;
+        return companyDto.build();
     }
 
     @Override
