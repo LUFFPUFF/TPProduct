@@ -4,7 +4,7 @@ import com.example.database.model.chats_messages_module.ChatAttachment;
 import com.example.database.repository.chats_messages_module.ChatAttachmentRepository;
 import com.example.domain.api.chat_service_api.config.FileUploadConfig;
 import com.example.domain.api.chat_service_api.exception_handler.exception.service.AntivirusException;
-import com.example.domain.dto.chat_module.ChatAttachmentDto;
+import com.example.domain.dto.ChatAttachmentDto;
 import com.example.domain.api.chat_service_api.service.ChatAttachmentService;
 import com.example.domain.api.chat_service_api.service.file_service.AntivirusService;
 import com.example.domain.api.chat_service_api.service.file_service.FileUploadService;

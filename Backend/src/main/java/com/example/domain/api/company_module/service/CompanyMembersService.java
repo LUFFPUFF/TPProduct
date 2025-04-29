@@ -1,6 +1,6 @@
 package com.example.domain.api.company_module.service;
 
-import com.example.database.model.company_subscription_module.Company;
+import com.example.database.model.company_subscription_module.company.Company;
 import com.example.domain.dto.CompanyWithMembersDto;
 import com.example.domain.dto.MemberDto;
 

@@ -6,7 +6,7 @@ import com.example.database.model.crm_module.client.Client;
 import com.example.database.repository.chats_messages_module.ChatRepository;
 import com.example.domain.api.chat_service_api.config.chat.ChatConfig;
 import com.example.domain.api.chat_service_api.exception_handler.exception.service.ChatServiceException;
-import com.example.domain.dto.chat_module.ChatDto;
+import com.example.domain.dto.ChatDto;
 import com.example.domain.dto.mapper.MapperDto;
 import com.example.domain.api.chat_service_api.service.ChatService;
 import jakarta.transaction.Transactional;

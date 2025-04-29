@@ -12,10 +12,10 @@ import com.example.domain.api.chat_service_api.integration.telegram.TelegramResp
 import com.example.domain.api.chat_service_api.service.ChatMessageService;
 import com.example.domain.api.chat_service_api.service.ChatService;
 import com.example.domain.api.company_api_test.service.ClientService;
-import com.example.domain.dto.chat_module.ChatDto;
-import com.example.domain.dto.chat_module.MessageDto;
-import com.example.domain.dto.company_module.ClientDto;
-import com.example.domain.dto.company_module.UserDto;
+import com.example.domain.dto.ChatDto;
+import com.example.domain.dto.MessageDto;
+import com.example.domain.dto.ClientDto;
+import com.example.domain.dto.UserDto;
 import com.example.domain.dto.mapper.MapperDto;
 import org.springframework.stereotype.Service;
 

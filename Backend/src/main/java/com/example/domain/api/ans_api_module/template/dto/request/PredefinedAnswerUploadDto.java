@@ -1,6 +1,6 @@
 package com.example.domain.api.ans_api_module.template.dto.request;
 
-import com.example.domain.dto.company_module.CompanyDto;
+import com.example.domain.dto.CompanyDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

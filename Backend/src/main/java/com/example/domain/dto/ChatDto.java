@@ -1,8 +1,8 @@
-package com.example.domain.dto.chat_module;
+package com.example.domain.dto;
 
 import com.example.database.model.chats_messages_module.chat.ChatChannel;
-import com.example.domain.dto.company_module.ClientDto;
-import com.example.domain.dto.company_module.UserDto;
+import com.example.domain.dto.ClientDto;
+import com.example.domain.dto.UserDto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -28,4 +28,5 @@ public class ChatDto {
     private String status;
 
     private LocalDateTime createdAt;
+
 }

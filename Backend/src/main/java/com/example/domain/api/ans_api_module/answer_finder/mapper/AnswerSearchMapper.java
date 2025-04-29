@@ -6,7 +6,7 @@ import com.example.domain.api.ans_api_module.answer_finder.domain.TrustScore;
 import com.example.domain.api.ans_api_module.answer_finder.domain.dto.PredefinedAnswerDto;
 import com.example.domain.api.ans_api_module.answer_finder.dto.AnswerSearchResultItem;
 import com.example.domain.api.ans_api_module.answer_finder.search.dto.ScoredAnswerCandidate;
-import com.example.domain.dto.company_module.CompanyDto;
+import com.example.domain.dto.CompanyDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

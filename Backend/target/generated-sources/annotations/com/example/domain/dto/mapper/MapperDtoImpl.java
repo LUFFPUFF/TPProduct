@@ -4,33 +4,52 @@ import com.example.database.model.chats_messages_module.ChatAttachment;
 import com.example.database.model.chats_messages_module.ChatMessage;
 import com.example.database.model.chats_messages_module.chat.Chat;
 import com.example.database.model.company_subscription_module.company.Company;
+import com.example.database.model.company_subscription_module.subscription.Subscription;
 import com.example.database.model.company_subscription_module.user_roles.UserRole;
-import com.example.database.model.company_subscription_module.user_roles.role.Role;
-import com.example.database.model.company_subscription_module.user_roles.role.RoleName;
 import com.example.database.model.company_subscription_module.user_roles.user.Gender;
+import com.example.database.model.company_subscription_module.user_roles.user.Role;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.model.company_subscription_module.user_roles.user.UserStatus;
 import com.example.database.model.crm_module.client.Client;
 import com.example.database.model.crm_module.client.TypeClient;
-import com.example.domain.dto.chat_module.ChatAttachmentDto;
-import com.example.domain.dto.chat_module.ChatDto;
-import com.example.domain.dto.chat_module.MessageDto;
-import com.example.domain.dto.company_module.ClientDto;
-import com.example.domain.dto.company_module.CompanyDto;
-import com.example.domain.dto.company_module.RoleDto;
-import com.example.domain.dto.company_module.UserDto;
-import com.example.domain.dto.company_module.UserRoleDto;
+import com.example.domain.dto.ChatAttachmentDto;
+import com.example.domain.dto.ChatDto;
+import com.example.domain.dto.ClientDto;
+import com.example.domain.dto.CompanyDto;
+import com.example.domain.dto.MessageDto;
+import com.example.domain.dto.RegistrationDto;
+import com.example.domain.dto.SubscriptionDto;
+import com.example.domain.dto.UserDto;
+import com.example.domain.dto.UserRoleDto;
 import java.util.Date;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-04-29T22:03:47+0300",
-    comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 22.0.2 (Amazon.com Inc.)"
+    date = "2025-04-30T00:27:11+0300",
+    comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 23.0.2 (Oracle Corporation)"
 )
 @Component
 public class MapperDtoImpl implements MapperDto {
+
+    @Override
+    public SubscriptionDto toSubscriptionDto(Subscription subscription) {
+        if ( subscription == null ) {
+            return null;
+        }
+
+        SubscriptionDto subscriptionDto = new SubscriptionDto();
+
+        subscriptionDto.setStatus( subscription.getStatus() );
+        subscriptionDto.setCost( subscription.getCost() );
+        subscriptionDto.setCountOperators( subscription.getCountOperators() );
+        subscriptionDto.setMaxOperators( subscription.getMaxOperators() );
+        subscriptionDto.setStartSubscription( subscription.getStartSubscription() );
+        subscriptionDto.setEndSubscription( subscription.getEndSubscription() );
+
+        return subscriptionDto;
+    }
 
     @Override
     public Chat toEntityChat(ChatDto chatDto) {
@@ -229,6 +248,23 @@ public class MapperDtoImpl implements MapperDto {
     }
 
     @Override
+    public User toEntityUser(RegistrationDto registrationDto) {
+        if ( registrationDto == null ) {
+            return null;
+        }
+
+        User user = new User();
+
+        user.setFullName( registrationDto.getFullName() );
+        user.setEmail( registrationDto.getEmail() );
+        user.setPassword( registrationDto.getPassword() );
+        user.setCreatedAt( registrationDto.getCreatedAt() );
+        user.setUpdatedAt( registrationDto.getUpdatedAt() );
+
+        return user;
+    }
+
+    @Override
     public UserDto toDtoUser(User user) {
         if ( user == null ) {
             return null;
@@ -236,7 +272,6 @@ public class MapperDtoImpl implements MapperDto {
 
         UserDto userDto = new UserDto();
 
-        userDto.setCompanyDto( toDtoCompany( user.getCompany() ) );
         userDto.setId( user.getId() );
         userDto.setFullName( user.getFullName() );
         userDto.setEmail( user.getEmail() );
@@ -255,46 +290,17 @@ public class MapperDtoImpl implements MapperDto {
     }
 
     @Override
-    public Role toEntityRole(RoleDto roleDto) {
-        if ( roleDto == null ) {
-            return null;
-        }
-
-        Role role = new Role();
-
-        role.setId( roleDto.getId() );
-        if ( roleDto.getName() != null ) {
-            role.setName( Enum.valueOf( RoleName.class, roleDto.getName() ) );
-        }
-        role.setDescription( roleDto.getDescription() );
-
-        return role;
-    }
-
-    @Override
-    public RoleDto toDtoRole(Role role) {
-        if ( role == null ) {
-            return null;
-        }
-
-        RoleDto roleDto = new RoleDto();
-
-        roleDto.setId( role.getId() );
-        if ( role.getName() != null ) {
-            roleDto.setName( role.getName().name() );
-        }
-        roleDto.setDescription( role.getDescription() );
-
-        return roleDto;
-    }
-
-    @Override
-    public UserRole toEntityUserRole(UserRoleDto userRoleDto) {
-        if ( userRoleDto == null ) {
+    public UserRole toEntityUserRole(User user, Role role) {
+        if ( user == null && role == null ) {
             return null;
         }
 
         UserRole userRole = new UserRole();
+
+        if ( user != null ) {
+            userRole.setId( user.getId() );
+        }
+        userRole.setRole( role );
 
         return userRole;
     }
@@ -306,6 +312,8 @@ public class MapperDtoImpl implements MapperDto {
         }
 
         UserRoleDto userRoleDto = new UserRoleDto();
+
+        userRoleDto.setRole( userRole.getRole() );
 
         return userRoleDto;
     }

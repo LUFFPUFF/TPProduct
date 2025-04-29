@@ -4,7 +4,7 @@ import com.example.database.model.company_subscription_module.user_roles.user.Us
 import com.example.database.model.crm_module.client.Client;
 import com.example.database.repository.company_subscription_module.UserRepository;
 import com.example.database.repository.crm_module.ClientRepository;
-import com.example.domain.dto.company_module.ClientDto;
+import com.example.domain.dto.ClientDto;
 import com.example.domain.dto.mapper.MapperDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

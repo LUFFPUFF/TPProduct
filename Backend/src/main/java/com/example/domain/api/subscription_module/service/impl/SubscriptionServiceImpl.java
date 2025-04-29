@@ -1,6 +1,6 @@
 package com.example.domain.api.subscription_module.service.impl;
 
-import com.example.database.model.company_subscription_module.Company;
+import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.company_subscription_module.subscription.Subscription;
 import com.example.database.model.company_subscription_module.user_roles.user.Role;
 import com.example.database.model.company_subscription_module.user_roles.user.User;

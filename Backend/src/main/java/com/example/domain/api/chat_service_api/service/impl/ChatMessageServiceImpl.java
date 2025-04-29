@@ -5,7 +5,7 @@ import com.example.database.repository.chats_messages_module.ChatMessageReposito
 import com.example.domain.api.chat_service_api.config.chat.ChatConfig;
 import com.example.domain.api.chat_service_api.exception_handler.exception.service.ChatMessageServiceException;
 import com.example.domain.api.chat_service_api.service.ChatMessageService;
-import com.example.domain.dto.chat_module.MessageDto;
+import com.example.domain.dto.MessageDto;
 import com.example.domain.dto.mapper.MapperDto;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;

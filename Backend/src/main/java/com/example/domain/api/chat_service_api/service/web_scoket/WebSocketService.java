@@ -4,9 +4,9 @@ import com.example.domain.api.chat_service_api.exception_handler.exception.servi
 import com.example.domain.api.chat_service_api.service.ChatAttachmentService;
 import com.example.domain.api.chat_service_api.service.ChatMessageService;
 import com.example.domain.api.chat_service_api.service.ChatService;
-import com.example.domain.dto.chat_module.ChatAttachmentDto;
-import com.example.domain.dto.chat_module.ChatDto;
-import com.example.domain.dto.chat_module.MessageDto;
+import com.example.domain.dto.ChatAttachmentDto;
+import com.example.domain.dto.ChatDto;
+import com.example.domain.dto.MessageDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;

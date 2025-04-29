@@ -4,7 +4,7 @@ package com.example.domain.api.chat_service_api.service;
 import com.example.database.model.chats_messages_module.chat.Chat;
 import com.example.database.model.chats_messages_module.chat.ChatChannel;
 import com.example.database.model.crm_module.client.Client;
-import com.example.domain.dto.chat_module.ChatDto;
+import com.example.domain.dto.ChatDto;
 
 import java.util.List;
 import java.util.Optional;

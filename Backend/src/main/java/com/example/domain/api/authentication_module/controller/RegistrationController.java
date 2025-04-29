@@ -2,6 +2,7 @@ package com.example.domain.api.authentication_module.controller;
 
 import com.example.domain.api.authentication_module.security.jwtUtils.AuthCookieService;
 import com.example.domain.api.authentication_module.service.interfaces.RegistrationService;
+import com.example.domain.dto.CheckCodeDto;
 import com.example.domain.dto.RegistrationDto;
 import com.example.domain.dto.TokenDto;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,8 +24,8 @@ public class RegistrationController {
         return ResponseEntity.ok(registrationService.registerUser(registrationDto));
     }
     @PostMapping("/check-code")
-    public ResponseEntity<String> checkCode(@RequestParam String code, HttpServletResponse resp) {
-        TokenDto tokenDto = registrationService.checkRegistrationCode(code);
+    public ResponseEntity<String> checkCode(@RequestBody @Validated CheckCodeDto code, HttpServletResponse resp) {
+        TokenDto tokenDto = registrationService.checkRegistrationCode(code.getCode());
         authCookieService.setTokenCookies(resp, tokenDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(tokenDto.getAccess_token());
     }

@@ -4,9 +4,7 @@ import com.example.database.model.ai_module.PredefinedAnswer;
 import com.example.database.model.company_subscription_module.company.Company;
 import com.example.domain.api.ans_api_module.template.dto.request.PredefinedAnswerUploadDto;
 import org.mapstruct.*;
-import org.springframework.stereotype.Component;
 
-@Component
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,

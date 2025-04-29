@@ -3,17 +3,17 @@ package com.example.domain.dto.mapper;
 import com.example.database.model.chats_messages_module.ChatAttachment;
 import com.example.database.model.chats_messages_module.ChatMessage;
 import com.example.database.model.chats_messages_module.chat.Chat;
-import com.example.database.model.company_subscription_module.Company;
+import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.company_subscription_module.subscription.Subscription;
 import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.company_subscription_module.user_roles.UserRole;
 import com.example.database.model.company_subscription_module.user_roles.user.Role;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.model.crm_module.client.Client;
-import com.example.domain.dto.chat_module.ChatAttachmentDto;
-import com.example.domain.dto.chat_module.MessageDto;
-import com.example.domain.dto.chat_module.ChatDto;
-import com.example.domain.dto.company_module.*;
+import com.example.domain.dto.ChatAttachmentDto;
+import com.example.domain.dto.MessageDto;
+import com.example.domain.dto.ChatDto;
+import com.example.domain.dto.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -63,7 +63,7 @@ public interface MapperDto {
 
     @Mapping(source = "companyDto", target = "company")
     User toEntityUser(UserDto userDto);
-    @Mapping(source = "company", target = "companyDto")
+
     User toEntityUser(RegistrationDto registrationDto);
     UserDto toDtoUser(User user);
 

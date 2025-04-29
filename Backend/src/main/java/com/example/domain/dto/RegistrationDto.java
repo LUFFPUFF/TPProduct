@@ -24,4 +24,13 @@ public class RegistrationDto {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+    public RegistrationDto(){};
+    public RegistrationDto(String email, String password, String fullName,
+                           LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.email = email;
+        this.password = password;
+        this.fullName = fullName;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

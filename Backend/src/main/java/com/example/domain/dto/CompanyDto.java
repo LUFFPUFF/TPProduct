@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 
 @Getter @Setter
 @ToString
-@Builder
 public class CompanyDto {
 
     private Integer id;

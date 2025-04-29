@@ -2,13 +2,16 @@ package com.example.cache;
 
 import com.example.domain.dto.RegistrationDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -31,18 +34,24 @@ public class CacheConfig {
     }
     @Bean
     public RedisTemplate<String, RegistrationDto> regDtoRedisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, RegistrationDto> template2 = new RedisTemplate<>();
-        template2.setConnectionFactory(connectionFactory);
-        Jackson2JsonRedisSerializer<RegistrationDto> serializer = new Jackson2JsonRedisSerializer<>(RegistrationDto.class);
+        RedisTemplate<String, RegistrationDto> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.activateDefaultTyping(
                 LaissezFaireSubTypeValidator.instance,
                 ObjectMapper.DefaultTyping.NON_FINAL
         );
-        template2.setKeySerializer(new StringRedisSerializer());
-        template2.setValueSerializer(serializer);
-        template2.afterPropertiesSet();
-        return template2;
+        GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(serializer);
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(serializer);
+        template.afterPropertiesSet();
+
+        return template;
     }
     @Bean
     public JedisConnectionFactory jedisConnectionFactory(RedisStandaloneConfiguration redisStandaloneConfiguration) {
