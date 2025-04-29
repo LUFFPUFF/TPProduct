@@ -1,0 +1,46 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  backend:
+    build: Backend
+    container_name: backend_container
+    restart: always
+    ports:
+      - "8081:8080"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - backend_network
+  postgres:
+    image: postgres:17-alpine
+    container_name: db_container
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: p855060123d
+      POSTGRES_DB: ans_machine_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend_network
+  redis:
+    image: redis:7-alpine
+    container_name: redis_container
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend_network
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  backend_network:
+    driver: bridge

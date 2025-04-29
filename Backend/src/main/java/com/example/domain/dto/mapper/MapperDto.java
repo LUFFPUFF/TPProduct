@@ -4,6 +4,7 @@ import com.example.database.model.chats_messages_module.ChatAttachment;
 import com.example.database.model.chats_messages_module.ChatMessage;
 import com.example.database.model.chats_messages_module.chat.Chat;
 import com.example.database.model.company_subscription_module.Company;
+import com.example.database.model.company_subscription_module.subscription.Subscription;
 import com.example.database.model.company_subscription_module.user_roles.UserRole;
 import com.example.database.model.company_subscription_module.user_roles.user.Role;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
@@ -18,7 +19,9 @@ import java.util.Date;
 
 @Mapper(componentModel = "spring", imports = {java.util.Date.class})
 public interface MapperDto {
-
+    //Subscription mapping
+    //
+    SubscriptionDto toSubscriptionDto(Subscription subscription);
     // Chat mapping
     Chat toEntityChat(ChatDto chatDto);
     ChatDto toDtoChat(Chat chat);

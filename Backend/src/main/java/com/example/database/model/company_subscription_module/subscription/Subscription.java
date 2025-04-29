@@ -2,6 +2,7 @@ package com.example.database.model.company_subscription_module.subscription;
 
 import com.example.database.model.company_subscription_module.Company;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
