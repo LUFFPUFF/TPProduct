@@ -1,5 +1,6 @@
 package com.example.ui.run;
 
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -9,9 +10,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "com.example")
-@EntityScan(basePackages = "com.example.database.model")
+@EntityScan(basePackages = "com/example/database/model")
 @EnableJpaRepositories(basePackages = "com.example.database.repository")
 @EnableScheduling
+@EnableBatchProcessing
 public class SpringBootStartApplication {
 
     public static void main(String[] args) {

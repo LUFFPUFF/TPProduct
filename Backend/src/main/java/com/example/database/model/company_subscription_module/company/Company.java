@@ -32,9 +32,6 @@ public class Company {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<User> users = new ArrayList<>();
-
     @Override
     public String toString() {
         return "Company{" +
