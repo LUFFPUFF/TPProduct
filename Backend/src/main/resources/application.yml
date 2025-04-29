@@ -124,7 +124,6 @@ nlp:
   api:
     client:
       embedding-api-url: https://router.huggingface.co/hf-inference/pipeline/sentence-similarity/sentence-transformers/all-MiniLM-L6-v2
-      api-key: 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
       connection-timeout-millis: 5000
       read-timeout-millis: 30000
       max-batch-size: 50
