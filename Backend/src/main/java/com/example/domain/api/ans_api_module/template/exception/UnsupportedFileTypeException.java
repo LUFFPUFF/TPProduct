@@ -5,7 +5,7 @@ import com.example.domain.api.ans_api_module.template.util.FileType;
 public class UnsupportedFileTypeException extends RuntimeException {
 
     public UnsupportedFileTypeException(FileType fileType) {
-        super("Unsupported file type: " + fileType);
+        super(STR."Unsupported file type: \{fileType}");
     }
 
     public UnsupportedFileTypeException() {

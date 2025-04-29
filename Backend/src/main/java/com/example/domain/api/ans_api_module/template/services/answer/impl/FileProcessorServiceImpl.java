@@ -118,7 +118,7 @@ public class FileProcessorServiceImpl implements FileProcessorService {
 
     private UploadResultResponse buildErrorResponse(Exception e) {
         return UploadResultResponse.builder()
-                .globalErrors(List.of("File processing failed: " + e.getMessage()))
+                .globalErrors(List.of(STR."File processing failed: \{e.getMessage()}"))
                 .status("FAILED")
                 .build();
     }

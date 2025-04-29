@@ -12,6 +12,8 @@ public class FileTypeDetector {
     public FileType detect(MultipartFile file) {
         String filename = file.getOriginalFilename();
 
+        System.out.println(STR."Имя файла: \{filename}");
+
         if (filename == null || filename.isBlank()) {
             throw new IllegalArgumentException("File name cannot be empty");
         }

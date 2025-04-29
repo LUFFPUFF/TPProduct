@@ -51,7 +51,8 @@ public class TxtAnswerReader implements AnswerFileReader {
                 new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
 
             Company company = companyRepository.findById(Math.toIntExact(jobCompanyId))
-                    .orElseThrow(() -> new EntityNotFoundException("Company with id " + jobCompanyId + " not found"));
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            STR."Company with id \{jobCompanyId} not found"));
 
             CompanyDto companyDto = CompanyDto.builder()
                     .id(company.getId())

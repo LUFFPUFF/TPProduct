@@ -104,6 +104,7 @@ public class XmlAnswerReader implements AnswerFileReader {
                         currentDepth--;
                         if ("answer".equals(reader.getLocalName())) {
                             if (currentDto != null) {
+                                // Используем категорию из jobParameters только если она не задана в XML
                                 if (currentDto.getCategory() == null && jobCategory != null) {
                                     currentDto.setCategory(jobCategory);
                                 }

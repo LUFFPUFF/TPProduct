@@ -1,7 +1,6 @@
 package com.example.database.model.ai_module;
 
 import com.example.database.model.company_subscription_module.company.Company;
-import com.example.domain.api.ans_api_module.answer_finder.domain.TrustScore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,10 +30,6 @@ public class PredefinedAnswer {
 
     @Column(name = "answer")
     private String answer;
-
-    @Embedded
-    @Column(name = "trust_score", nullable = false)
-    private TrustScore trustScore;
 
     @Column(name = "created_at")
     @CreationTimestamp

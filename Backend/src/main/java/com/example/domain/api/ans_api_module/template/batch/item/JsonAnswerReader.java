@@ -100,12 +100,12 @@ public class JsonAnswerReader implements AnswerFileReader {
         dto.setCompanyDto(companyDto);
 
         if (!node.has("title") || node.get("title").isNull()) {
-            throw new TextProcessingException("Title is required for answer at position" + recordNumber);
+            throw new TextProcessingException(STR."Title is required for answer at position \{recordNumber}");
         }
         dto.setTitle(node.get("title").asText().trim());
 
         if (!node.has("answer") || node.get("answer").isNull()) {
-            throw new TextProcessingException("Answer is required for answer at position " + recordNumber);
+            throw new TextProcessingException(STR."Answer is required for answer at position \{recordNumber}");
         }
         dto.setAnswer(node.get("answer").asText().trim());
 
