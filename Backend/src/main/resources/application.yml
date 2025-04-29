@@ -115,24 +115,40 @@ email:
   imap_store: "imaps"
   imap_folder: "INBOX"
 
+nlp:
+  lemmatizer:
+    implementation: external-api
+    api-url: https://lindat.mff.cuni.cz/services/udpipe/api/process
+    connectTimeoutMillis: 5000
+    read-timeout-millis: 30000
+  api:
+    client:
+      embedding-api-url: https://router.huggingface.co/hf-inference/pipeline/sentence-similarity/sentence-transformers/all-MiniLM-L6-v2
+      api-key: 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
+      connection-timeout-millis: 5000
+      read-timeout-millis: 30000
+      max-batch-size: 50
 
-ans_machine:
-  npl:
-    speller:
-      yandex_speller_url: "https://speller.yandex.net/services/spellservice.json/checkText"
+answersearch:
+  weights:
+    similarity: 0.7
+    trust: 0.3
 
-correction:
-  enabled: true
-  rules:
-    active: commaBeforeConjunction, commaAfterAddress,commaListCorrection, fixCommaSpacingCorrection, removeExtraCorrection
-    order: abbreviationDotCorrection, sentenceEndingDotCorrection, exclamationMarkCorrection, questionMarkCorrection
+ml:
+  service:
+    base-url: http://localhost:8000/generate
+  prompts:
+    correction-prompt-template: "Исправь орфографические, пунктуационные и грамматические ошибки в следующем предложении, строго соблюдая нормы современного русского языка. Дай только исправленный вариант без пояснений: %s"
+    rewrite-instruction-template: "Перепиши следующий корпоративный ответ, сделав его более дружелюбным, теплым и естественным, но при этом не перегруженным деталями. Сделай так, чтобы ответ звучал приветливо и было ощущение личного общения. Также убедись, что ответ остается коротким и по делу."
+    rewrite-prompt-template: "%sШаблонный ответ: %s. Дай только измененный вариант."
+  params:
+    temperature: 0.7
+    max-new-tokens: 150
+    top-p: 0.95
+    do-sample: false
+    stream: false
+    max-retries: 3
 
-  stats:
-    directory: stats
-    flush-interval: 1m
-    metrics:
-      file: stats/metrics/metrics.log
-      log-interval: 1m
 
 
 

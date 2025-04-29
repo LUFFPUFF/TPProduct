@@ -1,9 +1,7 @@
 package com.example.domain.api.ans_api_module.template.controller;
 
-import com.example.domain.api.ans_api_module.template.services.answer.FileProcessorService;
 import com.example.domain.api.ans_api_module.template.services.answer.PredefinedAnswerService;
 import com.example.domain.api.ans_api_module.template.dto.request.PredefinedAnswerUploadDto;
-import com.example.domain.api.ans_api_module.template.dto.request.UploadFileRequest;
 import com.example.domain.api.ans_api_module.template.dto.response.AnswerResponse;
 import com.example.domain.api.ans_api_module.template.dto.response.UploadResultResponse;
 import jakarta.transaction.Transactional;
@@ -15,7 +13,6 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.persistence.StepExecution;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -24,8 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -91,7 +86,7 @@ public class PredefinedAnswerController {
             @PathVariable String category,
             @RequestParam(required = false) Integer companyId) {
         List<AnswerResponse> responses = companyId != null
-                ? (List<AnswerResponse>) answerService.getAnswerById(companyId)
+                ? answerService.getAllAnswers()
                 : answerService.getAnswersByCategory(category);
         return ResponseEntity.ok(responses);
     }
@@ -158,13 +153,6 @@ public class PredefinedAnswerController {
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-    }
-
-    private File saveFileToTempDirectory(MultipartFile file) throws IOException {
-        Path tempDir = Files.createTempDirectory("upload-");
-        Path tempFile = tempDir.resolve(Objects.requireNonNull(file.getOriginalFilename()));
-        file.transferTo(tempFile.toFile());
-        return tempFile.toFile();
     }
 
     @DeleteMapping("/batch")

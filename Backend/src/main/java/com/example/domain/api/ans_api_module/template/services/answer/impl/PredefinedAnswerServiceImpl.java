@@ -93,7 +93,7 @@ public class PredefinedAnswerServiceImpl implements PredefinedAnswerService {
                     }
 
                     if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-                        String likePattern = STR."%\{searchTerm.toLowerCase()}%";
+                        String likePattern = searchTerm.toLowerCase();
                         predicates.add(cb.or(
                                 cb.like(cb.lower(root.get("title")), likePattern),
                                 cb.like(cb.lower(root.get("answer")), likePattern),

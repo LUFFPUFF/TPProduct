@@ -14,7 +14,7 @@ public class ValidationUtils {
 
     public void validateAnswerDto(PredefinedAnswerUploadDto dto) {
         if (!companyRepository.existsById(dto.getCompanyDto().getId())) {
-            throw new ValidationException(STR."Company not found: \{dto.getCompanyDto().getId()}");
+            throw new ValidationException("Company not found: " + dto.getCompanyDto().getId());
         }
 
         if (dto.getAnswer().length() > 5000) {
