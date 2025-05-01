@@ -27,4 +27,14 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     long countOpenChatsByUserId(@Param("userId") Integer userId,
                                 @Param("openStatuses") Collection<ChatStatus> openStatuses);
 
+    Optional<User> findByEmail(String email);
+
+    Optional<User> findByCompanyId(Integer companyId);
+
+    void updateByCompanyIdAndEmail(Integer companyId, String email);
+
+    List<User> getAllByCompanyId(Integer companyId);
+
+
+
 }

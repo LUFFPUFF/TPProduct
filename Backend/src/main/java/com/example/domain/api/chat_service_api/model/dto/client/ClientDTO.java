@@ -2,7 +2,7 @@ package com.example.domain.api.chat_service_api.model.dto.client;
 
 import com.example.database.model.crm_module.client.TypeClient;
 import com.example.domain.api.chat_service_api.model.dto.user.UserInfoDTO;
-import com.example.domain.dto.company_module.CompanyDto;
+import com.example.domain.dto.CompanyDto;
 import lombok.Data;
 
 import java.time.LocalDateTime;

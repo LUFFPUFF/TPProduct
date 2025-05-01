@@ -5,10 +5,11 @@ spring:
     livereload:
       enabled: false
 
+
   datasource:
-    url: jdbc:postgresql://postgres:5432/ans_machine_db
+    url: jdbc:postgresql://localhost:5432/ans_machine_db
     username: postgres
-    password: p855060123d
+    password: nikita090504
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
@@ -16,10 +17,7 @@ spring:
       idle-timeout: 30000
       max-lifetime: 1800000
 
-  data:
-    redis:
-      host: redis
-      port: 6379
+
 
   task:
     execution:
@@ -38,17 +36,12 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
+    open-in-view: false
 
   servlet:
     multipart:
       max-file-size: 10MB
       max-request-size: 20MB
-
-  websocket:
-    endpoint: /test_endpoint_ans
-    allowed-origin-patterns: "*"
-    application-destination-prefix: /app
-    user-destination-prefix: /user
 
   batch:
     jdbc:
@@ -59,10 +52,6 @@ spring:
   main:
     allow-bean-definition-overriding: true
 
-  security:
-    user:
-      name: admin
-      password: admin
 
 validation:
   file-upload:
@@ -76,18 +65,6 @@ file-upload:
   location: /uploads
   clamav-host: localhost
   clamav-port: 3310
-
-server:
-  error:
-    include-stacktrace: never
-
-jwt:
-  secret: "sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3"
-  access-expiration: 100000
-  refresh-expiration: 86400000
-
-subscription:
-  price: 790.00
 
 # Настройки чатов
 chat:
@@ -144,6 +121,7 @@ nlp:
   api:
     client:
       embedding-api-url: https://router.huggingface.co/hf-inference/pipeline/sentence-similarity/sentence-transformers/all-MiniLM-L6-v2
+      apiKey: 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
       connection-timeout-millis: 5000
       read-timeout-millis: 30000
       max-batch-size: 50
@@ -168,7 +146,21 @@ ml:
     stream: false
     max-retries: 3
 
-
+websocket:
+  endpoint: /ws
+  allowed-origins: "http://localhost:8080"
+  heartbeat:
+    interval: 30000 # Интервал отправки heartbeat (пингов) от сервера клиенту (мс)
+    timeout: 10000  # Время ожидания ответа на пинг перед разрывом соединения (мс)
+  message:
+    buffer-size: 16384 # Размер буфера входящих сообщений (байты)
+    send-timeout: 3000 # Таймаут отправки сообщения (мс)
+  stomp:
+    simple-broker:
+      enabled: true
+      destination-prefix: /topic/,/queue/
+      application-destination-prefix: /app
+      user-destination-prefix: /user
 
 
 

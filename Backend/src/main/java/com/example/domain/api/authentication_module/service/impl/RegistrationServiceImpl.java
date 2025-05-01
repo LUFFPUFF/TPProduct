@@ -52,8 +52,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public TokenDto checkRegistrationCode(String registrationCode) {
-        return authCacheService.getRegistrationCode(registrationCode).map( registrationDto ->{
-                userRepository.save(mapperDto.toEntityUser(registrationDto));
+        return authCacheService.getRegistrationCode(registrationCode)
+                .map( registrationDto ->{
+                userRepository.save(mapperDto.toEntityUserFromRegistration(registrationDto));
                return jWTUtilsService.generateTokensByUser(userDetailsService.loadUserByUsername(registrationDto.getEmail()));
         })
         .orElseThrow(InvalidRegistrationCodeException::new);

@@ -5,9 +5,8 @@ import com.example.database.model.chats_messages_module.chat.Chat;
 import com.example.database.model.chats_messages_module.chat.ChatStatus;
 import com.example.database.model.chats_messages_module.message.ChatMessage;
 import com.example.database.model.company_subscription_module.company.Company;
+import com.example.database.model.company_subscription_module.subscription.Subscription;
 import com.example.database.model.company_subscription_module.user_roles.UserRole;
-import com.example.database.model.company_subscription_module.user_roles.role.Role;
-import com.example.database.model.company_subscription_module.user_roles.role.RoleName;
 import com.example.database.model.company_subscription_module.user_roles.user.Gender;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.model.company_subscription_module.user_roles.user.UserStatus;
@@ -16,21 +15,22 @@ import com.example.database.model.crm_module.client.TypeClient;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
 import com.example.domain.api.chat_service_api.model.dto.client.ClientInfoDTO;
 import com.example.domain.api.chat_service_api.model.dto.user.UserInfoDTO;
-import com.example.domain.dto.chat_module.ChatAttachmentDto;
-import com.example.domain.dto.chat_module.ChatDto;
-import com.example.domain.dto.company_module.ClientDto;
-import com.example.domain.dto.company_module.CompanyDto;
-import com.example.domain.dto.company_module.RoleDto;
-import com.example.domain.dto.company_module.UserDto;
-import com.example.domain.dto.company_module.UserRoleDto;
+import com.example.domain.dto.ChatAttachmentDto;
+import com.example.domain.dto.ChatDto;
+import com.example.domain.dto.ClientDto;
+import com.example.domain.dto.CompanyDto;
+import com.example.domain.dto.RegistrationDto;
+import com.example.domain.dto.SubscriptionDto;
+import com.example.domain.dto.UserDto;
+import com.example.domain.dto.UserRoleDto;
 import java.util.Date;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-01T11:43:19+0300",
-    comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 22.0.2 (Amazon.com Inc.)"
+    date = "2025-05-01T23:20:31+0300",
+    comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 21.0.7 (Microsoft)"
 )
 @Component
 public class MapperDtoImpl implements MapperDto {
@@ -274,37 +274,20 @@ public class MapperDtoImpl implements MapperDto {
     }
 
     @Override
-    public Role toEntityRole(RoleDto roleDto) {
-        if ( roleDto == null ) {
+    public User toEntityUserFromRegistration(RegistrationDto registrationDto) {
+        if ( registrationDto == null ) {
             return null;
         }
 
-        Role role = new Role();
+        User user = new User();
 
-        role.setId( roleDto.getId() );
-        if ( roleDto.getName() != null ) {
-            role.setName( Enum.valueOf( RoleName.class, roleDto.getName() ) );
-        }
-        role.setDescription( roleDto.getDescription() );
+        user.setFullName( registrationDto.getFullName() );
+        user.setEmail( registrationDto.getEmail() );
+        user.setPassword( registrationDto.getPassword() );
+        user.setCreatedAt( registrationDto.getCreatedAt() );
+        user.setUpdatedAt( registrationDto.getUpdatedAt() );
 
-        return role;
-    }
-
-    @Override
-    public RoleDto toDtoRole(Role role) {
-        if ( role == null ) {
-            return null;
-        }
-
-        RoleDto roleDto = new RoleDto();
-
-        roleDto.setId( role.getId() );
-        if ( role.getName() != null ) {
-            roleDto.setName( role.getName().name() );
-        }
-        roleDto.setDescription( role.getDescription() );
-
-        return roleDto;
+        return user;
     }
 
     @Override
@@ -314,6 +297,8 @@ public class MapperDtoImpl implements MapperDto {
         }
 
         UserRole userRole = new UserRole();
+
+        userRole.setRole( userRoleDto.getRole() );
 
         return userRole;
     }
@@ -326,7 +311,27 @@ public class MapperDtoImpl implements MapperDto {
 
         UserRoleDto userRoleDto = new UserRoleDto();
 
+        userRoleDto.setRole( userRole.getRole() );
+
         return userRoleDto;
+    }
+
+    @Override
+    public SubscriptionDto toSubscriptionDto(Subscription subscriptionDto) {
+        if ( subscriptionDto == null ) {
+            return null;
+        }
+
+        SubscriptionDto subscriptionDto1 = new SubscriptionDto();
+
+        subscriptionDto1.setStatus( subscriptionDto.getStatus() );
+        subscriptionDto1.setCost( subscriptionDto.getCost() );
+        subscriptionDto1.setCountOperators( subscriptionDto.getCountOperators() );
+        subscriptionDto1.setMaxOperators( subscriptionDto.getMaxOperators() );
+        subscriptionDto1.setStartSubscription( subscriptionDto.getStartSubscription() );
+        subscriptionDto1.setEndSubscription( subscriptionDto.getEndSubscription() );
+
+        return subscriptionDto1;
     }
 
     protected Client clientInfoDTOToClient(ClientInfoDTO clientInfoDTO) {

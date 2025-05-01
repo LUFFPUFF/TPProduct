@@ -30,7 +30,8 @@ public class CompanyMembersServiceImpl implements CompanyMembersService {
 
     @Override
     public List<MemberDto> findMembers(Company company) {
-        return userRepository.getUsersByCompany(company).stream().map(user -> MemberDto.builder()
+        return userRepository.findByCompanyId(company.getId()).stream()
+                .map(user -> MemberDto.builder()
                 .email(user.getEmail())
                 .fullName(user.getFullName())
                 .build()).toList();
@@ -42,7 +43,7 @@ public class CompanyMembersServiceImpl implements CompanyMembersService {
         Company company = userRepository.findByEmail(myEmail).map(User::getCompany).orElseThrow(NotFoundCompanyException::new);
         subscriptionService.addOperatorCount(company);
         roleService.addRole(memberEmail, Role.OPERATOR);
-        userRepository.updateCompanyByEmail(memberEmail, company);
+        userRepository.updateByCompanyIdAndEmail(company.getId(), memberEmail);
         return CompanyWithMembersDto.builder()
                 .company(mapperDto.toDtoCompany(company))
                 .members(findMembers(company))

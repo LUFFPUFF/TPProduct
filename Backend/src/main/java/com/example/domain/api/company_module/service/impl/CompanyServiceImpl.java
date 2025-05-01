@@ -51,7 +51,8 @@ public class CompanyServiceImpl implements CompanyService {
 
     }
     public List<MemberDto> findMembers(Company company) {
-        return userRepository.getUsersByCompany(company).stream().map(user -> MemberDto.builder()
+        return userRepository.getAllByCompanyId(company.getId()).stream()
+                .map(user -> MemberDto.builder()
                 .email(user.getEmail())
                 .fullName(user.getFullName())
                 .build()).toList();

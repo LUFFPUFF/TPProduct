@@ -57,7 +57,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         );
 
         subscribeDataDto.setCompany(company);
-        userRepository.updateCompanyByEmail(email,company);
+        userRepository.updateByCompanyIdAndEmail(company.getId(), email);
         roleService.addRole(email,Role.MANAGER);
         roleService.addRole(email,Role.OPERATOR);
         Subscription subscription = subscribeDataMapper.toSubscription(subscribeDataDto);
