@@ -12,7 +12,8 @@ public class GmailParser extends AbstractEmailParser {
     private final EmailProperties emailProperties;
 
     public GmailParser(CompanyMailConfiguration emailConfig,
-                       BlockingQueue<EmailResponse> messageQueue, EmailProperties emailProperties) {
+                       BlockingQueue<EmailResponse> messageQueue,
+                       EmailProperties emailProperties) {
         super(emailConfig, emailProperties, messageQueue);
         this.emailProperties = emailProperties;
     }

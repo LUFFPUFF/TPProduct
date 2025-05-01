@@ -42,23 +42,24 @@ public class AnswerSearchServiceImpl implements AnswerSearchService {
             log.warn("Запрос клиента очень длинный ({} символов). Может повлиять на производительность API.", clientQuery.length());
         }
 
-        String processedQuery = " ";
+        String processedQuery = clientQuery;
 
-        try {
-            List<String> queryLemmas = lemmatizer.lemmatize(Collections.singletonList(clientQuery));
-            if (queryLemmas != null && !queryLemmas.isEmpty()) {
-                processedQuery = String.join(" ", queryLemmas);
-                log.debug("Лемматизированный запрос клиента: '{}'", processedQuery);
-            } else {
-                log.warn("Лемматизатор вернул пустой список лемм для запроса '{}'. Использование оригинального запроса.",
-                        truncateLogString(clientQuery));
-                processedQuery = clientQuery;
-            }
-        } catch (NlpException e) {
-            log.warn("Ошибка при лемматизации запроса клиента '{}'. Использование оригинального запроса.",
-                    truncateLogString(clientQuery), e);
-            processedQuery = clientQuery;
-        }
+        //TODO не работает лематизация
+//        try {
+//            List<String> queryLemmas = lemmatizer.lemmatize(Collections.singletonList(clientQuery));
+//            if (queryLemmas != null && !queryLemmas.isEmpty()) {
+//                processedQuery = String.join(" ", queryLemmas);
+//                log.debug("Лемматизированный запрос клиента: '{}'", processedQuery);
+//            } else {
+//                log.warn("Лемматизатор вернул пустой список лемм для запроса '{}'. Использование оригинального запроса.",
+//                        truncateLogString(clientQuery));
+//                processedQuery = clientQuery;
+//            }
+//        } catch (NlpException e) {
+//            log.warn("Ошибка при лемматизации запроса клиента '{}'. Использование оригинального запроса.",
+//                    truncateLogString(clientQuery), e);
+//            processedQuery = clientQuery;
+//        }
 
         List<PredefinedAnswer> potentialAnswers = fetchPotentialAnswers(companyId, category);
 

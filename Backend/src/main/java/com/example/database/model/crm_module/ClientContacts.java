@@ -16,8 +16,8 @@ public class ClientContacts {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "client_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
     @Column(name = "type")
@@ -25,6 +25,9 @@ public class ClientContacts {
 
     @Column(name = "value")
     private String value;
+
+    @Column(name= "company_id")
+    private Integer companyId;
 
 
 }

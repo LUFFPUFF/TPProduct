@@ -1,106 +1,229 @@
 package com.example.domain.api.chat_service_api.service.impl;
 
-import com.example.database.model.chats_messages_module.ChatMessage;
+import com.example.database.model.chats_messages_module.chat.Chat;
+import com.example.database.model.chats_messages_module.chat.ChatChannel;
+import com.example.database.model.chats_messages_module.chat.ChatMessageSenderType;
+import com.example.database.model.chats_messages_module.chat.ChatStatus;
+import com.example.database.model.chats_messages_module.message.ChatMessage;
+import com.example.database.model.chats_messages_module.message.MessageStatus;
+import com.example.database.model.company_subscription_module.user_roles.user.User;
+import com.example.database.model.crm_module.client.Client;
 import com.example.database.repository.chats_messages_module.ChatMessageRepository;
-import com.example.domain.api.chat_service_api.config.chat.ChatConfig;
-import com.example.domain.api.chat_service_api.exception_handler.exception.service.ChatMessageServiceException;
-import com.example.domain.api.chat_service_api.service.ChatMessageService;
-import com.example.domain.dto.chat_module.MessageDto;
-import com.example.domain.dto.mapper.MapperDto;
-import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
-import lombok.Data;
+import com.example.database.repository.chats_messages_module.ChatRepository;
+import com.example.database.repository.company_subscription_module.UserRepository;
+import com.example.database.repository.crm_module.ClientRepository;
+import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundException;
+import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
+import com.example.domain.api.chat_service_api.mapper.ChatMessageMapper;
+import com.example.domain.api.chat_service_api.model.dto.MessageDto;
+import com.example.domain.api.chat_service_api.model.dto.MessageStatusUpdateDTO;
+import com.example.domain.api.chat_service_api.model.rest.mesage.SendMessageRequestDTO;
+import com.example.domain.api.chat_service_api.service.IChatMessageService;
+import com.example.domain.api.chat_service_api.service.WebSocketMessagingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Slf4j
+import static com.example.domain.api.chat_service_api.service.impl.LeastBusyAssignmentService.OPEN_CHAT_STATUSES;
+
 @Service
 @RequiredArgsConstructor
-@Transactional
-public class ChatMessageServiceImpl implements ChatMessageService {
+@Slf4j
+public class ChatMessageServiceImpl implements IChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
-    private final MapperDto mapperDto;
-    private final ChatConfig config;
+    private final ChatRepository chatRepository;
+    private final UserRepository userRepository;
+    private final ClientRepository clientRepository;
+    private final ChatMessageMapper chatMessageMapper;
+    private final WebSocketMessagingService messagingService;
 
     @Override
-    public MessageDto createMessage(@Valid MessageDto messageDto) {
-        try {
-            if (messageDto.getContent().length() > config.getMaxMessageLength()) {
-                throw new ChatMessageServiceException("Message content exceeds maximum allowed length");
+    public MessageDto processAndSaveMessage(SendMessageRequestDTO messageRequest, Integer senderId, ChatMessageSenderType senderType) {
+        Chat chat = chatRepository.findById(messageRequest.getChatId())
+                .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + messageRequest.getChatId() + " not found"));
+
+        // TODO: Проверка прав! Может ли senderId отправлять сообщения в этот чат?
+
+        User senderOperator = null;
+        Client senderClient = null;
+
+        if (senderType == ChatMessageSenderType.OPERATOR) {
+            senderOperator = userRepository.findById(senderId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Operator with ID " + senderId + " not found."));
+        } else if (senderType == ChatMessageSenderType.CLIENT) {
+            senderClient = clientRepository.findById(senderId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Client with ID " + senderId + " not found."));
+        } else if (senderType == ChatMessageSenderType.AUTO_RESPONDER) {
+            senderClient = clientRepository.findById(senderId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Client with ID " + senderId + " not found."));
+        } else {
+            throw new IllegalArgumentException("Unsupported sender type: " + senderType);
+        }
+
+        ChatMessage message = new ChatMessage();
+        message.setChat(chat);
+        message.setSenderOperator(senderOperator);
+        message.setSenderClient(senderClient);
+        message.setSenderType(senderType);
+        message.setContent(messageRequest.getContent());
+        message.setExternalMessageId(messageRequest.getExternalMessageId());
+        message.setReplyToExternalMessageId(messageRequest.getReplyToExternalMessageId());
+        message.setSentAt(LocalDateTime.now());
+        message.setStatus(MessageStatus.SENT);
+
+        // TODO: Обработка вложений messageRequest.getAttachments()
+
+        ChatMessage savedMessage = chatMessageRepository.save(message);
+
+        chat.setLastMessageAt(savedMessage.getSentAt());
+        chatRepository.save(chat);
+
+        MessageDto savedMessageDTO = chatMessageMapper.toDto(savedMessage);
+
+        String destination = "/topic/chat/" + chat.getId() + "/messages";
+        messagingService.sendMessage(destination, savedMessageDTO);
+
+        // TODO: Если отправитель - клиент, и чат в статусе ASSIGNED/IN_PROGRESS - создать уведомление для назначенного оператора.
+
+        return savedMessageDTO;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<MessageDto> getMessagesByChatId(Integer chatId) {
+        Chat chat = chatRepository.findById(chatId)
+                .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
+
+        // TODO: Проверка прав! Может ли текущий пользователь видеть сообщения этого чата?
+
+        List<ChatMessage> messages = chatMessageRepository.findByChatIdOrderBySentAtAsc(chatId);
+
+        return messages.stream()
+                .map(chatMessageMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public MessageDto updateMessageStatus(Integer messageId, MessageStatus newStatus, Integer userId) {
+        ChatMessage message = chatMessageRepository.findById(messageId)
+                .orElseThrow(() -> new ResourceNotFoundException("Message with ID " + messageId + " not found."));
+
+        // TODO: Проверка прав! Может ли userId изменить статус этого сообщения на newStatus?
+
+        message.setStatus(newStatus);
+        ChatMessage updatedMessage = chatMessageRepository.save(message);
+        MessageDto updatedMessageDTO = chatMessageMapper.toDto(updatedMessage);
+
+        MessageStatusUpdateDTO statusUpdateDTO = new MessageStatusUpdateDTO();
+        statusUpdateDTO.setMessageId(updatedMessage.getId());
+        statusUpdateDTO.setChatId(updatedMessage.getChat().getId());
+        statusUpdateDTO.setNewStatus(updatedMessage.getStatus());
+        statusUpdateDTO.setTimestamp(LocalDateTime.now());
+
+        String destination = "/topic/chat/" + updatedMessage.getChat().getId() + "/messages";
+        messagingService.sendMessage(destination, statusUpdateDTO);
+
+        return updatedMessageDTO;
+    }
+
+    @Override
+    public int markClientMessagesAsRead(Integer chatId, Integer operatorId, Collection<Integer> messageIds) {
+        if (messageIds == null || messageIds.isEmpty()) {
+            return 0;
+        }
+
+        Chat chat = chatRepository.findById(chatId)
+                .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
+
+        // TODO: Проверить, что operatorId существует и является оператором
+        // TODO: Проверить, что operatorId назначен на этот чат (или является админом)
+
+        int updatedCount = chatMessageRepository.markClientMessagesAsRead(chatId, MessageStatus.READ, messageIds);
+
+        if (updatedCount > 0) {
+            String destination = "/topic/chat/" + chatId + "/messages";
+            for (Integer messageId : messageIds) {
+                MessageStatusUpdateDTO statusUpdateDTO = new MessageStatusUpdateDTO();
+                statusUpdateDTO.setMessageId(messageId);
+                statusUpdateDTO.setChatId(chatId);
+                statusUpdateDTO.setNewStatus(MessageStatus.READ);
+                statusUpdateDTO.setTimestamp(LocalDateTime.now());
+                messagingService.sendMessage(destination, statusUpdateDTO);
             }
-
-            ChatMessage chatMessage = mapperDto.toEntityChatMessage(messageDto);
-            ChatMessage savedMessage = chatMessageRepository.save(chatMessage);
-
-            return mapperDto.toDtoChatMessage(savedMessage);
-        } catch (ChatMessageServiceException e) {
-            log.error("Validation error while creating message: {}", e.getMessage(), e);
-            throw e;
-        } catch (Exception e) {
-            log.error("Error while creating message: {}", e.getMessage(), e);
-            throw new ChatMessageServiceException("Failed to create message: " + e.getMessage(), e);
         }
+        return updatedCount;
     }
 
     @Override
-    public MessageDto getMessageById(Integer id) {
-        try {
-            log.info("Fetching message by id: {}", id);
-            ChatMessage chatMessage = chatMessageRepository.findById(id)
-                    .orElseThrow(() -> new ChatMessageServiceException("Message not found with id: " + id));
-            return mapperDto.toDtoChatMessage(chatMessage);
-        } catch (Exception e) {
-            log.error("Error while fetching message by id {}: {}", id, e.getMessage(), e);
-            throw new ChatMessageServiceException("Failed to fetch message by id " + id + ": " + e.getMessage(), e);
+    public Optional<Chat> findOpenChatByClientAndChannel(Integer clientId, ChatChannel channel) {
+        Optional<Chat> foundChat = chatMessageRepository
+                .findFirstChatByChatClient_IdAndChatChannelAndChatStatusInOrderByChatCreatedAtDesc(clientId, channel, OPEN_CHAT_STATUSES);
+        if(foundChat.isPresent()) {
+            log.debug("Found open chat ID {} via ChatMessageService for client {} on channel {}", foundChat.get().getId(), clientId, channel);
+        } else {
+            log.debug("No open chat found via ChatMessageService for client {} on channel {}", clientId, channel);
         }
+        return foundChat;
     }
 
     @Override
-    public List<MessageDto> getAllMessages() {
-        try {
-            log.info("Fetching all messages");
-            return chatMessageRepository.findAll().stream()
-                    .map(mapperDto::toDtoChatMessage)
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            log.error("Error while fetching all messages: {}", e.getMessage(), e);
-            throw new ChatMessageServiceException("Failed to fetch all messages: " + e.getMessage(), e);
+    public Optional<ChatMessage> findFirstMessageByChatId(Integer chatId) {
+        Optional<ChatMessage> firstMessage = chatMessageRepository.findFirstByChatIdOrderBySentAtAsc(chatId);
+        if (firstMessage.isPresent()) {
+            log.debug("Found first message ID {} for chat ID {}", firstMessage.get().getId(), chatId);
+        } else {
+            log.debug("No messages found for chat ID {}", chatId);
         }
+        return firstMessage;
     }
 
     @Override
-    public MessageDto updateMessage(Integer id, MessageDto messageDto) {
-        try {
-            log.info("Updating message with id: {}", id);
-            ChatMessage existingMessage = chatMessageRepository.findById(id)
-                    .orElseThrow(() -> new ChatMessageServiceException("Message not found with id: " + id));
-
-            existingMessage.setContent(messageDto.getContent());
-
-            ChatMessage updatedMessage = chatMessageRepository.save(existingMessage);
-            return mapperDto.toDtoChatMessage(updatedMessage);
-        } catch (Exception e) {
-            log.error("Error while updating message with id {}: {}", id, e.getMessage(), e);
-            throw new ChatMessageServiceException("Failed to update message with id " + id + ": " + e.getMessage(), e);
-        }
+    public Optional<Chat> findChatEntityById(Integer chatId) {
+        return chatRepository.findById(chatId);
     }
 
     @Override
-    public void deleteMessage(Integer id) {
-        try {
-            log.info("Deleting message with id: {}", id);
-            chatMessageRepository.deleteById(id);
-        } catch (Exception e) {
-            log.error("Error while deleting message with id {}: {}", id, e.getMessage(), e);
-            throw new ChatMessageServiceException("Failed to delete message with id " + id + ": " + e.getMessage(), e);
+    public int updateOperatorMessageStatusByExternalId(Integer chatId, String externalMessageId, MessageStatus newStatus) {
+        Chat chat = chatRepository.findById(chatId)
+                .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
+
+        // TODO: Проверка прав! Имеет ли право внешний сервис или текущий пользователь
+
+        int updatedCount = chatMessageRepository.updateOperatorMessageStatusByExternalId(chatId, newStatus, externalMessageId);
+
+        if (updatedCount > 0) {
+            Optional<ChatMessage> updatedMsgOptional = chatMessageRepository.findByExternalMessageId(externalMessageId)
+                    .filter(msg -> Objects.equals(msg.getChat().getId(), chatId));
+
+            if (updatedMsgOptional.isPresent()) {
+                ChatMessage updatedMsg = updatedMsgOptional.get();
+                MessageStatusUpdateDTO statusUpdateDTO = new MessageStatusUpdateDTO();
+                statusUpdateDTO.setMessageId(updatedMsg.getId());
+                statusUpdateDTO.setChatId(chatId);
+                statusUpdateDTO.setNewStatus(newStatus);
+                statusUpdateDTO.setTimestamp(LocalDateTime.now());
+
+                String destination = "/topic/chat/" + chatId + "/messages";
+                messagingService.sendMessage(destination, statusUpdateDTO);
+            } else {
+                System.err.println("Warning: Updated status for external message ID " + externalMessageId + " in chat " + chatId + ", but could not retrieve updated message for WS notification.");
+            }
         }
+
+        return updatedCount;
+    }
+
+    @Override
+    public ChatMessage saveIncomingMessageFromExternal(Integer chatId, ChatMessageSenderType senderType, Integer senderId, String content, String externalMessageId, String replyToExternalMessageId) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

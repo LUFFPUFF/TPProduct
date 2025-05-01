@@ -1,13 +1,13 @@
 package com.example.database.model.chats_messages_module.chat;
 
-import com.example.database.model.chats_messages_module.ChatMessage;
+import com.example.database.model.chats_messages_module.message.ChatMessage;
+import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.model.crm_module.client.Client;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,23 +22,41 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
+
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "chat_channel", nullable = false)
     private ChatChannel chatChannel;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", length = 50, nullable = false)
-    private String status;
+    private ChatStatus status;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "assigned_at", nullable = true)
+    private LocalDateTime assignedAt;
+
+    @Column(name = "closed_at")
+    private LocalDateTime closedAt;
+
+    @Column(name = "last_message_at", nullable = true)
+    private LocalDateTime lastMessageAt;
+
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("sentAt ASC")
+    private List<ChatMessage> messages;
 
     @Override
     public String toString() {

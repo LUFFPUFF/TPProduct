@@ -8,6 +8,7 @@ import com.example.domain.api.chat_service_api.integration.mail.properties.Email
 import com.example.domain.api.chat_service_api.integration.mail.response.EmailResponse;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 
 @Component

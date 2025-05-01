@@ -16,6 +16,9 @@ public class CompanyTelegramConfiguration {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "chat_telegram_id")
+    private Long chatTelegramId;
+
     @ManyToOne
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
@@ -28,6 +31,7 @@ public class CompanyTelegramConfiguration {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;

@@ -29,12 +29,18 @@ public class Integration {
     @Column(name = "status")
     private IntegrationStatus status;
 
+    @Column(name = "integration_type")
+    private IntegrationType type;
+
     @Column(name = "setting_key")
     private String settingKey;
 
-    @Column(name = "setting_value")
-    private String settingValue;
+    @Column(name = "settings_json", columnDefinition = "jsonb")
+    private String settingsJson;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 }

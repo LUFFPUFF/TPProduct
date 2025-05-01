@@ -1,5 +1,6 @@
 package com.example.database.model.chats_messages_module;
 
+import com.example.database.model.chats_messages_module.message.ChatMessage;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -24,4 +25,7 @@ public class ChatAttachment {
 
     @Column(name = "file_type", length = 50, nullable = false)
     private String fileType;
+
+    @Column(name = "file_size")
+    private Long fileSize;
 }

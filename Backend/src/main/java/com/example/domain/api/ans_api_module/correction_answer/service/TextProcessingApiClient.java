@@ -25,8 +25,10 @@ public class TextProcessingApiClient {
     private final ObjectMapper objectMapper;
     private final URI generateUri;
 
-    private static final Duration TIMEOUT = Duration.ofSeconds(5);
+    //TODO увеличено до 5 минут потому что не тянет система
+    private static final Duration TIMEOUT = Duration.ofMinutes(5);
     private static final String ENDPOINT = "/generate";
+    private static final String gg = "http://localhost:8000";
 
     public TextProcessingApiClient(MLServiceConfig config, ObjectMapper objectMapper) {
         this.httpClient = HttpClient.newBuilder()
@@ -34,7 +36,7 @@ public class TextProcessingApiClient {
                 .build();
 
         this.objectMapper = objectMapper;
-        this.generateUri = URI.create(config.baseUrl() + ENDPOINT);
+        this.generateUri = URI.create(gg + ENDPOINT);
     }
 
     public GenerationResponse generateText(GenerationRequest request) {
@@ -55,7 +57,7 @@ public class TextProcessingApiClient {
             } else {
                 String errorBody = response.body();
 
-                if (response.statusCode() >= 400 || response.statusCode() >= 500) {
+                if (response.statusCode() >= 400) {
                     List<String> apiValidationErrors = extractValidationErrorsFromErrorBody(errorBody);
                     if (!apiValidationErrors.isEmpty()) {
                         log.debug("API Validation Error ({}): {}", response.statusCode(), errorBody);
@@ -83,10 +85,11 @@ public class TextProcessingApiClient {
     }
 
     private HttpRequest createRequest(URI uri, String requestBody) {
+        //TODO увеличено до 5 минут потому что не тянет система
         return HttpRequest.newBuilder()
                 .uri(uri)
                 .header("Content-Type", "application/json")
-                .timeout(Duration.ofSeconds(15))
+                .timeout(Duration.ofMinutes(5))
                 .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                 .build();
     }

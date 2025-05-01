@@ -5,6 +5,7 @@ spring:
     livereload:
       enabled: false
 
+
   datasource:
     url: jdbc:postgresql://localhost:5432/ans_machine_db
     username: postgres
@@ -15,6 +16,8 @@ spring:
       minimum-idle: 10
       idle-timeout: 30000
       max-lifetime: 1800000
+
+
 
   task:
     execution:
@@ -39,12 +42,6 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 20MB
-
-  websocket:
-    endpoint: /test_endpoint_ans
-    allowed-origin-patterns: "*"
-    application-destination-prefix: /app
-    user-destination-prefix: /user
 
   batch:
     jdbc:
@@ -124,6 +121,7 @@ nlp:
   api:
     client:
       embedding-api-url: https://router.huggingface.co/hf-inference/pipeline/sentence-similarity/sentence-transformers/all-MiniLM-L6-v2
+      apiKey: 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
       connection-timeout-millis: 5000
       read-timeout-millis: 30000
       max-batch-size: 50
@@ -148,7 +146,21 @@ ml:
     stream: false
     max-retries: 3
 
-
+websocket:
+  endpoint: /ws
+  allowed-origins: "http://localhost:8080"
+  heartbeat:
+    interval: 30000 # Интервал отправки heartbeat (пингов) от сервера клиенту (мс)
+    timeout: 10000  # Время ожидания ответа на пинг перед разрывом соединения (мс)
+  message:
+    buffer-size: 16384 # Размер буфера входящих сообщений (байты)
+    send-timeout: 3000 # Таймаут отправки сообщения (мс)
+  stomp:
+    simple-broker:
+      enabled: true
+      destination-prefix: /topic/,/queue/
+      application-destination-prefix: /app
+      user-destination-prefix: /user
 
 
 

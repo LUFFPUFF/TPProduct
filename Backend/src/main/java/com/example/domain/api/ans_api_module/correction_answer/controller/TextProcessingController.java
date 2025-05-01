@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 public class TextProcessingController {
 
     private final TextProcessingService textProcessingService;
-    private final ObjectMapper objectMapper;
 
     @PostMapping("/process")
     public ResponseEntity<TextProcessingResponse> processText(

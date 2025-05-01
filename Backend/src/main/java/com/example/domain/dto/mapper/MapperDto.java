@@ -1,7 +1,7 @@
 package com.example.domain.dto.mapper;
 
 import com.example.database.model.chats_messages_module.ChatAttachment;
-import com.example.database.model.chats_messages_module.ChatMessage;
+import com.example.database.model.chats_messages_module.message.ChatMessage;
 import com.example.database.model.chats_messages_module.chat.Chat;
 import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.company_subscription_module.user_roles.UserRole;
@@ -9,7 +9,7 @@ import com.example.database.model.company_subscription_module.user_roles.role.Ro
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.model.crm_module.client.Client;
 import com.example.domain.dto.chat_module.ChatAttachmentDto;
-import com.example.domain.dto.chat_module.MessageDto;
+import com.example.domain.api.chat_service_api.model.dto.MessageDto;
 import com.example.domain.dto.chat_module.ChatDto;
 import com.example.domain.dto.company_module.*;
 import org.mapstruct.Mapper;

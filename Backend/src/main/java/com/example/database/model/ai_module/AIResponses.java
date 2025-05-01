@@ -1,6 +1,6 @@
 package com.example.database.model.ai_module;
 
-import com.example.database.model.chats_messages_module.ChatMessage;
+import com.example.database.model.chats_messages_module.message.ChatMessage;
 import com.example.database.model.chats_messages_module.chat.Chat;
 import com.example.database.model.crm_module.client.Client;
 import jakarta.persistence.*;

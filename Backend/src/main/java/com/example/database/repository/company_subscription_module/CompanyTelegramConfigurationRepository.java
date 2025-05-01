@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface CompanyTelegramConfigurationRepository extends JpaRepository<CompanyTelegramConfiguration, Integer> {
 
     Optional<CompanyTelegramConfiguration> findByBotUsername(String botUsername);
+
+    Optional<CompanyTelegramConfiguration> findByCompanyId(Integer companyId);
 }
