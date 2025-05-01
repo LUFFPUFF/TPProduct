@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BeansEndpointTabSettings">
+    <option name="diagramMode" value="true" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="DX-114 configuration nginx, fixed docker, fixed code after last merge" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Exception" />
+        <option value="Interface" />
+        <option value="Dockerfile" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="DX-114" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Sdr3nko&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/LUFFPUFF/TPProduct.git&quot;,
+    &quot;accountId&quot;: &quot;82a99f4e-2c75-474e-9dd8-3e8f44fd316f&quot;
+  }
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2twuwXMjgGbn7JgWp1AyxdVeJ25" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.SpringBootStartApplication.executor": "Run",
+    "Docker.Docker/Dockerfile.executor": "Run",
+    "Docker.Docker: Compose Deployment.executor": "Run",
+    "Docker.frontend/Dockerfile.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.SpringBootStartApplication.executor": "Run",
+    "extract.method.default.visibility": "private",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Admin/Desktop/postgresql-42.7.3.jar",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.16113281",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "configurable.group.build",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Admin\IdeaProjects\TPProduct" />
+      <recent name="C:\Users\Admin\IdeaProjects\TPProduct\Backend" />
+      <recent name="C:\Users\Admin\IdeaProjects\TPProduct\Diagrams\UseCaseDiagrams" />
+      <recent name="C:\Users\Admin\IdeaProjects\TPProduct\Diagrams\ActivityDiagram" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.example.domain.dto" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Docker.frontend/Dockerfile">
+    <configuration name="SpringBootStartApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.ui.run.SpringBootStartApplication" />
+      <module name="Backend" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.ui.run.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SpringBootStartApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="Backend" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.ui.run.SpringBootStartApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.ui.run.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Docker: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="sourceFilePath" value="Docker/docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="Docker/Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="sourceFilePath" value="Docker/Dockerfile" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
+      <deployment type="dockerfile">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="frontend/Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="sourceFilePath" value="frontend/Dockerfile" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.SpringBootStartApplication" />
+        <item itemvalue="Docker.frontend/Dockerfile" />
+        <item itemvalue="Docker.Docker: Compose Deployment" />
+        <item itemvalue="Docker.Docker/Dockerfile" />
+        <item itemvalue="Application.SpringBootStartApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.23726.103" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.23726.103" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="" />
+      <created>1741275697248</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1741275697248</updated>
+      <workItem from="1741275698431" duration="4187000" />
+      <workItem from="1741279938587" duration="634000" />
+      <workItem from="1741280577082" duration="683000" />
+      <workItem from="1741281280300" duration="5523000" />
+      <workItem from="1741299301513" duration="1182000" />
+      <workItem from="1741348481469" duration="2891000" />
+      <workItem from="1741615456915" duration="4470000" />
+      <workItem from="1742225447787" duration="1506000" />
+      <workItem from="1742229877483" duration="446000" />
+      <workItem from="1742230401814" duration="761000" />
+      <workItem from="1742231196548" duration="1786000" />
+      <workItem from="1742240146895" duration="4396000" />
+      <workItem from="1742246133257" duration="2448000" />
+      <workItem from="1742291200950" duration="1079000" />
+      <workItem from="1742493277515" duration="10346000" />
+      <workItem from="1742715783465" duration="29516000" />
+      <workItem from="1742759808577" duration="8270000" />
+      <workItem from="1742801717793" duration="6210000" />
+      <workItem from="1742828638059" duration="13785000" />
+      <workItem from="1742890682658" duration="15539000" />
+      <workItem from="1742908368387" duration="14930000" />
+      <workItem from="1742983091537" duration="63000" />
+      <workItem from="1743023770830" duration="466000" />
+      <workItem from="1743076692626" duration="1253000" />
+      <workItem from="1743352054458" duration="397000" />
+      <workItem from="1743354226866" duration="360000" />
+      <workItem from="1743368758568" duration="114000" />
+      <workItem from="1743373169961" duration="94000" />
+      <workItem from="1743442526939" duration="7097000" />
+      <workItem from="1743517348274" duration="1520000" />
+      <workItem from="1743525892707" duration="17762000" />
+      <workItem from="1743613625123" duration="3057000" />
+      <workItem from="1743618928306" duration="9822000" />
+      <workItem from="1743668487861" duration="3906000" />
+      <workItem from="1743682418336" duration="19276000" />
+      <workItem from="1743705785994" duration="218000" />
+      <workItem from="1743712212141" duration="1428000" />
+      <workItem from="1743757070980" duration="4514000" />
+      <workItem from="1743762947084" duration="1930000" />
+      <workItem from="1743853391998" duration="4704000" />
+      <workItem from="1743859734984" duration="2621000" />
+      <workItem from="1744297203813" duration="1591000" />
+      <workItem from="1744907286838" duration="18724000" />
+      <workItem from="1744959937700" duration="7907000" />
+      <workItem from="1745351035739" duration="1150000" />
+      <workItem from="1745401249355" duration="3654000" />
+      <workItem from="1745519662892" duration="13019000" />
+      <workItem from="1745562695626" duration="13636000" />
+      <workItem from="1745597007176" duration="7418000" />
+      <workItem from="1745745784797" duration="16907000" />
+      <workItem from="1745842095722" duration="2411000" />
+      <workItem from="1745844667259" duration="17823000" />
+      <workItem from="1745917405841" duration="8489000" />
+      <workItem from="1745936403871" duration="2464000" />
+      <workItem from="1745954220572" duration="10171000" />
+      <workItem from="1745967080502" duration="3568000" />
+      <workItem from="1745972081717" duration="26000" />
+      <workItem from="1745972625720" duration="434000" />
+      <workItem from="1746003646045" duration="4436000" />
+      <workItem from="1746010027978" duration="1866000" />
+      <workItem from="1746029372071" duration="17004000" />
+      <workItem from="1746087607069" duration="4240000" />
+    </task>
+    <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
+      <option name="closed" value="true" />
+      <created>1741277058963</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1741277058963</updated>
+    </task>
+    <task id="LOCAL-00002" summary="DX-91 DX-93 added company and subscription module">
+      <option name="closed" value="true" />
+      <created>1745955391970</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1745955391970</updated>
+    </task>
+    <task id="LOCAL-00003" summary="merged auth,company,subscription modules and frontend into main">
+      <option name="closed" value="true" />
+      <created>1745970260640</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1745970260640</updated>
+    </task>
+    <task id="LOCAL-00004" summary="DX-114 configuration nginx, fixed docker, fixed code after last merge">
+      <option name="closed" value="true" />
+      <created>1746091050382</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1746091050395</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="added activity diagram, usecase diagrams for operator and administrator" />
+    <MESSAGE value="DX-91 DX-93 added company and subscription module" />
+    <MESSAGE value="merged auth,company,subscription modules and frontend into main" />
+    <MESSAGE value="DX-114 configuration nginx, fixed docker, fixed code after last merge" />
+    <option name="LAST_COMMIT_MESSAGE" value="DX-114 configuration nginx, fixed docker, fixed code after last merge" />
+  </component>
+</project>
