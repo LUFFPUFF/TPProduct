@@ -8,7 +8,8 @@ const API = {
     },
     auth: {
         login: `${API_BASE_URL}/auth/login`,
-        register: `${API_BASE_URL}/auth/register`,
+        register: `${API_BASE_URL}/registration/register`,
+        confirmCode: `${API_BASE_URL}/registration/check-code`,
         refreshToken: `${API_BASE_URL}/auth/refresh`,
     },
     users: {

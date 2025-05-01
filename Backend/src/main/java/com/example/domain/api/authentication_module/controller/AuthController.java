@@ -4,6 +4,7 @@ import com.example.database.model.company_subscription_module.user_roles.user.Us
 import com.example.database.repository.company_subscription_module.UserRepository;
 import com.example.domain.api.authentication_module.security.jwtUtils.AuthCookieService;
 import com.example.domain.api.authentication_module.service.interfaces.AuthService;
+import com.example.domain.dto.EmailDto;
 import com.example.domain.dto.LoginReqDto;
 import com.example.domain.dto.TokenDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("api/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
@@ -23,10 +24,10 @@ public class AuthController {
     private final AuthCookieService authCookieService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody @Validated LoginReqDto loginDto, HttpServletResponse resp) {
+    public ResponseEntity<EmailDto> login(@RequestBody @Validated LoginReqDto loginDto, HttpServletResponse resp) {
         TokenDto tokenDto = authService.login(loginDto.getEmail(),loginDto.getPassword());
         authCookieService.setTokenCookies(resp,tokenDto);
-        return ResponseEntity.ok().body("Залогинился");
+        return ResponseEntity.ok().body(EmailDto.builder().email(loginDto.getEmail()).build());
     }
 
     @PostMapping("/logout")

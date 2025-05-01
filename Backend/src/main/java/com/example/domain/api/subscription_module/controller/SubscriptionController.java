@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/subscription")
+@RequestMapping("api/subscription")
 @RequiredArgsConstructor
 @Validated
 public class SubscriptionController {

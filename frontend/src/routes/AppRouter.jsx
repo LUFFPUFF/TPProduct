@@ -7,7 +7,7 @@ import DialogPage from "../pages/DialogPage.jsx";
 import SubscriptionsPage from "../pages/SubscriptionsPage.jsx";
 import IntegrationsPage from "../pages/IntegrationsPage.jsx";
 import TemplatesPage from "../pages/TemplatesPage.jsx";
-import CrmPage from "../pages/CrmPage.jsx";
+
 
 const AppRouter = () => {
     return (

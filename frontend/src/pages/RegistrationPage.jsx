@@ -34,7 +34,7 @@ export const RegistrationPage = () => {
             if (response.ok) {
                 setMessage("Регистрация успешна!");
                 setEmail("");
-                setPassword("");
+
             } else {
                 setMessage("Ошибка регистрации. Попробуйте еще раз.");
             }
@@ -85,6 +85,32 @@ export const RegistrationPage = () => {
                             hover:bg-[#2a4992] active:bg-[#dadee7] active:text-black transition-all duration-150 ease-in-out transform active:scale-95"
                     >
                         Зарегистрироваться
+                    </button>
+                    {
+                        //TODO: Временное решение, заменить на нормальное подтверждение кода
+                    }
+                    <button
+                        type="button"
+                        onClick={async () => {
+                            try {
+                                const response = await fetch(API.auth.confirmCode, {
+                                    method: "POST",
+                                    headers: {"Content-Type": "application/json"},
+                                    body: JSON.stringify({"code":"000000"}),
+                                });
+                                if (response.ok) {
+                                    setMessage("Код подтверждён успешно.");
+                                } else {
+                                    setMessage("Ошибка подтверждения. Проверьте код.");
+                                }
+                            } catch (error) {
+                                setMessage(`Ошибка соединения: ${error.message}`);
+                            }
+                        }}
+                        className="mt-4 w-full sm:w-96 md:w-[400px] lg:w-[500px] p-3 text-lg font-semibold bg-green-700 text-white rounded-md
+        hover:bg-green-800 active:bg-green-300 active:text-black transition-all duration-150 ease-in-out transform active:scale-95"
+                    >
+                        Подтвердить код
                     </button>
                 </form>
             </div>
