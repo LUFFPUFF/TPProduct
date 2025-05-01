@@ -1,6 +1,6 @@
 package com.example.domain.api.ans_api_module.answer_finder.domain.dto;
 
-import com.example.domain.dto.company_module.CompanyDto;
+import com.example.domain.dto.CompanyDto;
 import lombok.Data;
 
 import java.time.LocalDateTime;

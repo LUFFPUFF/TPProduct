@@ -54,7 +54,7 @@ public class HfSimilarityConfig {
                         event.getNumberOfRetryAttempts(), Objects.requireNonNull(event.getLastThrowable()).getMessage()));
 
         circuitBreaker.getEventPublisher()
-                .onCallNotPermitted(_ -> log.warn("CircuitBreaker 'huggingFaceEmbeddingApi' prevented calling API"))
+                .onCallNotPermitted(a -> log.warn("CircuitBreaker 'huggingFaceEmbeddingApi' prevented calling API"))
                 .onError(event -> log.error("CircuitBreaker 'huggingFaceEmbeddingApi' recorded error: {}", event.getThrowable().getMessage()))
                 .onSuccess(event -> log.debug("CircuitBreaker 'huggingFaceEmbeddingApi' recorded success"))
                 .onStateTransition(event -> log.info("CircuitBreaker 'huggingFaceEmbeddingApi' transitioned from {} to {}",

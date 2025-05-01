@@ -1,6 +1,6 @@
 package com.example.domain.api.company_api_test.service;
 
-import com.example.domain.dto.company_module.CompanyDto;
+import com.example.domain.dto.CompanyDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

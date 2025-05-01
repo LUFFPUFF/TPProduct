@@ -45,7 +45,7 @@ public class ExternalApiLemmatizer implements Lemmatizer {
         if (lemmas == null || lemmas.isEmpty()) {
             throw new NlpException("UDpipe API returned empty lemma list for single word: " + word + ". Check response format or word validity.");
         }
-        return lemmas.getFirst();
+        return lemmas.get(0);
     }
 
     @Override

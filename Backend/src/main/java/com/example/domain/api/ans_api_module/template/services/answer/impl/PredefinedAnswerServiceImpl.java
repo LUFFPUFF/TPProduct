@@ -85,7 +85,7 @@ public class PredefinedAnswerServiceImpl implements PredefinedAnswerService {
     @Override
     public Page<AnswerResponse> searchAnswers(String searchTerm, Integer companyId, Pageable pageable) {
         return answerRepository.findAll(
-                (Root<PredefinedAnswer> root, CriteriaQuery<?> _, CriteriaBuilder cb) -> {
+                (Root<PredefinedAnswer> root, CriteriaQuery<?> a, CriteriaBuilder cb) -> {
                     List<Predicate> predicates = new ArrayList<>();
 
                     if (companyId != null) {

@@ -9,7 +9,7 @@ import com.example.domain.api.ans_api_module.template.exception.ValidationExcept
 import com.example.domain.api.ans_api_module.template.util.FileType;
 import com.example.domain.api.ans_api_module.template.util.ValidationUtils;
 import com.example.domain.api.ans_api_module.template.dto.request.PredefinedAnswerUploadDto;
-import com.example.domain.dto.company_module.CompanyDto;
+import com.example.domain.dto.CompanyDto;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
