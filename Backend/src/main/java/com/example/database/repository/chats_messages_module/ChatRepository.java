@@ -38,6 +38,8 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
 
     Optional<Chat> findFirstByClientIdAndChatChannelAndStatusInOrderByCreatedAtDesc(Integer clientId, ChatChannel channel, Collection<ChatStatus> statuses);
 
+    Optional<Chat> findByClientId(Integer clientId);
+
     @Modifying
     @Query("UPDATE Chat c SET c.status = :status, c.assignedAt = :assignedAt WHERE c.id = :chatId")
     int updateStatus(@Param("chatId") Integer chatId,

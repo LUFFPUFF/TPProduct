@@ -175,6 +175,11 @@ public class ChatServiceImpl implements IChatService {
     }
 
     @Override
+    public Optional<Chat> findOpenChatByClient(Integer clientId) {
+        return chatRepository.findByClientId(clientId);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Optional<Chat> findChatEntityById(Integer chatId) {
         log.debug("Finding chat entity by ID: {}", chatId);
@@ -285,6 +290,14 @@ public class ChatServiceImpl implements IChatService {
         return chats.stream()
                 .map(chatMapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ChatDTO> getOperatorChatsStatus(Integer userId, Set<ChatStatus> statuses) {
+        List<Chat> chats = chatRepository.findByUserIdAndStatusIn(userId, statuses);
+        return chats.stream()
+                .map(chatMapper::toDto)
+                .toList();
     }
 
     @Override

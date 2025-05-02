@@ -7,21 +7,471 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="DX-43 исправлены ошибки при клонировании чатов, а также добавлена возможность назначать оператора">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/fa0ae2bb-c4c2-407d-9196-c5342e35f0be/storage_v2/_src_/database/ans_machine_db.b8M7Ww.meta" afterDir="false" />
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="DX-43 исправлены ошибки TelegramBot и создание клиента">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/template/services/answer/impl/PredefinedAnswerServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/template/services/answer/impl/PredefinedAnswerServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RoleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RoleServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/process_service/ClientCompanyProcessService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/process_service/ClientCompanyProcessService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/telegram/TelegramDialogBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/telegram/TelegramDialogBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/telegram/TelegramResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/telegram/TelegramResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/.bin/uuid" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/.bin/uuid.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/.bin/uuid.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/.package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/bundles/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/bundles/stomp.umd.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/bundles/stomp.umd.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/bundles/stomp.umd.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/augment-websocket.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/augment-websocket.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/augment-websocket.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/byte.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/byte.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/byte.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/client.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/client.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/client.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/compatibility/compat-client.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/compatibility/compat-client.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/compatibility/compat-client.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/compatibility/heartbeat-info.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/compatibility/heartbeat-info.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/compatibility/heartbeat-info.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/compatibility/stomp.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/compatibility/stomp.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/compatibility/stomp.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/frame-impl.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/frame-impl.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/frame-impl.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/i-frame.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/i-frame.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/i-frame.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/i-message.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/i-message.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/i-message.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/i-transaction.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/i-transaction.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/i-transaction.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/index.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/parser.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/parser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/parser.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/stomp-config.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/stomp-config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/stomp-config.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/stomp-handler.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/stomp-handler.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/stomp-handler.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/stomp-headers.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/stomp-headers.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/stomp-headers.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/stomp-subscription.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/stomp-subscription.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/stomp-subscription.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/types.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/types.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/types.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/versions.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/versions.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/esm6/versions.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/augment-websocket.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/byte.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/client.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/compatibility/compat-client.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/compatibility/heartbeat-info.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/compatibility/stomp.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/frame-impl.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/i-frame.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/i-message.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/i-transaction.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/parser.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/stomp-config.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/stomp-handler.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/stomp-headers.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/stomp-subscription.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/types.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/@stomp/stompjs/src/versions.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/debug/CHANGELOG.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/debug/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/debug/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/debug/node.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/debug/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/debug/src/browser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/debug/src/common.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/debug/src/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/debug/src/node.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/eventsource/.editorconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/eventsource/CONTRIBUTING.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/eventsource/HISTORY.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/eventsource/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/eventsource/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/eventsource/example/eventsource-polyfill.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/eventsource/example/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/eventsource/example/sse-client.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/eventsource/example/sse-server.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/eventsource/lib/eventsource-polyfill.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/eventsource/lib/eventsource.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/eventsource/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/faye-websocket/CHANGELOG.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/faye-websocket/LICENSE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/faye-websocket/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/faye-websocket/lib/faye/eventsource.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/faye-websocket/lib/faye/websocket.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/faye-websocket/lib/faye/websocket/api.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/faye-websocket/lib/faye/websocket/api/event.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/faye-websocket/lib/faye/websocket/api/event_target.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/faye-websocket/lib/faye/websocket/client.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/faye-websocket/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/http-parser-js/LICENSE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/http-parser-js/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/http-parser-js/http-parser.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/http-parser-js/http-parser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/http-parser-js/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/inherits/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/inherits/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/inherits/inherits.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/inherits/inherits_browser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/inherits/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/ms/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/ms/license.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/ms/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/ms/readme.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/querystringify/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/querystringify/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/querystringify/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/querystringify/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/requires-port/.npmignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/requires-port/.travis.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/requires-port/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/requires-port/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/requires-port/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/requires-port/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/requires-port/test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/safe-buffer/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/safe-buffer/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/safe-buffer/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/safe-buffer/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/safe-buffer/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/AUTHORS" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/CODE_OF_CONDUCT.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/Changelog.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/dist/sockjs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/dist/sockjs.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/dist/sockjs.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/dist/sockjs.min.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/entry.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/event/close.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/event/emitter.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/event/event.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/event/eventtarget.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/event/trans-message.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/facade.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/iframe-bootstrap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/info-ajax.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/info-iframe-receiver.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/info-iframe.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/info-receiver.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/location.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/shims.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport-list.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/browser/abstract-xhr.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/browser/eventsource.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/browser/websocket.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/driver/eventsource.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/driver/websocket.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/driver/xhr.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/eventsource.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/htmlfile.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/iframe.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/jsonp-polling.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/lib/ajax-based.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/lib/buffered-sender.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/lib/iframe-wrap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/lib/polling.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/lib/sender-receiver.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/receiver/eventsource.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/receiver/htmlfile.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/receiver/jsonp.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/receiver/xhr.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/sender/jsonp.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/sender/xdr.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/sender/xhr-cors.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/sender/xhr-fake.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/sender/xhr-local.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/websocket.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/xdr-polling.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/xdr-streaming.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/xhr-polling.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/transport/xhr-streaming.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/utils/browser-crypto.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/utils/browser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/utils/escape.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/utils/event.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/utils/iframe.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/utils/log.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/utils/object.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/utils/random.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/utils/transport.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/utils/url.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/lib/version.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/sockjs-client/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/url-parse/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/url-parse/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/url-parse/dist/url-parse.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/url-parse/dist/url-parse.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/url-parse/dist/url-parse.min.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/url-parse/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/url-parse/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/LICENSE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/max.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/max.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/md5.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/md5.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/native.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/native.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/nil.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/nil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/parse.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/parse.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/regex.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/regex.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/rng.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/rng.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/sha1.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/sha1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/stringify.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/stringify.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/types.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/types.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/uuid-bin.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/uuid-bin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v1.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v1ToV6.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v1ToV6.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v3.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v3.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v35.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v35.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v4.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v4.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v5.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v5.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v6.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v6.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v6ToV1.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v6ToV1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v7.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/v7.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/validate.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/validate.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/version.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs-browser/version.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/max.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/max.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/md5.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/md5.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/native.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/native.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/nil.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/nil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/parse.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/parse.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/regex.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/regex.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/rng.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/rng.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/sha1.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/sha1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/stringify.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/stringify.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/types.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/types.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/uuid-bin.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/uuid-bin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v1.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v1ToV6.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v1ToV6.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v3.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v3.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v35.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v35.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v4.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v4.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v5.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v5.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v6.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v6.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v6ToV1.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v6ToV1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v7.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/v7.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/validate.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/validate.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/version.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/cjs/version.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/max.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/max.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/md5.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/md5.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/native.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/native.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/nil.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/nil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/parse.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/parse.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/regex.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/regex.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/rng.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/rng.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/sha1.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/sha1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/stringify.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/stringify.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/types.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/types.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/uuid-bin.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/uuid-bin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v1.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v1ToV6.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v1ToV6.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v3.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v3.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v35.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v35.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v4.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v4.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v5.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v5.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v6.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v6.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v6ToV1.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v6ToV1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v7.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/v7.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/validate.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/validate.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/version.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm-browser/version.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/max.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/max.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/md5.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/md5.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/native.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/native.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/nil.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/nil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/parse.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/parse.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/regex.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/regex.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/rng.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/rng.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/sha1.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/sha1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/stringify.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/stringify.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/types.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/types.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/uuid-bin.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/uuid-bin.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v1.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v1ToV6.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v1ToV6.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v3.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v3.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v35.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v35.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v4.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v4.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v5.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v5.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v6.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v6.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v6ToV1.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v6ToV1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v7.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/v7.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/validate.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/validate.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/version.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/dist/esm/version.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/uuid/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/CHANGELOG.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/LICENSE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/lib/websocket/driver.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/lib/websocket/driver/base.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/lib/websocket/driver/client.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/lib/websocket/driver/draft75.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/lib/websocket/driver/draft76.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/lib/websocket/driver/headers.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/lib/websocket/driver/hybi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/lib/websocket/driver/hybi/frame.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/lib/websocket/driver/hybi/message.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/lib/websocket/driver/proxy.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/lib/websocket/driver/server.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/lib/websocket/driver/stream_reader.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/lib/websocket/http_parser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/lib/websocket/streams.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-driver/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-extensions/CHANGELOG.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-extensions/LICENSE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-extensions/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-extensions/lib/parser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-extensions/lib/pipeline/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-extensions/lib/pipeline/cell.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-extensions/lib/pipeline/functor.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-extensions/lib/pipeline/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-extensions/lib/pipeline/pledge.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-extensions/lib/pipeline/ring_buffer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-extensions/lib/websocket_extensions.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/node_modules/websocket-extensions/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/database/repository/chats_messages_module/ChatRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/database/repository/chats_messages_module/ChatRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/service/impl/AutoResponderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/service/impl/AutoResponderServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/template/controller/PredefinedAnswerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/template/controller/PredefinedAnswerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/IChatService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/IChatService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/impl/ChatServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/impl/ChatServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/company_module/service/CompanyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/company_module/service/CompanyService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/company_module/service/impl/CompanyServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/company_module/service/impl/CompanyServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/Backend-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/Backend-0.0.1-SNAPSHOT.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/Backend-0.0.1-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/Backend-0.0.1-SNAPSHOT.jar.original" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/chats_messages_module/ChatMessageRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/chats_messages_module/ChatMessageRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/service/impl/RoleServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/service/impl/RoleServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/process_service/ClientCompanyProcessService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/process_service/ClientCompanyProcessService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/impl/ChatMessageServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/impl/ChatMessageServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/chats_messages_module/ChatRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/chats_messages_module/ChatRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/service/impl/AutoResponderServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/service/impl/AutoResponderServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/job/AnswerItemProcessListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/job/AnswerItemProcessListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/job/AnswerItemWriteListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/job/AnswerItemWriteListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/listener/UploadJobListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/listener/UploadJobListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/processor/AnswerItemProcessor.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/processor/AnswerItemProcessor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/controller/PredefinedAnswerController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/controller/PredefinedAnswerController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/services/answer/impl/PredefinedAnswerServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/services/answer/impl/PredefinedAnswerServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramDialogBot.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramDialogBot.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/IChatService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/IChatService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/impl/ChatServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/impl/ChatServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/company_module/service/CompanyService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/company_module/service/CompanyService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/company_module/service/impl/CompanyServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/company_module/service/impl/CompanyServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/answer_finder/mapper/AnswerSearchMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/answer_finder/mapper/AnswerSearchMapperImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/JobExecutionMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/JobExecutionMapperImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/PredefinedAnswerMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/PredefinedAnswerMapperImpl.java" afterDir="false" />
@@ -32,7 +482,8 @@
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/NotificationMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/NotificationMapperImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/UserMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/UserMapperImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/dto/mapper/MapperDtoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/dto/mapper/MapperDtoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,8 +507,9 @@
       <list>
         <option value="Enum" />
         <option value="Exception" />
-        <option value="Interface" />
         <option value="Dockerfile" />
+        <option value="package-info" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -69,7 +521,6 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -101,53 +552,54 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.SpringBootStartApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Docker/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Docker: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.frontend/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Maven.Backend [clean,install].executor&quot;: &quot;Run&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Spring Boot.SpringBootStartApplication.executor&quot;: &quot;Run&quot;,
-    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Admin/Desktop/postgresql-42.7.3.jar&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.16113281&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.build&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.SpringBootStartApplication.executor": "Run",
+    "Docker.Docker/Dockerfile.executor": "Run",
+    "Docker.Docker: Compose Deployment.executor": "Run",
+    "Docker.frontend/Dockerfile.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "Maven.Backend [clean,install].executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.SpringBootStartApplication.executor": "Run",
+    "extract.method.default.visibility": "private",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Admin/Desktop/postgresql-42.7.3.jar",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "C:/Users/123/AppData/Roaming/JetBrains/IntelliJIdea2024.3/node/versions/22.15.0/node",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.16113281",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "configurable.group.build",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\ui\description_api" />
       <recent name="C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\resources" />
       <recent name="C:\Users\Admin\IdeaProjects\TPProduct" />
       <recent name="C:\Users\Admin\IdeaProjects\TPProduct\Backend" />
       <recent name="C:\Users\Admin\IdeaProjects\TPProduct\Diagrams\UseCaseDiagrams" />
-      <recent name="C:\Users\Admin\IdeaProjects\TPProduct\Diagrams\ActivityDiagram" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.example.domain.dto" />
@@ -312,7 +764,7 @@
       <workItem from="1746087607069" duration="4240000" />
       <workItem from="1746139029181" duration="7426000" />
       <workItem from="1746180500085" duration="994000" />
-      <workItem from="1746181515774" duration="9825000" />
+      <workItem from="1746181515774" duration="27768000" />
     </task>
     <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
       <option name="closed" value="true" />
@@ -362,7 +814,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746150459666</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="DX-43 исправлены ошибки TelegramBot и создание клиента">
+      <option name="closed" value="true" />
+      <created>1746194633470</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1746194633470</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -387,6 +847,7 @@
     <MESSAGE value="DX-43 Доработана система сокетов, а также улучшен модуль интеграций с внешними системами" />
     <MESSAGE value="merge DX-43 from main" />
     <MESSAGE value="DX-43 исправлены ошибки при клонировании чатов, а также добавлена возможность назначать оператора" />
-    <option name="LAST_COMMIT_MESSAGE" value="DX-43 исправлены ошибки при клонировании чатов, а также добавлена возможность назначать оператора" />
+    <MESSAGE value="DX-43 исправлены ошибки TelegramBot и создание клиента" />
+    <option name="LAST_COMMIT_MESSAGE" value="DX-43 исправлены ошибки TelegramBot и создание клиента" />
   </component>
 </project>

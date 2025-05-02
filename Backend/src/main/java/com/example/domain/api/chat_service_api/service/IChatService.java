@@ -11,6 +11,7 @@ import com.example.domain.api.chat_service_api.model.rest.chat.CreateChatRequest
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface IChatService {
 
@@ -49,6 +50,8 @@ public interface IChatService {
      */
     List<ChatDTO> getOperatorChats(Integer userId);
 
+    List<ChatDTO> getOperatorChatsStatus(Integer userId, Set<ChatStatus> statuses);
+
     /**
      * Получает список чатов для клиента.
      * @param clientId ID клиента.
@@ -59,6 +62,8 @@ public interface IChatService {
     ChatDetailsDTO requestOperatorEscalation(Integer chatId, Integer clientId);
 
     Optional<Chat> findOpenChatByClientAndChannel(Integer clientId, ChatChannel channel);
+
+    Optional<Chat> findOpenChatByClient(Integer clientId);
 
     Optional<Chat> findChatEntityById(Integer chatId);
 

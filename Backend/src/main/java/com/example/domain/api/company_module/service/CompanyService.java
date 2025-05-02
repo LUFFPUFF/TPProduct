@@ -5,9 +5,11 @@ import com.example.domain.dto.CompanyDto;
 import com.example.domain.dto.CompanyWithMembersDto;
 
 public interface CompanyService {
+
     Company createCompany(CompanyDto companyDto);
     CompanyWithMembersDto findCompany(String email);
     void disbandCompany(String email);
+    CompanyWithMembersDto findCompanyWithId(Integer id);
 
 
 }

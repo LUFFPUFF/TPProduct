@@ -110,7 +110,7 @@ public class PredefinedAnswerController {
             }
 
             Path tempDir = Files.createTempDirectory("upload_");
-            Path tempFilePath = tempDir.resolve(file.getOriginalFilename());
+            Path tempFilePath = tempDir.resolve(Objects.requireNonNull(file.getOriginalFilename()));
             file.transferTo(tempFilePath);
 
             if (!Files.exists(tempFilePath) || Files.size(tempFilePath) == 0) {

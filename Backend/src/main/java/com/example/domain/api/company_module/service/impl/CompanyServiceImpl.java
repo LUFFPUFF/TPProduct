@@ -50,6 +50,18 @@ public class CompanyServiceImpl implements CompanyService {
     public void disbandCompany(String email) {
 
     }
+
+    @Override
+    public CompanyWithMembersDto findCompanyWithId(Integer id) {
+        Company company = companyRepository.findById(id)
+                .orElseThrow(NotFoundCompanyException::new);
+
+        return CompanyWithMembersDto.builder()
+                .company(mapperDto.toDtoCompany(company))
+                .members(findMembers(company))
+                .build();
+    }
+
     public List<MemberDto> findMembers(Company company) {
         return userRepository.getAllByCompanyId(company.getId()).stream()
                 .map(user -> MemberDto.builder()

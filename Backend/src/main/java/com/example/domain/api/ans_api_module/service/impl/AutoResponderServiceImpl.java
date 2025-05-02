@@ -13,15 +13,12 @@ import com.example.domain.api.ans_api_module.correction_answer.service.TextProce
 import com.example.domain.api.ans_api_module.event.AutoResponderEscalationEvent;
 import com.example.domain.api.ans_api_module.exception.AutoResponderException;
 import com.example.domain.api.ans_api_module.service.IAutoResponderService;
-import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.exception.ExternalMessagingException;
 import com.example.domain.api.chat_service_api.integration.service.IExternalMessagingService;
 import com.example.domain.api.chat_service_api.mapper.ChatMessageMapper;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
 import com.example.domain.api.chat_service_api.model.rest.mesage.SendMessageRequestDTO;
 import com.example.domain.api.chat_service_api.service.IChatMessageService;
-import com.example.domain.api.chat_service_api.service.IChatService;
-import com.example.domain.api.chat_service_api.service.WebSocketMessagingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
