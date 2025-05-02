@@ -11,6 +11,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     host: true,
-    allowedHosts: ['dialogx.ru']
+    cors: true,
+    origin: 'http://dialogx.ru'
   }
 })
