@@ -1,20 +1,18 @@
 package com.example.domain.api.authentication_module.security.jwtUtils.impl;
 
-import com.example.database.repository.company_subscription_module.UserRepository;
 import com.example.domain.api.authentication_module.cache.AuthCacheService;
 import com.example.domain.api.authentication_module.exception_handler_auth.InvalidTokenSignException;
 import com.example.domain.api.authentication_module.security.config.JWTConfig;
 
 import com.example.domain.api.authentication_module.security.jwtUtils.JWTUtilsService;
 import com.example.domain.dto.TokenDto;
-import com.example.domain.dto.mapper.MapperDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 
 import io.jsonwebtoken.security.Keys;
-import lombok.Data;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -23,11 +21,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@Data
+@RequiredArgsConstructor
 public class JWTUtilsServiceImpl implements JWTUtilsService {
     private final JWTConfig jwtConfig;
-    private final MapperDto mapperDto;
-    private final UserRepository userRepository;
     private final AuthCacheService authCacheService;
 
     @Override

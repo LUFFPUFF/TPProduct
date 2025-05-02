@@ -49,7 +49,6 @@ public class ChatServiceImpl implements IChatService {
     private final IClientService clientService;
     private final IUserService userService;
     private final ChatMapper chatMapper;
-    private final ChatMessageMapper chatMessageMapper;
     private final ChatMessageRepository chatMessageRepository;
     private final IAssignmentService assignmentService;
     private final WebSocketMessagingService messagingService;

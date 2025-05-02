@@ -56,8 +56,6 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
 
         Chat chat = chatOptional.get();
 
-        AUTO_RESPONDER_INTERNAL_USER_ID = chat.getClient() != null ? chat.getClient().getId() : null;
-
         if (chat.getStatus() != ChatStatus.PENDING_AUTO_RESPONDER) {
             log.warn("AutoResponder: Chat ID {} is not in PENDING_AUTO_RESPONDER status (current status: {}). Skipping.", chatId, chat.getStatus());
             return;
@@ -184,6 +182,8 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
         messageRequest.setContent(content);
         messageRequest.setExternalMessageId(null);
         messageRequest.setReplyToExternalMessageId(null);
+
+        AUTO_RESPONDER_INTERNAL_USER_ID = chat.getClient().getId();
 
         messageRequest.setSenderId(AUTO_RESPONDER_INTERNAL_USER_ID);
         messageRequest.setSenderType(AUTO_RESPONDER_SENDER_TYPE);

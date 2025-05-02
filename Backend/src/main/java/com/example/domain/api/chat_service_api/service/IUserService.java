@@ -1,7 +1,7 @@
 package com.example.domain.api.chat_service_api.service;
 
 import com.example.database.model.company_subscription_module.user_roles.user.User;
-import com.example.domain.api.chat_service_api.model.dto.user.UserDTO;
+import com.example.domain.dto.UserDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,8 +20,8 @@ public interface IUserService {
      * @param userId ID пользователя.
      * @return Optional UserDTO.
      */
-    Optional<UserDTO> findDtoById(Integer userId);
+    Optional<UserDto> findDtoById(Integer userId);
 
-     List<UserDTO> getAllUsers(Integer companyId);
+     List<UserDto> getAllUsers(Integer companyId);
      void updateOnlineStatus(Integer userId, boolean isOnline);
 }

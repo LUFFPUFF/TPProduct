@@ -3,9 +3,11 @@ package com.example.database.repository.company_subscription_module;
 import com.example.database.model.chats_messages_module.chat.ChatStatus;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -31,10 +33,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByCompanyId(Integer companyId);
 
-    void updateByCompanyIdAndEmail(Integer companyId, String email);
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.company.id = :companyId WHERE u.email = :email")
+    void updateByCompanyIdAndEmail(@Param("companyId") Integer companyId,
+                                   @Param("email") String email);
 
     List<User> getAllByCompanyId(Integer companyId);
-
-
-
 }

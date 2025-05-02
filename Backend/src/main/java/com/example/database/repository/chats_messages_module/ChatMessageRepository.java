@@ -2,9 +2,11 @@ package com.example.database.repository.chats_messages_module;
 
 import com.example.database.model.chats_messages_module.chat.Chat;
 import com.example.database.model.chats_messages_module.chat.ChatChannel;
+import com.example.database.model.chats_messages_module.chat.ChatMessageSenderType;
 import com.example.database.model.chats_messages_module.chat.ChatStatus;
 import com.example.database.model.chats_messages_module.message.ChatMessage;
 import com.example.database.model.chats_messages_module.message.MessageStatus;
+import com.example.database.model.company_subscription_module.user_roles.user.User;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -52,6 +54,12 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Intege
             @Param("clientId") Integer clientId,
             @Param("channel") ChatChannel channel,
             @Param("statuses") Collection<ChatStatus> statuses
+    );
+
+    long countByChatAndSenderOperatorAndSenderType(
+            Chat chat,
+            User senderOperator,
+            ChatMessageSenderType senderType
     );
 
 }

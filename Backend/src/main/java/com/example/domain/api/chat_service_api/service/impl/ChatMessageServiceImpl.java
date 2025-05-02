@@ -59,6 +59,8 @@ public class ChatMessageServiceImpl implements IChatMessageService {
         if (senderType == ChatMessageSenderType.OPERATOR) {
             senderOperator = userRepository.findById(senderId)
                     .orElseThrow(() -> new ResourceNotFoundException("Operator with ID " + senderId + " not found."));
+            //TODO устанавливает чат статус = IN_PROGRESS, если оператор отправил более 5 сообщений
+            checkAndUpdateChatStatus(chat, senderOperator);
         } else if (senderType == ChatMessageSenderType.CLIENT) {
             senderClient = clientRepository.findById(senderId)
                     .orElseThrow(() -> new ResourceNotFoundException("Client with ID " + senderId + " not found."));
@@ -225,5 +227,25 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     @Override
     public ChatMessage saveIncomingMessageFromExternal(Integer chatId, ChatMessageSenderType senderType, Integer senderId, String content, String externalMessageId, String replyToExternalMessageId) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private void checkAndUpdateChatStatus(Chat chat, User operator) {
+        if (chat.getStatus() != ChatStatus.ASSIGNED) {
+            return;
+        }
+
+        long operatorMessagesCount = chatMessageRepository.countByChatAndSenderOperatorAndSenderType(
+                chat,
+                operator,
+                ChatMessageSenderType.OPERATOR
+        );
+
+        if (operatorMessagesCount >= 5) {
+            chat.setStatus(ChatStatus.IN_PROGRESS);
+            chatRepository.save(chat);
+
+            log.info("Chat {} status updated to IN_PROGRESS (operator {} sent {} messages)",
+                    chat.getId(), operator.getId(), operatorMessagesCount);
+        }
     }
 }

@@ -8,7 +8,7 @@ import com.example.database.model.company_subscription_module.subscription.Subsc
 import com.example.database.model.company_subscription_module.user_roles.UserRole;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.model.crm_module.client.Client;
-import com.example.domain.api.chat_service_api.model.dto.user.UserDTO;
+import com.example.domain.api.chat_service_api.model.dto.ChatDTO;
 import com.example.domain.dto.*;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
 import org.mapstruct.Mapper;
@@ -21,29 +21,6 @@ import java.util.Date;
 
 @Mapper(componentModel = "spring", imports = {java.util.Date.class}, uses = {ChatMapperHelper.class})
 public interface MapperDto {
-
-    // Chat mapping
-    @Mapping(source = "userDto", target = "user")
-    @Mapping(source = "clientDto", target = "client")
-    Chat toEntityChat(ChatDto chatDto);
-
-    @Mapping(source = "user", target = "userDto")
-    @Mapping(source = "client", target = "clientDto")
-    ChatDto toDtoChat(Chat chat);
-
-    // Message mapping
-    @Mapping(source = "chatDto", target = "chat")
-    @Mapping(source = "content", target = "content")
-    @Mapping(source = "sentAt", target = "sentAt")
-    ChatMessage toEntityChatMessage(MessageDto messageDto);
-
-    @Mapping(source = "chat", target = "chatDto")
-    @Mapping(source = "content", target = "content")
-    @Mapping(source = "sentAt", target = "sentAt")
-    MessageDto toDtoChatMessage(ChatMessage chatMessage);
-
-    ChatAttachment toEntityChatAttachment(ChatAttachmentDto chatAttachmentDto);
-    ChatAttachmentDto toDtoChatAttachment(ChatAttachment chatAttachment);
 
     @Mapping(source = "userDto", target = "user")
     Client toEntityClient(ClientDto clientDto);

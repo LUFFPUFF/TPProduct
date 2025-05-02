@@ -17,7 +17,10 @@ spring:
       idle-timeout: 30000
       max-lifetime: 1800000
 
-
+  data:
+    redis:
+      host: redis
+      port: 6379
 
   task:
     execution:
@@ -65,6 +68,11 @@ file-upload:
   location: /uploads
   clamav-host: localhost
   clamav-port: 3310
+
+jwt:
+  secret: "sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3"
+  access-expiration: 100000
+  refresh-expiration: 86400000
 
 # Настройки чатов
 chat:

@@ -4,6 +4,7 @@ import com.example.domain.api.ans_api_module.correction_answer.config.MLServiceC
 import com.example.domain.api.ans_api_module.correction_answer.dto.GenerationRequest;
 import com.example.domain.api.ans_api_module.correction_answer.dto.GenerationResponse;
 import com.example.domain.api.ans_api_module.correction_answer.exception.MLException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,9 +77,6 @@ public class TextProcessingApiClient {
             throw new MLException("API request interrupted", -1, e);
         } catch (Exception e) {
             log.error("Unexpected error during API request processing: {}", e.getMessage(), e);
-            if (e instanceof com.fasterxml.jackson.core.JsonProcessingException) {
-                throw new MLException("Failed to parse API response", -1, e);
-            }
             throw new MLException("Unexpected error calling API", -1, e);
         }
 

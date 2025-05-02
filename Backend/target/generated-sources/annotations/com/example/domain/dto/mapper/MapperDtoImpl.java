@@ -1,9 +1,5 @@
 package com.example.domain.dto.mapper;
 
-import com.example.database.model.chats_messages_module.ChatAttachment;
-import com.example.database.model.chats_messages_module.chat.Chat;
-import com.example.database.model.chats_messages_module.chat.ChatStatus;
-import com.example.database.model.chats_messages_module.message.ChatMessage;
 import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.company_subscription_module.subscription.Subscription;
 import com.example.database.model.company_subscription_module.user_roles.UserRole;
@@ -12,11 +8,6 @@ import com.example.database.model.company_subscription_module.user_roles.user.Us
 import com.example.database.model.company_subscription_module.user_roles.user.UserStatus;
 import com.example.database.model.crm_module.client.Client;
 import com.example.database.model.crm_module.client.TypeClient;
-import com.example.domain.api.chat_service_api.model.dto.MessageDto;
-import com.example.domain.api.chat_service_api.model.dto.client.ClientInfoDTO;
-import com.example.domain.api.chat_service_api.model.dto.user.UserInfoDTO;
-import com.example.domain.dto.ChatAttachmentDto;
-import com.example.domain.dto.ChatDto;
 import com.example.domain.dto.ClientDto;
 import com.example.domain.dto.CompanyDto;
 import com.example.domain.dto.RegistrationDto;
@@ -29,121 +20,11 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-01T23:20:31+0300",
+    date = "2025-05-02T01:48:54+0300",
     comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 21.0.7 (Microsoft)"
 )
 @Component
 public class MapperDtoImpl implements MapperDto {
-
-    @Override
-    public Chat toEntityChat(ChatDto chatDto) {
-        if ( chatDto == null ) {
-            return null;
-        }
-
-        Chat chat = new Chat();
-
-        chat.setUser( toEntityUser( chatDto.getUserDto() ) );
-        chat.setClient( toEntityClient( chatDto.getClientDto() ) );
-        chat.setId( chatDto.getId() );
-        chat.setChatChannel( chatDto.getChatChannel() );
-        if ( chatDto.getStatus() != null ) {
-            chat.setStatus( Enum.valueOf( ChatStatus.class, chatDto.getStatus() ) );
-        }
-        chat.setCreatedAt( chatDto.getCreatedAt() );
-
-        return chat;
-    }
-
-    @Override
-    public ChatDto toDtoChat(Chat chat) {
-        if ( chat == null ) {
-            return null;
-        }
-
-        ChatDto chatDto = new ChatDto();
-
-        chatDto.setUserDto( toDtoUser( chat.getUser() ) );
-        chatDto.setClientDto( toDtoClient( chat.getClient() ) );
-        chatDto.setId( chat.getId() );
-        chatDto.setChatChannel( chat.getChatChannel() );
-        if ( chat.getStatus() != null ) {
-            chatDto.setStatus( chat.getStatus().name() );
-        }
-        chatDto.setCreatedAt( chat.getCreatedAt() );
-
-        return chatDto;
-    }
-
-    @Override
-    public ChatMessage toEntityChatMessage(MessageDto messageDto) {
-        if ( messageDto == null ) {
-            return null;
-        }
-
-        ChatMessage chatMessage = new ChatMessage();
-
-        chatMessage.setChat( toEntityChat( messageDto.getChatDto() ) );
-        chatMessage.setContent( messageDto.getContent() );
-        chatMessage.setSentAt( messageDto.getSentAt() );
-        chatMessage.setId( messageDto.getId() );
-        chatMessage.setSenderClient( clientInfoDTOToClient( messageDto.getSenderClient() ) );
-        chatMessage.setSenderOperator( userInfoDTOToUser( messageDto.getSenderOperator() ) );
-        chatMessage.setStatus( messageDto.getStatus() );
-        chatMessage.setSenderType( messageDto.getSenderType() );
-        chatMessage.setReplyToExternalMessageId( messageDto.getReplyToExternalMessageId() );
-
-        return chatMessage;
-    }
-
-    @Override
-    public MessageDto toDtoChatMessage(ChatMessage chatMessage) {
-        if ( chatMessage == null ) {
-            return null;
-        }
-
-        MessageDto messageDto = new MessageDto();
-
-        messageDto.setChatDto( toDtoChat( chatMessage.getChat() ) );
-        messageDto.setContent( chatMessage.getContent() );
-        messageDto.setSentAt( chatMessage.getSentAt() );
-        messageDto.setId( chatMessage.getId() );
-        messageDto.setSenderType( chatMessage.getSenderType() );
-        messageDto.setStatus( chatMessage.getStatus() );
-        messageDto.setSenderOperator( userToUserInfoDTO( chatMessage.getSenderOperator() ) );
-        messageDto.setSenderClient( clientToClientInfoDTO( chatMessage.getSenderClient() ) );
-        messageDto.setReplyToExternalMessageId( chatMessage.getReplyToExternalMessageId() );
-
-        return messageDto;
-    }
-
-    @Override
-    public ChatAttachment toEntityChatAttachment(ChatAttachmentDto chatAttachmentDto) {
-        if ( chatAttachmentDto == null ) {
-            return null;
-        }
-
-        ChatAttachment chatAttachment = new ChatAttachment();
-
-        chatAttachment.setFileUrl( chatAttachmentDto.getFileUrl() );
-        chatAttachment.setFileType( chatAttachmentDto.getFileType() );
-
-        return chatAttachment;
-    }
-
-    @Override
-    public ChatAttachmentDto toDtoChatAttachment(ChatAttachment chatAttachment) {
-        if ( chatAttachment == null ) {
-            return null;
-        }
-
-        ChatAttachmentDto chatAttachmentDto = new ChatAttachmentDto();
-
-        chatAttachmentDto.setFileUrl( chatAttachment.getFileUrl() );
-        chatAttachmentDto.setFileType( chatAttachment.getFileType() );
-
-        return chatAttachmentDto;
-    }
 
     @Override
     public Client toEntityClient(ClientDto clientDto) {
@@ -332,65 +213,5 @@ public class MapperDtoImpl implements MapperDto {
         subscriptionDto1.setEndSubscription( subscriptionDto.getEndSubscription() );
 
         return subscriptionDto1;
-    }
-
-    protected Client clientInfoDTOToClient(ClientInfoDTO clientInfoDTO) {
-        if ( clientInfoDTO == null ) {
-            return null;
-        }
-
-        Client client = new Client();
-
-        client.setId( clientInfoDTO.getId() );
-        client.setName( clientInfoDTO.getName() );
-        client.setTypeClient( clientInfoDTO.getTypeClient() );
-        client.setTag( clientInfoDTO.getTag() );
-
-        return client;
-    }
-
-    protected User userInfoDTOToUser(UserInfoDTO userInfoDTO) {
-        if ( userInfoDTO == null ) {
-            return null;
-        }
-
-        User user = new User();
-
-        user.setId( userInfoDTO.getId() );
-        user.setFullName( userInfoDTO.getFullName() );
-        user.setStatus( userInfoDTO.getStatus() );
-        user.setProfilePicture( userInfoDTO.getProfilePicture() );
-
-        return user;
-    }
-
-    protected UserInfoDTO userToUserInfoDTO(User user) {
-        if ( user == null ) {
-            return null;
-        }
-
-        UserInfoDTO userInfoDTO = new UserInfoDTO();
-
-        userInfoDTO.setId( user.getId() );
-        userInfoDTO.setFullName( user.getFullName() );
-        userInfoDTO.setProfilePicture( user.getProfilePicture() );
-        userInfoDTO.setStatus( user.getStatus() );
-
-        return userInfoDTO;
-    }
-
-    protected ClientInfoDTO clientToClientInfoDTO(Client client) {
-        if ( client == null ) {
-            return null;
-        }
-
-        ClientInfoDTO clientInfoDTO = new ClientInfoDTO();
-
-        clientInfoDTO.setId( client.getId() );
-        clientInfoDTO.setName( client.getName() );
-        clientInfoDTO.setTag( client.getTag() );
-        clientInfoDTO.setTypeClient( client.getTypeClient() );
-
-        return clientInfoDTO;
     }
 }

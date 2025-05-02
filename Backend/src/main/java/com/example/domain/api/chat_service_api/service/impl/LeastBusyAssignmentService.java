@@ -22,7 +22,9 @@ public class LeastBusyAssignmentService implements IAssignmentService {
     public static final Collection<ChatStatus> OPEN_CHAT_STATUSES = Set.of(
             ChatStatus.ASSIGNED,
             ChatStatus.IN_PROGRESS,
-            ChatStatus.PENDING_OPERATOR
+            ChatStatus.PENDING_OPERATOR,
+            ChatStatus.PENDING_AUTO_RESPONDER,
+            ChatStatus.NEW
     );
 
     @Override
