@@ -7,7 +7,10 @@ services:
     container_name: nginx_container
     restart: always
     ports:
+      - "443:443"
       - "80:80"
+    volumes:
+      - /etc/ssl/dialogx:/etc/ssl/dialogx:ro
     depends_on:
       - frontend
     networks:
