@@ -10,7 +10,7 @@ services:
       - "443:443"
       - "80:80"
     volumes:
-      - /etc/ssl/dialogx:/etc/ssl/dialogx:ro
+      - /etc/ssl/dialogx:/etc/ssl:ro
     depends_on:
       - frontend
     networks:
