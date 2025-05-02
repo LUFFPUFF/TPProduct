@@ -48,7 +48,6 @@ public class PredefinedAnswerServiceImpl implements PredefinedAnswerService {
         PredefinedAnswer savedAnswer = answerRepository.save(predefinedAnswer);
 
         return buildResponseFromEntity(savedAnswer);
-
     }
 
     @Override

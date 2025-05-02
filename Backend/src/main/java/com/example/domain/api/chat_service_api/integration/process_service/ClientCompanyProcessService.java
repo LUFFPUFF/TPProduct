@@ -51,7 +51,7 @@ public class ClientCompanyProcessService {
                         .orElseThrow(() -> new ResourceNotFoundException("Telegram configuration not found"));
 
         Company company = configuration.getCompany();
-        String telegramUsername = telegramResponse.getBotUsername();
+        String telegramUsername = telegramResponse.getUsername();
 
         Client client = clientService.findByName(telegramUsername)
                 .orElseGet(() -> clientService.createClient(telegramUsername, company.getId(), null));

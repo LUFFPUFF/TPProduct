@@ -18,6 +18,8 @@ public class RoleServiceImpl implements RoleService  {
     private final UserRepository userRepository;
     private final AuthCacheService authCacheService;
 
+    //TODO получение ролей
+
     @Override
     @Transactional
     public boolean addRole(String userEmail, Role role) {

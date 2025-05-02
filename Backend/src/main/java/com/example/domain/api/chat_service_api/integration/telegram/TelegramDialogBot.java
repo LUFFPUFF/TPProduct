@@ -11,7 +11,10 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.GetMe;
+import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -19,6 +22,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -26,28 +31,33 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Slf4j
 public class TelegramDialogBot extends TelegramLongPollingBot {
 
-    private final BlockingQueue<TelegramResponse> internalIncomingQueue = new LinkedBlockingQueue<>();
     private final BlockingQueue<Object> incomingMessageQueue;
     private final CompanyTelegramConfigurationRepository companyTelegramConfigurationRepository;
-
     private final String botUsername;
     private volatile boolean running = true;
     private BotSession botSession;
+    private Long botId;
 
-    public TelegramDialogBot(@Value("${telegram.test_bot.token}") String botToken,
-                             BlockingQueue<Object> incomingMessageQueue,
-                             CompanyTelegramConfigurationRepository companyTelegramConfigurationRepository,
-                             @Value("${telegram.test_bot.username}") String botUsername) {
+    private static final int MAX_RETRY_ATTEMPTS = 10;
+    private static final long RETRY_DELAY_MS = 10000;
+
+    public TelegramDialogBot(
+            @Value("${telegram.token}") String botToken,
+            @Value("${telegram.username}") String botUsername,
+            BlockingQueue<Object> incomingMessageQueue,
+            CompanyTelegramConfigurationRepository companyTelegramConfigurationRepository) {
+
         super(botToken);
+        this.botUsername = botUsername;
         this.incomingMessageQueue = incomingMessageQueue;
         this.companyTelegramConfigurationRepository = companyTelegramConfigurationRepository;
-        this.botUsername = botUsername;
     }
 
     @PostConstruct
     public void init() {
         startBotWithRetry();
-        startInternalQueueProducer();
+        startMessageProcessingThread();
+        fetchBotInfo();
     }
 
     @PreDestroy
@@ -58,91 +68,117 @@ public class TelegramDialogBot extends TelegramLongPollingBot {
         }
     }
 
-    private void startInternalQueueProducer() {
-        new Thread(() -> {
-            while (true) {
+    private void startMessageProcessingThread() {
+        Thread messageProcessor = new Thread(() -> {
+            while (running) {
                 try {
-                    TelegramResponse response = getResponse();
-                    log.debug("Putting Telegram message from internal queue into main incoming queue: {}", response);
-                    incomingMessageQueue.put(response);
-
-                } catch (InterruptedException e) {
-                    log.error("Telegram message queue producer interrupted:", e);
-                    Thread.currentThread().interrupt();
-                    break;
+                    processPendingMessages();
                 } catch (Exception e) {
-                    log.error("Error putting Telegram message into incoming queue: {}", e.getMessage(), e);
+                    log.error("Error in message processing thread", e);
                 }
             }
-        }).start();
-        log.info("Telegram message queue producer started.");
-    }
-
-    public TelegramResponse getResponse() {
-        try {
-            return internalIncomingQueue.take();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        });
+        messageProcessor.setName("TelegramMessageProcessor");
+        messageProcessor.setDaemon(true);
+        messageProcessor.start();
     }
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage()) {
-            Message message = update.getMessage();
-            String textMessage = message.getText();
-            User user = message.getFrom();
-            Integer messageDate = message.getDate();
-            Long telegramChatId = message.getChatId();
+        if (!update.hasMessage() || !update.getMessage().hasText()) {
+            return;
+        }
 
+        Message message = update.getMessage();
+        User user = message.getFrom();
 
-            GetMe getMe = new GetMe();
+        if (user == null || user.getIsBot()) {
+            return;
+        }
 
-            try {
-                User botInfo = execute(getMe);
+        try {
+            TelegramResponse response = buildTelegramResponse(message);
+            updateChatConfiguration(message.getChatId());
+            incomingMessageQueue.put(response);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("Message processing interrupted");
+        } catch (Exception e) {
+            log.error("Error processing Telegram message", e);
+        }
+    }
 
-                TelegramResponse response = new TelegramResponse(
-                        botInfo.getId(), botInfo.getUserName(), user.getUserName(), user.getFirstName(), textMessage, messageDate
-                );
+    private void processPendingMessages() {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 
-                CompanyTelegramConfiguration companyTelegramConfiguration = companyTelegramConfigurationRepository.findByBotUsername(botUsername)
-                        .orElseThrow(() -> new ResourceNotFoundException("Not found company telegram configuration for bot: " + botUsername));
-                companyTelegramConfiguration.setChatTelegramId(telegramChatId);
-
-                companyTelegramConfigurationRepository.save(companyTelegramConfiguration);
-
-                incomingMessageQueue.put(response);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                log.error("Failed to put Telegram message into queue:", e);
-                Thread.currentThread().interrupt();
-            } catch (Exception e) {
-                log.error("Error creating or putting Telegram message into queue: {}", e.getMessage(), e);
-            }
+    private void fetchBotInfo() {
+        try {
+            User botInfo = execute(new GetMe());
+            this.botId = botInfo.getId();
+            log.info("Bot info fetched. ID: {}, Username: {}", botId, botUsername);
+        } catch (TelegramApiException e) {
+            log.error("Failed to fetch bot info", e);
         }
     }
 
 
     private void startBotWithRetry() {
-        new Thread(() -> {
-            while (running) {
+        TelegramBotsApi botsApi;
+        try {
+            botsApi = new TelegramBotsApi(DefaultBotSession.class);
+        } catch (TelegramApiException e) {
+            log.error("Failed to create TelegramBotsApi instance", e);
+            throw new RuntimeException("Failed to create TelegramBotsApi", e);
+        }
+
+        for (int attempt = 1; attempt <= MAX_RETRY_ATTEMPTS; attempt++) {
+            try {
+                botSession = botsApi.registerBot(this);
+                log.info("Successfully registered Telegram bot @{}", botUsername);
+                return;
+            } catch (TelegramApiException e) {
+                log.error("Failed to register bot (attempt {}/{}): {}",
+                        attempt, MAX_RETRY_ATTEMPTS, e.getMessage());
+
+                if (attempt == MAX_RETRY_ATTEMPTS) {
+                    throw new RuntimeException("Failed to register bot after " + MAX_RETRY_ATTEMPTS + " attempts", e);
+                }
+
                 try {
-                    TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-                    botSession = botsApi.registerBot(this);
-                    log.info("Telegram bot successfully started");
-                    break;
-                } catch (TelegramApiException e) {
-                    log.error("Failed to register bot: {}. Retrying in 10 seconds...", e.getMessage());
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException ie) {
-                        Thread.currentThread().interrupt();
-                        return;
-                    }
+                    Thread.sleep(RETRY_DELAY_MS);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Bot registration interrupted", ie);
                 }
             }
-        }).start();
+        }
+    }
+
+    private TelegramResponse buildTelegramResponse(Message message) {
+        return TelegramResponse.builder()
+                .botId(botId)
+                .botUsername(botUsername)
+                .username(message.getFrom().getUserName())
+                .firstUsername(message.getFrom().getFirstName())
+                .text(message.getText())
+                .date(message.getDate())
+                .build();
+    }
+
+    private void updateChatConfiguration(Long chatId) {
+        companyTelegramConfigurationRepository.findByBotUsername(botUsername)
+                .ifPresent(config -> {
+                    if (!chatId.equals(config.getChatTelegramId())) {
+                        config.setChatTelegramId(chatId);
+                        companyTelegramConfigurationRepository.save(config);
+                        log.info("Updated chat ID for bot {} to {}", botUsername, chatId);
+                    }
+                });
     }
 
     /**
@@ -162,9 +198,27 @@ public class TelegramDialogBot extends TelegramLongPollingBot {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to send Telegram message", e);
         }
 
+    }
+
+    /**
+     * Отправляет фото в указанный чат Telegram.
+     * @param chatId ID чата Telegram (Long).
+     * @param photoUrl путь к изображению.
+     */
+    public void sendPhoto(Long chatId, String photoUrl, String caption) {
+        SendPhoto sendPhoto = new SendPhoto();
+        sendPhoto.setChatId(chatId.toString());
+        sendPhoto.setPhoto(new InputFile(photoUrl));
+        sendPhoto.setCaption(caption);
+
+        try {
+            execute(sendPhoto);
+        } catch (TelegramApiException e) {
+            log.error("Failed to send photo", e);
+        }
     }
 
     @Override

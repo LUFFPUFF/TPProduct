@@ -94,14 +94,14 @@ DialogX - это интеллектуальный автоответчик но�
 
 ## 👥 Команда проекта
 
-| Роль                | Имя               | Контакты |
-|---------------------|-------------------|----------|
-| **Team Lead**       | Флейшман Никита   | [GitHub](https://github.com/LUFFPUFF) \| [VK](vk.com/olegnichiparenko) |
-| **Backend/DevOps**  | Сидоренко Игорь   | [GitHub](https://github.com/Sdr3nko) \| [VK](vk.com/id718859915) |
-| **Frontend**        | Давыдов Игорь     | [GitHub](https://github.com/C0r1e0ne) \| [VK](vk.com/steaach) |
-| **Аналитик/PM**     | Баранник Данил    | [GitHub](https://github.com/Danil200405) \| [VK](vk.com/danil_barannik) |
-| **UX/UI Designer**  | Гончаров Вадим    | [GitHub](https://github.com/username5) \| [VK](vk.com/vadikgoncharov) |
-| **QA Engineer**     | Кузнецов Валерий  | [GitHub](https://github.com/valer4ik57) \| [VK](vk.com/awkward666) |
+| Роль                         | Имя               | Контакты |
+|------------------------------|-------------------|----------|
+| **Team Lead**                | Флейшман Никита   | [GitHub](https://github.com/LUFFPUFF) \| [VK](vk.com/olegnichiparenko) |
+| **Backend/DevOps**           | Сидоренко Игорь   | [GitHub](https://github.com/Sdr3nko) \| [VK](vk.com/id718859915) |
+| **Frontend**                 | Давыдов Игорь     | [GitHub](https://github.com/C0r1e0ne) \| [VK](vk.com/steaach) |
+| **Аналитик/Product Manager** | Баранник Данил    | [GitHub](https://github.com/Danil200405) \| [VK](vk.com/danil_barannik) |
+| **UX/UI Designer**           | Гончаров Вадим    | [GitHub](https://github.com/username5) \| [VK](vk.com/vadikgoncharov) |
+| **QA Engineer**              | Кузнецов Валерий  | [GitHub](https://github.com/valer4ik57) \| [VK](vk.com/awkward666) |
 
 ---
 
