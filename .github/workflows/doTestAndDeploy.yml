@@ -2,7 +2,7 @@ name: DoTestAndDeploy
 on:
   push:
     branches: [ "main" ]
-  pull_request:
+  pull_request_target:
     branches: [ "main" ]
 
 jobs:
@@ -15,7 +15,6 @@ jobs:
            mkdir -p ~/.ssh
            echo "${{ secrets.ServerSSH }}" > ~/.ssh/id_ed25519
            chmod 600 ~/.ssh/id_ed25519
-           cat ~/.ssh/id_ed25519
            ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 root@176.98.178.29 << 'EOF'
             cd TPProduct
             git pull
