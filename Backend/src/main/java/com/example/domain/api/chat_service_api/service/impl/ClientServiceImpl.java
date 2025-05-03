@@ -39,6 +39,11 @@ public class ClientServiceImpl implements IClientService {
     }
 
     @Override
+    public Optional<Client> findByNameAndCompanyId(String name, Integer companyId) {
+        return clientRepository.findByNameAndCompanyId(name, companyId);
+    }
+
+    @Override
     public Optional<ClientDTO> findDtoById(Integer clientId) {
         return findById(clientId)
                 .map(clientMapper::toDto);

@@ -20,8 +20,10 @@ import com.example.domain.api.chat_service_api.model.dto.MessageStatusUpdateDTO;
 import com.example.domain.api.chat_service_api.model.rest.mesage.SendMessageRequestDTO;
 import com.example.domain.api.chat_service_api.service.IChatMessageService;
 import com.example.domain.api.chat_service_api.service.WebSocketMessagingService;
+import com.example.domain.api.chat_service_api.service.security.IChatSecurityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,11 +49,11 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     private final WebSocketMessagingService messagingService;
 
     @Override
+    @Transactional
+    @PreAuthorize("@chatSecurityService.canProcessAndSaveMessage(#messageRequest.chatId, #senderId, #senderType)")
     public MessageDto processAndSaveMessage(SendMessageRequestDTO messageRequest, Integer senderId, ChatMessageSenderType senderType) {
         Chat chat = chatRepository.findById(messageRequest.getChatId())
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + messageRequest.getChatId() + " not found"));
-
-        // TODO: Проверка прав! Может ли senderId отправлять сообщения в этот чат?
 
         User senderOperator = null;
         Client senderClient = null;
@@ -59,7 +61,6 @@ public class ChatMessageServiceImpl implements IChatMessageService {
         if (senderType == ChatMessageSenderType.OPERATOR) {
             senderOperator = userRepository.findById(senderId)
                     .orElseThrow(() -> new ResourceNotFoundException("Operator with ID " + senderId + " not found."));
-            //TODO устанавливает чат статус = IN_PROGRESS, если оператор отправил более 5 сообщений
             checkAndUpdateChatStatus(chat, senderOperator);
         } else if (senderType == ChatMessageSenderType.CLIENT) {
             senderClient = clientRepository.findById(senderId)
@@ -101,12 +102,8 @@ public class ChatMessageServiceImpl implements IChatMessageService {
 
     @Override
     @Transactional(readOnly = true)
+    @PreAuthorize("@chatSecurityService.canAccessChat(#chatId)")
     public List<MessageDto> getMessagesByChatId(Integer chatId) {
-        Chat chat = chatRepository.findById(chatId)
-                .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
-
-        // TODO: Проверка прав! Может ли текущий пользователь видеть сообщения этого чата?
-
         List<ChatMessage> messages = chatMessageRepository.findByChatIdOrderBySentAtAsc(chatId);
 
         return messages.stream()
@@ -115,11 +112,11 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     }
 
     @Override
-    public MessageDto updateMessageStatus(Integer messageId, MessageStatus newStatus, Integer userId) {
+    @Transactional
+    @PreAuthorize("@chatSecurityService.canUpdateMessageStatus(#messageId)")
+    public MessageDto updateMessageStatus(Integer messageId, MessageStatus newStatus) {
         ChatMessage message = chatMessageRepository.findById(messageId)
                 .orElseThrow(() -> new ResourceNotFoundException("Message with ID " + messageId + " not found."));
-
-        // TODO: Проверка прав! Может ли userId изменить статус этого сообщения на newStatus?
 
         message.setStatus(newStatus);
         ChatMessage updatedMessage = chatMessageRepository.save(message);
@@ -138,16 +135,12 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     }
 
     @Override
+    @Transactional
+    @PreAuthorize("principal.id == #operatorId and @chatSecurityService.canMarkMessagesAsRead(#chatId, #operatorId)")
     public int markClientMessagesAsRead(Integer chatId, Integer operatorId, Collection<Integer> messageIds) {
         if (messageIds == null || messageIds.isEmpty()) {
             return 0;
         }
-
-        Chat chat = chatRepository.findById(chatId)
-                .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
-
-        // TODO: Проверить, что operatorId существует и является оператором
-        // TODO: Проверить, что operatorId назначен на этот чат (или является админом)
 
         int updatedCount = chatMessageRepository.markClientMessagesAsRead(chatId, MessageStatus.READ, messageIds);
 
@@ -166,6 +159,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Chat> findOpenChatByClientAndChannel(Integer clientId, ChatChannel channel) {
         Optional<Chat> foundChat = chatMessageRepository
                 .findFirstChatByChatClient_IdAndChatChannelAndChatStatusInOrderByChatCreatedAtDesc(clientId, channel, OPEN_CHAT_STATUSES);
@@ -178,6 +172,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<ChatMessage> findFirstMessageByChatId(Integer chatId) {
         Optional<ChatMessage> firstMessage = chatMessageRepository.findFirstByChatIdOrderBySentAtAsc(chatId);
         if (firstMessage.isPresent()) {
@@ -189,16 +184,16 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Chat> findChatEntityById(Integer chatId) {
         return chatRepository.findById(chatId);
     }
 
     @Override
+    @PreAuthorize("@chatSecurityService.canUpdateMessageStatusByExternalId(#chatId, #externalMessageId)")
     public int updateOperatorMessageStatusByExternalId(Integer chatId, String externalMessageId, MessageStatus newStatus) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
-
-        // TODO: Проверка прав! Имеет ли право внешний сервис или текущий пользователь
 
         int updatedCount = chatMessageRepository.updateOperatorMessageStatusByExternalId(chatId, newStatus, externalMessageId);
 
@@ -210,14 +205,14 @@ public class ChatMessageServiceImpl implements IChatMessageService {
                 ChatMessage updatedMsg = updatedMsgOptional.get();
                 MessageStatusUpdateDTO statusUpdateDTO = new MessageStatusUpdateDTO();
                 statusUpdateDTO.setMessageId(updatedMsg.getId());
-                statusUpdateDTO.setChatId(chatId);
+                statusUpdateDTO.setChatId(updatedMsg.getChat().getId());
                 statusUpdateDTO.setNewStatus(newStatus);
                 statusUpdateDTO.setTimestamp(LocalDateTime.now());
 
-                String destination = "/topic/chat/" + chatId + "/messages";
+                String destination = "/topic/chat/" + chat.getId() + "/messages";
                 messagingService.sendMessage(destination, statusUpdateDTO);
             } else {
-                System.err.println("Warning: Updated status for external message ID " + externalMessageId + " in chat " + chatId + ", but could not retrieve updated message for WS notification.");
+                log.warn("Warning: Updated status for external message ID {} in chat {}, but could not retrieve updated message for WS notification.", externalMessageId, chatId);
             }
         }
 
@@ -225,6 +220,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     }
 
     @Override
+    @Deprecated
     public ChatMessage saveIncomingMessageFromExternal(Integer chatId, ChatMessageSenderType senderType, Integer senderId, String content, String externalMessageId, String replyToExternalMessageId) {
         throw new UnsupportedOperationException("Not supported yet.");
     }

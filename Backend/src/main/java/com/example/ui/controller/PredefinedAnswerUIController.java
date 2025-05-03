@@ -4,7 +4,10 @@ import com.example.domain.api.ans_api_module.template.dto.request.PredefinedAnsw
 import com.example.domain.api.ans_api_module.template.dto.response.AnswerResponse;
 import com.example.domain.api.ans_api_module.template.dto.response.UploadResultResponse;
 import com.example.domain.api.ans_api_module.template.services.answer.PredefinedAnswerService;
+import com.example.domain.api.chat_service_api.exception_handler.exception.service.ChatServiceException;
+import com.example.domain.api.chat_service_api.service.security.IChatSecurityService;
 import com.example.domain.api.company_module.service.CompanyService;
+import com.example.domain.dto.AppUserDetails;
 import com.example.domain.dto.CompanyWithMembersDto;
 import com.example.ui.dto.answer.UiPredefinedAnswerDto;
 import com.example.ui.dto.answer.UiPredefinedAnswerRequest;
@@ -19,6 +22,7 @@ import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +31,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/ui/predefined-answers")
@@ -36,18 +41,14 @@ public class PredefinedAnswerUIController {
 
     private final PredefinedAnswerService answerService;
     private final UIPredefinedAnswerMapper uiAnswerMapper;
+    private final IChatSecurityService chatSecurityService;
     private final CompanyService companyService;
 
     private final JobLauncher jobLauncher;
     private final Job answerUploadJob;
 
-    //TODO получать информацию из security
-    private Integer getCurrentUserCompanyId() {
-        return 2;
-    }
-
-    private Integer getCurrentUserId() {
-        return 1;
+    private Optional<AppUserDetails> getCurrentAppUser() {
+        return chatSecurityService.getCurrentAppUserPrincipal();
     }
 
     /**
@@ -58,8 +59,17 @@ public class PredefinedAnswerUIController {
      * @return UI DTO созданного ответа.
      */
     @PostMapping
+    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<UiPredefinedAnswerDto> createAnswer(@Valid @RequestBody UiPredefinedAnswerRequest dto) {
-        Integer userCompanyId = getCurrentUserCompanyId();
+
+        AppUserDetails currentUser = getCurrentAppUser()
+                .orElseThrow(() -> new RuntimeException("Current user is not logged in"));
+        Integer userCompanyId = currentUser.getCompanyId();
+
+        if (userCompanyId == null) {
+            log.warn("User {} attempted to create predefined answer but is not associated with a company.", currentUser.getId());
+            throw new ChatServiceException("Authenticated user is not associated with a company.");
+        }
 
         PredefinedAnswerUploadDto serviceDto = uiAnswerMapper.toServiceDto(dto);
 
@@ -80,11 +90,19 @@ public class PredefinedAnswerUIController {
      * @return UI DTO обновленного ответа.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<UiPredefinedAnswerDto> updateAnswer(
             @PathVariable Integer id,
             @Valid @RequestBody UiPredefinedAnswerRequest dto) {
 
-        Integer userCompanyId = getCurrentUserCompanyId();
+        AppUserDetails currentUser = getCurrentAppUser()
+                .orElseThrow(() -> new RuntimeException("Current user is not logged in"));
+        Integer userCompanyId = currentUser.getCompanyId();
+
+        if (userCompanyId == null) {
+            log.warn("User {} attempted to update predefined answer {} but is not associated with a company.", currentUser.getId(), id);
+            throw new ChatServiceException("Authenticated user is not associated with a company.");
+        }
 
         PredefinedAnswerUploadDto serviceDto = uiAnswerMapper.toServiceDto(dto);
         CompanyWithMembersDto company = companyService.findCompanyWithId(userCompanyId);
@@ -104,7 +122,16 @@ public class PredefinedAnswerUIController {
      * @param id ID удаляемого ответа.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<Void> deleteAnswer(@PathVariable Integer id) {
+        AppUserDetails currentUser = getCurrentAppUser()
+                .orElseThrow(() -> new RuntimeException("Current user is not logged in"));
+        Integer userCompanyId = currentUser.getCompanyId();
+
+        if (userCompanyId == null) {
+            log.warn("User {} attempted to delete predefined answer {} but is not associated with a company.", currentUser.getId(), id);
+            throw new ChatServiceException("Authenticated user is not associated with a company.");
+        }
         answerService.deleteAnswer(id);
         return ResponseEntity.noContent().build();
     }
@@ -117,7 +144,16 @@ public class PredefinedAnswerUIController {
      * @return UI DTO ответа.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<UiPredefinedAnswerDto> getAnswerById(@PathVariable Integer id) {
+        AppUserDetails currentUser = getCurrentAppUser()
+                .orElseThrow(() -> new RuntimeException("Current user is not logged in"));
+        Integer userCompanyId = currentUser.getCompanyId();
+
+        if (userCompanyId == null) {
+            log.warn("User {} attempted to get predefined answer {} but is not associated with a company.", currentUser.getId(), id);
+            throw new ChatServiceException("Authenticated user is not associated with a company.");
+        }
         AnswerResponse serviceResponse = answerService.getAnswerById(id);
         return ResponseEntity.ok(uiAnswerMapper.toUiDto(serviceResponse));
     }
@@ -130,16 +166,21 @@ public class PredefinedAnswerUIController {
      * @return Список UIPredefinedAnswerDto.
      */
     @GetMapping("/my/category/{category}")
+    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<List<UiPredefinedAnswerDto>> getMyCompanyAnswersByCategory(
             @PathVariable String category) {
 
-        String companyName = "DialogX"; //TODO Тестовое имя - брать из security
-        List<AnswerResponse> serviceResponses = answerService.getAnswersByCategory(category);
-        List<AnswerResponse> filteredResponses = serviceResponses.stream()
-                .filter(ans -> ans.getCompanyName() != null && ans.getCompanyName().equals(companyName))
-                .toList();
+        AppUserDetails currentUser = getCurrentAppUser()
+                .orElseThrow(() -> new RuntimeException("Current user is not logged in"));
+        Integer userCompanyId = currentUser.getCompanyId();
 
-        List<UiPredefinedAnswerDto> uiResponses = uiAnswerMapper.toUiDtoList(filteredResponses);
+        if (userCompanyId == null) {
+            log.warn("User {} attempted to get predefined answers by category {} but is not associated with a company.", currentUser.getId(), category);
+            throw new ChatServiceException("Authenticated user is not associated with a company.");
+        }
+
+        List<AnswerResponse> serviceResponses = answerService.getAnswersByCategory(category);
+        List<UiPredefinedAnswerDto> uiResponses = uiAnswerMapper.toUiDtoList(serviceResponses);
         return ResponseEntity.ok(uiResponses);
     }
 
@@ -153,12 +194,20 @@ public class PredefinedAnswerUIController {
      * @return Результат загрузки.
      */
     @PostMapping("/upload")
+    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<UploadResultResponse> uploadAnswers(
             @RequestParam("file") MultipartFile file,
             @RequestParam String category,
             @RequestParam(defaultValue = "false") String overwrite) {
-        Integer currentUserId = getCurrentUserId();
-        Integer userCompanyId = getCurrentUserCompanyId();
+        AppUserDetails currentUser = getCurrentAppUser()
+                .orElseThrow(() -> new RuntimeException("Current user is not logged in"));
+        Integer currentUserId = currentUser.getId();
+        Integer userCompanyId = currentUser.getCompanyId();
+
+        if (userCompanyId == null) {
+            log.warn("User {} attempted to upload predefined answers but is not associated with a company.", currentUserId);
+            throw new ChatServiceException("Authenticated user is not associated with a company.");
+        }
 
         try {
             if (file == null || file.isEmpty()) {

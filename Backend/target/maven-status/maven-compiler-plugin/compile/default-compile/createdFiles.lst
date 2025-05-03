@@ -81,6 +81,7 @@ com\example\domain\api\ans_api_module\template\batch\reader\PredefinedAnswerItem
 com\example\domain\api\ans_api_module\template\dto\request\UploadFileRequest.class
 com\example\database\model\company_subscription_module\company\Company.class
 com\example\domain\api\ans_api_module\template\batch\job\AnswerUploadJobConfig.class
+com\example\domain\dto\AppUserDetails.class
 com\example\domain\api\chat_service_api\service\impl\LeastBusyAssignmentService.class
 com\example\domain\api\ans_api_module\answer_finder\exception\NlpException.class
 com\example\domain\api\chat_service_api\mapper\UserMapper.class
@@ -99,6 +100,7 @@ com\example\domain\api\chat_service_api\exception_handler\exception\controller\C
 com\example\ui\dto\chat\message\UiMessageDto.class
 com\example\database\model\ai_module\PredefinedAnswer.class
 com\example\domain\api\chat_service_api\model\rest\RequestOperatorRequestDTO.class
+com\example\domain\api\chat_service_api\service\security\impl\ChatSecurityServiceImpl.class
 com\example\database\repository\company_subscription_module\UserRoleRepository.class
 com\example\ui\mapper\chat\UiUserMapper.class
 com\example\database\repository\crm_module\ClientNotesRepository.class
@@ -284,6 +286,7 @@ com\example\database\model\company_subscription_module\user_roles\user\Role.clas
 com\example\domain\api\ans_api_module\template\batch\job\AnswerItemWriteListener$WriteStatistics.class
 com\example\database\model\ai_module\AITrainingData.class
 com\example\domain\dto\MemberDto$MemberDtoBuilder.class
+com\example\domain\api\chat_service_api\service\security\IChatSecurityService.class
 com\example\domain\dto\CompanyDto$CompanyDtoBuilder.class
 com\example\domain\api\ans_api_module\correction_answer\dto\textProcessingDto\Status.class
 com\example\domain\api\ans_api_module\template\batch\item\AnswerFileReader.class
