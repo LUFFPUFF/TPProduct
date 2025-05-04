@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-04T00:54:45+0300",
-    comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 21.0.7 (Microsoft)"
+    date = "2025-05-04T21:05:30+0300",
+    comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 22.0.2 (Oracle Corporation)"
 )
 @Component
 public class JobExecutionMapperImpl implements JobExecutionMapper {
