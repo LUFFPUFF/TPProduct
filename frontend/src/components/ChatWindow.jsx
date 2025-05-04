@@ -23,9 +23,8 @@ const ChatWindow = ({ selectedDialog }) => {
         setIsSending(true);
 
         const newMessage = {
-            sender: "Оператор",
-            text: messageText,
-            time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            chatId: selectedDialog.id,
+            content: messageText,
         };
 
         try {
@@ -39,11 +38,15 @@ const ChatWindow = ({ selectedDialog }) => {
 
             if (!res.ok) throw new Error("Ошибка при отправке сообщения");
 
-            // Обновляем локальное состояние
-            setMessages((prev) => [...prev, newMessage]);
+            const displayedMessage = {
+                sender: "Оператор",
+                text: messageText,
+                time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            };
+
+            setMessages((prev) => [...prev, displayedMessage]);
             setMessageText("");
 
-            // Обновляем статус диалога, например, на "active"
             await fetch(API.dialogs.updateStatus(selectedDialog.id), {
                 method: "PATCH",
                 headers: {
