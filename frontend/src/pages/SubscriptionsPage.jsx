@@ -12,12 +12,12 @@ export default function SubscriptionsPage() {
 
     const fetchSoloPrice = async (months) => {
         try {
-            const response = await fetch(API.subscriptions.price, {
+            const url = `${API.subscriptions.price}?months_count=${months}`;
+            const response = await fetch(url, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ months_count: months }),
             });
 
             if (!response.ok) {
@@ -34,15 +34,12 @@ export default function SubscriptionsPage() {
 
     const fetchTeamPrice = async (months, users) => {
         try {
-            const response = await fetch(API.subscriptions.price, {
+            const url = `${API.subscriptions.price}?months_count=${months}&operators_count=${users}`;
+            const response = await fetch(url, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    months_count: months,
-                    operators_count: users,
-                }),
             });
 
             if (!response.ok) {
