@@ -1,6 +1,7 @@
 package com.example.ui.controller;
 
 import com.example.database.model.chats_messages_module.chat.Chat;
+import com.example.database.model.chats_messages_module.chat.ChatChannel;
 import com.example.database.model.chats_messages_module.chat.ChatMessageSenderType;
 import com.example.database.model.chats_messages_module.chat.ChatStatus;
 import com.example.database.model.company_subscription_module.company.Company;
@@ -13,10 +14,12 @@ import com.example.domain.api.chat_service_api.model.dto.ChatDTO;
 import com.example.domain.api.chat_service_api.model.dto.ChatDetailsDTO;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
 import com.example.domain.api.chat_service_api.model.dto.notification.NotificationDTO;
+import com.example.domain.api.chat_service_api.model.rest.chat.AssignChatRequestDTO;
 import com.example.domain.api.chat_service_api.model.rest.chat.CloseChatRequestDTO;
 import com.example.domain.api.chat_service_api.model.rest.chat.CreateChatRequestDTO;
 import com.example.domain.api.chat_service_api.model.rest.mesage.SendMessageRequestDTO;
 import com.example.domain.api.chat_service_api.service.*;
+import com.example.domain.dto.AppUserDetails;
 import com.example.ui.mapper.chat.UIMessageMapper;
 import com.example.ui.mapper.chat.UINotificationMapper;
 import com.example.ui.mapper.chat.UiChatMapper;
@@ -31,6 +34,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,9 +59,13 @@ public class ChatUiController {
     private final UIMessageMapper messageMapper;
     private final UINotificationMapper notificationMapper;
 
-    //TODO логика получения id оператора из security
-    private Integer getCurrentOperatorId() {
-        return 1;
+    private AppUserDetails getCurrentAppUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || !(authentication.getPrincipal() instanceof AppUserDetails)) {
+            log.error("Attempted to access secured resource without valid AppUserDetails principal.");
+            throw new IllegalStateException("User is not authenticated or principal is not of type AppUserDetails");
+        }
+        return (AppUserDetails) authentication.getPrincipal();
     }
 
     /**
@@ -63,6 +73,7 @@ public class ChatUiController {
      * <p>GET /api/ui/chats/{chatId}/details
      */
     @GetMapping("/{chatId}/details")
+    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<ChatUIDetailsDTO> getChatDetails(@PathVariable Integer chatId) {
         ChatDetailsDTO chatDetails = chatService.getChatDetails(chatId);
         ChatUIDetailsDTO uiChatDetails = chatMapper.toUiDetailsDto(chatDetails);
@@ -79,17 +90,18 @@ public class ChatUiController {
      * @return Список UIChatDto.
      */
     @GetMapping("/my")
+    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<List<UIChatDto>> getMyOperatorsChats(
             @RequestParam(value = "status", required = false) Set<ChatStatus> statuses
     ) {
 
-        Integer currentOperatorId = getCurrentOperatorId();
+        Integer currentUserId = getCurrentAppUser().getId();
 
         List<ChatDTO> chats;
         if (statuses == null || statuses.isEmpty()) {
-            chats = chatService.getOperatorChats(currentOperatorId);
+            chats = chatService.getOperatorChats(currentUserId);
         } else {
-            chats = chatService.getOperatorChatsStatus(currentOperatorId, statuses);
+            chats = chatService.getOperatorChatsStatus(currentUserId, statuses);
         }
 
         List<UIChatDto> uiChats = chats.stream()
@@ -106,46 +118,49 @@ public class ChatUiController {
      * @return Детали созданного чата.
      */
     @PostMapping("/create-test-chat")
+    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<ChatUIDetailsDTO> createTestChat() {
-        Integer currentOperatorId = getCurrentOperatorId();
+        AppUserDetails currentUser = getCurrentAppUser();
+        Integer currentUserId = currentUser.getId();
+        Integer companyId = currentUser.getCompanyId();
+
+        if (companyId == null) {
+            throw new ChatServiceException("Authenticated user is not associated with a company.");
+        }
 
         try {
-            User operator = userService.findById(currentOperatorId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Operator with ID " + currentOperatorId + " not found."));
-
-            Company company = operator.getCompany();
-            if (company == null) {
-                throw new ChatServiceException("Operator is not associated with a company.");
-            }
-            Integer companyId = company.getId();
+            User operator = userService.findById(currentUserId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Authenticated operator with ID " + currentUserId + " not found."));
 
             String testClientName = "Тестовый клиент (Оператор " + operator.getFullName() + ")";
-            Client testClient = clientService.findByName(testClientName)
+            Client testClient = clientService.findByNameAndCompanyId(testClientName, companyId)
                     .orElseGet(() -> {
-                        log.info("Creating new test client: {}", testClientName);
+                        log.info("Creating new test client: {} for company ID {}", testClientName, companyId);
                         return clientService.createClient(testClientName, companyId, null);
                     });
 
             Optional<Chat> existingOpenTestChat = chatService.findOpenChatByClient(testClient.getId());
             if (existingOpenTestChat.isPresent()) {
+                log.info("Open test chat ID {} already exists for client {}. Returning existing chat.", existingOpenTestChat.get().getId(), testClient.getId());
                 ChatDetailsDTO existingChatDetails = chatService.getChatDetails(existingOpenTestChat.get().getId());
                 return ResponseEntity.ok(chatMapper.toUiDetailsDto(existingChatDetails));
             }
 
             CreateChatRequestDTO createRequest = new CreateChatRequestDTO();
             createRequest.setClientId(testClient.getId());
-            createRequest.setCompanyId(companyId);
-            createRequest.setChatChannel(null);
+            createRequest.setChatChannel(ChatChannel.Test);
             createRequest.setInitialMessageContent("Добрый день! Я тестовый клиент.");
 
             ChatDetailsDTO initialChatDetails = chatService.createChat(createRequest);
 
-            if (initialChatDetails.getStatus() != ChatStatus.ASSIGNED && initialChatDetails.getOperator() == null) {
-                initialChatDetails.setStatus(ChatStatus.ASSIGNED);
-            }
+            AssignChatRequestDTO assignRequest = new AssignChatRequestDTO();
+            assignRequest.setChatId(initialChatDetails.getId());
+            assignRequest.setOperatorId(currentUserId);
 
-            ChatDetailsDTO currentChatDetails = chatService.getChatDetails(initialChatDetails.getId());
-            return ResponseEntity.status(HttpStatus.CREATED).body(chatMapper.toUiDetailsDto(currentChatDetails));
+            ChatDetailsDTO assignedChatDetails = chatService.assignOperatorToChat(assignRequest);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(chatMapper.toUiDetailsDto(assignedChatDetails));
+
         } catch (ResourceNotFoundException e) {
             log.error("Error creating test chat (resource not found): {}", e.getMessage());
             throw e;
@@ -168,9 +183,10 @@ public class ChatUiController {
      * @return UiMessageDto отправленного сообщения.
      */
     @PostMapping("/messages")
+    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<UiMessageDto> sendChatMessage(@RequestBody @Valid UiSendUiMessageRequest messageRequest) {
 
-        Integer currentOperatorId;
+        Integer currentUserId = getCurrentAppUser().getId();
 
         Chat chatEntity = chatService.findChatEntityById(messageRequest.getChatId())
                 .orElseThrow(() -> {
@@ -178,26 +194,18 @@ public class ChatUiController {
                     return new ChatNotFoundException("Chat with ID " + messageRequest.getChatId() + " not found.");
                 });
 
-        User assignedOperator = chatEntity.getUser();
-
-        if (assignedOperator == null) {
-            throw new ChatServiceException("Cannot send message to chat without an assigned operator (TEMPORARY RESTRICTION). Chat status: " + chatEntity.getStatus());
-        }
-
-        currentOperatorId = assignedOperator.getId(); //TODO ВРЕМЕННО: Берем ID назначенного оператора
-
         if (chatEntity.getStatus() == ChatStatus.PENDING_AUTO_RESPONDER ||
                 chatEntity.getStatus() == ChatStatus.CLOSED ||
                 chatEntity.getStatus() == ChatStatus.ARCHIVED) {
-            log.warn("Operator ID {} (assigned) attempted to send message to chat ID {} with invalid status {}.",
-                    currentOperatorId, chatEntity.getId(), chatEntity.getStatus());
-            throw new ChatServiceException("Cannot send message to chat with status: " + chatEntity.getStatus());
+            log.warn("Operator ID {} attempted to send message to chat ID {} with invalid status {}.",
+                    currentUserId, chatEntity.getId(), chatEntity.getStatus());
+            throw new ChatServiceException("Cannot send message to chat with status: " + chatEntity.getStatus() + ". Allowed statuses: ASSIGNED, IN_PROGRESS.");
         }
 
         SendMessageRequestDTO serviceRequest = new SendMessageRequestDTO();
         serviceRequest.setChatId(chatEntity.getId());
         serviceRequest.setContent(messageRequest.getContent());
-        serviceRequest.setSenderId(currentOperatorId);
+        serviceRequest.setSenderId(currentUserId);
         serviceRequest.setSenderType(ChatMessageSenderType.OPERATOR);
 
         MessageDto sentMessageDto = chatMessageService.processAndSaveMessage(
@@ -218,16 +226,17 @@ public class ChatUiController {
      * @return Список UINotificationDto.
      */
     @GetMapping("/notifications/my")
+    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<List<UiNotificationDto>> getMyNotifications(
             @RequestParam(value = "unreadOnly", required = false, defaultValue = "false") boolean unreadOnly
     ) {
-        Integer currentOperatorId = getCurrentOperatorId();
+        Integer currentUserId = getCurrentAppUser().getId();
 
         List<NotificationDTO> notifications;
         if (unreadOnly) {
-            notifications = notificationService.getUnreadNotifications(currentOperatorId);
+            notifications = notificationService.getUnreadNotifications(currentUserId);
         } else {
-            notifications = notificationService.getAllNotifications(currentOperatorId);
+            notifications = notificationService.getAllNotifications(currentUserId);
         }
 
         List<UiNotificationDto> uiNotifications = notifications.stream()
@@ -243,10 +252,11 @@ public class ChatUiController {
      * <p>POST /api/ui/chats/{chatId}/messages/read
      */
     @PostMapping("/{chatId}/messages/read")
+    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<Void> markMessagesAsRead(@PathVariable Integer chatId,
                                                    @RequestBody @Valid MarkUIMessagesAsReadRequestUI request) {
-        Integer currentOperatorId = getCurrentOperatorId();
-        chatMessageService.markClientMessagesAsRead(chatId, currentOperatorId, request.getMessageIds());
+        Integer currentUserId = getCurrentAppUser().getId();
+        chatMessageService.markClientMessagesAsRead(chatId, currentUserId, request.getMessageIds());
         return ResponseEntity.noContent().build();
     }
 
@@ -256,8 +266,10 @@ public class ChatUiController {
      * <p>POST /api/ui/chats/{chatId}/close
      */
     @PostMapping("/{chatId}/close")
+    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<ChatUIDetailsDTO> closeChat(@PathVariable Integer chatId) {
-        Integer currentUserId = getCurrentOperatorId();
+        Integer currentUserId = getCurrentAppUser().getId();
+
         CloseChatRequestDTO serviceRequest = new CloseChatRequestDTO();
         serviceRequest.setChatId(chatId);
         serviceRequest.setClosingUserId(currentUserId);
@@ -266,4 +278,34 @@ public class ChatUiController {
         ChatUIDetailsDTO uiChatDetails = chatMapper.toUiDetailsDto(closedChatDetails);
         return ResponseEntity.ok(uiChatDetails);
     }
+
+    @GetMapping("/waiting")
+    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
+    public ResponseEntity<List<UIChatDto>> getWaitingChats() {
+        AppUserDetails currentUser = getCurrentAppUser();
+        Integer companyId = currentUser.getCompanyId();
+
+        if (companyId == null) {
+            log.warn("User {} attempted to get waiting chats but is not associated with a company.", currentUser.getId());
+            throw new ChatServiceException("Authenticated user is not associated with a company.");
+        }
+
+        List<ChatDTO> chats = chatService.getWaitingChats(companyId);
+        List<UIChatDto> uiChats = chats.stream()
+                .map(chatMapper::toUiDto)
+                .toList();
+
+        return ResponseEntity.ok(uiChats);
+    }
+
+    @PostMapping("/assign")
+    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
+    public ResponseEntity<ChatUIDetailsDTO> assignChat(@RequestBody @Valid AssignChatRequestDTO assignRequest) {
+        ChatDetailsDTO assignedChatDetails = chatService.assignOperatorToChat(assignRequest);
+        ChatUIDetailsDTO uiChatDetails = chatMapper.toUiDetailsDto(assignedChatDetails);
+
+        return ResponseEntity.ok(uiChatDetails);
+    }
+
+
 }
