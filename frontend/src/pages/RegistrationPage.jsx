@@ -66,7 +66,7 @@ export const RegistrationPage = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ email, code: confirmationCode }),
+                body: JSON.stringify({ code: confirmationCode }),
             });
 
             const data = await response.json();
@@ -76,7 +76,6 @@ export const RegistrationPage = () => {
                 return;
             }
 
-            // Попытка автоматического входа после подтверждения
             const loginResponse = await fetch(API.auth.login, {
                 method: "POST",
                 headers: {
@@ -92,12 +91,11 @@ export const RegistrationPage = () => {
                 return;
             }
 
-            // Сохранение токена в localStorage (или куда вам нужно)
+            // Сохраняем токен и email в localStorage
             localStorage.setItem("token", loginData.token);
+            localStorage.setItem("email", email);
 
-            // Переход на страницу диалогов
             navigate("/dialogs");
-
         } catch (error) {
             console.error("Confirmation error:", error);
             setConfirmMessage("Сервер недоступен. Повторите попытку позже.");
@@ -149,7 +147,7 @@ export const RegistrationPage = () => {
                     </button>
                 </form>
             </div>
-            {/*TODO: Убрать тестовые данные*/}
+
             {showCodeModal && (
                 <div
                     className="fixed inset-0 z-50 flex justify-center items-center px-4"
