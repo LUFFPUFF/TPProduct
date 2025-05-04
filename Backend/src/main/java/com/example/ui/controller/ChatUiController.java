@@ -6,6 +6,7 @@ import com.example.database.model.chats_messages_module.chat.ChatStatus;
 import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.model.crm_module.client.Client;
+import com.example.domain.api.authentication_module.service.interfaces.UserDataService;
 import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.exception.service.ChatServiceException;
@@ -31,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,10 +54,11 @@ public class ChatUiController {
     private final UiChatMapper chatMapper;
     private final UIMessageMapper messageMapper;
     private final UINotificationMapper notificationMapper;
+    private final UserDataService userDataService;
 
-    //TODO логика получения id оператора из security
     private Integer getCurrentOperatorId() {
-        return 1;
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userDataService.getUserData(email).getUser().getId();
     }
 
     /**
