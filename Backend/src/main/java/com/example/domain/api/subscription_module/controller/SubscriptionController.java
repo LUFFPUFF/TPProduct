@@ -5,6 +5,9 @@ import com.example.domain.dto.PriceDto;
 import com.example.domain.dto.SubscribeDataDto;
 import com.example.domain.dto.SubscriptionDto;
 import com.example.domain.dto.SubscriptionPriceReqDto;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +25,11 @@ public class SubscriptionController {
         return ResponseEntity.ok(subscribeService.subscribe(subscribeDataDto));
     }
 
-    //TODO: Продление, обновление подписки
+    @PostMapping("/renew")
+    public ResponseEntity<SubscriptionDto> renewSubscription(@RequestBody @Validated SubscribeDataDto subscribeDataDto) {
+        return ResponseEntity.ok(subscribeService.renew(subscribeDataDto));
+    }
+
     @GetMapping("/get")
     public ResponseEntity<SubscriptionDto> getSubscription() {
         return ResponseEntity.ok(subscribeService.getSubscription());
@@ -35,9 +42,20 @@ public class SubscriptionController {
     }
 
     @GetMapping("/price")
-    public ResponseEntity<PriceDto> getSubscriptionPrice(@RequestBody @Validated SubscriptionPriceReqDto subscriptionPriceDto) {
+    public ResponseEntity<PriceDto> getSubscriptionPrice(
+            @RequestParam @Min(1) @Max(240) Integer months_count,
+            @RequestParam @Min(1) @Max(1000) Integer operators_count) {
+        SubscriptionPriceReqDto subscriptionPriceDto = SubscriptionPriceReqDto.builder()
+                .months_count(months_count)
+                .operators_count(operators_count)
+                .build();
+
         return ResponseEntity.ok(
-                PriceDto.builder().price( subscribeService.countPrice(subscriptionPriceDto)).build());
+                PriceDto.builder()
+                        .price(subscribeService.countPrice(subscriptionPriceDto))
+                        .build()
+        );
     }
+
 
 }

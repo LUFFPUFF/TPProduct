@@ -34,12 +34,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     @Transactional
     public Boolean registerUser(RegistrationDto registrationDto) {
-        checkEmailIsAvailable(registrationDto.getEmail());
-        registrationDto.setFullName(registrationDto.getEmail());
-        registrationDto.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
-        registrationDto.setCreatedAt(LocalDateTime.now());
-        registrationDto.setUpdatedAt(LocalDateTime.now());
-        sendRegistrationCode(registrationDto);
+        if(checkEmailIsAvailable(registrationDto.getEmail())) {
+            registrationDto.setFullName(registrationDto.getEmail());
+            registrationDto.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
+            registrationDto.setCreatedAt(LocalDateTime.now());
+            registrationDto.setUpdatedAt(LocalDateTime.now());
+            sendRegistrationCode(registrationDto);
+        }
         return true;
     }
     @Override
@@ -71,9 +72,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     @Transactional
-    public void checkEmailIsAvailable(String email) {
+    public boolean checkEmailIsAvailable(String email) {
         if (userRepository.findByEmail(email).isPresent()) {
             throw new EmailExistsException();
         }
+        return true;
     }
 }
