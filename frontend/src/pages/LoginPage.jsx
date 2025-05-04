@@ -47,7 +47,7 @@ export const LoginPage = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                localStorage.setItem("email:", data.email);
+                localStorage.setItem("email", data.email);
                 setMessage("Вход выполнен успешно!");
                 setEmail("");
                 setPassword("");

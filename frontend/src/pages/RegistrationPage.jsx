@@ -43,7 +43,7 @@ export const RegistrationPage = () => {
                 return;
             }
 
-            setMessage("Регистрация успешна! Введите код подтверждения.");
+            setMessage("Введите код подтверждения.");
             setShowCodeModal(true);
         } catch (error) {
             console.error("Registration error:", error);
@@ -134,7 +134,7 @@ export const RegistrationPage = () => {
                     </button>
                 </form>
             </div>
-            //TODO: Убрать тестовые данные
+            {/*TODO: Убрать тестовые данные*/}
             {showCodeModal && (
                 <div
                     className="fixed inset-0 z-50 flex justify-center items-center px-4"
