@@ -51,6 +51,12 @@ public class PredefinedAnswerUIController {
         return chatSecurityService.getCurrentAppUserPrincipal();
     }
 
+    @GetMapping
+    public ResponseEntity<List<UiPredefinedAnswerDto>> getPredefinedAnswers() {
+        List<AnswerResponse> response = answerService.getAllAnswers();
+        return ResponseEntity.ok(uiAnswerMapper.toUiDtoList(response));
+    }
+
     /**
      * Создает новый шаблонный ответ.
      * <p>POST /api/ui/predefined-answers

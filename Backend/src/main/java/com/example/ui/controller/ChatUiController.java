@@ -306,6 +306,4 @@ public class ChatUiController {
 
         return ResponseEntity.ok(uiChatDetails);
     }
-
-
 }
