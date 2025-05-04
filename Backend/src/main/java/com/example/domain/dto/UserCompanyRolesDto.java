@@ -14,11 +14,8 @@ import java.util.Optional;
 public class UserCompanyRolesDto {
     private User user;
     private Company company;
-    private List<Role> userRoles;
-
-    public UserCompanyRolesDto(User user, Company company, List<Role> roles) {
+    public UserCompanyRolesDto(User user, Company company) {
         this.user = user;
         this.company = company;
-        this.userRoles = roles;
     }
 }
