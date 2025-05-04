@@ -35,10 +35,9 @@ public interface IChatMessageService {
      * Обновляет статус сообщения.
      * @param messageId ID сообщения.
      * @param newStatus Новый статус.
-     * @param userId ID пользователя, выполняющего действие (для проверок).
      * @return Обновленный ChatMessageDTO или null, если не найдено/нет прав.
      */
-    MessageDto updateMessageStatus(Integer messageId, MessageStatus newStatus, Integer userId);
+    MessageDto updateMessageStatus(Integer messageId, MessageStatus newStatus);
 
     /**
      * Помечает сообщения клиента в чате как прочитанные оператором.
