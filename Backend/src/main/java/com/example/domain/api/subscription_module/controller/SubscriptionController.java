@@ -1,6 +1,7 @@
 package com.example.domain.api.subscription_module.controller;
 
 import com.example.domain.api.subscription_module.service.SubscriptionService;
+import com.example.domain.dto.PriceDto;
 import com.example.domain.dto.SubscribeDataDto;
 import com.example.domain.dto.SubscriptionDto;
 import com.example.domain.dto.SubscriptionPriceReqDto;
@@ -34,8 +35,9 @@ public class SubscriptionController {
     }
 
     @GetMapping("/price")
-    public ResponseEntity<Float> getSubscriptionPrice(@RequestBody @Validated SubscriptionPriceReqDto subscriptionPriceDto) {
-        return ResponseEntity.ok(subscribeService.countPrice(subscriptionPriceDto));
+    public ResponseEntity<PriceDto> getSubscriptionPrice(@RequestBody @Validated SubscriptionPriceReqDto subscriptionPriceDto) {
+        return ResponseEntity.ok(
+                PriceDto.builder().price( subscribeService.countPrice(subscriptionPriceDto)).build());
     }
 
 }
