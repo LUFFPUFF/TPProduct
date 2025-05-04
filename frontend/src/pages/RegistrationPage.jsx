@@ -66,8 +66,8 @@ export const RegistrationPage = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({code: confirmationCode }),
             });
+                body: JSON.stringify({ code: confirmationCode }),
 
             const data = await response.json();
 
@@ -92,8 +92,9 @@ export const RegistrationPage = () => {
                 return;
             }
 
-            // Сохранение токена в localStorage (или куда вам нужно)
+            // Сохраняем токен и email в localStorage
             localStorage.setItem("token", loginData.token);
+            localStorage.setItem("email", email);
 
             // Переход на страницу диалогов
             navigate("/dialogs");
