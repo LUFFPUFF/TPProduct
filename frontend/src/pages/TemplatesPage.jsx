@@ -22,6 +22,9 @@ const TemplatesPage = () => {
             try {
                 const res = await fetch(API.templates.getAll);
                 const data = await res.json();
+                if (!Array.isArray(data)) {
+                    throw new Error("Ожидался массив, но получен другой тип");
+                }
                 setTemplates(data);
             } catch (error) {
                 alert("Ошибка при загрузке шаблонов: " + error.message);

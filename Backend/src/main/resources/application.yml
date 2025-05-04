@@ -152,7 +152,6 @@ ml:
     do-sample: false
     stream: false
     max-retries: 3
-
 websocket:
   endpoint: /ws
   allowed-origins: "http://localhost:8080"
@@ -168,7 +167,8 @@ websocket:
       destination-prefix: /topic/,/queue/
       application-destination-prefix: /app
       user-destination-prefix: /user
-
+subscription:
+  price: 790
 
 
 

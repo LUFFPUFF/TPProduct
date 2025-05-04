@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../config/api";
 
 export const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,7 +22,7 @@ export const LoginPage = () => {
             return;
         }
 
-        // 🔧 Тестовые данные
+        // Тестовые данные
         const testUser = {
             email: "test@example.com",
             password: "123456",
@@ -33,7 +35,7 @@ export const LoginPage = () => {
             setPassword("");
 
             setTimeout(() => {
-                window.location.href = "/";
+                navigate("/dialogs"); // изменено
             }, 1000);
             return;
         }
@@ -53,7 +55,7 @@ export const LoginPage = () => {
                 setPassword("");
 
                 setTimeout(() => {
-                    window.location.href = "/";
+                    navigate("/dialogs"); // изменено
                 }, 1000);
             } else {
                 setMessage("Неверный email или пароль.");

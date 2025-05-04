@@ -17,8 +17,8 @@ const API = {
         update: `${API_BASE_URL}/users/update`,
     },
     subscriptions: {
-        profile: `${API_BASE_URL}/users/profile`,
-        update: `${API_BASE_URL}/users/update`,
+        price: `${API_BASE_URL}/subscription/price`,
+        activate: `${API_BASE_URL}/subscription/subscribe`,
     },
     templates: {
         getAll: `${API_BASE_URL}/ui/predefined-answers`,
@@ -30,9 +30,10 @@ const API = {
         downloadExample: `${API_BASE_URL}/templates/example-download`,
     },
     dialogs: {
-        getAll: `${API_BASE_URL}/dialogs`,
-        getById: (id) => `${API_BASE_URL}/dialogs/${id}`,
-        sendMessage: (id) => `${API_BASE_URL}/dialogs/${id}/messages`,
+        getAll: `${API_BASE_URL}/ui/chats/my`,
+        getById: (id) => `${API_BASE_URL}/ui/chats/{chatId}/details`,
+        sendMessage: (id) => `${API_BASE_URL}/ui/chats/messages`,
+        sendSelfMessage: `${API_BASE_URL}/ui/chats/create-test-chat`,
         updateStatus: (id) => `${API_BASE_URL}/dialogs/${id}/status`,
     },
 };

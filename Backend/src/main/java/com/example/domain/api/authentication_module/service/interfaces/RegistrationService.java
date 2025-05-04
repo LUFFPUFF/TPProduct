@@ -7,5 +7,5 @@ public interface RegistrationService {
     Boolean registerUser(RegistrationDto registrationDto);
     Boolean sendRegistrationCode(RegistrationDto registrationDto);
     TokenDto checkRegistrationCode(String registrationCode);
-    void checkEmailIsAvailable(String email);
+    boolean checkEmailIsAvailable(String email);
 }

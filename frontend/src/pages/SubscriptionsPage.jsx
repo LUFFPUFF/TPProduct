@@ -12,12 +12,12 @@ export default function SubscriptionsPage() {
 
     const fetchSoloPrice = async (months) => {
         try {
-            const response = await fetch(API.subscriptions.profile, {
-                method: "POST",
+            const url = `${API.subscriptions.price}?months_count=${months}&operators_count=1`;
+            const response = await fetch(url, {
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ months }),
             });
 
             if (!response.ok) {
@@ -34,12 +34,12 @@ export default function SubscriptionsPage() {
 
     const fetchTeamPrice = async (months, users) => {
         try {
-            const response = await fetch(API.subscriptions.update, {
-                method: "POST",
+            const url = `${API.subscriptions.price}?months_count=${months}&operators_count=${users}`;
+            const response = await fetch(url, {
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ months, users }),
             });
 
             if (!response.ok) {
@@ -51,6 +51,32 @@ export default function SubscriptionsPage() {
         } catch (error) {
             console.error("Ошибка при получении цены командной подписки:", error);
             setTeamPrice("Ошибка");
+        }
+    };
+
+    const activateSubscription = async (tariff, months, users = 1) => {
+        try {
+            const response = await fetch(API.subscriptions.activate, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    tariff,
+                    price: {
+                        months_count: months,
+                        operators_count: users,
+                    },
+                }),
+            });
+
+            if (!response.ok) throw new Error("Ошибка активации подписки");
+
+            const data = await response.json();
+            alert(`Подписка активирована до ${new Date(data.endSubscription).toLocaleDateString()}`);
+        } catch (error) {
+            console.error("Ошибка при активации подписки:", error);
+            alert("Не удалось подключить подписку");
         }
     };
 
@@ -81,6 +107,7 @@ export default function SubscriptionsPage() {
                 "Аналитика",
             ],
             button: "Подключить",
+            onClick: () => activateSubscription("SOLO", soloMonths),
             durationInput: (
                 <label className="block mb-2 font-medium text-black">
                     Срок подписки (в месяцах)
@@ -110,6 +137,7 @@ export default function SubscriptionsPage() {
                 "Доступ ко всем функциям",
             ],
             button: "Подключить",
+            onClick: () => activateSubscription("DYNAMIC", teamMonths, teamUsers),
             durationInput: (
                 <>
                     <label className="block mb-2 font-medium text-black">
@@ -221,7 +249,9 @@ export default function SubscriptionsPage() {
                                     ))}
                                 </ul>
                             </div>
-                            <button className="mt-auto bg-[#092155] text-white py-2 px-4 rounded hover:bg-[#2a4992] active:bg-[#dadee7] font-semibold active:text-black transition-all duration-150 ease-in-out transform active:scale-95">
+                            <button
+                                onClick={plan.onClick}
+                                className="mt-auto bg-[#092155] text-white py-2 px-4 rounded hover:bg-[#2a4992] active:bg-[#dadee7] font-semibold active:text-black transition-all duration-150 ease-in-out transform active:scale-95">
                                 {plan.button}
                             </button>
                         </div>

@@ -34,7 +34,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByCompanyId(Integer companyId);
 
-    @Query("SELECT UserCompanyRolesDto(u, u.company,null) " +
+    @Query("SELECT new com.example.domain.dto.UserCompanyRolesDto(u, u.company) " +
             "FROM User u WHERE u.email = :email")
     Optional<UserCompanyRolesDto> findUserData(@Param("email") String email);
     @Modifying

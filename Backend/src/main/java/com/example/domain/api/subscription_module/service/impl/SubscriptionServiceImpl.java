@@ -71,6 +71,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
+    public SubscriptionDto renew(SubscribeDataDto subscribeDataDto) {
+        return null;
+    }
+
+    @Override
     @Transactional
     public SubscriptionDto getSubscription() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();

@@ -13,5 +13,6 @@ public interface JWTUtilsService {
    TokenDto generateTokensByUser(UserDetails user);
    Claims parseToken(String token);
    List<String> getRoles(String token);
+   String getEmail(String token);
    boolean isTokenExpired(String token);
 }
