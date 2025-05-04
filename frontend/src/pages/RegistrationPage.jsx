@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import API from "../config/api";
+import { useNavigate } from "react-router-dom";
 
 export const RegistrationPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
-
+    const navigate = useNavigate();
     const [showCodeModal, setShowCodeModal] = useState(false);
     const [confirmationCode, setConfirmationCode] = useState("");
     const [confirmMessage, setConfirmMessage] = useState("");
@@ -75,14 +76,28 @@ export const RegistrationPage = () => {
                 return;
             }
 
-            setConfirmMessage("Подтверждение успешно!");
-            setTimeout(() => {
-                setShowCodeModal(false);
-                setEmail("");
-                setPassword("");
-                setConfirmationCode("");
-                setMessage("Вы успешно зарегистрировались.");
-            }, 1000);
+            // Попытка автоматического входа после подтверждения
+            const loginResponse = await fetch(API.auth.login, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const loginData = await loginResponse.json();
+
+            if (!loginResponse.ok) {
+                setConfirmMessage(loginData.message || "Подтверждено, но не удалось войти.");
+                return;
+            }
+
+            // Сохранение токена в localStorage (или куда вам нужно)
+            localStorage.setItem("token", loginData.token);
+
+            // Переход на страницу диалогов
+            navigate("/dialogs");
+
         } catch (error) {
             console.error("Confirmation error:", error);
             setConfirmMessage("Сервер недоступен. Повторите попытку позже.");

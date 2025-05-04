@@ -114,7 +114,7 @@ export const LoginPage = () => {
                     </a>
                 </div>
                 <div className="text-center mt-2">
-                    <a href="/register" className="text-blue-600 hover:text-blue-800 transition">
+                    <a href="/dialogs" className="text-blue-600 hover:text-blue-800 transition">
                         Нет аккаунта? <span className="underline">Зарегистрируйтесь</span>
                     </a>
                 </div>
