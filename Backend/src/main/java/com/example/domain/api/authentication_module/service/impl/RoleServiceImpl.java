@@ -11,14 +11,14 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService  {
     private final UserRoleRepository userRoleRepository;
     private final UserRepository userRepository;
     private final AuthCacheService authCacheService;
-
-    //TODO получение ролей
 
     @Override
     @Transactional
@@ -32,7 +32,11 @@ public class RoleServiceImpl implements RoleService  {
             return true;
         }).orElseThrow(NotFoundUserException::new);
     }
-
+    @Override
+    @Transactional
+    public List<Role> getUserRoles(String email){
+        return userRoleRepository.findRolesByEmail(email);
+    }
     @Override
     @Transactional
     public boolean removeRole(String userEmail, Role role) {
