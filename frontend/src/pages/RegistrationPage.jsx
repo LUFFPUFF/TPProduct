@@ -6,6 +6,10 @@ export const RegistrationPage = () => {
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
 
+    const [showCodeModal, setShowCodeModal] = useState(false);
+    const [confirmationCode, setConfirmationCode] = useState("");
+    const [confirmMessage, setConfirmMessage] = useState("");
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setMessage("");
@@ -24,22 +28,64 @@ export const RegistrationPage = () => {
         }
 
         try {
-            // Ссылка на API
             const response = await fetch(API.auth.register, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify({ email, password }),
             });
 
-            if (response.ok) {
-                setMessage("Регистрация успешна!");
-                setEmail("");
+            const data = await response.json();
 
-            } else {
-                setMessage("Ошибка регистрации. Попробуйте еще раз.");
+            if (!response.ok) {
+                setMessage(data.message || "Ошибка регистрации.");
+                return;
             }
+
+            setMessage("Регистрация успешна! Введите код подтверждения.");
+            setShowCodeModal(true);
         } catch (error) {
-            setMessage(`Ошибка соединения: ${error.message}`);
+            console.error("Registration error:", error);
+            setMessage("Сервер недоступен. Повторите попытку позже.");
+        }
+    };
+
+    const handleConfirm = async () => {
+        setConfirmMessage("");
+
+        if (!confirmationCode) {
+            setConfirmMessage("Введите код подтверждения.");
+            return;
+        }
+
+        try {
+            const response = await fetch(API.auth.confirmCode, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email, code: confirmationCode }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setConfirmMessage(data.message || "Ошибка подтверждения.");
+                return;
+            }
+
+            setConfirmMessage("Подтверждение успешно!");
+            setTimeout(() => {
+                setShowCodeModal(false);
+                setEmail("");
+                setPassword("");
+                setConfirmationCode("");
+                setMessage("Вы успешно зарегистрировались.");
+            }, 1000);
+        } catch (error) {
+            console.error("Confirmation error:", error);
+            setConfirmMessage("Сервер недоступен. Повторите попытку позже.");
         }
     };
 
@@ -51,7 +97,7 @@ export const RegistrationPage = () => {
                 <h2 className="text-3xl sm:text-4xl font-bold text-center text-black mb-6">Регистрация</h2>
 
                 {message && (
-                    <p className={`text-center mb-4 ${message.includes("успешна") ? "text-green-600" : "text-red-600"}`}>
+                    <p className={`text-center mb-4 ${message.includes("успешн") ? "text-green-600" : "text-red-600"}`}>
                         {message}
                     </p>
                 )}
@@ -86,34 +132,48 @@ export const RegistrationPage = () => {
                     >
                         Зарегистрироваться
                     </button>
-                    {
-                        //TODO: Временное решение, заменить на нормальное подтверждение кода
-                    }
-                    <button
-                        type="button"
-                        onClick={async () => {
-                            try {
-                                const response = await fetch(API.auth.confirmCode, {
-                                    method: "POST",
-                                    headers: {"Content-Type": "application/json"},
-                                    body: JSON.stringify({"code":"000000"}),
-                                });
-                                if (response.ok) {
-                                    setMessage("Код подтверждён успешно.");
-                                } else {
-                                    setMessage("Ошибка подтверждения. Проверьте код.");
-                                }
-                            } catch (error) {
-                                setMessage(`Ошибка соединения: ${error.message}`);
-                            }
-                        }}
-                        className="mt-4 w-full sm:w-96 md:w-[400px] lg:w-[500px] p-3 text-lg font-semibold bg-green-700 text-white rounded-md
-        hover:bg-green-800 active:bg-green-300 active:text-black transition-all duration-150 ease-in-out transform active:scale-95"
-                    >
-                        Подтвердить код
-                    </button>
                 </form>
             </div>
+            //TODO: Убрать тестовые данные
+            {showCodeModal && (
+                <div
+                    className="fixed inset-0 z-50 flex justify-center items-center px-4"
+                    style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+                    onClick={() => setShowCodeModal(false)}
+                >
+                    <div
+                        className="bg-white p-6 rounded-xl shadow-xl max-w-sm w-full text-center"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <h3 className="text-xl font-semibold mb-4">Подтверждение почты</h3>
+                        <p className="mb-2">
+                            Введите код, отправленный на почту.<br />
+                            <strong>(Для теста: 000000)</strong>
+                        </p>
+                        <input
+                            type="text"
+                            value={confirmationCode}
+                            onChange={(e) => setConfirmationCode(e.target.value)}
+                            className="w-full p-2 border rounded-md mb-3"
+                            placeholder="Код подтверждения"
+                        />
+                        {confirmMessage && (
+                            <p className={`mb-3 text-sm ${confirmMessage.includes("успешно") ? "text-green-600" : "text-red-600"}`}>
+                                {confirmMessage}
+                            </p>
+                        )}
+                        <div className="flex justify-end gap-2">
+                            <button onClick={() => setShowCodeModal(false)} className="text-gray-600 px-4 py-2">Отмена</button>
+                            <button
+                                onClick={handleConfirm}
+                                className="bg-[#092155] text-white px-4 py-2 rounded-md hover:bg-[#2a4992]"
+                            >
+                                Подтвердить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <footer className="text-sm text-gray-600 py-6 mt-6 text-center">
                 © 2025 DialogX. Все права защищены.
