@@ -44,7 +44,7 @@ public class SubscriptionPriceCalculateServiceImpl implements SubscriptionPriceC
         BigDecimal totalPrice = BigDecimal.ONE.subtract(discount);
         totalPrice = totalPrice.multiply(subscriptionConfig.getPrice())
                 .multiply(BigDecimal.valueOf(people))
-                .multiply(BigDecimal.valueOf(months));
+                .multiply(BigDecimal.valueOf(months)).setScale(2, RoundingMode.HALF_DOWN);
 
         return totalPrice;
     }
