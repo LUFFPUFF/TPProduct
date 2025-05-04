@@ -13,7 +13,7 @@ export default function SubscriptionsPage() {
     const fetchSoloPrice = async (months) => {
         try {
             const response = await fetch(API.subscriptions.price, {
-                method: "POST",
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -35,7 +35,7 @@ export default function SubscriptionsPage() {
     const fetchTeamPrice = async (months, users) => {
         try {
             const response = await fetch(API.subscriptions.price, {
-                method: "POST",
+                method: "GET",
                 headers: {
                     "Content-Type": "application/json",
                 },
