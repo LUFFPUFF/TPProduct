@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 public interface SubscriptionService {
     SubscriptionDto subscribe(SubscribeDataDto subscribeDataDto);
     void cancel();
+    SubscriptionDto renew(SubscribeDataDto subscribeDataDto);
     SubscriptionDto getSubscription();
     Float countPrice(SubscriptionPriceReqDto subscriptionPriceDto);
     void addOperatorCount(Company company);
