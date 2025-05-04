@@ -66,8 +66,9 @@ export const RegistrationPage = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-            });
                 body: JSON.stringify({ code: confirmationCode }),
+            });
+
 
             const data = await response.json();
 
