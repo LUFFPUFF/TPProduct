@@ -2,6 +2,7 @@ package com.example.database.repository.company_subscription_module;
 
 import com.example.database.model.chats_messages_module.chat.ChatStatus;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
+import com.example.domain.dto.UserCompanyRolesDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -33,6 +34,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByCompanyId(Integer companyId);
 
+    @Query("SELECT UserCompanyRolesDto(u, u.company) " +
+            "FROM User u WHERE u.email = :email")
+    Optional<UserCompanyRolesDto> findUserData(@Param("email") String email);
     @Modifying
     @Transactional
     @Query("UPDATE User u SET u.company.id = :companyId WHERE u.email = :email")
