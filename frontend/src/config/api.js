@@ -21,11 +21,13 @@ const API = {
         update: `${API_BASE_URL}/users/update`,
     },
     templates: {
-        getAll: `${API_BASE_URL}/templates`,
-        create: `${API_BASE_URL}/templates/save`,
+        getAll: `${API_BASE_URL}/ui/predefined-answers`,
+        create: `${API_BASE_URL}/ui/predefined-answers`,
+        upload: `${API_BASE_URL}/ui/predefined-answers/upload`,
         update: `${API_BASE_URL}/templates/save`,
         uploadMany: `${API_BASE_URL}/templates/save`,
         delete: (id) => `${API_BASE_URL}/templates/${id}`,
+        downloadExample: `${API_BASE_URL}/templates/example-download`,
     },
     dialogs: {
         getAll: `${API_BASE_URL}/dialogs`,

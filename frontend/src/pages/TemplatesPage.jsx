@@ -7,10 +7,12 @@ const TemplatesPage = () => {
     const [templates, setTemplates] = useState([]);
     const [showAddForm, setShowAddForm] = useState(false);
     const [newTitle, setNewTitle] = useState("");
-    const [newText, setNewText] = useState("");
+    const [newCategory, setNewCategory] = useState("");
+    const [newAnswer, setNewAnswer] = useState("");
     const [editIndex, setEditIndex] = useState(null);
     const [editedTitle, setEditedTitle] = useState("");
-    const [editedText, setEditedText] = useState("");
+    const [editedCategory, setEditedCategory] = useState("");
+    const [editedAnswer, setEditedAnswer] = useState("");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const fileInputRef = useRef(null);
@@ -29,8 +31,8 @@ const TemplatesPage = () => {
     }, []);
 
     const handleAddTemplate = async () => {
-        if (newTitle.trim() && newText.trim()) {
-            const newTemplate = { title: newTitle, text: newText };
+        if (newTitle.trim() && newAnswer.trim()) {
+            const newTemplate = { title: newTitle, category: newCategory, answer: newAnswer };
             try {
                 const res = await fetch(API.templates.create, {
                     method: "POST",
@@ -42,7 +44,8 @@ const TemplatesPage = () => {
                 const data = await res.json();
                 setTemplates([...templates, data]);
                 setNewTitle("");
-                setNewText("");
+                setNewCategory("");
+                setNewAnswer("");
                 setShowAddForm(false);
             } catch (error) {
                 alert("Ошибка при создании шаблона: " + error.message);
@@ -53,14 +56,16 @@ const TemplatesPage = () => {
     const handleEditClick = (index) => {
         setEditIndex(index);
         setEditedTitle(templates[index].title);
-        setEditedText(templates[index].text);
+        setEditedCategory(templates[index].category);
+        setEditedAnswer(templates[index].answer);
     };
 
     const handleSaveEdit = async () => {
         const updatedTemplate = {
             id: templates[editIndex].id,
             title: editedTitle,
-            text: editedText,
+            category: editedCategory,
+            answer: editedAnswer,
         };
         try {
             const res = await fetch(API.templates.update, {
@@ -76,9 +81,28 @@ const TemplatesPage = () => {
             setTemplates(updatedTemplates);
             setEditIndex(null);
             setEditedTitle("");
-            setEditedText("");
+            setEditedCategory("");
+            setEditedAnswer("");
         } catch (error) {
             alert("Ошибка при обновлении шаблона: " + error.message);
+        }
+    };
+    const handleDownloadExample = async () => {
+        try {
+            const response = await fetch(API.templates.downloadExample);
+            if (!response.ok) throw new Error("Ошибка при скачивании примера");
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "example-templates.json";
+            a.click();
+
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            alert("Не удалось скачать пример: " + error.message);
         }
     };
 
@@ -86,33 +110,43 @@ const TemplatesPage = () => {
         const file = e.target.files[0];
         if (!file) return;
 
-        const reader = new FileReader();
-        reader.onload = async (event) => {
-            try {
-                const parsed = JSON.parse(event.target.result);
-                if (Array.isArray(parsed)) {
-                    const validTemplates = parsed.filter((t) => t.title && t.text);
-                    if (validTemplates.length) {
-                        const res = await fetch(API.templates.uploadMany, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify(validTemplates),
-                        });
-                        const data = await res.json();
-                        setTemplates((prev) => [...prev, ...data]);
-                    } else {
-                        alert("Нет валидных шаблонов в файле.");
-                    }
-                } else {
-                    alert("Файл должен содержать массив шаблонов.");
-                }
-            } catch (err) {
-                alert("Ошибка при чтении файла: " + err.message);
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("category", "default"); // можно поменять при необходимости
+        formData.append("overwrite", "false");
+
+        try {
+            const res = await fetch(API.templates.uploadMany, {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!res.ok) {
+                const text = await res.text();
+                throw new Error(`Ошибка при загрузке: ${text}`);
             }
-        };
-        reader.readAsText(file);
+
+            const data = await res.json();
+
+            let message = `Обработано: ${data.processedCount}\nДубликатов: ${data.duplicatesCount}`;
+            if (data.globalErrors?.length) {
+                message += `\nГлобальные ошибки:\n${data.globalErrors.join("\n")}`;
+            }
+            if (data.rowErrors && Object.keys(data.rowErrors).length > 0) {
+                message += `\nОшибки по строкам:\n`;
+                for (const [row, err] of Object.entries(data.rowErrors)) {
+                    message += `Строка ${row}: ${err}\n`;
+                }
+            }
+
+            alert(message);
+
+            // Перезагрузить список шаблонов
+            const newTemplates = await fetch(API.templates.getAll).then((r) => r.json());
+            setTemplates(newTemplates);
+        } catch (err) {
+            alert("Ошибка при загрузке файла: " + err.message);
+        }
     };
 
     return (
@@ -165,15 +199,23 @@ const TemplatesPage = () => {
 
                 <button
                     onClick={() => fileInputRef.current.click()}
-                    className="w-fit px-6 py-2 bg-[#f3f4f6] border border-black font-semibold text-black rounded-lg flex items-center hover:bg-gray-100 mb-10 active:text-black transition-all duration-150 ease-in-out transform active:scale-95"
+                    className="w-fit px-6 py-2 bg-white border border-black font-semibold text-black rounded-lg flex items-center hover:bg-gray-100 mb-10 active:text-black transition-all duration-150 ease-in-out transform active:scale-95"
                 >
                     <span>Загрузить шаблонные ответы</span>
                     <img src={plus} alt="plus" className="w-6 h-6 ml-4" />
                 </button>
+                <button
+                    onClick={handleDownloadExample}
+                    className="w-fit px-6 py-2 bg-white border border-black font-semibold text-black rounded-lg flex items-center hover:bg-gray-100 mb-10 active:text-black transition-all duration-150 ease-in-out transform active:scale-95"
+                >
+                    <span>Загрузить шаблонные ответы</span>
+                    <img src={plus} alt="plus" className="w-6 h-6 ml-4" />
+                </button>
+
                 <input
                     ref={fileInputRef}
                     type="file"
-                    accept=".json"
+                    accept=".json,.csv,.xml,.txt"
                     onChange={handleFileChange}
                     className="hidden"
                 />
@@ -194,15 +236,22 @@ const TemplatesPage = () => {
                             <div className="space-y-4 mt-6">
                                 <input
                                     type="text"
-                                    placeholder="Тема"
+                                    placeholder="Название ответа"
                                     value={newTitle}
                                     onChange={(e) => setNewTitle(e.target.value)}
                                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0a226e]"
                                 />
+                                <input
+                                    type="category"
+                                    placeholder="Категория"
+                                    value={newCategory}
+                                    onChange={(e) => setNewCategory(e.target.value)}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0a226e]"
+                                />
                                 <textarea
                                     placeholder="Текст шаблона"
-                                    value={newText}
-                                    onChange={(e) => setNewText(e.target.value)}
+                                    value={newAnswer}
+                                    onChange={(e) => setNewAnswer(e.target.value)}
                                     className="w-full h-32 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#0a226e] resize-none break-words whitespace-pre-wrap"
                                 />
                                 <button
@@ -231,16 +280,23 @@ const TemplatesPage = () => {
                                                     onChange={(e) => setEditedTitle(e.target.value)}
                                                     className="w-full px-3 py-2 border border-gray-300 rounded mb-2"
                                                 />
+                                                <input
+                                                    type="category"
+                                                    value={editedCategory}
+                                                    onChange={(e) => setEditedCategory(e.target.value)}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded mb-2"
+                                                />
                                                 <textarea
-                                                    value={editedText}
-                                                    onChange={(e) => setEditedText(e.target.value)}
+                                                    value={editedAnswer}
+                                                    onChange={(e) => setEditedAnswer(e.target.value)}
                                                     className="w-full h-32 px-3 py-2 border border-gray-300 rounded resize-none break-words whitespace-pre-wrap"
                                                 />
                                             </>
                                         ) : (
                                             <>
                                                 <div className="font-bold text-black text-xl break-words">{template.title}</div>
-                                                <div className="text-sm text-black mt-1 break-words whitespace-pre-wrap">{template.text}</div>
+                                                <div className="font-bold text-black text-xl break-words">{template.category}</div>
+                                                <div className="text-sm text-black mt-1 break-words whitespace-pre-wrap">{template.answer}</div>
                                             </>
                                         )}
                                     </div>
