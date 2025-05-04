@@ -12,7 +12,7 @@ export default function SubscriptionsPage() {
 
     const fetchSoloPrice = async (months) => {
         try {
-            const url = `${API.subscriptions.price}?months_count=${months}`;
+            const url = `${API.subscriptions.price}?months_count=${months}&operators_count=1`;
             const response = await fetch(url, {
                 method: "GET",
                 headers: {
