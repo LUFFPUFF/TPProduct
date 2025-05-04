@@ -46,6 +46,12 @@ public class JWTUtilsServiceImpl implements JWTUtilsService {
     public List<String> getRoles(String token) {
         return parseToken(token).get("roles", List.class);
     }
+
+    @Override
+    public String getEmail(String token) {
+        return parseToken(token).get("email", String.class);
+    }
+
     @Override
     public String generateRefreshToken(UserDetails user) {
         Map<String, Object> claims = new HashMap<>();
