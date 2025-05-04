@@ -18,7 +18,7 @@ const API = {
     },
     subscriptions: {
         price: `${API_BASE_URL}/subscription/price`,
-        update: `${API_BASE_URL}/users/update`,
+        activate: `${API_BASE_URL}/subscription/subscribe`,
     },
     templates: {
         getAll: `${API_BASE_URL}/ui/predefined-answers`,
