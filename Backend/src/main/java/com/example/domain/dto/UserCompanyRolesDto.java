@@ -12,12 +12,13 @@ import java.util.Optional;
 @Data
 @Builder
 public class UserCompanyRolesDto {
-    User user;
-    Optional<Company> company;
-    List<Role> userRoles;
-    UserCompanyRolesDto(User user, Company company) {
-        this.user = user;
-        this.company = Optional.ofNullable(company);
-    }
+    private User user;
+    private Company company;
+    private List<Role> userRoles;
 
+    public UserCompanyRolesDto(User user, Company company, List<Role> roles) {
+        this.user = user;
+        this.company = company;
+        this.userRoles = roles;
+    }
 }
