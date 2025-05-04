@@ -249,7 +249,9 @@ export default function SubscriptionsPage() {
                                     ))}
                                 </ul>
                             </div>
-                            <button className="mt-auto bg-[#092155] text-white py-2 px-4 rounded hover:bg-[#2a4992] active:bg-[#dadee7] font-semibold active:text-black transition-all duration-150 ease-in-out transform active:scale-95">
+                            <button
+                                onClick={plan.onClick}
+                                className="mt-auto bg-[#092155] text-white py-2 px-4 rounded hover:bg-[#2a4992] active:bg-[#dadee7] font-semibold active:text-black transition-all duration-150 ease-in-out transform active:scale-95">
                                 {plan.button}
                             </button>
                         </div>
