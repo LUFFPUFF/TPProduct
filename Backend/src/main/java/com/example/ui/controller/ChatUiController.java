@@ -10,10 +10,12 @@ import com.example.database.repository.company_subscription_module.UserRepositor
 import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.exception.service.ChatServiceException;
+import com.example.domain.api.chat_service_api.mapper.ChatMessageMapper;
 import com.example.domain.api.chat_service_api.model.dto.ChatDTO;
 import com.example.domain.api.chat_service_api.model.dto.ChatDetailsDTO;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
 import com.example.domain.api.chat_service_api.model.dto.notification.NotificationDTO;
+import com.example.domain.api.chat_service_api.model.dto.user.UserInfoDTO;
 import com.example.domain.api.chat_service_api.model.rest.chat.AssignChatRequestDTO;
 import com.example.domain.api.chat_service_api.model.rest.chat.CloseChatRequestDTO;
 import com.example.domain.api.chat_service_api.model.rest.chat.CreateChatRequestDTO;
@@ -56,6 +58,7 @@ public class ChatUiController {
     private final UiChatMapper chatMapper;
     private final UIMessageMapper messageMapper;
     private final UINotificationMapper notificationMapper;
+    private final ChatMessageMapper chatMessageMapper;
 
     private final UserRepository userRepository;
 
@@ -155,6 +158,9 @@ public class ChatUiController {
             createRequest.setInitialMessageContent("Добрый день! Я тестовый клиент.");
 
             ChatDetailsDTO initialChatDetails = chatService.createChat(createRequest);
+            UserInfoDTO userInfoDTO = chatMessageMapper.mapUserInfo(operator);
+            initialChatDetails.setStatus(ChatStatus.ASSIGNED);
+            initialChatDetails.setOperator(userInfoDTO);
 
             AssignChatRequestDTO assignRequest = new AssignChatRequestDTO();
             assignRequest.setChatId(initialChatDetails.getId());
