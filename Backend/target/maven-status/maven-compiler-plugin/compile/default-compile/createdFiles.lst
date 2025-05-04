@@ -81,7 +81,6 @@ com\example\domain\api\ans_api_module\template\batch\reader\PredefinedAnswerItem
 com\example\domain\api\ans_api_module\template\dto\request\UploadFileRequest.class
 com\example\database\model\company_subscription_module\company\Company.class
 com\example\domain\api\ans_api_module\template\batch\job\AnswerUploadJobConfig.class
-com\example\domain\dto\AppUserDetails.class
 com\example\domain\api\chat_service_api\service\impl\LeastBusyAssignmentService.class
 com\example\domain\api\ans_api_module\answer_finder\exception\NlpException.class
 com\example\domain\api\chat_service_api\mapper\UserMapper.class
@@ -100,7 +99,6 @@ com\example\domain\api\chat_service_api\exception_handler\exception\controller\C
 com\example\ui\dto\chat\message\UiMessageDto.class
 com\example\database\model\ai_module\PredefinedAnswer.class
 com\example\domain\api\chat_service_api\model\rest\RequestOperatorRequestDTO.class
-com\example\domain\api\chat_service_api\service\security\impl\ChatSecurityServiceImpl.class
 com\example\database\repository\company_subscription_module\UserRoleRepository.class
 com\example\ui\mapper\chat\UiUserMapper.class
 com\example\database\repository\crm_module\ClientNotesRepository.class
@@ -113,11 +111,13 @@ com\example\ui\mapper\answer\UIPredefinedAnswerMapperImpl.class
 com\example\domain\api\chat_service_api\integration\mail\dialog_bot\EmailParserFactory.class
 com\example\domain\api\authentication_module\service\impl\RoleServiceImpl.class
 com\example\database\model\chats_messages_module\chat\ChatChannel.class
+com\example\domain\dto\PriceDto.class
 com\example\domain\api\chat_service_api\service\impl\UserServiceImpl.class
 com\example\domain\api\subscription_module\exception_handler_subscription\AlreadyInCompanyException.class
 com\example\database\model\crm_module\task\Task.class
 com\example\ui\mapper\answer\UIPredefinedAnswerMapper.class
 com\example\domain\api\ans_api_module\answer_finder\nlp\hf_similarity_client\config\HfSimilarityConfig.class
+com\example\domain\dto\PriceDto$PriceDtoBuilder.class
 com\example\database\model\company_subscription_module\user_roles\user\UserStatus.class
 com\example\domain\dto\RegistrationDto.class
 com\example\domain\api\authentication_module\security\config\JWTConfig.class
@@ -161,6 +161,7 @@ com\example\ui\mapper\chat\UINotificationMapper.class
 com\example\domain\api\ans_api_module\template\dto\request\PredefinedAnswerUploadDto$PredefinedAnswerUploadDtoBuilder.class
 com\example\domain\api\ans_api_module\template\mapper\PredefinedAnswerMapper.class
 com\example\domain\api\ans_api_module\template\batch\item\TxtAnswerReader.class
+com\example\domain\api\authentication_module\service\interfaces\UserDataService.class
 com\example\domain\api\subscription_module\exception_handler_subscription\MaxOperatorsCountException.class
 com\example\domain\dto\RegistrationDto$RegistrationDtoBuilder.class
 com\example\domain\api\chat_service_api\exception_handler\ResourceNotFoundException.class
@@ -195,11 +196,13 @@ com\example\ui\mapper\chat\UiUserMapperImpl.class
 com\example\domain\api\ans_api_module\template\exception\InvalidAnswerDataException.class
 com\example\domain\api\chat_service_api\model\dto\MessageStatusUpdateDTO.class
 com\example\domain\api\chat_service_api\integration\mail\parser\AbstractEmailParser.class
+com\example\ui\mapper\chat\UINotificationMapperImpl.class
 com\example\database\repository\chats_messages_module\NotificationRepository.class
 com\example\domain\api\ans_api_module\correction_answer\dto\GenerationRequest.class
 com\example\domain\api\ans_api_module\template\config\TempFileStorageConfig.class
 com\example\ui\controller\PredefinedAnswerUIController.class
 com\example\database\model\company_subscription_module\subscription\SubscriptionStatus.class
+com\example\domain\dto\UserCompanyRolesDto$UserCompanyRolesDtoBuilder.class
 com\example\database\model\crm_module\deal\DealStage.class
 com\example\domain\api\subscription_module\controller\SubscriptionController.class
 com\example\domain\api\ans_api_module\correction_answer\service\TextProcessingService.class
@@ -280,6 +283,7 @@ com\example\domain\api\authentication_module\security\jwtUtils\JwtRequestFilter.
 com\example\domain\dto\mapper\ChatMapperHelper.class
 com\example\ui\dto\user\UiUserDto.class
 com\example\domain\api\ans_api_module\correction_answer\rule\RewriteRule.class
+com\example\domain\api\authentication_module\service\impl\UserDataServiceImpl.class
 com\example\domain\dto\TokenDto$TokenDtoBuilder.class
 com\example\domain\api\ans_api_module\correction_answer\config\MLParamsConfig$MLParamsConfigBuilder.class
 com\example\database\model\company_subscription_module\user_roles\user\Role.class
@@ -360,6 +364,7 @@ com\example\domain\api\ans_api_module\correction_answer\config\TextProcessingCon
 com\example\domain\api\chat_service_api\integration\vk\VKDialogBot.class
 com\example\domain\api\ans_api_module\correction_answer\service\GenerationType.class
 com\example\domain\api\authentication_module\exception_handler_auth\InvalidTokenSignException.class
+com\example\domain\dto\UserCompanyRolesDto.class
 com\example\domain\api\company_module\service\CompanyMembersService.class
 com\example\domain\api\ans_api_module\answer_finder\dto\rest\AnswerSearchResponse$AnswerSearchResponseBuilder.class
 com\example\domain\api\company_module\exception_handler_company\NotFoundCompanyException.class

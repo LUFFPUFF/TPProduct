@@ -50,7 +50,6 @@ public class ChatMessageServiceImpl implements IChatMessageService {
 
     @Override
     @Transactional
-    @PreAuthorize("@chatSecurityService.canProcessAndSaveMessage(#messageRequest.chatId, #senderId, #senderType)")
     public MessageDto processAndSaveMessage(SendMessageRequestDTO messageRequest, Integer senderId, ChatMessageSenderType senderType) {
         Chat chat = chatRepository.findById(messageRequest.getChatId())
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + messageRequest.getChatId() + " not found"));
@@ -102,7 +101,6 @@ public class ChatMessageServiceImpl implements IChatMessageService {
 
     @Override
     @Transactional(readOnly = true)
-    @PreAuthorize("@chatSecurityService.canAccessChat(#chatId)")
     public List<MessageDto> getMessagesByChatId(Integer chatId) {
         List<ChatMessage> messages = chatMessageRepository.findByChatIdOrderBySentAtAsc(chatId);
 
@@ -113,7 +111,6 @@ public class ChatMessageServiceImpl implements IChatMessageService {
 
     @Override
     @Transactional
-    @PreAuthorize("@chatSecurityService.canUpdateMessageStatus(#messageId)")
     public MessageDto updateMessageStatus(Integer messageId, MessageStatus newStatus) {
         ChatMessage message = chatMessageRepository.findById(messageId)
                 .orElseThrow(() -> new ResourceNotFoundException("Message with ID " + messageId + " not found."));
@@ -136,7 +133,6 @@ public class ChatMessageServiceImpl implements IChatMessageService {
 
     @Override
     @Transactional
-    @PreAuthorize("principal.id == #operatorId and @chatSecurityService.canMarkMessagesAsRead(#chatId, #operatorId)")
     public int markClientMessagesAsRead(Integer chatId, Integer operatorId, Collection<Integer> messageIds) {
         if (messageIds == null || messageIds.isEmpty()) {
             return 0;
@@ -190,7 +186,6 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     }
 
     @Override
-    @PreAuthorize("@chatSecurityService.canUpdateMessageStatusByExternalId(#chatId, #externalMessageId)")
     public int updateOperatorMessageStatusByExternalId(Integer chatId, String externalMessageId, MessageStatus newStatus) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));

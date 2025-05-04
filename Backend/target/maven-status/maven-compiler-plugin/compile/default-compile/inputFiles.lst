@@ -190,9 +190,11 @@ C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\authentication_module\service\impl\AuthServiceImpl.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\authentication_module\service\impl\RegistrationServiceImpl.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\authentication_module\service\impl\RoleServiceImpl.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\authentication_module\service\impl\UserDataServiceImpl.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\authentication_module\service\interfaces\AuthService.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\authentication_module\service\interfaces\RegistrationService.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\authentication_module\service\interfaces\RoleService.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\authentication_module\service\interfaces\UserDataService.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\authentication_module\testAuthService\TestController.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\config\WebSocketConfig.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\controller\ChatWebSocketController.java
@@ -262,7 +264,6 @@ C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\service\INotificationService.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\service\IUserService.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\service\security\IChatSecurityService.java
-C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\service\security\impl\ChatSecurityServiceImpl.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\service\WebSocketMessagingService.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\company_api_test\service\ClientService.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\company_api_test\service\CompanyService.java
@@ -289,7 +290,6 @@ C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\subscription_module\service\mapper\SubscribeDataMapper.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\subscription_module\service\SubscriptionPriceCalculateService.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\subscription_module\service\SubscriptionService.java
-C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\AppUserDetails.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\ChatAttachmentDto.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\CheckCodeDto.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\ClientDto.java
@@ -300,12 +300,14 @@ C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\mapper\ChatMapperHelper.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\mapper\MapperDto.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\MemberDto.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\PriceDto.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\RegistrationDto.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\SubscribeDataDto.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\SubscribeTariff.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\SubscriptionDto.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\SubscriptionPriceReqDto.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\TokenDto.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\UserCompanyRolesDto.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\UserDto.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\UserRoleDto.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\ui\controller\ChatUiController.java

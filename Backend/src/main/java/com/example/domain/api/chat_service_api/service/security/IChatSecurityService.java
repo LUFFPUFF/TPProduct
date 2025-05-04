@@ -1,7 +1,6 @@
 package com.example.domain.api.chat_service_api.service.security;
 
 import com.example.database.model.chats_messages_module.chat.ChatMessageSenderType;
-import com.example.domain.dto.AppUserDetails;
 import org.springframework.security.core.Authentication;
 
 import java.util.Optional;
@@ -78,7 +77,5 @@ public interface IChatSecurityService {
      * Разрешено, если пользователь является оператором/менеджером с компанией, и сообщение находится в чате этой компании.
      */
     boolean canUpdateMessageStatusByExternalId(Integer chatId, String externalMessageId);
-
-    Optional<AppUserDetails> getCurrentAppUserPrincipal();
 
 }

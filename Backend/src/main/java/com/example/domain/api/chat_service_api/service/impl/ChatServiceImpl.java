@@ -19,7 +19,6 @@ import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundExc
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.exception.service.ChatServiceException;
 import com.example.domain.api.chat_service_api.mapper.ChatMapper;
-import com.example.domain.api.chat_service_api.mapper.ChatMessageMapper;
 import com.example.domain.api.chat_service_api.model.dto.ChatDTO;
 import com.example.domain.api.chat_service_api.model.dto.ChatDetailsDTO;
 import com.example.domain.api.chat_service_api.model.rest.chat.AssignChatRequestDTO;
@@ -27,11 +26,9 @@ import com.example.domain.api.chat_service_api.model.rest.chat.CloseChatRequestD
 import com.example.domain.api.chat_service_api.model.rest.chat.CreateChatRequestDTO;
 import com.example.domain.api.chat_service_api.service.*;
 import com.example.domain.api.chat_service_api.service.security.IChatSecurityService;
-import com.example.domain.dto.AppUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,7 +55,6 @@ public class ChatServiceImpl implements IChatService {
     private final WebSocketMessagingService messagingService;
     private final INotificationService notificationService;
     private final IAutoResponderService autoResponderService;
-    private final IChatSecurityService chatSecurityService;
 
     @Override
     @Transactional
@@ -207,40 +203,27 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-    @PreAuthorize("@chatSecurityService.canAssignOperatorToChat(#assignRequest.chatId)")
     public ChatDetailsDTO assignOperatorToChat(AssignChatRequestDTO assignRequest) {
         Chat chat = chatRepository.findById(assignRequest.getChatId())
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + assignRequest.getChatId() + " not found"));
 
-        if (chat.getStatus() != ChatStatus.PENDING_OPERATOR &&
-                chat.getStatus() != ChatStatus.PENDING_AUTO_RESPONDER &&
-                chat.getStatus() != ChatStatus.ASSIGNED) {
-
-            throw new ChatServiceException("Chat with ID " + assignRequest.getChatId() + " is not in a state to be assigned (Current status: " + chat.getStatus() + ").");
+        if (chat.getStatus() != ChatStatus.PENDING_OPERATOR) {
+            throw new ChatServiceException("Chat with ID " + assignRequest.getChatId() + " is not in a state to be assigned.");
         }
 
-        User operatorToAssign;
-        boolean autoAssigned = false;
+        // TODO: Проверить права текущего пользователя. Только оператор может взять чат.
 
+        User operatorToAssign;
         if (assignRequest.getOperatorId() != null) {
-            log.debug("Attempting to assign specific operator with ID: {}", assignRequest.getOperatorId());
+            log.debug("Assigning specific operator with ID: {}", assignRequest.getOperatorId());
             operatorToAssign = userService.findById(assignRequest.getOperatorId())
                     .orElseThrow(() -> new ResourceNotFoundException("Operator with ID " + assignRequest.getOperatorId() + " not found."));
-            if (operatorToAssign.getCompany() == null || !operatorToAssign.getCompany().getId().equals(chat.getCompany().getId())) {
-                throw new ChatServiceException("Operator must belong to the same company as the chat.");
-            }
-            AppUserDetails currentUser = chatSecurityService.getCurrentAppUserPrincipal()
-                    .orElseThrow(() -> new RuntimeException("Security principal not found after authentication check"));
-
-            boolean isOperator = currentUser.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals(Role.OPERATOR.name()));
-
-            if (isOperator && !currentUser.getId().equals(assignRequest.getOperatorId())) {
-                throw new ChatServiceException("Operators can only assign chats to themselves.");
-            }
+            // TODO: Проверить, что operatorToAssign действительно является оператором и доступен
         } else {
+            //TODO Если ID оператора не указан в запросе, найти наименее загруженного
             Optional<User> autoAssignedOperator = assignmentService.assignOperator(chat);
             operatorToAssign = autoAssignedOperator.orElseThrow(() -> new ResourceNotFoundException("No available operator found for assignment for company " + chat.getCompany().getId()));
-            autoAssigned = true;
+            log.debug("Auto-assigned operator with ID: {}", operatorToAssign.getId());
         }
 
         if (chat.getStatus() == ChatStatus.ASSIGNED && chat.getUser() != null && chat.getUser().getId().equals(operatorToAssign.getId())) {
@@ -248,32 +231,30 @@ public class ChatServiceImpl implements IChatService {
             return chatMapper.toDetailsDto(chatRepository.findById(chat.getId()).orElseThrow());
         }
 
-        User previousOperator = chat.getUser();
-        if (previousOperator != null) {
-            notificationService.createNotification(previousOperator, chat, "CHAT_UNASSIGNED", "Чат #" + chat.getId() + " был переназначен.");
-        }
-
         chat.setUser(operatorToAssign);
         chat.setStatus(ChatStatus.ASSIGNED);
         chat.setAssignedAt(LocalDateTime.now());
 
         Chat updatedChat = chatRepository.save(chat);
+        log.info("Chat ID {} assigned to operator {}. New status: {}",
+                updatedChat.getId(), operatorToAssign.getId(), updatedChat.getStatus());
 
         notificationService.createNotification(operatorToAssign, updatedChat, "CHAT_ASSIGNED", "Вам назначен чат #" + updatedChat.getId());
 
-        if (updatedChat.getStatus() == ChatStatus.ASSIGNED && (previousOperator == null || autoAssigned)) {
+        if (chat.getStatus() == ChatStatus.PENDING_OPERATOR) {
             messagingService.sendMessage("/topic/operators/available/chat-assignment", chatMapper.toDto(updatedChat));
+            log.debug("Sent chat assignment notification to /topic/operators/available/chat-assignment for chat ID {}", updatedChat.getId());
         }
 
         Chat chatWithDetails = chatRepository.findById(updatedChat.getId())
                 .orElseThrow(() -> new RuntimeException("Failed to load assigned chat details after saving"));
 
+        log.info("Chat assignment process finished for chat ID: {}", chatWithDetails.getId());
         return chatMapper.toDetailsDto(chatWithDetails);
     }
 
     @Override
     @Transactional
-    @PreAuthorize("@chatSecurityService.canCloseChat(#closeRequest.chatId)")
     public ChatDetailsDTO closeChat(CloseChatRequestDTO closeRequest) {
         Chat chat = chatRepository.findById(closeRequest.getChatId())
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + closeRequest.getChatId() + " not found"));
@@ -306,7 +287,6 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional(readOnly = true)
-    @PreAuthorize("@chatSecurityService.canAccessChat(#chatId)")
     public ChatDetailsDTO getChatDetails(Integer chatId) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
@@ -316,7 +296,6 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional(readOnly = true)
-    @PreAuthorize("principal.id == #userId")
     public List<ChatDTO> getOperatorChats(Integer userId) {
         Collection<ChatStatus> assignedStatuses = Set.of(ChatStatus.ASSIGNED, ChatStatus.IN_PROGRESS);
         List<Chat> chats = chatRepository.findByUserIdAndStatusIn(userId, assignedStatuses);
@@ -328,7 +307,6 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional(readOnly = true)
-    @PreAuthorize("principal.id == #userId")
     public List<ChatDTO> getOperatorChatsStatus(Integer userId, Set<ChatStatus> statuses) {
         List<Chat> chats = chatRepository.findByUserIdAndStatusIn(userId, statuses);
         return chats.stream()
@@ -338,7 +316,6 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional(readOnly = true)
-    @PreAuthorize("@chatSecurityService.canAccessClient(#clientId)")
     public List<ChatDTO> getClientChats(Integer clientId) {
         // TODO: Реализовать получение чатов для клиента.
         throw new UnsupportedOperationException("Not implemented yet");
@@ -346,7 +323,6 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional(readOnly = true)
-    @PreAuthorize("@chatSecurityService.isAppUserOperatorOrManagerWithCompany(authentication) and principal.companyId == #companyId")
     public List<ChatDTO> getWaitingChats(Integer companyId) {
         List<Chat> chats = chatRepository.findByCompanyIdAndStatusOrderByLastMessageAtDesc(companyId, ChatStatus.PENDING_OPERATOR);
         return chats.stream()
@@ -356,7 +332,6 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-    @PreAuthorize("@chatSecurityService.canUpdateChatStatus(#chatId)")
     public void updateChatStatus(Integer chatId, ChatStatus newStatus) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));

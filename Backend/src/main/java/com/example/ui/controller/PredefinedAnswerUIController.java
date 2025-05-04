@@ -1,13 +1,14 @@
 package com.example.ui.controller;
 
+import com.example.database.model.company_subscription_module.user_roles.user.User;
+import com.example.database.repository.company_subscription_module.UserRepository;
 import com.example.domain.api.ans_api_module.template.dto.request.PredefinedAnswerUploadDto;
 import com.example.domain.api.ans_api_module.template.dto.response.AnswerResponse;
 import com.example.domain.api.ans_api_module.template.dto.response.UploadResultResponse;
 import com.example.domain.api.ans_api_module.template.services.answer.PredefinedAnswerService;
+import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.exception.service.ChatServiceException;
-import com.example.domain.api.chat_service_api.service.security.IChatSecurityService;
 import com.example.domain.api.company_module.service.CompanyService;
-import com.example.domain.dto.AppUserDetails;
 import com.example.domain.dto.CompanyWithMembersDto;
 import com.example.ui.dto.answer.UiPredefinedAnswerDto;
 import com.example.ui.dto.answer.UiPredefinedAnswerRequest;
@@ -22,7 +23,8 @@ import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,14 +43,14 @@ public class PredefinedAnswerUIController {
 
     private final PredefinedAnswerService answerService;
     private final UIPredefinedAnswerMapper uiAnswerMapper;
-    private final IChatSecurityService chatSecurityService;
+    private final UserRepository userRepository;
     private final CompanyService companyService;
 
     private final JobLauncher jobLauncher;
     private final Job answerUploadJob;
 
-    private Optional<AppUserDetails> getCurrentAppUser() {
-        return chatSecurityService.getCurrentAppUserPrincipal();
+    private Optional<User> getCurrentAppUser(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @GetMapping
@@ -65,12 +67,16 @@ public class PredefinedAnswerUIController {
      * @return UI DTO созданного ответа.
      */
     @PostMapping
-    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<UiPredefinedAnswerDto> createAnswer(@Valid @RequestBody UiPredefinedAnswerRequest dto) {
 
-        AppUserDetails currentUser = getCurrentAppUser()
-                .orElseThrow(() -> new RuntimeException("Current user is not logged in"));
-        Integer userCompanyId = currentUser.getCompanyId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+
+        User currentUser = currentUserOpt
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Integer userCompanyId = currentUser.getCompany().getId();
 
         if (userCompanyId == null) {
             log.warn("User {} attempted to create predefined answer but is not associated with a company.", currentUser.getId());
@@ -96,14 +102,18 @@ public class PredefinedAnswerUIController {
      * @return UI DTO обновленного ответа.
      */
     @PutMapping("/{id}")
-    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<UiPredefinedAnswerDto> updateAnswer(
             @PathVariable Integer id,
             @Valid @RequestBody UiPredefinedAnswerRequest dto) {
 
-        AppUserDetails currentUser = getCurrentAppUser()
-                .orElseThrow(() -> new RuntimeException("Current user is not logged in"));
-        Integer userCompanyId = currentUser.getCompanyId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+
+        User currentUser = currentUserOpt
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Integer userCompanyId = currentUser.getCompany().getId();
 
         if (userCompanyId == null) {
             log.warn("User {} attempted to update predefined answer {} but is not associated with a company.", currentUser.getId(), id);
@@ -128,11 +138,15 @@ public class PredefinedAnswerUIController {
      * @param id ID удаляемого ответа.
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<Void> deleteAnswer(@PathVariable Integer id) {
-        AppUserDetails currentUser = getCurrentAppUser()
-                .orElseThrow(() -> new RuntimeException("Current user is not logged in"));
-        Integer userCompanyId = currentUser.getCompanyId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+
+        User currentUser = currentUserOpt
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Integer userCompanyId = currentUser.getCompany().getId();
 
         if (userCompanyId == null) {
             log.warn("User {} attempted to delete predefined answer {} but is not associated with a company.", currentUser.getId(), id);
@@ -150,11 +164,15 @@ public class PredefinedAnswerUIController {
      * @return UI DTO ответа.
      */
     @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<UiPredefinedAnswerDto> getAnswerById(@PathVariable Integer id) {
-        AppUserDetails currentUser = getCurrentAppUser()
-                .orElseThrow(() -> new RuntimeException("Current user is not logged in"));
-        Integer userCompanyId = currentUser.getCompanyId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+
+        User currentUser = currentUserOpt
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Integer userCompanyId = currentUser.getCompany().getId();
 
         if (userCompanyId == null) {
             log.warn("User {} attempted to get predefined answer {} but is not associated with a company.", currentUser.getId(), id);
@@ -172,13 +190,17 @@ public class PredefinedAnswerUIController {
      * @return Список UIPredefinedAnswerDto.
      */
     @GetMapping("/my/category/{category}")
-    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<List<UiPredefinedAnswerDto>> getMyCompanyAnswersByCategory(
             @PathVariable String category) {
 
-        AppUserDetails currentUser = getCurrentAppUser()
-                .orElseThrow(() -> new RuntimeException("Current user is not logged in"));
-        Integer userCompanyId = currentUser.getCompanyId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+
+        User currentUser = currentUserOpt
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Integer userCompanyId = currentUser.getCompany().getId();
 
         if (userCompanyId == null) {
             log.warn("User {} attempted to get predefined answers by category {} but is not associated with a company.", currentUser.getId(), category);
@@ -200,15 +222,19 @@ public class PredefinedAnswerUIController {
      * @return Результат загрузки.
      */
     @PostMapping("/upload")
-    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<UploadResultResponse> uploadAnswers(
             @RequestParam("file") MultipartFile file,
             @RequestParam String category,
             @RequestParam(defaultValue = "false") String overwrite) {
-        AppUserDetails currentUser = getCurrentAppUser()
-                .orElseThrow(() -> new RuntimeException("Current user is not logged in"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+
+        User currentUser = currentUserOpt
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
         Integer currentUserId = currentUser.getId();
-        Integer userCompanyId = currentUser.getCompanyId();
+        Integer userCompanyId = currentUser.getCompany().getId();
 
         if (userCompanyId == null) {
             log.warn("User {} attempted to upload predefined answers but is not associated with a company.", currentUserId);

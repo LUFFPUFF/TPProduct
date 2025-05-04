@@ -4,9 +4,9 @@ import com.example.database.model.chats_messages_module.chat.Chat;
 import com.example.database.model.chats_messages_module.chat.ChatChannel;
 import com.example.database.model.chats_messages_module.chat.ChatMessageSenderType;
 import com.example.database.model.chats_messages_module.chat.ChatStatus;
-import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.model.crm_module.client.Client;
+import com.example.database.repository.company_subscription_module.UserRepository;
 import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.exception.service.ChatServiceException;
@@ -19,7 +19,6 @@ import com.example.domain.api.chat_service_api.model.rest.chat.CloseChatRequestD
 import com.example.domain.api.chat_service_api.model.rest.chat.CreateChatRequestDTO;
 import com.example.domain.api.chat_service_api.model.rest.mesage.SendMessageRequestDTO;
 import com.example.domain.api.chat_service_api.service.*;
-import com.example.domain.dto.AppUserDetails;
 import com.example.ui.mapper.chat.UIMessageMapper;
 import com.example.ui.mapper.chat.UINotificationMapper;
 import com.example.ui.mapper.chat.UiChatMapper;
@@ -34,7 +33,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -59,13 +57,10 @@ public class ChatUiController {
     private final UIMessageMapper messageMapper;
     private final UINotificationMapper notificationMapper;
 
-    private AppUserDetails getCurrentAppUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated() || !(authentication.getPrincipal() instanceof AppUserDetails)) {
-            log.error("Attempted to access secured resource without valid AppUserDetails principal.");
-            throw new IllegalStateException("User is not authenticated or principal is not of type AppUserDetails");
-        }
-        return (AppUserDetails) authentication.getPrincipal();
+    private final UserRepository userRepository;
+
+    private Optional<User> getCurrentAppUser(String email) {
+        return userRepository.findByEmail(email);
     }
 
     /**
@@ -73,7 +68,6 @@ public class ChatUiController {
      * <p>GET /api/ui/chats/{chatId}/details
      */
     @GetMapping("/{chatId}/details")
-    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<ChatUIDetailsDTO> getChatDetails(@PathVariable Integer chatId) {
         ChatDetailsDTO chatDetails = chatService.getChatDetails(chatId);
         ChatUIDetailsDTO uiChatDetails = chatMapper.toUiDetailsDto(chatDetails);
@@ -90,18 +84,22 @@ public class ChatUiController {
      * @return Список UIChatDto.
      */
     @GetMapping("/my")
-    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<List<UIChatDto>> getMyOperatorsChats(
             @RequestParam(value = "status", required = false) Set<ChatStatus> statuses
     ) {
 
-        Integer currentUserId = getCurrentAppUser().getId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+
+        User currentUser = currentUserOpt
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         List<ChatDTO> chats;
         if (statuses == null || statuses.isEmpty()) {
-            chats = chatService.getOperatorChats(currentUserId);
+            chats = chatService.getOperatorChats(currentUser.getId());
         } else {
-            chats = chatService.getOperatorChatsStatus(currentUserId, statuses);
+            chats = chatService.getOperatorChatsStatus(currentUser.getId(), statuses);
         }
 
         List<UIChatDto> uiChats = chats.stream()
@@ -118,11 +116,16 @@ public class ChatUiController {
      * @return Детали созданного чата.
      */
     @PostMapping("/create-test-chat")
-    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<ChatUIDetailsDTO> createTestChat() {
-        AppUserDetails currentUser = getCurrentAppUser();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+
+        User currentUser = currentUserOpt
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
         Integer currentUserId = currentUser.getId();
-        Integer companyId = currentUser.getCompanyId();
+        Integer companyId = currentUser.getCompany().getId();
 
         if (companyId == null) {
             throw new ChatServiceException("Authenticated user is not associated with a company.");
@@ -183,10 +186,16 @@ public class ChatUiController {
      * @return UiMessageDto отправленного сообщения.
      */
     @PostMapping("/messages")
-    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<UiMessageDto> sendChatMessage(@RequestBody @Valid UiSendUiMessageRequest messageRequest) {
 
-        Integer currentUserId = getCurrentAppUser().getId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+
+        User currentUser = currentUserOpt
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Integer currentUserId = currentUser.getId();
 
         Chat chatEntity = chatService.findChatEntityById(messageRequest.getChatId())
                 .orElseThrow(() -> {
@@ -226,11 +235,17 @@ public class ChatUiController {
      * @return Список UINotificationDto.
      */
     @GetMapping("/notifications/my")
-    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<List<UiNotificationDto>> getMyNotifications(
             @RequestParam(value = "unreadOnly", required = false, defaultValue = "false") boolean unreadOnly
     ) {
-        Integer currentUserId = getCurrentAppUser().getId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+
+        User currentUser = currentUserOpt
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Integer currentUserId = currentUser.getId();
 
         List<NotificationDTO> notifications;
         if (unreadOnly) {
@@ -252,10 +267,16 @@ public class ChatUiController {
      * <p>POST /api/ui/chats/{chatId}/messages/read
      */
     @PostMapping("/{chatId}/messages/read")
-    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<Void> markMessagesAsRead(@PathVariable Integer chatId,
                                                    @RequestBody @Valid MarkUIMessagesAsReadRequestUI request) {
-        Integer currentUserId = getCurrentAppUser().getId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+
+        User currentUser = currentUserOpt
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Integer currentUserId = currentUser.getId();
         chatMessageService.markClientMessagesAsRead(chatId, currentUserId, request.getMessageIds());
         return ResponseEntity.noContent().build();
     }
@@ -266,9 +287,15 @@ public class ChatUiController {
      * <p>POST /api/ui/chats/{chatId}/close
      */
     @PostMapping("/{chatId}/close")
-    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<ChatUIDetailsDTO> closeChat(@PathVariable Integer chatId) {
-        Integer currentUserId = getCurrentAppUser().getId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+
+        User currentUser = currentUserOpt
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Integer currentUserId = currentUser.getId();
 
         CloseChatRequestDTO serviceRequest = new CloseChatRequestDTO();
         serviceRequest.setChatId(chatId);
@@ -280,10 +307,15 @@ public class ChatUiController {
     }
 
     @GetMapping("/waiting")
-    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<List<UIChatDto>> getWaitingChats() {
-        AppUserDetails currentUser = getCurrentAppUser();
-        Integer companyId = currentUser.getCompanyId();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+
+        User currentUser = currentUserOpt
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Integer companyId = currentUser.getCompany().getId();
 
         if (companyId == null) {
             log.warn("User {} attempted to get waiting chats but is not associated with a company.", currentUser.getId());
@@ -299,7 +331,6 @@ public class ChatUiController {
     }
 
     @PostMapping("/assign")
-    @PreAuthorize("isAuthenticated() and principal instanceof T(com.example.domain.dto.AppUserDetails)")
     public ResponseEntity<ChatUIDetailsDTO> assignChat(@RequestBody @Valid AssignChatRequestDTO assignRequest) {
         ChatDetailsDTO assignedChatDetails = chatService.assignOperatorToChat(assignRequest);
         ChatUIDetailsDTO uiChatDetails = chatMapper.toUiDetailsDto(assignedChatDetails);
