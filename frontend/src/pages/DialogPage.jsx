@@ -59,7 +59,7 @@ const DialogPage = () => {
         } catch (err) {
             console.error("Ошибка при создании тестового чата:", err);
         }
-
+    }
 
         return (
             <div className="flex flex-col md:flex-row h-screen bg-[#e6e5ea] overflow-hidden">
@@ -181,5 +181,4 @@ const DialogPage = () => {
             </div>
         );
     };
-}
 export default DialogPage;
