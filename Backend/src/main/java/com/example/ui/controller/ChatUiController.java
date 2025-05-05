@@ -106,9 +106,12 @@ public class ChatUiController {
         }
 
         List<UIChatDto> uiChats = chats.stream()
-                .map(chatMapper::toUiDto)
+                .map(chat -> {
+                    UIChatDto uiChat = chatMapper.toUiDto(chat);
+                    uiChat.setLastMessageContent(chat.getLastMessageSnippet());
+                    return uiChat;
+                } )
                 .toList();
-
         return ResponseEntity.ok(uiChats);
     }
 
