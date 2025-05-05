@@ -37,7 +37,7 @@ const TemplatesPage = () => {
         if (!window.confirm("Вы уверены, что хотите удалить шаблон?")) return;
 
         try {
-            await fetch(`${API.templates.delete}/${id}`, {
+            await fetch(API.templates.delete(id), {
                 method: "DELETE",
             });
 
@@ -323,14 +323,14 @@ const TemplatesPage = () => {
                                         {editIndex === index ? (
                                             <button
                                                 onClick={handleSaveEdit}
-                                                className="mt-2 bg-[#0a226e] text-white text-sm px-4 py-2 rounded hover:bg-[#2a4992] whitespace-nowrap max-w-full"
+                                                className="mt-2 bg-[#0a226e] text-white text-3sm px-4 py-2 rounded hover:bg-[#2a4992] whitespace-nowrap max-w-full"
                                             >
                                                 Сохранить
                                             </button>
                                         ) : (
                                             <button
                                                 onClick={() => handleEditClick(index)}
-                                                className="mt-2 bg-[#0a226e] text-white text-sm px-4 py-2 rounded hover:bg-[#2a4992]"
+                                                className="mt-2 bg-[#0a226e] text-white text-3sm px-4 py-2 rounded hover:bg-[#2a4992]"
                                             >
                                                 Изменить
                                             </button>
