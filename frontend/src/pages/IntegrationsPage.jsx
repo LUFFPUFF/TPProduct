@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import Sidebar from "../components/Sidebar";
 import telegramIcon from "../assets/telegram.png";
 import whatsappIcon from "../assets/whatsapp.png";
@@ -7,11 +7,11 @@ import mailIcon from "../assets/mail.png";
 import API from "../config/api";
 
 const initialIntegrations = [
-    { name: "Telegram", icon: telegramIcon, connected: false },
-    { name: "Whats App", icon: whatsappIcon, connected: false },
-    { name: "Вконтакте", icon: vkIcon, connected: false },
-    { name: "Почту", icon: mailIcon, connected: false },
-    { name: "Виджет", icon: null, connected: false },
+    {name: "Telegram", icon: telegramIcon, connected: false},
+    {name: "Whats App", icon: whatsappIcon, connected: false},
+    {name: "Вконтакте", icon: vkIcon, connected: false},
+    {name: "Почту", icon: mailIcon, connected: false},
+    {name: "Виджет", icon: null, connected: false},
 ];
 
 export default function IntegrationsPage() {
@@ -19,11 +19,13 @@ export default function IntegrationsPage() {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedIntegration, setSelectedIntegration] = useState(null);
     const [token, setToken] = useState("");
-    const [code, setCode] = useState("");
-    const [step, setStep] = useState(1); // 1 — токен, 2 — код
+    const [botName, setBotName] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [email, setEmail] = useState("");
+    const [emailPassword, setEmailPassword] = useState("");
+    const [imapHost, setImapHost] = useState("");
 
     useEffect(() => {
         document.body.style.overflow = modalOpen ? "hidden" : "auto";
@@ -35,40 +37,77 @@ export default function IntegrationsPage() {
     const handleConnectClick = (integration) => {
         setSelectedIntegration(integration);
         setModalOpen(true);
-        setStep(1);
         setToken("");
-        setCode("");
+        setBotName("");
+        setEmail("");
+        setEmailPassword("");
+        setImapHost("");
         setError("");
-    };
-
-    const handleNextStep = () => {
-        if (!token) {
-            setError("Введите токен");
-            return;
-        }
-        setError("");
-        setStep(2);
     };
 
     const handleSubmit = async () => {
-        if (!token || !code || !selectedIntegration) return;
+        if (!selectedIntegration) return;
 
         setLoading(true);
         setError("");
 
+        let payload = {};
+
         try {
-            const response = await fetch(API.integrations.connect, {
+            if (selectedIntegration.name === "Telegram") {
+                if (!token || !botName) {
+                    const msg = "Введите токен и имя бота";
+                    console.warn(msg);
+                    setError(msg);
+                    return;
+                }
+                payload = {
+                    botToken: token,
+                    botName: botName
+                };
+            } else if (selectedIntegration.name === "Почту") {
+                if (!email || !emailPassword || !imapHost) {
+                    const msg = "Заполните все поля для Email";
+                    console.warn(msg);
+                    setError(msg);
+                    return;
+                }
+                payload = {
+                    email,
+                    password: emailPassword,
+                    imapHost
+                };
+            } else {
+                if (!token) {
+                    const msg = "Введите токен";
+                    console.warn(msg);
+                    setError(msg);
+                    return;
+                }
+                payload = { token };
+            }
+
+            let url = API.integrations.connect;
+
+            if (selectedIntegration.name === "Telegram") {
+                url = API.integrations.createTGIntegration;
+            } else if (selectedIntegration.name === "Почту") {
+                url = API.integrations.getMailIntegration;
+            }
+
+            console.log("Отправка запроса:", url, payload);
+
+            const response = await fetch(url, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    integration: selectedIntegration.name,
-                    token,
-                    code,
-                }),
+                body: JSON.stringify(payload),
             });
+
+            console.log("Статус ответа:", response.status);
 
             if (!response.ok) {
                 const errorData = await response.json();
+                console.error("Ошибка от сервера:", errorData);
                 throw new Error(errorData.message || "Ошибка подключения");
             }
 
@@ -80,7 +119,10 @@ export default function IntegrationsPage() {
 
             setModalOpen(false);
             setToken("");
-            setCode("");
+            setBotName("");
+            setEmail("");
+            setEmailPassword("");
+            setImapHost("");
             setSelectedIntegration(null);
         } catch (err) {
             console.error("Ошибка подключения интеграции:", err);
@@ -90,16 +132,22 @@ export default function IntegrationsPage() {
         }
     };
 
+
     const handleDisconnect = async (integrationName) => {
         try {
+            console.log("Отключение интеграции:", integrationName);
+
             const response = await fetch(API.integrations.disconnect, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ integration: integrationName }),
             });
 
+            console.log("Статус ответа на отключение:", response.status);
+
             if (!response.ok) {
                 const errorData = await response.json();
+                console.error("Ошибка от сервера при отключении:", errorData);
                 throw new Error(errorData.message || "Ошибка при отключении");
             }
 
@@ -114,30 +162,32 @@ export default function IntegrationsPage() {
         }
     };
 
-    const connectedItems = integrations.filter((i) => i.connected);
+    const connectedItems = integrations.filter((i) => i.connected)
 
     return (
         <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-[#e5e6eb] z-0">
             <div className="md:hidden p-4">
                 <button onClick={() => setIsSidebarOpen(true)} aria-label="Открыть меню">
-                    <svg className="w-8 h-8 text-[#2a4992]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    <svg className="w-8 h-8 text-[#2a4992]" fill="none" stroke="currentColor" strokeWidth="2"
+                         viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
                 </button>
             </div>
 
             <div className="hidden md:block">
-                <Sidebar />
+                <Sidebar/>
             </div>
 
             {isSidebarOpen && (
                 <>
-                    <div className="fixed inset-0 z-40 bg-black bg-opacity-50" onClick={() => setIsSidebarOpen(false)} />
+                    <div className="fixed inset-0 z-40 bg-black bg-opacity-50" onClick={() => setIsSidebarOpen(false)}/>
                     <div className="fixed top-0 left-0 w-64 h-full z-50 bg-white shadow-lg overflow-y-auto">
-                        <Sidebar />
+                        <Sidebar/>
                         <button onClick={() => setIsSidebarOpen(false)} className="absolute top-4 right-4">
-                            <svg className="w-6 h-6 text-gray-600 hover:text-black" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            <svg className="w-6 h-6 text-gray-600 hover:text-black" fill="none" stroke="currentColor"
+                                 strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
                         </button>
                     </div>
@@ -159,8 +209,9 @@ export default function IntegrationsPage() {
                             </h2>
                             <div className="flex-1 flex items-center justify-center">
                                 {item.icon ? (
-                                    <div className="bg-[#677daf] rounded-xl w-24 h-24 flex items-center justify-center mb-4">
-                                        <img src={item.icon} alt={item.name} className="w-16 h-16" />
+                                    <div
+                                        className="bg-[#677daf] rounded-xl w-24 h-24 flex items-center justify-center mb-4">
+                                        <img src={item.icon} alt={item.name} className="w-16 h-16"/>
                                     </div>
                                 ) : (
                                     <p className="text-base font-bold mt-4 mb-4">Подключи виджет на сайт</p>
@@ -181,7 +232,7 @@ export default function IntegrationsPage() {
                     ))}
                 </div>
 
-                <div className="w-full h-[4px] rounded-3xl bg-black mb-10" />
+                <div className="w-full h-[4px] rounded-3xl bg-black mb-10"/>
 
                 {connectedItems.length > 0 && (
                     <div className="bg-white p-6 rounded-lg shadow-lg">
@@ -205,21 +256,47 @@ export default function IntegrationsPage() {
             </main>
 
             {modalOpen && (
-                <>
+                <div
+                    className="fixed inset-0 z-50 flex justify-center items-center px-4"
+                    style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+                    onClick={() => setModalOpen(false)}
+                >
                     <div
-                        className="fixed inset-0 z-50 flex justify-center items-center px-4"
-                        style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-                        onClick={() => setModalOpen(false)}
+                        className="bg-white p-6 rounded-lg w-full max-w-md shadow-lg"
+                        onClick={(e) => e.stopPropagation()}
                     >
-                        <div
-                            className="bg-white p-6 rounded-lg w-full max-w-md shadow-lg"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <h2 className="text-xl font-bold mb-4">
-                                {step === 1 ? `Введите токен для ${selectedIntegration?.name}` : "Введите код подтверждения"}
-                            </h2>
+                        <h2 className="text-xl font-bold mb-4">
+                            {selectedIntegration?.name === "Почту"
+                                ? "Введите данные для подключения к почте"
+                                : `Введите токен для ${selectedIntegration?.name}`}
+                        </h2>
 
-                            {step === 1 ? (
+                        {selectedIntegration?.name === "Почту" ? (
+                            <>
+                                <input
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="Email"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
+                                />
+                                <input
+                                    type="password"
+                                    value={emailPassword}
+                                    onChange={(e) => setEmailPassword(e.target.value)}
+                                    placeholder="Пароль"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
+                                />
+                                <input
+                                    type="text"
+                                    value={imapHost}
+                                    onChange={(e) => setImapHost(e.target.value)}
+                                    placeholder="IMAP Host (например, imap.yandex.ru)"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
+                                />
+                            </>
+                        ) : (
+                            <>
                                 <input
                                     type="text"
                                     value={token}
@@ -227,56 +304,55 @@ export default function IntegrationsPage() {
                                     placeholder="Токен"
                                     className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
                                 />
-                            ) : (
-                                <input
-                                    type="text"
-                                    value={code}
-                                    onChange={(e) => setCode(e.target.value)}
-                                    placeholder="Код подтверждения"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
-                                />
-                            )}
 
-                            {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
-
-                            <div className="flex justify-end gap-2">
-                                <button
-                                    onClick={() => {
-                                        setModalOpen(false);
-                                        setToken("");
-                                        setCode("");
-                                        setSelectedIntegration(null);
-                                        setStep(1);
-                                        setError("");
-                                    }}
-                                    className="bg-[#dadee7] active:bg-[#dadee7] active:text-black transition-all duration-150 ease-in-out transform active:scale-95 px-4 py-2 rounded"
-                                >
-                                    Отмена
-                                </button>
-
-                                {step === 1 ? (
-                                    <button
-                                        onClick={handleNextStep}
-                                        disabled={!token}
-                                        className="bg-[#0a2255] hover:bg-[#2a4992] text-white px-4 py-2 rounded disabled:opacity-50 active:bg-[#dadee7] active:text-black transition-all duration-150 ease-in-out transform active:scale-95"
-                                    >
-                                        Далее
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={handleSubmit}
-                                        disabled={!code || loading}
-                                        className={`${
-                                            loading ? "opacity-50 cursor-not-allowed" : "bg-[#0a2255] hover:bg-[#2a4992] active:bg-[#dadee7] active:text-black transition-all duration-150 ease-in-out transform active:scale-95"
-                                        } text-white px-4 py-2 rounded`}
-                                    >
-                                        {loading ? "Отправка..." : "Подтвердить"}
-                                    </button>
+                                {selectedIntegration?.name === "Telegram" && (
+                                    <input
+                                        type="text"
+                                        value={botName}
+                                        onChange={(e) => setBotName(e.target.value)}
+                                        placeholder="Имя бота"
+                                        className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
+                                    />
                                 )}
-                            </div>
+                            </>
+                        )}
+
+                        {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+
+                        <div className="flex justify-end gap-2">
+                            <button
+                                onClick={() => {
+                                    setModalOpen(false);
+                                    setToken("");
+                                    setBotName("");
+                                    setImapHost("");
+                                    setSelectedIntegration(null);
+                                    setError("");
+                                }}
+                                className="bg-[#dadee7] px-4 py-2 rounded transition-all duration-150 ease-in-out transform active:scale-95"
+                            >
+                                Отмена
+                            </button>
+
+                            <button
+                                onClick={handleSubmit}
+                                disabled={
+                                    loading ||
+                                    (selectedIntegration?.name === "Почту"
+                                        ? !(token && botName && imapHost)
+                                        : !token)
+                                }
+                                className={`${
+                                    loading
+                                        ? "opacity-50 cursor-not-allowed"
+                                        : "bg-[#0a2255] hover:bg-[#2a4992] active:bg-[#dadee7] active:text-black"
+                                } text-white px-4 py-2 rounded transition-all duration-150 ease-in-out transform active:scale-95`}
+                            >
+                                {loading ? "Подключение..." : "Подключить"}
+                            </button>
                         </div>
                     </div>
-                </>
+                </div>
             )}
         </div>
     );
