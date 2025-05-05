@@ -211,7 +211,12 @@ C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\exception_handler\GlobalChatExceptionHandler.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\exception_handler\ResourceNotFoundException.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\config\IntegrationConfig.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\controller\IntegrationController.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\dto\IncomingTelegramMessage.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\dto\IntegrationMailDto.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\dto\IntegrationTelegramDto.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\dto\rest\CreateMailConfigurationRequest.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\dto\rest\CreateTelegramConfigurationRequest.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\listener\IncomingMessageQueueListener.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\listener\OutgoingMessageQueueListener.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\listener\SendMessageCommand.java
@@ -222,9 +227,12 @@ C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\mail\parser\YandexParser.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\mail\properties\EmailProperties.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\mail\response\EmailResponse.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\mapper\IntegrationMapper.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\process_service\ClientCompanyProcessService.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\service\IExternalMessagingService.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\service\IIntegrationService.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\service\impl\ExternalMessagingServiceImpl.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\service\impl\IntegrationServiceImpl.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\telegram\TelegramConfiguration.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\telegram\TelegramDialogBot.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\telegram\TelegramResponse.java
@@ -310,6 +318,7 @@ C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\UserCompanyRolesDto.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\UserDto.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\dto\UserRoleDto.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\ui\config\BatchInfrastructureConfig.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\ui\controller\ChatUiController.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\ui\controller\PredefinedAnswerUIController.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\ui\dto\answer\UiPredefinedAnswerDto.java

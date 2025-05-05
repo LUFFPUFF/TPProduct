@@ -30,47 +30,40 @@ public class IntegrationController {
     private final UserRepository userRepository;
 
     @PostMapping("/create/telegram")
-    public ResponseEntity<IntegrationTelegramDto> createIntegrationTelegram(CreateTelegramConfigurationRequest request) {
+    public ResponseEntity<IntegrationTelegramDto> createIntegrationTelegram(@RequestBody CreateTelegramConfigurationRequest request) {
         CompanyTelegramConfiguration companyTelegramConfiguration = integrationService.createCompanyTelegramConfiguration(request);
         return ResponseEntity.ok(integrationMapper.toDto(companyTelegramConfiguration));
     }
 
-
     @PostMapping("/create/email")
-    public ResponseEntity<IntegrationMailDto> createIntegrationEmail(CreateMailConfigurationRequest request) {
+    public ResponseEntity<IntegrationMailDto> createIntegrationEmail(@RequestBody CreateMailConfigurationRequest request) {
         CompanyMailConfiguration companyMailConfiguration = integrationService.createCompanyMailConfiguration(request);
         return ResponseEntity.ok(integrationMapper.toDto(companyMailConfiguration));
     }
 
     @GetMapping("/telegram")
-    public ResponseEntity<IntegrationTelegramDto> getAllIntegrationTelegram() {
-
+    public ResponseEntity<List<IntegrationTelegramDto>> getAllIntegrationTelegram() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
-
         User currentUser = currentUserOpt
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         List<IntegrationTelegramDto> telegramDtos = integrationMapper.toDto(
                 integrationService.getAllTelegramConfigurations(currentUser.getCompany().getId()));
-        return ResponseEntity.ok((IntegrationTelegramDto) telegramDtos);
+        return ResponseEntity.ok(telegramDtos);
     }
 
-    @GetMapping("/telegram")
-    public ResponseEntity<IntegrationMailDto> getAllIntegrationEmail() {
-
+    @GetMapping("/email")
+    public ResponseEntity<List<IntegrationMailDto>> getAllIntegrationEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
-
         User currentUser = currentUserOpt
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         List<IntegrationMailDto> mailDtos = integrationMapper.toDtoList(
                 integrationService.getAllMailConfigurations(currentUser.getCompany().getId()));
 
-        return ResponseEntity.ok((IntegrationMailDto) mailDtos);
+        return ResponseEntity.ok(mailDtos);
     }
 
     private Optional<User> getCurrentAppUser(String email) {

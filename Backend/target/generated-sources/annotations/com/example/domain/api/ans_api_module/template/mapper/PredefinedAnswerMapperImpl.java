@@ -4,12 +4,14 @@ import com.example.database.model.ai_module.PredefinedAnswer;
 import com.example.database.model.company_subscription_module.company.Company;
 import com.example.domain.api.ans_api_module.template.dto.request.PredefinedAnswerUploadDto;
 import com.example.domain.dto.CompanyDto;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-05T02:36:25+0300",
+    date = "2025-05-05T20:30:30+0300",
     comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 21.0.7 (Microsoft)"
 )
 @Component
@@ -45,6 +47,20 @@ public class PredefinedAnswerMapperImpl implements PredefinedAnswerMapper {
         predefinedAnswerUploadDto.answer( entity.getAnswer() );
 
         return predefinedAnswerUploadDto.build();
+    }
+
+    @Override
+    public List<PredefinedAnswer> toEntityList(List<PredefinedAnswerUploadDto> dtoList) {
+        if ( dtoList == null ) {
+            return null;
+        }
+
+        List<PredefinedAnswer> list = new ArrayList<PredefinedAnswer>( dtoList.size() );
+        for ( PredefinedAnswerUploadDto predefinedAnswerUploadDto : dtoList ) {
+            list.add( toEntity( predefinedAnswerUploadDto ) );
+        }
+
+        return list;
     }
 
     @Override
