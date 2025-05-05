@@ -34,6 +34,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -114,50 +115,62 @@ public class ChatServiceImpl implements IChatService {
 
         Optional<User> currentUserOpt = userRepository.findByEmail(authentication.getName());
 
-        User currentUser = currentUserOpt
+        User operator = currentUserOpt
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        Client client = clientService.findById(createRequest.getClientId())
-                .orElseThrow(() -> new ResourceNotFoundException("Client with ID " + createRequest.getClientId() + " not found"));
+        Client client = getClientWithCompanyCheck(createRequest.getClientId());
 
-        Company company = client.getCompany();
-        if (company == null) {
-            log.error("Client with ID {} is not associated with a company.", createRequest.getClientId());
-            throw new ResourceNotFoundException("Client is not associated with a company.");
-        }
+        Chat chat = createAndSaveChatWithOperator(client, operator, createRequest);
 
-        Optional<Chat> existingChat = findOpenChatByClientAndChannel(createRequest.getClientId(), createRequest.getChatChannel());
-        if (existingChat.isPresent()) {
-            log.warn("Open chat ID {} already exists for client {} on channel {}", existingChat.get().getId(), createRequest.getClientId(), createRequest.getChatChannel());
-            throw new ChatServiceException("Open chat already exists for this client and channel.");
-        }
+        addInitialMessageIfNeeded(chat, client, createRequest.getInitialMessageContent());
 
-        Chat chat = createChatEntity(client, company, createRequest.getChatChannel());
-        chat.setUser(currentUser);
-        log.debug("Created initial chat entity with ID: {}", chat.getId());
+        return chatMapper.toDetailsDto(chat);
 
-        Chat savedChat = chatRepository.save(chat);
-        log.info("Saved initial chat entity with ID: {}", savedChat.getId());
+    }
 
-        if (createRequest.getInitialMessageContent() != null && !createRequest.getInitialMessageContent().isBlank()) {
-            ChatMessage firstMessage = createChatMessageEntity(savedChat, client, null,
-                    ChatMessageSenderType.CLIENT, createRequest.getInitialMessageContent(), null, null);
+    private Chat createAndSaveChatWithOperator(Client client,
+                                        User operator,
+                                        CreateChatRequestDTO request) {
+
+        Chat chat = new Chat();
+        chat.setClient(client);
+        chat.setCompany(client.getCompany());
+        chat.setChatChannel(ChatChannel.VK);
+        chat.setUser(operator);
+        chat.setStatus(ChatStatus.ASSIGNED);
+
+        chat.setCreatedAt(LocalDateTime.now());
+        chat.setLastMessageAt(LocalDateTime.now());
+
+        return chatRepository.save(chat);
+
+    }
+
+    private void addInitialMessageIfNeeded(Chat chat, Client client, String messageContent) {
+        if (StringUtils.hasText(messageContent)) {
+            ChatMessage firstMessage = new ChatMessage();
+            firstMessage.setChat(chat);
+            firstMessage.setSenderClient(client);
+            firstMessage.setSenderType(ChatMessageSenderType.CLIENT);
+            firstMessage.setContent(messageContent);
+            firstMessage.setSentAt(LocalDateTime.now());
+
             chatMessageRepository.save(firstMessage);
-            savedChat.setLastMessageAt(firstMessage.getSentAt());
-        } else {
-            savedChat.setLastMessageAt(savedChat.getCreatedAt());
+            chat.setLastMessageAt(firstMessage.getSentAt());
+            chatRepository.save(chat);
+        }
+    }
+
+    private Client getClientWithCompanyCheck(Integer clientId) {
+        Client client = clientService.findById(clientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Client with ID " + clientId + " not found"));
+
+        if (client.getCompany() == null) {
+            log.error("Client with ID {} is not associated with a company.", clientId);
+            throw new ResourceNotFoundException("Client is not associated with a company");
         }
 
-        chatRepository.save(savedChat);
-
-        try {
-            autoResponderService.processNewPendingChat(savedChat.getId());
-            log.info("Auto-responder triggered for chat ID: {}", savedChat.getId());
-        } catch (AutoResponderException e) { log.error("Failed to trigger auto-responder for chat ID {}: {}", savedChat.getId(), e.getMessage(), e);
-            throw new AutoResponderException(e.getMessage());
-        }
-
-        return chatMapper.toDetailsDto(savedChat);
+        return client;
     }
 
     @Override

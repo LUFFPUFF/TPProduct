@@ -13,7 +13,7 @@ const ClientInfo = ({ selectedDialog }) => {
 
     return (
         <div className="w-full md:w-1/4 bg-[#f3f4f6] rounded-lg p-4 md:p-8 shadow-md h-full md:h-auto overflow-y-auto">
-            <h2 className="font-bold text-xl">{selectedDialog.client}</h2>
+            <h2 className="font-bold text-xl">{selectedDialog.client?.name}</h2>
 
             {/* О клиенте */}
             <p className="text-black font-bold mt-5">О клиенте</p>

@@ -5,6 +5,8 @@ import com.example.database.model.company_subscription_module.company.Company;
 import com.example.domain.api.ans_api_module.template.dto.request.PredefinedAnswerUploadDto;
 import org.mapstruct.*;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
@@ -17,6 +19,8 @@ public interface PredefinedAnswerMapper {
 
     @Mapping(target = "companyDto", source = "company")
     PredefinedAnswerUploadDto toDto(PredefinedAnswer entity);
+
+    List<PredefinedAnswer> toEntityList(List<PredefinedAnswerUploadDto> dtoList);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "company", ignore = true)

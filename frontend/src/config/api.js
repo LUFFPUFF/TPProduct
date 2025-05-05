@@ -31,8 +31,8 @@ const API = {
     },
     dialogs: {
         getAll: `${API_BASE_URL}/ui/chats/my`,
-        getById: (id) => `${API_BASE_URL}/ui/chats/{chatId}/details`,
-        sendMessage: (id) => `${API_BASE_URL}/ui/chats/messages`,
+        getById: (id) => `${API_BASE_URL}/ui/chats/${id}/details`,
+        sendMessage: `${API_BASE_URL}/ui/chats/messages`,
         sendSelfMessage: `${API_BASE_URL}/ui/chats/create-test-chat`,
         updateStatus: (id) => `${API_BASE_URL}/dialogs/${id}/status`,
     },

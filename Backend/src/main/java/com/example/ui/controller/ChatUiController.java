@@ -165,13 +165,7 @@ public class ChatUiController {
             initialChatDetails.setStatus(ChatStatus.ASSIGNED);
             initialChatDetails.setOperator(userInfoDTO);
 
-            AssignChatRequestDTO assignRequest = new AssignChatRequestDTO();
-            assignRequest.setChatId(initialChatDetails.getId());
-            assignRequest.setOperatorId(currentUserId);
-
-            ChatDetailsDTO assignedChatDetails = chatService.assignOperatorToChat(assignRequest);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(chatMapper.toUiDetailsDto(assignedChatDetails));
+            return ResponseEntity.status(HttpStatus.CREATED).body(chatMapper.toUiDetailsDto(initialChatDetails));
 
         } catch (ResourceNotFoundException e) {
             log.error("Error creating test chat (resource not found): {}", e.getMessage());

@@ -4,6 +4,7 @@ import com.example.database.model.ai_module.PredefinedAnswer;
 import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.repository.ai_module.PredefinedAnswerRepository;
 import com.example.database.repository.company_subscription_module.CompanyRepository;
+import com.example.domain.api.ans_api_module.answer_finder.domain.dto.PredefinedAnswerDto;
 import com.example.domain.api.ans_api_module.template.mapper.PredefinedAnswerMapper;
 import com.example.domain.api.ans_api_module.template.services.answer.PredefinedAnswerService;
 import com.example.domain.api.ans_api_module.template.dto.request.PredefinedAnswerUploadDto;
@@ -115,6 +116,19 @@ public class PredefinedAnswerServiceImpl implements PredefinedAnswerService {
         return answerRepository.findByCategoryIgnoreCase(category).stream()
                 .map(this::buildResponseFromEntity)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AnswerResponse> getAnswersByCompanyId(Integer companyId) {
+        List<PredefinedAnswer> predefinedAnswer = answerRepository.findByCompanyId(companyId);
+
+        List<AnswerResponse> answerResponses = new ArrayList<>();
+
+        for (PredefinedAnswer predefinedAnsw : predefinedAnswer) {
+            answerResponses.add(buildResponseFromEntity(predefinedAnsw));
+        }
+
+        return answerResponses;
     }
 
     @Transactional

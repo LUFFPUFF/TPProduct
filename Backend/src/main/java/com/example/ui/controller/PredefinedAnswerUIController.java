@@ -55,7 +55,16 @@ public class PredefinedAnswerUIController {
 
     @GetMapping
     public ResponseEntity<List<UiPredefinedAnswerDto>> getPredefinedAnswers() {
-        List<AnswerResponse> response = answerService.getAllAnswers();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+
+        User currentUser = currentUserOpt
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        List<AnswerResponse> response = answerService.getAnswersByCompanyId(currentUser.getCompany().getId());
+
         return ResponseEntity.ok(uiAnswerMapper.toUiDtoList(response));
     }
 
