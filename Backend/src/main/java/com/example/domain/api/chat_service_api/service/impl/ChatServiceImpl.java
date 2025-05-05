@@ -375,7 +375,7 @@ public class ChatServiceImpl implements IChatService {
         return chats.stream()
                 .map(chat -> {
                    ChatDTO chatDTO = chatMapper.toDto(chat);
-                   chatDTO.setLastMessageSnippet(chat.getMessages().getLast().getContent());
+                   chatDTO.setLastMessageSnippet(chat.getMessages().get(chat.getMessages().size()-1).getContent());
                    return chatDTO;
                 })
                 .collect(Collectors.toList());
