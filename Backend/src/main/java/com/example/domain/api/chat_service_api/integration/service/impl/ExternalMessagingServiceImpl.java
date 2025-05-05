@@ -29,7 +29,7 @@ public class ExternalMessagingServiceImpl implements IExternalMessagingService {
     private final IChatMessageService chatMessageService;
     private final BlockingQueue<Object> outgoingMessageQueue;
     private final CompanyMailConfigurationRepository mailConfigRepository;
-    private final CompanyTelegramConfigurationRepository companyTelegramConfiguration;
+    private final CompanyTelegramConfigurationRepository companyTelegramConfigurationRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -46,39 +46,41 @@ public class ExternalMessagingServiceImpl implements IExternalMessagingService {
                 });
 
         Client client = chat.getClient();
-
         if (client == null) {
             log.error("Client not associated with chat ID {} for sending external message.", chatId);
             throw new ResourceNotFoundException("Client not found for chat ID " + chatId);
         }
 
         ChatChannel channel = chat.getChatChannel();
-
         if (channel == null) {
             log.error("Chat channel is null for chat ID {}.", chatId);
             throw new ExternalMessagingException("Chat channel is not defined for chat ID " + chatId);
         }
 
         Company company = chat.getCompany();
-        if (company == null) {
-            log.error("Company not associated with chat ID {} for external messaging config.", chatId);
-            throw new ResourceNotFoundException("Company not found for chat ID " + chatId);
+        if (company == null || company.getId() == null) {
+            log.error("Company not associated or has null ID with chat ID {} for external messaging config.", chatId);
+            throw new ResourceNotFoundException("Company not found or invalid for chat ID " + chatId);
         }
 
         Object sendMessageCommand;
         try {
             switch (channel) {
                 case Telegram -> {
-                    CompanyTelegramConfiguration telegramConfiguration = companyTelegramConfiguration.findByCompanyId(company.getId())
-                                    .orElseThrow(() -> new ResourceNotFoundException("Telegram config not found for company " + company.getId()));
+                    CompanyTelegramConfiguration telegramConfiguration = companyTelegramConfigurationRepository
+                            .findByCompanyId(company.getId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Telegram config not found for company " + company.getId()));
 
-                    sendMessageCommand = new SendMessageCommand(
-                            ChatChannel.Telegram,
-                            chatId,
-                            messageContent,
-                            telegramConfiguration.getChatTelegramId(),
-                            null, null, null
-                    );
+                    sendMessageCommand = SendMessageCommand.builder()
+                            .channel(ChatChannel.Telegram)
+                            .chatId(chatId)
+                            .companyId(company.getId())
+                            .content(messageContent)
+                            .telegramChatId(telegramConfiguration.getChatTelegramId())
+                            .toEmailAddress(null)
+                            .fromEmailAddress(null)
+                            .subject(null)
+                            .build();
                 }
 
                 case Email -> {
@@ -93,15 +95,16 @@ public class ExternalMessagingServiceImpl implements IExternalMessagingService {
                     String fromEmailAddress  = mailConfig.getEmailAddress();
                     String emailSubject = "Re: Ваш чат #" + chat.getId();
 
-                    sendMessageCommand = new SendMessageCommand(
-                      ChatChannel.Email,
-                      chatId,
-                      messageContent,
-                      null,
-                      clientEmailAddress,
-                      fromEmailAddress,
-                      emailSubject
-                    );
+                    sendMessageCommand = SendMessageCommand.builder()
+                            .channel(ChatChannel.Email)
+                            .chatId(chatId)
+                            .companyId(company.getId())
+                            .content(messageContent)
+                            .telegramChatId(null)
+                            .toEmailAddress(clientEmailAddress)
+                            .fromEmailAddress(fromEmailAddress)
+                            .subject(emailSubject)
+                            .build();
                 }
 
                 default -> {
@@ -110,14 +113,22 @@ public class ExternalMessagingServiceImpl implements IExternalMessagingService {
                 }
             }
         } catch (Exception e) {
-            log.error("Failed to send external message for chat ID {}: {}", chatId, e.getMessage(), e);
-            throw new ExternalMessagingException("Failed to send external message for chat ID " + chatId, e);
+            log.error("Failed to create external message command for chat ID {}: {}", chatId, e.getMessage(), e);
+            if (e instanceof ExternalMessagingException) {
+                throw (ExternalMessagingException) e;
+            } else if (e instanceof ResourceNotFoundException) {
+                throw (ResourceNotFoundException) e;
+            } else {
+                throw new ExternalMessagingException("Failed to create external message command for chat ID " + chatId, e);
+            }
         }
 
         try {
             outgoingMessageQueue.put(sendMessageCommand);
+            log.info("Put SendMessageCommand for chat ID {} (channel {}) into outgoing queue.", chatId, channel);
         } catch (InterruptedException e) {
             log.error("Failed to put external message command into outgoing queue for chat ID {}: {}", chatId, e.getMessage(), e);
+            Thread.currentThread().interrupt();
             throw new ExternalMessagingException("Failed to put external message command into outgoing queue for chat ID " + chatId, e);
         }
     }

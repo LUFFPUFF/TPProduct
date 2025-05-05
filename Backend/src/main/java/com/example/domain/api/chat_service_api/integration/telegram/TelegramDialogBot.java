@@ -23,9 +23,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpEntity;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.meta.generics.BotSession;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.util.Collections;
 import java.util.HashMap;

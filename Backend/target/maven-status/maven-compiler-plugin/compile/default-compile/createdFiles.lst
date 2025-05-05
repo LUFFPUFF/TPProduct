@@ -78,6 +78,7 @@ com\example\ui\dto\chat\message\UiMessageDto$UiMessageDtoBuilder.class
 com\example\database\model\company_subscription_module\company\CompanyMailConfiguration.class
 com\example\domain\api\chat_service_api\mapper\ClientMapperImpl.class
 com\example\domain\api\ans_api_module\template\batch\reader\PredefinedAnswerItemReaderAdapter.class
+com\example\domain\api\chat_service_api\integration\telegram\TelegramBotManager.class
 com\example\domain\api\ans_api_module\template\dto\request\UploadFileRequest.class
 com\example\database\model\company_subscription_module\company\Company.class
 com\example\domain\api\ans_api_module\template\batch\job\AnswerUploadJobConfig.class
@@ -170,6 +171,7 @@ com\example\domain\api\chat_service_api\exception_handler\ResourceNotFoundExcept
 com\example\domain\api\company_module\exception_handler_company\SelfMemberDisbandException.class
 com\example\domain\api\subscription_module\exception_handler_subscription\NotFoundSubscriptionException.class
 com\example\domain\api\ans_api_module\template\util\ValidationUtils.class
+com\example\domain\api\chat_service_api\integration\telegram\BotPollingProcess.class
 com\example\domain\api\chat_service_api\integration\whats_app\WhatsAppDialogBot.class
 com\example\domain\api\ans_api_module\answer_finder\nlp\hf_similarity_client\model\HfSimilarityRequest$SentenceSimilarityInput.class
 com\example\domain\api\ans_api_module\template\dto\job\JobExecutionDto.class
@@ -253,6 +255,7 @@ com\example\domain\api\company_module\controller\CompanySettingsController.class
 com\example\domain\api\authentication_module\service\interfaces\AuthService.class
 com\example\domain\dto\MemberDto.class
 com\example\database\repository\company_subscription_module\CompanyMailConfigurationRepository.class
+com\example\domain\api\chat_service_api\integration\telegram\TelegramApiClient.class
 com\example\domain\api\ans_api_module\template\dto\job\JobStatisticsDto.class
 com\example\domain\api\chat_service_api\integration\vk\VkResponse.class
 com\example\domain\api\chat_service_api\config\WebSocketConfig.class
@@ -333,9 +336,9 @@ com\example\domain\api\chat_service_api\service\IClientService.class
 com\example\ui\mapper\chat\UIMessageMapper.class
 com\example\domain\api\ans_api_module\correction_answer\controller\TextProcessingController.class
 com\example\database\model\integration_module\IntegrationStatus.class
-com\example\domain\api\chat_service_api\integration\config\DialogBotConfig.class
 com\example\domain\api\ans_api_module\template\controller\PredefinedAnswerController.class
 com\example\database\repository\crm_module\ClientContactsRepository.class
+com\example\domain\api\chat_service_api\integration\telegram\TelegramBotManager$1.class
 com\example\domain\dto\SubscriptionPriceReqDto$SubscriptionPriceReqDtoBuilder.class
 com\example\database\model\company_subscription_module\subscription\Subscription.class
 com\example\domain\api\ans_api_module\correction_answer\config\promt\PromptTemplateProperties.class
@@ -368,6 +371,7 @@ com\example\domain\api\authentication_module\service\interfaces\RegistrationServ
 com\example\domain\api\ans_api_module\template\services\AnswerValidationService.class
 com\example\domain\api\ans_api_module\answer_finder\exception\AnswerSearchException.class
 com\example\domain\api\chat_service_api\mapper\NotificationMapper.class
+com\example\domain\api\chat_service_api\integration\listener\SendMessageCommand$SendMessageCommandBuilder.class
 com\example\domain\api\chat_service_api\integration\mail\parser\GmailParser.class
 com\example\domain\api\chat_service_api\integration\mapper\IntegrationMapperImpl.class
 com\example\domain\api\ans_api_module\template\exception\InvalidFileException.class

@@ -1,7 +1,7 @@
 package com.example.domain.api.chat_service_api.integration.listener;
 
 import com.example.domain.api.chat_service_api.integration.mail.dialog_bot.EmailDialogBot;
-import com.example.domain.api.chat_service_api.integration.telegram.TelegramDialogBot;
+import com.example.domain.api.chat_service_api.integration.telegram.TelegramBotManager;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class OutgoingMessageQueueListener {
 
     private final BlockingQueue<Object> outgoingMessageQueue;
 
-    private final TelegramDialogBot telegramDialogBot;
+    private final TelegramBotManager telegramBotManager;
     private final EmailDialogBot emailDialogBot;
 
     private volatile boolean running = true;
@@ -58,18 +58,24 @@ public class OutgoingMessageQueueListener {
                 log.debug("Outgoing Listener received command from queue: {}", command);
 
                 if (command instanceof SendMessageCommand sendCommand) {
-                    log.info("Processing SendMessageCommand for chat ID {} on channel {}",
-                            sendCommand.getChatId(), sendCommand.getChannel());
+                    Integer companyId = sendCommand.getCompanyId();
+                    if (companyId == null) {
+                        log.error("SendMessageCommand received without company ID. Cannot route message.");
+                        continue;
+                    }
+
+                    log.info("Processing SendMessageCommand for chat ID {} on channel {} (company ID {})",
+                            sendCommand.getChatId(), sendCommand.getChannel(), companyId);
 
                     try {
                         switch (sendCommand.getChannel()) {
                             case Telegram:
                                 Long telegramChatId = sendCommand.getTelegramChatId();
                                 if (telegramChatId != null) {
-                                    telegramDialogBot.sendMessage(telegramChatId, sendCommand.getContent());
-                                    log.info("Message sent via TelegramDialogBot for chat ID {}", sendCommand.getChatId());
+                                    telegramBotManager.sendTelegramMessage(companyId, telegramChatId, sendCommand.getContent());
+                                    log.info("Message sent via TelegramBotManager for chat ID {} (company ID {})", telegramChatId, companyId);
                                 } else {
-                                    log.error("Telegram Chat ID not found in SendMessageCommand for chat ID {}", sendCommand.getChatId());
+                                    log.error("Telegram Chat ID not found in SendMessageCommand for company ID {}", companyId);
                                 }
                                 break;
 
@@ -79,9 +85,9 @@ public class OutgoingMessageQueueListener {
                                 String subject = sendCommand.getSubject();
                                 if (toEmailAddress != null && fromEmailAddress != null) {
                                     emailDialogBot.sendMessage(toEmailAddress, subject, sendCommand.getContent(), fromEmailAddress);
-                                    log.info("Message sent via EmailDialogBot for chat ID {}", sendCommand.getChatId());
+                                    log.info("Message sent via EmailDialogBot for chat ID {} (company ID {})", sendCommand.getChatId(), companyId);
                                 } else {
-                                    log.error("Email addresses not found in SendMessageCommand for chat ID {}", sendCommand.getChatId());
+                                    log.error("Email addresses not found in SendMessageCommand for chat ID {} (company ID {})", sendCommand.getChatId(), companyId);
                                 }
                                 break;
 
@@ -91,7 +97,8 @@ public class OutgoingMessageQueueListener {
                                 break;
                         }
                     } catch (Exception e) {
-                        log.error("Error sending message via adapter for chat ID {}: {}", sendCommand.getChatId(), e.getMessage(), e);
+                        log.error("Error sending message via adapter for chat ID {} (company ID {}): {}", sendCommand.getChatId(), companyId, e.getMessage(), e);
+                        // TODO: Обработка ошибки: залогировать, возможно, положить команду обратно или в очередь ошибок
                     }
 
                 } else {
@@ -102,6 +109,7 @@ public class OutgoingMessageQueueListener {
             } catch (InterruptedException e) {
                 log.info("Outgoing message queue listener thread interrupted, shutting down.");
                 Thread.currentThread().interrupt();
+                running = false;
             } catch (Exception e) {
                 log.error("Error processing command from outgoing queue: {}", e.getMessage(), e);
                 // TODO: Обработать ошибку обработки: залогировать, возможно, положить команду в очередь ошибок

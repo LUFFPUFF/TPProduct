@@ -15,4 +15,12 @@ public interface CompanyTelegramConfigurationRepository extends JpaRepository<Co
     Optional<CompanyTelegramConfiguration> findByCompanyId(Integer companyId);
 
     List<CompanyTelegramConfiguration> findAllByCompanyId(Integer companyId);
+
+    List<CompanyTelegramConfiguration> findAllByBotTokenIsNotNullAndBotTokenIsNot(String token);
+
+    Optional<CompanyTelegramConfiguration> findByCompanyIdAndBotTokenIsNotNullAndBotTokenIsNot(Integer companyId, String token);
+
+    int countByBotTokenIsNotNullAndBotTokenIsNot(String token);
+
+    Optional<CompanyTelegramConfiguration> findByChatTelegramId(Long chatTelegramId);
 }

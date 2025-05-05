@@ -16,4 +16,5 @@ public class TelegramResponse{
     private String firstUsername;
     private String text;
     private Integer date;
+    private Long chatId;
 }

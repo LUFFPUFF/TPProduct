@@ -210,7 +210,6 @@ C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\exception_handler\exception\service\WebSocketServiceException.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\exception_handler\GlobalChatExceptionHandler.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\exception_handler\ResourceNotFoundException.java
-C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\config\DialogBotConfig.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\config\IntegrationConfig.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\controller\IntegrationController.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\dto\IncomingTelegramMessage.java
@@ -234,8 +233,11 @@ C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\service\IIntegrationService.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\service\impl\ExternalMessagingServiceImpl.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\service\impl\IntegrationServiceImpl.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\telegram\BotPollingProcess.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\telegram\TelegramApiClient.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\telegram\TelegramApiResponse.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\telegram\TelegramApiUserResponse.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\telegram\TelegramBotManager.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\telegram\TelegramConfiguration.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\telegram\TelegramDialogBot.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\domain\api\chat_service_api\integration\telegram\TelegramResponse.java
