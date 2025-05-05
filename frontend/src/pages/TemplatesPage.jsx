@@ -80,24 +80,33 @@ const TemplatesPage = () => {
     };
 
     const handleSaveEdit = async () => {
+        const oldTemplate = templates[editIndex];
         const updatedTemplate = {
-            id: templates[editIndex].id,
             title: editedTitle,
             category: editedCategory,
             answer: editedAnswer,
         };
+
         try {
-            const res = await fetch(API.templates.update, {
-                method: "PUT",
+            await fetch(API.templates.delete(oldTemplate.id), {
+                method: "DELETE",
+            });
+
+            const res = await fetch(API.templates.create, {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(updatedTemplate),
             });
-            const data = await res.json();
+
+            const createdTemplate = await res.json();
+
             const updatedTemplates = [...templates];
-            updatedTemplates[editIndex] = data;
+            updatedTemplates.splice(editIndex, 1, createdTemplate);
             setTemplates(updatedTemplates);
+
+            // Сброс состояний редактирования
             setEditIndex(null);
             setEditedTitle("");
             setEditedCategory("");
@@ -106,6 +115,8 @@ const TemplatesPage = () => {
             alert("Ошибка при обновлении шаблона: " + error.message);
         }
     };
+
+
     const handleDownloadExample = async () => {
         try {
             const response = await fetch(API.templates.downloadExample);
