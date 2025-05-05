@@ -63,10 +63,7 @@ public class PredefinedAnswerUIController {
         User currentUser = currentUserOpt
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        List<AnswerResponse> response = answerService.getAllAnswers()
-                .stream()
-                .filter(answer -> Objects.equals(currentUser.getCompany().getName(), answer.getCompanyName()))
-                .toList();
+        List<AnswerResponse> response = answerService.getAnswersByCompanyId(currentUser.getCompany().getId());
 
         return ResponseEntity.ok(uiAnswerMapper.toUiDtoList(response));
     }

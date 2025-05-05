@@ -17,4 +17,5 @@ public interface PredefinedAnswerService {
     AnswerResponse getAnswerById(Integer id);
     Page<AnswerResponse> searchAnswers(String query, Integer companyId, Pageable pageable);
     List<AnswerResponse> getAnswersByCategory(String category);
+    List<AnswerResponse> getAnswersByCompanyId(Integer companyId);
 }
