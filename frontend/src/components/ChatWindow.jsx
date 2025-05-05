@@ -10,8 +10,17 @@ const ChatWindow = ({ selectedDialog }) => {
     const [messages, setMessages] = useState(selectedDialog.messages || []);
     const [isSending, setIsSending] = useState(false);
 
+    const formatMessages = (rawMessages) =>
+        (rawMessages || []).map((msg) => ({
+            sender: msg.senderType === "OPERATOR" ? "Оператор" : "Клиент",
+            text: msg.content,
+            time: msg.sentAt
+                ? new Date(msg.sentAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                : "",
+        }));
+
     useEffect(() => {
-        setMessages(selectedDialog.messages || []);
+        setMessages(formatMessages(selectedDialog.messages));
     }, [selectedDialog]);
 
     useEffect(() => {
