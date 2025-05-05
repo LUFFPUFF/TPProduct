@@ -146,7 +146,7 @@ const TemplatesPage = () => {
         formData.append("overwrite", "false");
 
         try {
-            const res = await fetch(API.templates.uploadMany, {
+            const res = await fetch(API.templates.upload, {
                 method: "POST",
                 body: formData,
             });
