@@ -2,9 +2,10 @@ const API_BASE_URL = "/api";
 
 const API = {
     integrations: {
-        connect: `${API_BASE_URL}/connect`,
-        disconnect: `${API_BASE_URL}/disconnect`,
-        list: `${API_BASE_URL}/integrations`,
+        createTGIntegration: `${API_BASE_URL}/ui/integration/create/telegram`,
+        createMailIntegration: `${API_BASE_URL}/ui/integration/create/email`,
+        getTGIntegration: `${API_BASE_URL}/ui/integration/telegram`,
+        getMailIntegration: `${API_BASE_URL}/ui/integration/email`,
     },
     auth: {
         login: `${API_BASE_URL}/auth/login`,
