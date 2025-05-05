@@ -323,21 +323,21 @@ const TemplatesPage = () => {
                                         {editIndex === index ? (
                                             <button
                                                 onClick={handleSaveEdit}
-                                                className="bg-[#0a226e] text-white text-sm px-4 py-2 rounded hover:bg-[#2a4992] whitespace-nowrap max-w-full"
+                                                className="mt-2 bg-[#0a226e] text-white text-sm px-4 py-2 rounded hover:bg-[#2a4992] whitespace-nowrap max-w-full"
                                             >
                                                 Сохранить
                                             </button>
                                         ) : (
                                             <button
                                                 onClick={() => handleEditClick(index)}
-                                                className="bg-[#0a226e] text-white text-sm px-4 py-2 rounded hover:bg-[#2a4992]"
+                                                className="mt-2 bg-[#0a226e] text-white text-sm px-4 py-2 rounded hover:bg-[#2a4992]"
                                             >
                                                 Изменить
                                             </button>
                                         )}
                                         <button
                                             onClick={() => handleDeleteTemplate(template.id)}
-                                            className="mt-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 active:bg-red-800 transition-all duration-150 ease-in-out transform active:scale-95"
+                                            className="mt-2 bg-red-600 text-white text-3sm  sm:w-[120px] px-4 py-2 rounded hover:bg-red-700"
                                         >
                                             Удалить
                                         </button>
