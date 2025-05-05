@@ -23,12 +23,12 @@ const ChatWindow = ({ selectedDialog }) => {
         setIsSending(true);
 
         const newMessage = {
-            chatId: selectedDialog.id,
+            chatId: Number(selectedDialog.id),
             content: messageText,
         };
 
         try {
-            const res = await fetch(API.dialogs.sendMessage(selectedDialog.id), {
+            const res = await fetch(API.dialogs.sendMessage(), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -60,6 +60,7 @@ const ChatWindow = ({ selectedDialog }) => {
             setIsSending(false);
         }
     };
+
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
