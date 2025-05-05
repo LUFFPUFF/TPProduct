@@ -7,8 +7,6 @@ import com.example.database.repository.company_subscription_module.CompanyMailCo
 import com.example.database.repository.company_subscription_module.CompanyTelegramConfigurationRepository;
 import com.example.database.repository.company_subscription_module.UserRepository;
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
-import com.example.domain.api.chat_service_api.integration.dto.IntegrationMailDto;
-import com.example.domain.api.chat_service_api.integration.dto.IntegrationTelegramDto;
 import com.example.domain.api.chat_service_api.integration.dto.rest.CreateMailConfigurationRequest;
 import com.example.domain.api.chat_service_api.integration.dto.rest.CreateTelegramConfigurationRequest;
 import com.example.domain.api.chat_service_api.integration.mapper.IntegrationMapper;
@@ -55,13 +53,13 @@ public class IntegrationServiceImpl implements IIntegrationService {
 
     @Override
     public CompanyTelegramConfiguration createCompanyTelegramConfiguration(CreateTelegramConfigurationRequest request) {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
 
         User currentUser = currentUserOpt
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
 
         CompanyTelegramConfiguration companyTelegramConfiguration = new CompanyTelegramConfiguration();
         companyTelegramConfiguration.setChatTelegramId(request.getChatId());
@@ -70,12 +68,12 @@ public class IntegrationServiceImpl implements IIntegrationService {
         companyTelegramConfiguration.setBotToken(request.getBotToken());
         companyTelegramConfiguration.setCreatedAt(LocalDateTime.now());
         companyTelegramConfiguration.setUpdatedAt(LocalDateTime.now());
+        companyTelegramConfigurationRepository.save(companyTelegramConfiguration);
         return companyTelegramConfiguration;
     }
 
     @Override
     public CompanyMailConfiguration createCompanyMailConfiguration(CreateMailConfigurationRequest request) {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
@@ -92,6 +90,7 @@ public class IntegrationServiceImpl implements IIntegrationService {
         companyMailConfiguration.setFolder("INBOX");
         companyMailConfiguration.setCreatedAt(LocalDateTime.now());
         companyMailConfiguration.setUpdatedAt(LocalDateTime.now());
+        companyMailConfigurationRepository.save(companyMailConfiguration);
         return companyMailConfiguration;
 
     }

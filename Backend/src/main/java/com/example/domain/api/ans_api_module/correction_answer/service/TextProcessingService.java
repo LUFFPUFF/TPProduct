@@ -1,12 +1,10 @@
 package com.example.domain.api.ans_api_module.correction_answer.service;
 
 import com.example.domain.api.ans_api_module.correction_answer.config.MLParamsConfig;
-import com.example.domain.api.ans_api_module.correction_answer.config.MLServiceConfig;
 import com.example.domain.api.ans_api_module.correction_answer.config.promt.PromptConfig;
 import com.example.domain.api.ans_api_module.correction_answer.dto.GenerationRequest;
 import com.example.domain.api.ans_api_module.correction_answer.dto.GenerationResponse;
 import com.example.domain.api.ans_api_module.correction_answer.exception.MLException;
-import com.example.domain.api.ans_api_module.correction_answer.rule.TestRule;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -47,15 +45,17 @@ public class TextProcessingService {
 
     private String processCorrection(String query) {
         String prompt = buildCorrectionPrompt(query);
-        GenerationRequest request = createGenerationRequest(prompt, false);
+        GenerationRequest request = createGenerationRequest(prompt);
 
         GenerationResponse response = retryGenerateTextCall(request, "correction");
         return extractProcessedText(response, query);
     }
 
     private String processRewrite(String query) {
-        String prompt = buildRewritePrompt("Improve this text while keeping the original meaning", query);
-        GenerationRequest request = createGenerationRequest(prompt, true);
+        String prompt = buildRewritePrompt("Перепиши следующий корпоративный ответ, сделав его более дружелюбным, теплым и естественным, но при этом не перегруженным деталями. " +
+                "Сделай так, чтобы ответ звучал приветливо и было ощущение личного общения. " +
+                "Также убедись, что ответ остается коротким и по делу.", query);
+        GenerationRequest request = createGenerationRequestRewrite(prompt);
 
         GenerationResponse response = retryGenerateTextCall(request, "rewrite");
         return extractProcessedText(response, query);
@@ -66,7 +66,7 @@ public class TextProcessingService {
         return processRewrite(correctedText);
     }
 
-    private GenerationRequest createGenerationRequest(String prompt, boolean isTextGeneration) {
+    private GenerationRequest createGenerationRequest(String prompt) {
         return GenerationRequest.builder()
                 .prompt(prompt)
                 .temperature(defaultApiParams.getTemperature())
@@ -74,7 +74,19 @@ public class TextProcessingService {
                 .topP(defaultApiParams.getTopP())
                 .doSample(defaultApiParams.isDoSample())
                 .stream(defaultApiParams.isStream())
-                .isTextGeneration(isTextGeneration)
+                .isTextGeneration(false)
+                .build();
+    }
+
+    private GenerationRequest createGenerationRequestRewrite(String prompt) {
+        return GenerationRequest.builder()
+                .prompt(prompt)
+                .temperature(defaultApiParams.getTemperature())
+                .maxNewTokens(defaultApiParams.getMaxNewTokens())
+                .topP(defaultApiParams.getTopP())
+                .doSample(defaultApiParams.isDoSample())
+                .stream(defaultApiParams.isStream())
+                .isTextGeneration(true)
                 .build();
     }
 

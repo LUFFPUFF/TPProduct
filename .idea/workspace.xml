@@ -7,13 +7,20 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Исправлена ошибка yml файла">
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Исправлен запрос на создание интеграции">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/config/DialogBotConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/config/DialogBotConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/correction_answer/config/MLParamsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/correction_answer/config/MLParamsConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/correction_answer/service/TextProcessingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/correction_answer/service/TextProcessingService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/controller/IntegrationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/controller/IntegrationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/dto/rest/CreateMailConfigurationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/dto/rest/CreateMailConfigurationRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/dto/rest/CreateTelegramConfigurationRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/dto/rest/CreateTelegramConfigurationRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/impl/IntegrationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/impl/IntegrationServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/controller/IntegrationController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/controller/IntegrationController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/dto/rest/CreateMailConfigurationRequest$CreateMailConfigurationRequestBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/dto/rest/CreateMailConfigurationRequest$CreateMailConfigurationRequestBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/dto/rest/CreateMailConfigurationRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/dto/rest/CreateMailConfigurationRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/dto/rest/CreateTelegramConfigurationRequest$CreateTelegramConfigurationRequestBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/dto/rest/CreateTelegramConfigurationRequest$CreateTelegramConfigurationRequestBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/dto/rest/CreateTelegramConfigurationRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/dto/rest/CreateTelegramConfigurationRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/service/impl/IntegrationServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/service/impl/IntegrationServiceImpl.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -299,7 +306,7 @@
       <workItem from="1746400167280" duration="6329000" />
       <workItem from="1746426971864" duration="29000" />
       <workItem from="1746442732834" duration="51000" />
-      <workItem from="1746456991072" duration="13288000" />
+      <workItem from="1746456991072" duration="19753000" />
     </task>
     <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
       <option name="closed" value="true" />
@@ -445,7 +452,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746473651303</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Исправлен запрос на создание интеграции">
+      <option name="closed" value="true" />
+      <created>1746475650191</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1746475650191</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -494,6 +509,7 @@
     <MESSAGE value="DX-147 Исправлена ошибка с двойным эндпоинтом" />
     <MESSAGE value="Исправлена ошибка клонирования бинов TelegramDialogBot" />
     <MESSAGE value="Исправлена ошибка yml файла" />
-    <option name="LAST_COMMIT_MESSAGE" value="Исправлена ошибка yml файла" />
+    <MESSAGE value="Исправлен запрос на создание интеграции" />
+    <option name="LAST_COMMIT_MESSAGE" value="Исправлен запрос на создание интеграции" />
   </component>
 </project>

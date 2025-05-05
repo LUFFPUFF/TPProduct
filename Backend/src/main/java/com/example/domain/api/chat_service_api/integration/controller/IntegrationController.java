@@ -31,27 +31,14 @@ public class IntegrationController {
 
     @PostMapping("/create/telegram")
     public ResponseEntity<IntegrationTelegramDto> createIntegrationTelegram(@RequestBody CreateTelegramConfigurationRequest request) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
-        User currentUser = currentUserOpt
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
         CompanyTelegramConfiguration companyTelegramConfiguration = integrationService.createCompanyTelegramConfiguration(request);
-        companyTelegramConfiguration.setCompany(currentUser.getCompany());
         return ResponseEntity.ok(integrationMapper.toDto(companyTelegramConfiguration));
     }
 
     @PostMapping("/create/email")
     public ResponseEntity<IntegrationMailDto> createIntegrationEmail(@RequestBody CreateMailConfigurationRequest request) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
-        User currentUser = currentUserOpt
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
         CompanyMailConfiguration companyMailConfiguration = integrationService.createCompanyMailConfiguration(request);
-        companyMailConfiguration.setCompany(currentUser.getCompany());
         return ResponseEntity.ok(integrationMapper.toDto(companyMailConfiguration));
     }
 

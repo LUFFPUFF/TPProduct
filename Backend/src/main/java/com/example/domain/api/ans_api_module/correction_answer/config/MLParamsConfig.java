@@ -18,7 +18,7 @@ public class MLParamsConfig {
     private double topP = 0.85;
 
     @Builder.Default
-    private boolean doSample = false;
+    private boolean doSample = true;
 
     @Builder.Default
     private boolean stream = false;
