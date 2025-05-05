@@ -58,6 +58,4 @@ public class DialogBotConfig {
     private Optional<User> getCurrentAppUser(String email) {
         return userRepository.findByEmail(email);
     }
-
-
 }

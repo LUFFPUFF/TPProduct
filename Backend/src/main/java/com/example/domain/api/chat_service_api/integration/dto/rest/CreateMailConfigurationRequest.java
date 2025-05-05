@@ -11,6 +11,5 @@ public class CreateMailConfigurationRequest {
     private String email;
     private String password;
     private String imapHost;
-    private Company company;
 
 }
