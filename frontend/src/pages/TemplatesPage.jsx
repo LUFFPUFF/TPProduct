@@ -33,6 +33,22 @@ const TemplatesPage = () => {
         fetchTemplates();
     }, []);
 
+    const handleDeleteTemplate = async (id) => {
+        if (!window.confirm("Вы уверены, что хотите удалить шаблон?")) return;
+
+        try {
+            await fetch(API.templates.delete(id), {
+                method: "DELETE",
+            });
+
+            const updatedTemplates = templates.filter((t) => t.id !== id);
+            setTemplates(updatedTemplates);
+            if (editIndex !== null) setEditIndex(null);
+        } catch (error) {
+            alert("Ошибка при удалении шаблона: " + error.message);
+        }
+    };
+
     const handleAddTemplate = async () => {
         if (newTitle.trim() && newAnswer.trim()) {
             const newTemplate = { title: newTitle, category: newCategory, answer: newAnswer };
@@ -64,24 +80,33 @@ const TemplatesPage = () => {
     };
 
     const handleSaveEdit = async () => {
+        const oldTemplate = templates[editIndex];
         const updatedTemplate = {
-            id: templates[editIndex].id,
             title: editedTitle,
             category: editedCategory,
             answer: editedAnswer,
         };
+
         try {
-            const res = await fetch(API.templates.update, {
-                method: "PUT",
+            await fetch(API.templates.delete(oldTemplate.id), {
+                method: "DELETE",
+            });
+
+            const res = await fetch(API.templates.create, {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(updatedTemplate),
             });
-            const data = await res.json();
+
+            const createdTemplate = await res.json();
+
             const updatedTemplates = [...templates];
-            updatedTemplates[editIndex] = data;
+            updatedTemplates.splice(editIndex, 1, createdTemplate);
             setTemplates(updatedTemplates);
+
+            // Сброс состояний редактирования
             setEditIndex(null);
             setEditedTitle("");
             setEditedCategory("");
@@ -90,6 +115,8 @@ const TemplatesPage = () => {
             alert("Ошибка при обновлении шаблона: " + error.message);
         }
     };
+
+
     const handleDownloadExample = async () => {
         try {
             const response = await fetch(API.templates.downloadExample);
@@ -115,11 +142,11 @@ const TemplatesPage = () => {
 
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("category", "default"); // можно поменять при необходимости
+        formData.append("category", "default");
         formData.append("overwrite", "false");
 
         try {
-            const res = await fetch(API.templates.uploadMany, {
+            const res = await fetch(API.templates.upload, {
                 method: "POST",
                 body: formData,
             });
@@ -211,7 +238,7 @@ const TemplatesPage = () => {
                     onClick={handleDownloadExample}
                     className="w-fit px-6 py-2 bg-white border border-black font-semibold text-black rounded-lg flex items-center hover:bg-gray-100 mb-10 active:text-black transition-all duration-150 ease-in-out transform active:scale-95"
                 >
-                    <span>Загрузить шаблонные ответы</span>
+                    <span>Скачать пример шаблонных ответов</span>
                     <img src={plus} alt="plus" className="w-6 h-6 ml-4" />
                 </button>
 
@@ -303,22 +330,28 @@ const TemplatesPage = () => {
                                             </>
                                         )}
                                     </div>
-                                    <div className="flex-shrink-0">
+                                    <div className="flex gap-2 mt-2">
                                         {editIndex === index ? (
                                             <button
                                                 onClick={handleSaveEdit}
-                                                className="bg-[#0a226e] text-white text-sm px-4 py-2 rounded hover:bg-[#2a4992] whitespace-nowrap max-w-full"
+                                                className="mt-2 bg-[#0a226e] text-white text-3sm px-4 py-2 rounded hover:bg-[#2a4992] whitespace-nowrap max-w-full"
                                             >
                                                 Сохранить
                                             </button>
                                         ) : (
                                             <button
                                                 onClick={() => handleEditClick(index)}
-                                                className="bg-[#0a226e] text-white text-sm px-4 py-2 rounded hover:bg-[#2a4992]"
+                                                className="mt-2 bg-[#0a226e] text-white text-3sm px-4 py-2 rounded hover:bg-[#2a4992]"
                                             >
                                                 Изменить
                                             </button>
                                         )}
+                                        <button
+                                            onClick={() => handleDeleteTemplate(template.id)}
+                                            className="mt-2 bg-red-600 text-white text-3sm  sm:w-[120px] px-4 py-2 rounded hover:bg-red-700"
+                                        >
+                                            Удалить
+                                        </button>
                                     </div>
                                 </div>
                             </div>

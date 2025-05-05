@@ -18,7 +18,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableTransactionManagement
 @EnableCaching
 @EnableScheduling
-@EnableBatchProcessing
 public class SpringBootStartApplication {
     public static void main(String[] args) {
        SpringApplication.run(SpringBootStartApplication.class, args);

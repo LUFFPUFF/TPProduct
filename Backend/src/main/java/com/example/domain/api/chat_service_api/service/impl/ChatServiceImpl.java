@@ -373,7 +373,11 @@ public class ChatServiceImpl implements IChatService {
         List<Chat> chats = chatRepository.findByUserIdAndStatusIn(userId, assignedStatuses);
 
         return chats.stream()
-                .map(chatMapper::toDto)
+                .map(chat -> {
+                   ChatDTO chatDTO = chatMapper.toDto(chat);
+                   chatDTO.setLastMessageSnippet(chat.getMessages().get(chat.getMessages().size()-1).getContent());
+                   return chatDTO;
+                })
                 .collect(Collectors.toList());
     }
 
