@@ -319,7 +319,7 @@ const TemplatesPage = () => {
                                             </>
                                         )}
                                     </div>
-                                    <div className="flex-shrink-0">
+                                    <div className="flex gap-2 mt-2">
                                         {editIndex === index ? (
                                             <button
                                                 onClick={handleSaveEdit}
