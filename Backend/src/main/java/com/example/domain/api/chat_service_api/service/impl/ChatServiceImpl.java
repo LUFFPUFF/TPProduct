@@ -12,6 +12,7 @@ import com.example.database.model.company_subscription_module.user_roles.user.Us
 import com.example.database.model.crm_module.client.Client;
 import com.example.database.repository.chats_messages_module.ChatMessageRepository;
 import com.example.database.repository.chats_messages_module.ChatRepository;
+import com.example.database.repository.company_subscription_module.UserRepository;
 import com.example.domain.api.ans_api_module.event.AutoResponderEscalationEvent;
 import com.example.domain.api.ans_api_module.exception.AutoResponderException;
 import com.example.domain.api.ans_api_module.service.IAutoResponderService;
@@ -29,6 +30,8 @@ import com.example.domain.api.chat_service_api.service.security.IChatSecuritySer
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +50,7 @@ import static com.example.domain.api.chat_service_api.service.impl.LeastBusyAssi
 public class ChatServiceImpl implements IChatService {
 
     private final ChatRepository chatRepository;
+    private final UserRepository userRepository;
     private final IClientService clientService;
     private final IUserService userService;
     private final ChatMapper chatMapper;
@@ -59,6 +63,7 @@ public class ChatServiceImpl implements IChatService {
     @Override
     @Transactional
     public ChatDetailsDTO createChat(CreateChatRequestDTO createRequest) {
+
         Client client = clientService.findById(createRequest.getClientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Client with ID " + createRequest.getClientId() + " not found"));
 
@@ -75,6 +80,60 @@ public class ChatServiceImpl implements IChatService {
         }
 
         Chat chat = createChatEntity(client, company, createRequest.getChatChannel());
+        log.debug("Created initial chat entity with ID: {}", chat.getId());
+
+        Chat savedChat = chatRepository.save(chat);
+        log.info("Saved initial chat entity with ID: {}", savedChat.getId());
+
+        if (createRequest.getInitialMessageContent() != null && !createRequest.getInitialMessageContent().isBlank()) {
+            ChatMessage firstMessage = createChatMessageEntity(savedChat, client, null,
+                    ChatMessageSenderType.CLIENT, createRequest.getInitialMessageContent(), null, null);
+            chatMessageRepository.save(firstMessage);
+            savedChat.setLastMessageAt(firstMessage.getSentAt());
+        } else {
+            savedChat.setLastMessageAt(savedChat.getCreatedAt());
+        }
+
+        chatRepository.save(savedChat);
+
+        try {
+            autoResponderService.processNewPendingChat(savedChat.getId());
+            log.info("Auto-responder triggered for chat ID: {}", savedChat.getId());
+        } catch (AutoResponderException e) { log.error("Failed to trigger auto-responder for chat ID {}: {}", savedChat.getId(), e.getMessage(), e);
+            throw new AutoResponderException(e.getMessage());
+        }
+
+        return chatMapper.toDetailsDto(savedChat);
+    }
+
+    @Override
+    @Transactional
+    public ChatDetailsDTO createChatWithOperator(CreateChatRequestDTO createRequest) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<User> currentUserOpt = userRepository.findByEmail(authentication.getName());
+
+        User currentUser = currentUserOpt
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Client client = clientService.findById(createRequest.getClientId())
+                .orElseThrow(() -> new ResourceNotFoundException("Client with ID " + createRequest.getClientId() + " not found"));
+
+        Company company = client.getCompany();
+        if (company == null) {
+            log.error("Client with ID {} is not associated with a company.", createRequest.getClientId());
+            throw new ResourceNotFoundException("Client is not associated with a company.");
+        }
+
+        Optional<Chat> existingChat = findOpenChatByClientAndChannel(createRequest.getClientId(), createRequest.getChatChannel());
+        if (existingChat.isPresent()) {
+            log.warn("Open chat ID {} already exists for client {} on channel {}", existingChat.get().getId(), createRequest.getClientId(), createRequest.getChatChannel());
+            throw new ChatServiceException("Open chat already exists for this client and channel.");
+        }
+
+        Chat chat = createChatEntity(client, company, createRequest.getChatChannel());
+        chat.setUser(currentUser);
         log.debug("Created initial chat entity with ID: {}", chat.getId());
 
         Chat savedChat = chatRepository.save(chat);

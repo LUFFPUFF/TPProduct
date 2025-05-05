@@ -1,9 +1,11 @@
 package com.example.database.model.company_subscription_module.company;
 
+import com.example.database.model.company_subscription_module.user_roles.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "company", indexes = {

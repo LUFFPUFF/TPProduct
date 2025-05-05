@@ -157,7 +157,7 @@ public class ChatUiController {
             createRequest.setChatChannel(ChatChannel.Test);
             createRequest.setInitialMessageContent("Добрый день! Я тестовый клиент.");
 
-            ChatDetailsDTO initialChatDetails = chatService.createChat(createRequest);
+            ChatDetailsDTO initialChatDetails = chatService.createChatWithOperator(createRequest);
             UserInfoDTO userInfoDTO = chatMessageMapper.mapUserInfo(operator);
             initialChatDetails.setStatus(ChatStatus.ASSIGNED);
             initialChatDetails.setOperator(userInfoDTO);

@@ -22,6 +22,9 @@ public interface IChatService {
      */
     ChatDetailsDTO createChat(CreateChatRequestDTO createRequest);
 
+
+    ChatDetailsDTO createChatWithOperator(CreateChatRequestDTO createRequest);
+
     /**
      * Назначает оператора на чат.
      * @param assignRequest DTO с ID чата и, возможно, ID оператора.
