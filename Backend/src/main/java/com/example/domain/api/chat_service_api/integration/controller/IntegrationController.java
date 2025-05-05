@@ -57,7 +57,7 @@ public class IntegrationController {
         return ResponseEntity.ok((IntegrationTelegramDto) telegramDtos);
     }
 
-    @GetMapping("/telegram")
+    @GetMapping("/email")
     public ResponseEntity<IntegrationMailDto> getAllIntegrationEmail() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
