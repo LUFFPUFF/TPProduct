@@ -228,6 +228,7 @@ com\example\domain\api\ans_api_module\correction_answer\dto\GenerationResponse$G
 com\example\domain\api\chat_service_api\service\IChatMessageService.class
 com\example\ui\dto\chat\rest\UiSendUiMessageRequest.class
 com\example\domain\api\chat_service_api\service\impl\NotificationServiceImpl.class
+com\example\domain\api\chat_service_api\integration\telegram\TelegramApiResponse.class
 com\example\database\model\crm_module\task\TaskStatus.class
 com\example\domain\api\authentication_module\security\config\SecurityConfig.class
 com\example\domain\api\ans_api_module\answer_finder\domain\AnswerCandidate.class
@@ -332,6 +333,7 @@ com\example\domain\api\chat_service_api\service\IClientService.class
 com\example\ui\mapper\chat\UIMessageMapper.class
 com\example\domain\api\ans_api_module\correction_answer\controller\TextProcessingController.class
 com\example\database\model\integration_module\IntegrationStatus.class
+com\example\domain\api\chat_service_api\integration\config\DialogBotConfig.class
 com\example\domain\api\ans_api_module\template\controller\PredefinedAnswerController.class
 com\example\database\repository\crm_module\ClientContactsRepository.class
 com\example\domain\dto\SubscriptionPriceReqDto$SubscriptionPriceReqDtoBuilder.class
@@ -380,6 +382,7 @@ com\example\domain\api\company_module\service\CompanyMembersService.class
 com\example\domain\api\ans_api_module\answer_finder\dto\rest\AnswerSearchResponse$AnswerSearchResponseBuilder.class
 com\example\domain\api\company_module\exception_handler_company\NotFoundCompanyException.class
 com\example\domain\api\ans_api_module\answer_finder\search\dto\ScoredAnswerCandidate$ScoredAnswerCandidateBuilder.class
+com\example\domain\api\chat_service_api\integration\telegram\TelegramApiUserResponse.class
 com\example\domain\api\chat_service_api\model\rest\chat\AssignChatRequestDTO.class
 com\example\domain\api\chat_service_api\service\IChatService.class
 com\example\ui\dto\chat\notification\UiNotificationDto.class

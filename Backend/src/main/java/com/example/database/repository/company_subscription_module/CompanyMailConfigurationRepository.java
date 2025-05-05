@@ -12,7 +12,10 @@ import java.util.Optional;
 public interface CompanyMailConfigurationRepository extends JpaRepository<CompanyMailConfiguration, Integer> {
 
     Optional<CompanyMailConfiguration> findByEmailAddress(String emailAddress);
+
     List<CompanyMailConfiguration> findAllByCompanyId(Integer companyId);
 
     Optional<CompanyMailConfiguration> findByCompany(Company company);
+
+    Optional<CompanyMailConfiguration> findByCompanyId(Integer companyId);
 }

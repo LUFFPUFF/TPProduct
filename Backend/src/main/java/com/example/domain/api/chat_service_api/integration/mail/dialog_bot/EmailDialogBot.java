@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-@Component
 @Slf4j
+@Component
 public class EmailDialogBot {
     private final CompanyMailConfigurationRepository mailConfigRepository;
     private final EmailParserFactory emailParserFactory;

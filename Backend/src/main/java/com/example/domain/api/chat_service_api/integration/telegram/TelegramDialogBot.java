@@ -6,48 +6,58 @@ import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoun
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.GetMe;
-import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpEntity;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.BotSession;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-@Component
 @Slf4j
-public class TelegramDialogBot extends TelegramLongPollingBot {
+public class TelegramDialogBot {
 
+    private final String botToken;
+    private final String botUsername;
     private final BlockingQueue<Object> incomingMessageQueue;
     private final CompanyTelegramConfigurationRepository companyTelegramConfigurationRepository;
-    private final String botUsername;
     private volatile boolean running = true;
-    private BotSession botSession;
     private Long botId;
+    private Thread pollingThread;
 
-    private static final int MAX_RETRY_ATTEMPTS = 10;
     private static final long RETRY_DELAY_MS = 10000;
+    private static final long POLLING_INTERVAL_MS = 1000;
+    private static final String TELEGRAM_API_URL = "https://api.telegram.org/bot";
 
-    public TelegramDialogBot(
-            @Value("${telegram.token}") String botToken,
-            @Value("${telegram.username}") String botUsername,
-            BlockingQueue<Object> incomingMessageQueue,
-            CompanyTelegramConfigurationRepository companyTelegramConfigurationRepository) {
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final AtomicBoolean pollingActive = new AtomicBoolean(false);
 
-        super(botToken);
+    public TelegramDialogBot(String botToken,
+                             String botUsername,
+                             BlockingQueue<Object> incomingMessageQueue,
+                             CompanyTelegramConfigurationRepository companyTelegramConfigurationRepository) {
+
+        this.botToken = botToken;
         this.botUsername = botUsername;
         this.incomingMessageQueue = incomingMessageQueue;
         this.companyTelegramConfigurationRepository = companyTelegramConfigurationRepository;
@@ -55,17 +65,54 @@ public class TelegramDialogBot extends TelegramLongPollingBot {
 
     @PostConstruct
     public void init() {
-        startBotWithRetry();
-        startMessageProcessingThread();
-        fetchBotInfo();
+        if (pollingActive.compareAndSet(false, true)) {
+            fetchBotInfo();
+            startPolling();
+            startMessageProcessingThread();
+        } else {
+            log.warn("Bot is already running");
+        }
     }
 
     @PreDestroy
     public void destroy() {
-        running = false;
-        if (botSession != null) {
-            botSession.stop();
+        if (pollingActive.compareAndSet(true, false)) {
+            running = false;
+            if (pollingThread != null) {
+                pollingThread.interrupt();
+                try {
+                    pollingThread.join(5000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+            log.info("Telegram bot stopped successfully");
         }
+    }
+
+    private void startPolling() {
+        pollingThread = new Thread(() -> {
+            long offset = 0;
+            while (running && pollingActive.get()) {
+                try {
+                    List<Update> updates = getUpdates(offset);
+                    for (Update update : updates) {
+                        processUpdate(update);
+                        offset = update.getUpdateId() + 1;
+                    }
+                    Thread.sleep(POLLING_INTERVAL_MS);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    log.info("Polling thread interrupted");
+                    break;
+                } catch (Exception e) {
+                    handlePollingError(e);
+                }
+            }
+        });
+        pollingThread.setName("TelegramPollingThread");
+        pollingThread.setDaemon(true);
+        pollingThread.start();
     }
 
     private void startMessageProcessingThread() {
@@ -83,8 +130,18 @@ public class TelegramDialogBot extends TelegramLongPollingBot {
         messageProcessor.start();
     }
 
-    @Override
-    public void onUpdateReceived(Update update) {
+    private List<Update> getUpdates(long offset) {
+        String url = TELEGRAM_API_URL + botToken + "/getUpdates?offset=" + offset + "&timeout=60";
+        try {
+            TelegramApiResponse apiResponse = restTemplate.getForObject(url, TelegramApiResponse.class);
+            return apiResponse != null && apiResponse.isOk() ? apiResponse.getResult() : Collections.emptyList();
+        } catch (RestClientException e) {
+            log.error("Failed to get updates", e);
+            return Collections.emptyList();
+        }
+    }
+
+    private void processUpdate(Update update) {
         if (!update.hasMessage() || !update.getMessage().hasText()) {
             return;
         }
@@ -116,46 +173,30 @@ public class TelegramDialogBot extends TelegramLongPollingBot {
         }
     }
 
-    private void fetchBotInfo() {
-        try {
-            User botInfo = execute(new GetMe());
-            this.botId = botInfo.getId();
-            log.info("Bot info fetched. ID: {}, Username: {}", botId, botUsername);
-        } catch (TelegramApiException e) {
-            log.error("Failed to fetch bot info", e);
+    private void handlePollingError(Exception e) {
+        if (e instanceof HttpClientErrorException.Conflict) {
+            log.error("Conflict detected - another bot instance is running. Stopping...");
+            running = false;
+        } else {
+            log.error("Error in polling thread", e);
+            try {
+                Thread.sleep(RETRY_DELAY_MS);
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 
-
-    private void startBotWithRetry() {
-        TelegramBotsApi botsApi;
+    private void fetchBotInfo() {
+        String url = TELEGRAM_API_URL + botToken + "/getMe";
         try {
-            botsApi = new TelegramBotsApi(DefaultBotSession.class);
-        } catch (TelegramApiException e) {
-            log.error("Failed to create TelegramBotsApi instance", e);
-            throw new RuntimeException("Failed to create TelegramBotsApi", e);
-        }
-
-        for (int attempt = 1; attempt <= MAX_RETRY_ATTEMPTS; attempt++) {
-            try {
-                botSession = botsApi.registerBot(this);
-                log.info("Successfully registered Telegram bot @{}", botUsername);
-                return;
-            } catch (TelegramApiException e) {
-                log.error("Failed to register bot (attempt {}/{}): {}",
-                        attempt, MAX_RETRY_ATTEMPTS, e.getMessage());
-
-                if (attempt == MAX_RETRY_ATTEMPTS) {
-                    throw new RuntimeException("Failed to register bot after " + MAX_RETRY_ATTEMPTS + " attempts", e);
-                }
-
-                try {
-                    Thread.sleep(RETRY_DELAY_MS);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                    throw new RuntimeException("Bot registration interrupted", ie);
-                }
+            TelegramApiUserResponse response = restTemplate.getForObject(url, TelegramApiUserResponse.class);
+            if (response != null && response.isOk()) {
+                this.botId = response.getResult().getId();
+                log.info("Bot info fetched. ID: {}, Username: {}", botId, botUsername);
             }
+        } catch (RestClientException e) {
+            log.error("Failed to fetch bot info", e);
         }
     }
 
@@ -191,16 +232,21 @@ public class TelegramDialogBot extends TelegramLongPollingBot {
             return;
         }
 
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(telegramChatId);
-        sendMessage.setText(text);
+        String url = TELEGRAM_API_URL + botToken + "/sendMessage";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        Map<String, Object> request = new HashMap<>();
+        request.put("chat_id", telegramChatId);
+        request.put("text", text);
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, headers);
 
         try {
-            execute(sendMessage);
-        } catch (TelegramApiException e) {
+            restTemplate.postForObject(url, entity, String.class);
+        } catch (RestClientException e) {
             throw new RuntimeException("Failed to send Telegram message", e);
         }
-
     }
 
     /**
@@ -209,20 +255,21 @@ public class TelegramDialogBot extends TelegramLongPollingBot {
      * @param photoUrl путь к изображению.
      */
     public void sendPhoto(Long chatId, String photoUrl, String caption) {
-        SendPhoto sendPhoto = new SendPhoto();
-        sendPhoto.setChatId(chatId.toString());
-        sendPhoto.setPhoto(new InputFile(photoUrl));
-        sendPhoto.setCaption(caption);
+        String url = TELEGRAM_API_URL + botToken + "/sendPhoto";
 
         try {
-            execute(sendPhoto);
-        } catch (TelegramApiException e) {
+            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+            body.add("chat_id", chatId.toString());
+            body.add("photo", photoUrl);
+            body.add("caption", caption);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+            restTemplate.postForObject(url, requestEntity, String.class);
+        } catch (RestClientException e) {
             log.error("Failed to send photo", e);
         }
-    }
-
-    @Override
-    public String getBotUsername() {
-        return botUsername;
     }
 }
