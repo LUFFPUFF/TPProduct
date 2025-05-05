@@ -142,7 +142,7 @@ const TemplatesPage = () => {
 
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("category", "default"); // можно поменять при необходимости
+        formData.append("category", "default");
         formData.append("overwrite", "false");
 
         try {
@@ -238,7 +238,7 @@ const TemplatesPage = () => {
                     onClick={handleDownloadExample}
                     className="w-fit px-6 py-2 bg-white border border-black font-semibold text-black rounded-lg flex items-center hover:bg-gray-100 mb-10 active:text-black transition-all duration-150 ease-in-out transform active:scale-95"
                 >
-                    <span>Загрузить шаблонные ответы</span>
+                    <span>Скачать пример шаблонных ответов</span>
                     <img src={plus} alt="plus" className="w-6 h-6 ml-4" />
                 </button>
 
