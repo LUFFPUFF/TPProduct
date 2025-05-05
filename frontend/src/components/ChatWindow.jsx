@@ -28,7 +28,7 @@ const ChatWindow = ({ selectedDialog }) => {
         };
 
         try {
-            const res = await fetch(API.dialogs.sendMessage(), {
+            const res = await fetch(API.dialogs.sendMessage, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
