@@ -18,7 +18,6 @@ import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoun
 import com.example.domain.api.chat_service_api.exception_handler.exception.service.ChatServiceException;
 import com.example.domain.api.chat_service_api.integration.mail.response.EmailResponse;
 import com.example.domain.api.chat_service_api.integration.telegram.TelegramResponse;
-import com.example.domain.api.chat_service_api.model.dto.ChatDetailsDTO;
 import com.example.domain.api.chat_service_api.model.rest.chat.CreateChatRequestDTO;
 import com.example.domain.api.chat_service_api.model.rest.mesage.SendMessageRequestDTO;
 import com.example.domain.api.chat_service_api.service.*;

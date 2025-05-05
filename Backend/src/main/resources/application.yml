@@ -50,7 +50,7 @@ spring:
     jdbc:
       initialize-schema: always
     job:
-      enabled: false
+      enabled: true
 
   main:
     allow-bean-definition-overriding: true
