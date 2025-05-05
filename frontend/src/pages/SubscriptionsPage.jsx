@@ -9,6 +9,25 @@ export default function SubscriptionsPage() {
     const [teamUsers, setTeamUsers] = useState(2);
     const [soloPrice, setSoloPrice] = useState(null);
     const [teamPrice, setTeamPrice] = useState(null);
+    const [subscriptionInfo, setSubscriptionInfo] = useState(null);
+
+    const fetchSubscription = async () => {
+        try {
+            const response = await fetch(API.subscriptions.get, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) throw new Error("Ошибка получения подписки");
+
+            const data = await response.json();
+            setSubscriptionInfo(data);
+        } catch (error) {
+            console.error("Ошибка при получении подписки:", error);
+        }
+    };
 
     const fetchSoloPrice = async (months) => {
         try {
@@ -79,6 +98,11 @@ export default function SubscriptionsPage() {
             alert("Не удалось подключить подписку");
         }
     };
+
+    useEffect(() => {
+        fetchSoloPrice(soloMonths);
+        fetchSubscription(); // добавили
+    }, [soloMonths]);
 
     useEffect(() => {
         fetchSoloPrice(soloMonths);
@@ -218,6 +242,12 @@ export default function SubscriptionsPage() {
             )}
 
             <div className="flex-1 px-6 py-8 sm:px-10 sm:py-10 overflow-y-auto">
+                {subscriptionInfo?.status === "ACTIVE" && (
+                    <div className="text-black text-base sm:text-lg mb-6">
+                        Подписка активна до{" "}
+                        <strong>{new Date(subscriptionInfo.endSubscription).toLocaleString("ru-RU")}</strong>
+                    </div>
+                )}
                 <h1 className="text-2xl sm:text-3xl font-bold text-black mb-4 sm:mb-6">
                     Выберите подходящий тариф
                 </h1>
