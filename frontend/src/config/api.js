@@ -24,9 +24,9 @@ const API = {
         getAll: `${API_BASE_URL}/ui/predefined-answers`,
         create: `${API_BASE_URL}/ui/predefined-answers`,
         upload: `${API_BASE_URL}/ui/predefined-answers/upload`,
+        delete: (id) => `${API_BASE_URL}/ui/predefined-answers/${id}`,
         update: `${API_BASE_URL}/templates/save`,
         uploadMany: `${API_BASE_URL}/templates/save`,
-        delete: (id) => `${API_BASE_URL}/templates/${id}`,
         downloadExample: `${API_BASE_URL}/templates/example-download`,
     },
     dialogs: {

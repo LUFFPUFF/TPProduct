@@ -33,6 +33,22 @@ const TemplatesPage = () => {
         fetchTemplates();
     }, []);
 
+    const handleDeleteTemplate = async (id) => {
+        if (!window.confirm("Вы уверены, что хотите удалить шаблон?")) return;
+
+        try {
+            await fetch(`${API.templates.delete}/${id}`, {
+                method: "DELETE",
+            });
+
+            const updatedTemplates = templates.filter((t) => t.id !== id);
+            setTemplates(updatedTemplates);
+            if (editIndex !== null) setEditIndex(null);
+        } catch (error) {
+            alert("Ошибка при удалении шаблона: " + error.message);
+        }
+    };
+
     const handleAddTemplate = async () => {
         if (newTitle.trim() && newAnswer.trim()) {
             const newTemplate = { title: newTitle, category: newCategory, answer: newAnswer };
@@ -319,6 +335,12 @@ const TemplatesPage = () => {
                                                 Изменить
                                             </button>
                                         )}
+                                        <button
+                                            onClick={() => handleDeleteTemplate(template.id)}
+                                            className="mt-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 active:bg-red-800 transition-all duration-150 ease-in-out transform active:scale-95"
+                                        >
+                                            Удалить
+                                        </button>
                                     </div>
                                 </div>
                             </div>
