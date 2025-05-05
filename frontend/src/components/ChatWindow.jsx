@@ -70,8 +70,8 @@ const ChatWindow = ({ selectedDialog }) => {
     return (
         <div className="w-full md:flex-1 bg-white rounded-lg shadow-[14px_14px_15px_rgba(0,0,0,0.32)] h-[calc(100vh-110px)] flex flex-col !relative z-10">
             <div className="p-4 border-b flex justify-between items-center">
-                <h2 className="font-bold text-lg">{selectedDialog.client}</h2>
-                <span className="text-gray-500 text-sm">Сообщение из {selectedDialog.source}</span>
+                <h2 className="font-bold text-lg">{selectedDialog.client?.name}</h2>
+                <span className="text-gray-500 text-sm">Сообщение из {selectedDialog.channel}</span>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 flex flex-col-reverse">
