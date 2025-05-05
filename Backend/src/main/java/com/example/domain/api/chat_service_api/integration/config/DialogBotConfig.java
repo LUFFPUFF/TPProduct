@@ -24,23 +24,21 @@ import java.util.concurrent.LinkedBlockingQueue;
 @RequiredArgsConstructor
 public class DialogBotConfig {
 
-    private final CompanyTelegramConfigurationRepository companyTelegramConfigurationRepository;
-    private final CompanyMailConfigurationRepository companyMailConfigurationRepository;
     private final UserRepository userRepository;
 
     @Bean
     public TelegramDialogBot createDialogBot(BlockingQueue<Object> incomingMessageQueue,
                                              CompanyTelegramConfigurationRepository companyTelegramConfigurationRepository) {
 
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
-//
-//        User currentUser = currentUserOpt
-//                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+
+        User currentUser = currentUserOpt
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         Optional<CompanyTelegramConfiguration> companyTelegramConfiguration = companyTelegramConfigurationRepository
-                .findByCompanyId(2);
+                .findByCompanyId(currentUser.getCompany().getId());
 
         String botToken = null;
         String botUsername = null;
