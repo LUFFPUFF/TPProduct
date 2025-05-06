@@ -11,10 +11,12 @@ import com.example.domain.api.chat_service_api.integration.dto.rest.CreateMailCo
 import com.example.domain.api.chat_service_api.integration.dto.rest.CreateTelegramConfigurationRequest;
 import com.example.domain.api.chat_service_api.integration.mapper.IntegrationMapper;
 import com.example.domain.api.chat_service_api.integration.service.IIntegrationService;
+import com.example.domain.api.chat_service_api.integration.telegram.TelegramBotManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +29,7 @@ public class IntegrationServiceImpl implements IIntegrationService {
     private final CompanyTelegramConfigurationRepository companyTelegramConfigurationRepository;
     private final CompanyMailConfigurationRepository companyMailConfigurationRepository;
     private final UserRepository userRepository;
-    private final IntegrationMapper integrationMapper;
+    private final TelegramBotManager telegramBotManager;
 
     @Override
     public List<CompanyTelegramConfiguration> getAllTelegramConfigurations(Integer companyId) {
@@ -52,47 +54,72 @@ public class IntegrationServiceImpl implements IIntegrationService {
     }
 
     @Override
+    @Transactional
     public CompanyTelegramConfiguration createCompanyTelegramConfiguration(CreateTelegramConfigurationRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = getCurrentAppUser(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found"));
 
-        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+        Integer companyId = currentUser.getCompany().getId();
+        if (companyId == null) {
+            throw new ResourceNotFoundException("Authenticated user is not associated with a company.");
+        }
 
-        User currentUser = currentUserOpt
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        Optional<CompanyTelegramConfiguration> existingConfigOpt = companyTelegramConfigurationRepository.findByCompanyId(companyId);
+        CompanyTelegramConfiguration config;
 
+        if (existingConfigOpt.isPresent()) {
+            config = existingConfigOpt.get();
+        } else {
+            config = new CompanyTelegramConfiguration();
+            config.setCompany(currentUser.getCompany());
+            config.setCreatedAt(LocalDateTime.now());
+        }
 
-        CompanyTelegramConfiguration companyTelegramConfiguration = new CompanyTelegramConfiguration();
-        companyTelegramConfiguration.setChatTelegramId(request.getChatId());
-        companyTelegramConfiguration.setCompany(currentUser.getCompany());
-        companyTelegramConfiguration.setBotUsername(request.getBotName());
-        companyTelegramConfiguration.setBotToken(request.getBotToken());
-        companyTelegramConfiguration.setCreatedAt(LocalDateTime.now());
-        companyTelegramConfiguration.setUpdatedAt(LocalDateTime.now());
-        companyTelegramConfigurationRepository.save(companyTelegramConfiguration);
-        return companyTelegramConfiguration;
+        config.setBotUsername(request.getBotName() != null ? request.getBotName().trim() : null);
+        config.setBotToken(request.getBotToken() != null ? request.getBotToken().trim() : null);
+        config.setUpdatedAt(LocalDateTime.now());
+
+        CompanyTelegramConfiguration savedConfig = companyTelegramConfigurationRepository.save(config);
+
+        telegramBotManager.startOrUpdatePollingForCompany(companyId);
+
+        return savedConfig;
     }
 
     @Override
+    @Transactional
     public CompanyMailConfiguration createCompanyMailConfiguration(CreateMailConfigurationRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = getCurrentAppUser(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found"));
 
-        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
+        Integer companyId = currentUser.getCompany().getId();
+        if (companyId == null) {
+            throw new ResourceNotFoundException("Authenticated user is not associated with a company.");
+        }
 
-        User currentUser = currentUserOpt
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        CompanyMailConfiguration companyMailConfiguration = new CompanyMailConfiguration();
-        companyMailConfiguration.setCompany(currentUser.getCompany());
-        companyMailConfiguration.setEmailAddress(request.getEmail());
-        companyMailConfiguration.setAppPassword(request.getPassword());
-        companyMailConfiguration.setImapServer(request.getImapHost());
-        companyMailConfiguration.setImapPort(993);
-        companyMailConfiguration.setFolder("INBOX");
-        companyMailConfiguration.setCreatedAt(LocalDateTime.now());
-        companyMailConfiguration.setUpdatedAt(LocalDateTime.now());
-        companyMailConfigurationRepository.save(companyMailConfiguration);
-        return companyMailConfiguration;
+        Optional<CompanyMailConfiguration> existingConfigOpt = companyMailConfigurationRepository.findByCompanyId(companyId);
+        CompanyMailConfiguration config;
 
+        if (existingConfigOpt.isPresent()) {
+            config = existingConfigOpt.get();
+        } else {
+            config = new CompanyMailConfiguration();
+            config.setCompany(currentUser.getCompany());
+            config.setCreatedAt(LocalDateTime.now());
+        }
+
+        config.setEmailAddress(request.getEmail() != null ? request.getEmail().trim() : null);
+        config.setAppPassword(request.getPassword() != null ? request.getPassword().trim() : null);
+        config.setImapServer(request.getImapHost() != null ? request.getImapHost().trim() : null);
+        config.setImapPort(993);
+        config.setFolder("INBOX");
+        config.setUpdatedAt(LocalDateTime.now());
+
+
+        return companyMailConfigurationRepository.save(config);
     }
 
     private Optional<User> getCurrentAppUser(String email) {

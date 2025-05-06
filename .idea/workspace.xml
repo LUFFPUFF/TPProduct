@@ -7,48 +7,9 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="DX-154 Исправлена ошибка с настройкой бина TelegramDialogBot">
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Исправлен конфигурационный файл">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/database/repository/company_subscription_module/CompanyTelegramConfigurationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/database/repository/company_subscription_module/CompanyTelegramConfigurationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/config/DialogBotConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/listener/OutgoingMessageQueueListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/listener/OutgoingMessageQueueListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/listener/SendMessageCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/listener/SendMessageCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/impl/ExternalMessagingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/impl/ExternalMessagingServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/telegram/TelegramDialogBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/telegram/TelegramDialogBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/telegram/TelegramResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/telegram/TelegramResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/Backend-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/Backend-0.0.1-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/Backend-0.0.1-SNAPSHOT.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/Backend-0.0.1-SNAPSHOT.jar.original" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/company_subscription_module/CompanyTelegramConfigurationRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/company_subscription_module/CompanyTelegramConfigurationRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/config/DialogBotConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/listener/OutgoingMessageQueueListener$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/listener/OutgoingMessageQueueListener$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/listener/OutgoingMessageQueueListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/listener/OutgoingMessageQueueListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/listener/SendMessageCommand.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/listener/SendMessageCommand.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/service/impl/ExternalMessagingServiceImpl$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/service/impl/ExternalMessagingServiceImpl$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/service/impl/ExternalMessagingServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/service/impl/ExternalMessagingServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramDialogBot.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramDialogBot.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramResponse$TelegramResponseBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramResponse$TelegramResponseBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramResponse.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/answer_finder/mapper/AnswerSearchMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/answer_finder/mapper/AnswerSearchMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/JobExecutionMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/JobExecutionMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/PredefinedAnswerMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/PredefinedAnswerMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/StatisticsMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/StatisticsMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/ChatMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/ChatMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/ChatMessageMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/ChatMessageMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/ClientMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/ClientMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/NotificationMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/NotificationMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/UserMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/UserMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/dto/mapper/MapperDtoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/dto/mapper/MapperDtoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/answer/UIPredefinedAnswerMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/answer/UIPredefinedAnswerMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UIMessageMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UIMessageMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UINotificationMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UINotificationMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiChatMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiChatMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiClientMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiClientMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiUserMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiUserMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/impl/IntegrationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/impl/IntegrationServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -334,7 +295,7 @@
       <workItem from="1746400167280" duration="6329000" />
       <workItem from="1746426971864" duration="29000" />
       <workItem from="1746442732834" duration="51000" />
-      <workItem from="1746456991072" duration="24038000" />
+      <workItem from="1746456991072" duration="26489000" />
     </task>
     <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
       <option name="closed" value="true" />
@@ -504,7 +465,23 @@
       <option name="project" value="LOCAL" />
       <updated>1746485121858</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="DX-154 Исправлена ошибка с настройкой бина TelegramDialogBot, добавлен Manager для управления жизненным циклом бота, а также улучшен Listener">
+      <option name="closed" value="true" />
+      <created>1746487644476</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1746487644476</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Исправлен конфигурационный файл">
+      <option name="closed" value="true" />
+      <created>1746488294928</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1746488294928</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -521,7 +498,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="DX-122" />
+                        <option value="main" />
                       </list>
                     </value>
                   </entry>
@@ -556,6 +533,8 @@
     <MESSAGE value="Исправлен запрос на создание интеграции" />
     <MESSAGE value="исправлен контроллер итеграций" />
     <MESSAGE value="DX-154 Исправлена ошибка с настройкой бина TelegramDialogBot" />
-    <option name="LAST_COMMIT_MESSAGE" value="DX-154 Исправлена ошибка с настройкой бина TelegramDialogBot" />
+    <MESSAGE value="DX-154 Исправлена ошибка с настройкой бина TelegramDialogBot, добавлен Manager для управления жизненным циклом бота, а также улучшен Listener" />
+    <MESSAGE value="Исправлен конфигурационный файл" />
+    <option name="LAST_COMMIT_MESSAGE" value="Исправлен конфигурационный файл" />
   </component>
 </project>
