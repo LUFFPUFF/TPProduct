@@ -6,6 +6,7 @@ import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.company_subscription_module.company.CompanyMailConfiguration;
 import com.example.database.model.company_subscription_module.company.CompanyTelegramConfiguration;
 import com.example.database.model.crm_module.client.Client;
+import com.example.database.repository.chats_messages_module.ChatRepository;
 import com.example.database.repository.company_subscription_module.CompanyMailConfigurationRepository;
 import com.example.database.repository.company_subscription_module.CompanyTelegramConfigurationRepository;
 import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundException;
@@ -26,7 +27,7 @@ import java.util.concurrent.BlockingQueue;
 @Slf4j
 public class ExternalMessagingServiceImpl implements IExternalMessagingService {
 
-    private final IChatMessageService chatMessageService;
+    private final ChatRepository chatRepository;
     private final BlockingQueue<Object> outgoingMessageQueue;
     private final CompanyMailConfigurationRepository mailConfigRepository;
     private final CompanyTelegramConfigurationRepository companyTelegramConfigurationRepository;
@@ -39,7 +40,7 @@ public class ExternalMessagingServiceImpl implements IExternalMessagingService {
             return;
         }
 
-        Chat chat = chatMessageService.findChatEntityById(chatId)
+        Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> {
                     log.error("Chat ID {} not found for sending external message.", chatId);
                     return new ChatNotFoundException("Chat with ID " + chatId + " not found for sending external message.");

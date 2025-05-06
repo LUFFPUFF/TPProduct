@@ -64,7 +64,7 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
                 ChatMessage firstMessage = firstClientMessageOptional.get();
                 MessageDto firstMessageDTO = messageMapper.toDto(firstMessage);
 
-                processIncomingMessage(firstMessageDTO, chat);
+                processIncomingMessageTest(firstMessageDTO, chat);
             } else {
                 log.warn("AutoResponder: No first message found in new pending chat ID {}", chatId);
             }
@@ -188,6 +188,25 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
 
         log.info("AutoResponder: Finished message processing for message ID {} in chat ID {}",
                 messageDTO.getId(), chat.getId());
+    }
+
+    //TODO пока не поднимем нейронку будет так
+    public void processIncomingMessageTest(MessageDto messageDTO, Chat chat) {
+        Integer companyId = chat.getCompany() != null ? chat.getCompany().getId() : null;
+
+        List<AnswerSearchResultItem> relevantAnswers = answerSearchService.findRelevantAnswers(
+                messageDTO.getContent(),
+                companyId,
+                null
+        );
+
+        Optional<AnswerSearchResultItem> bestAnswer = relevantAnswers.stream()
+                .findFirst();
+
+        if (bestAnswer.isPresent()) {
+            AnswerSearchResultItem bestAnswerItem = bestAnswer.get();
+            sendAutoResponderMessage(chat, bestAnswerItem.getAnswer().getAnswer());
+        }
     }
 
     @Override

@@ -145,7 +145,7 @@ public class ClientCompanyProcessService {
     private void processAutoResponder(Chat chat, MessageDto messageDto) {
         if (chat.getStatus() == ChatStatus.PENDING_AUTO_RESPONDER) {
             try {
-                autoResponderService.processIncomingMessage(messageDto, chat);
+                autoResponderService.processIncomingMessageTest(messageDto, chat);
             } catch (Exception e) {
                 log.error("AutoResponder processing failed for chat {}: {}", chat.getId(), e.getMessage());
                 throw new AutoResponderException("autoResponder processing failed", e);
