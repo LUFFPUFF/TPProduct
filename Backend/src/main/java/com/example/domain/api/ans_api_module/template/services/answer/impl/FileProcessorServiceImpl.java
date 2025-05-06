@@ -72,7 +72,7 @@ public class FileProcessorServiceImpl implements FileProcessorService {
     }
 
     @SuppressWarnings("unchecked")
-    private UploadResultResponse buildUploadResult(JobExecution jobExecution) {
+    public UploadResultResponse buildUploadResult(JobExecution jobExecution) {
         Map<String, Object> jobStats = jobExecution.getExecutionContext()
                 .get("processingStats", Map.class);
 

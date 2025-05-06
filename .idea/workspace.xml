@@ -7,9 +7,8 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Исправлен конфигурационный файл">
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="DX-43 исправлены ошибки TelegramBot и создание клиента">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/DialogPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/DialogPage.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,47 +77,58 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.SpringBootStartApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Docker/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Docker: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.frontend/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Maven.Backend [clean,install].executor&quot;: &quot;Run&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Spring Boot.SpringBootStartApplication.executor&quot;: &quot;Run&quot;,
-    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Admin/Desktop/postgresql-42.7.3.jar&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_interpreter_path&quot;: &quot;C:/Users/123/AppData/Roaming/JetBrains/IntelliJIdea2024.3/node/versions/22.15.0/node&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.16113281&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.group.build&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.SpringBootStartApplication.executor": "Run",
+    "Docker.Docker/Dockerfile.executor": "Run",
+    "Docker.Docker: Compose Deployment.executor": "Run",
+    "Docker.frontend/Dockerfile.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "JUnit.AutoResponderServiceImplTest.executor": "Run",
+    "JUnit.ClientServiceImplTest.executor": "Run",
+    "JUnit.CompanyMembersServiceImplTest.executor": "Run",
+    "JUnit.ExternalMessagingServiceImplTest.executor": "Run",
+    "JUnit.FileProcessorServiceImplTest.executor": "Run",
+    "JUnit.LeastBusyAssignmentServiceTest.executor": "Run",
+    "JUnit.NotificationServiceImplTest.executor": "Run",
+    "JUnit.SubscriptionPriceCalculateServiceImplTest.executor": "Run",
+    "JUnit.SubscriptionServiceImplTest.executor": "Run",
+    "JUnit.TextProcessingServiceTest.executor": "Run",
+    "JUnit.UserServiceImplTest.executor": "Run",
+    "Maven.Backend [clean,install].executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.SpringBootStartApplication.executor": "Run",
+    "extract.method.default.visibility": "private",
+    "git-widget-placeholder": "DX-149",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Admin/Desktop/postgresql-42.7.3.jar",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "C:/Users/123/AppData/Roaming/JetBrains/IntelliJIdea2024.3/node/versions/22.15.0/node",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.16113281",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "configurable.group.build",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\ui\description_api" />
@@ -128,6 +138,8 @@
       <recent name="C:\Users\Admin\IdeaProjects\TPProduct\Diagrams\UseCaseDiagrams" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.example.domain.api.ans_api_module.service.impl" />
+      <recent name="com.example.domain.api.ans_api_module.correction_answer.service" />
       <recent name="com.example.domain.dto" />
     </key>
   </component>
@@ -136,16 +148,34 @@
       <command value="mvn clean install" />
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.SpringBootStartApplication">
-    <configuration name="SpringBootStartApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.example.ui.run.SpringBootStartApplication" />
+  <component name="RunManager" selected="JUnit.java in Backend">
+    <configuration name="All in Backend" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Backend" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ExternalMessagingServiceImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Backend" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.example.ui.run.*" />
+          <option name="PATTERN" value="com.example.domain.api.chat_service_api.integration.service.impl.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <option name="PACKAGE_NAME" value="com.example.domain.api.chat_service_api.integration.service.impl" />
+      <option name="MAIN_CLASS_NAME" value="com.example.domain.api.chat_service_api.integration.service.impl.ExternalMessagingServiceImplTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="java in Backend" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Backend" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/Backend/src/test/java" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -163,22 +193,6 @@
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
-    </configuration>
-    <configuration name="Docker: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
-      <deployment type="docker-compose.yml">
-        <settings>
-          <option name="sourceFilePath" value="Docker/docker-compose.yml" />
-        </settings>
-      </deployment>
-      <method v="2" />
-    </configuration>
-    <configuration name="Docker/Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
-      <deployment type="dockerfile">
-        <settings>
-          <option name="sourceFilePath" value="Docker/Dockerfile" />
-        </settings>
-      </deployment>
-      <method v="2" />
     </configuration>
     <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
       <deployment type="docker-compose.yml">
@@ -202,11 +216,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.java in Backend" />
+        <item itemvalue="JUnit.All in Backend" />
+        <item itemvalue="JUnit.ExternalMessagingServiceImplTest" />
         <item itemvalue="Spring Boot.SpringBootStartApplication" />
         <item itemvalue="Docker.frontend/Dockerfile" />
-        <item itemvalue="Docker.Docker: Compose Deployment" />
-        <item itemvalue="Docker.Docker/Dockerfile" />
-        <item itemvalue="Application.SpringBootStartApplication" />
       </list>
     </recent_temporary>
   </component>
@@ -290,12 +304,7 @@
       <workItem from="1746087607069" duration="4240000" />
       <workItem from="1746139029181" duration="7426000" />
       <workItem from="1746180500085" duration="994000" />
-      <workItem from="1746181515774" duration="31815000" />
-      <workItem from="1746302123019" duration="7132000" />
-      <workItem from="1746400167280" duration="6329000" />
-      <workItem from="1746426971864" duration="29000" />
-      <workItem from="1746442732834" duration="51000" />
-      <workItem from="1746456991072" duration="30621000" />
+      <workItem from="1746181515774" duration="27768000" />
     </task>
     <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
       <option name="closed" value="true" />
@@ -353,175 +362,7 @@
       <option name="project" value="LOCAL" />
       <updated>1746194633470</updated>
     </task>
-    <task id="LOCAL-00008" summary="DX-43 исправлены ошибки TelegramBot и создание клиента">
-      <option name="closed" value="true" />
-      <created>1746214244063</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1746214244063</updated>
-    </task>
-    <task id="LOCAL-00009" summary="DX-144 Добавлен метод для получения всех шаблонных ответов">
-      <option name="closed" value="true" />
-      <created>1746400897485</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1746400897485</updated>
-    </task>
-    <task id="LOCAL-00010" summary="DX-145 Исправлена ошибка с получением AppUserDetails">
-      <option name="closed" value="true" />
-      <created>1746401856899</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1746401856899</updated>
-    </task>
-    <task id="LOCAL-00011" summary="DX-145 Исправлена ошибка с получением AppUserDetails, а также ошибка указания user_id">
-      <option name="closed" value="true" />
-      <created>1746403134704</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1746403134704</updated>
-    </task>
-    <task id="LOCAL-00012" summary="DX-145 Исправлена ошибка с получением AppUserDetails, а также ошибка указания user_id. Добавлен метод для создания тестового чата">
-      <option name="closed" value="true" />
-      <created>1746404514818</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1746404514818</updated>
-    </task>
-    <task id="LOCAL-00013" summary="Исправлена ошибка с назначением оператора на тестовый чат">
-      <option name="closed" value="true" />
-      <created>1746405283761</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1746405283761</updated>
-    </task>
-    <task id="LOCAL-00014" summary="Исправлена ошибка с отображением шаблонных ответов">
-      <option name="closed" value="true" />
-      <created>1746405818832</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1746405818832</updated>
-    </task>
-    <task id="LOCAL-00015" summary="DX-147 Добавлена контроллеры для управления интеграциями">
-      <option name="closed" value="true" />
-      <created>1746460796081</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1746460796081</updated>
-    </task>
-    <task id="LOCAL-00016" summary="DX-147 Исправлена ошибка с двойным эндпоинтом">
-      <option name="closed" value="true" />
-      <created>1746466712189</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1746466712189</updated>
-    </task>
-    <task id="LOCAL-00017" summary="Исправлена ошибка клонирования бинов TelegramDialogBot">
-      <option name="closed" value="true" />
-      <created>1746473336087</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1746473336087</updated>
-    </task>
-    <task id="LOCAL-00018" summary="Исправлена ошибка yml файла">
-      <option name="closed" value="true" />
-      <created>1746473651303</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1746473651303</updated>
-    </task>
-    <task id="LOCAL-00019" summary="Исправлен запрос на создание интеграции">
-      <option name="closed" value="true" />
-      <created>1746475650191</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1746475650191</updated>
-    </task>
-    <task id="LOCAL-00020" summary="исправлен контроллер итеграций">
-      <option name="closed" value="true" />
-      <created>1746483225062</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1746483225062</updated>
-    </task>
-    <task id="LOCAL-00021" summary="DX-154 Исправлена ошибка с настройкой бина TelegramDialogBot">
-      <option name="closed" value="true" />
-      <created>1746485121858</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1746485121858</updated>
-    </task>
-    <task id="LOCAL-00022" summary="DX-154 Исправлена ошибка с настройкой бина TelegramDialogBot, добавлен Manager для управления жизненным циклом бота, а также улучшен Listener">
-      <option name="closed" value="true" />
-      <created>1746487644476</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1746487644476</updated>
-    </task>
-    <task id="LOCAL-00023" summary="Исправлен конфигурационный файл">
-      <option name="closed" value="true" />
-      <created>1746488294928</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1746488294928</updated>
-    </task>
-    <task id="LOCAL-00024" summary="DX-156 Исправлен сервис по настройке интеграции">
-      <option name="closed" value="true" />
-      <created>1746489931510</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1746489931510</updated>
-    </task>
-    <task id="LOCAL-00025" summary="Исправлена и обработана ошибка на падение ai-service">
-      <option name="closed" value="true" />
-      <created>1746490901172</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1746490901172</updated>
-    </task>
-    <task id="LOCAL-00026" summary="Исправлена ошибка отправки сообщений оператором во внешние сервисы">
-      <option name="closed" value="true" />
-      <created>1746492065017</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1746492065017</updated>
-    </task>
-    <task id="LOCAL-00027" summary="Исправлены ошибки с зацикливанием и бинов и работа автоответчик">
-      <option name="closed" value="true" />
-      <created>1746492716408</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1746492716408</updated>
-    </task>
-    <task id="LOCAL-00028" summary="Исправлен конфигурационный файл">
-      <option name="closed" value="true" />
-      <created>1746492763607</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1746492763607</updated>
-    </task>
-    <option name="localTasksCounter" value="29" />
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -532,50 +373,21 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="main" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <MESSAGE value="added activity diagram, usecase diagrams for operator and administrator" />
+    <MESSAGE value="DX-91 DX-93 added company and subscription module" />
+    <MESSAGE value="merged auth,company,subscription modules and frontend into main" />
     <MESSAGE value="DX-114 configuration nginx, fixed docker, fixed code after last merge" />
     <MESSAGE value="DX-43 Доработана система сокетов, а также улучшен модуль интеграций с внешними системами" />
     <MESSAGE value="merge DX-43 from main" />
     <MESSAGE value="DX-43 исправлены ошибки при клонировании чатов, а также добавлена возможность назначать оператора" />
-    <MESSAGE value="DX-66 Разработаны контроллеры для маршрутизации данных между бекендом и фронтендом. Созданы md описания для Chat Module и загрузки шаблонных ответов" />
-    <MESSAGE value="DX-66 Разработаны контроллеры для маршрутизации данных между бекендом и фронтендом. Созданы md описания для Chat Module и загрузки шаблонных ответов" />
-    <MESSAGE value="DX-144 Добавлен метод для получения всех шаблонных ответов" />
-    <MESSAGE value="DX-145 Исправлена ошибка с получением AppUserDetails" />
-    <MESSAGE value="DX-145 Исправлена ошибка с получением AppUserDetails, а также ошибка указания user_id" />
-    <MESSAGE value="DX-145 Исправлена ошибка с получением AppUserDetails, а также ошибка указания user_id. Добавлен метод для создания тестового чата" />
-    <MESSAGE value="Исправлена ошибка с назначением оператора на тестовый чат" />
-    <MESSAGE value="Исправлена ошибка с отображением шаблонных ответов" />
-    <MESSAGE value="DX-147 Добавлена контроллеры для управления интеграциями" />
-    <MESSAGE value="DX-147 Исправлена ошибка с двойным эндпоинтом" />
-    <MESSAGE value="Исправлена ошибка клонирования бинов TelegramDialogBot" />
-    <MESSAGE value="Исправлена ошибка yml файла" />
-    <MESSAGE value="Исправлен запрос на создание интеграции" />
-    <MESSAGE value="исправлен контроллер итеграций" />
-    <MESSAGE value="DX-154 Исправлена ошибка с настройкой бина TelegramDialogBot" />
-    <MESSAGE value="DX-154 Исправлена ошибка с настройкой бина TelegramDialogBot, добавлен Manager для управления жизненным циклом бота, а также улучшен Listener" />
-    <MESSAGE value="DX-156 Исправлен сервис по настройке интеграции" />
-    <MESSAGE value="Исправлена и обработана ошибка на падение ai-service" />
-    <MESSAGE value="Исправлена ошибка отправки сообщений оператором во внешние сервисы" />
-    <MESSAGE value="Исправлены ошибки с зацикливанием и бинов и работа автоответчик" />
-    <MESSAGE value="Исправлен конфигурационный файл" />
-    <option name="LAST_COMMIT_MESSAGE" value="Исправлен конфигурационный файл" />
+    <MESSAGE value="DX-43 исправлены ошибки TelegramBot и создание клиента" />
+    <option name="LAST_COMMIT_MESSAGE" value="DX-43 исправлены ошибки TelegramBot и создание клиента" />
   </component>
 </project>
