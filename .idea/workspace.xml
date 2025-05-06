@@ -7,7 +7,7 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Удалена директория stats">
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Доработан README.md">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -128,11 +128,11 @@
       <recent name="com.example.domain.api.chat_service_api.service.impl" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\123\IdeaProjects\TPProduct\docs\Diagrams" />
       <recent name="C:\Users\123\IdeaProjects\TPProduct\docs\test_reports" />
       <recent name="C:\Users\123\IdeaProjects\TPProduct\Backend\src\test\java\com\example\domain\api\chat_service_api\service\impl" />
       <recent name="C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\ui\description_api" />
       <recent name="C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\resources" />
-      <recent name="C:\Users\Admin\IdeaProjects\TPProduct" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.example.domain.dto" />
@@ -374,7 +374,23 @@
       <option name="project" value="LOCAL" />
       <updated>1746514978454</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Исправлены диаграммы">
+      <option name="closed" value="true" />
+      <created>1746515844752</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1746515844752</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Доработан README.md">
+      <option name="closed" value="true" />
+      <created>1746515969493</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1746515969493</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -402,6 +418,8 @@
     <MESSAGE value="DX-66 Разработаны контроллеры для маршрутизации данных между бекендом и фронтендом. Созданы md описания для Chat Module и загрузки шаблонных ответов" />
     <MESSAGE value="DX-66 Разработаны контроллеры для маршрутизации данных между бекендом и фронтендом. Созданы md описания для Chat Module и загрузки шаблонных ответов" />
     <MESSAGE value="Удалена директория stats" />
-    <option name="LAST_COMMIT_MESSAGE" value="Удалена директория stats" />
+    <MESSAGE value="Исправлены диаграммы" />
+    <MESSAGE value="Доработан README.md" />
+    <option name="LAST_COMMIT_MESSAGE" value="Доработан README.md" />
   </component>
 </project>
