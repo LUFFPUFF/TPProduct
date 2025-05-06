@@ -143,7 +143,7 @@ DialogX - это интеллектуальный автоответчик но�
 - [Наш чек-лист](docs/check_list/ТПЧеклист2этап.pdf)
 ### Кто нас оценивал?
 - 9 группа 3 команда [Git](https://github.com/slash0t/travel-planner) | [Check list](https://github.com/slash0t/travel-planner/blob/main/documentation/Чеклист%20оценивания%202.pdf)
-- 3 группа 1 команда [Git](https://github.com/Shao-Lin/Music-dating) | [Check list](https://github.com/Shao-Lin/Music-dating/blob/main/documentation/ВГУ-ТП.%20Чеклист%201%20этап%203.1%20команда.pdf)
+- 3 группа 1 команда [Git](https://github.com/Shao-Lin/Music-dating) | [Check list](https://github.com/Shao-Lin/Music-dating/blob/dev/documentation/ВГУ-ТП.Чеклист%202%20этап%203.1%20команда.pdf)
 - 10 группа 3 команда [Git](https://github.com/git-company-tp10-1/main) | [Check list](https://github.com/Storix2025/Storix/blob/main/Documentation/чек-лист/ТП.%20Чеклист%202%20этап.pdf)
 - 10 группа 1 команда [Git](https://github.com/Storix2025/Storix) | [Check list](https://github.com/git-company-tp10-1/main/blob/main/Documentation/Чеклист%202%20этап.pdf)
 
