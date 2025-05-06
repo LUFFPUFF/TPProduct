@@ -69,6 +69,13 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
                 log.warn("AutoResponder: No first message found in new pending chat ID {}", chatId);
             }
         } catch (Exception e) {
+            log.error("Error during initial auto-responder processing for chat {}", chatId, e);
+            if (chat.getStatus() == ChatStatus.PENDING_AUTO_RESPONDER) {
+                log.warn("AutoResponder: Publishing escalation event due to initial processing error for chat ID {}...", chatId);
+                eventPublisher.publishEvent(new AutoResponderEscalationEvent(this, chat.getId(), chat.getClient().getId()));
+                sendAutoResponderMessage(chat, "Извините, произошла ошибка при первом обращении. Передаю ваш вопрос оператору.");
+                log.warn("AutoResponder: Escalation event published for chat ID {} due to initial error.", chatId);
+            }
             throw new AutoResponderException("Error during initial auto-responder processing for chat " + chatId, e);
         }
 
@@ -93,17 +100,29 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
             return;
         }
 
-        try {
-            String correctedQuery = textProcessingService.processQuery(clientQuery, GenerationType.CORRECTION);
-            log.debug("AutoResponder: Corrected client query for message ID {}: {}", messageDTO.getId(), correctedQuery);
+        String correctedQuery = clientQuery;
+        List<AnswerSearchResultItem> relevantAnswers = null;
 
-            List<AnswerSearchResultItem> relevantAnswers = answerSearchService.findRelevantAnswers(
+        try {
+            correctedQuery = textProcessingService.processQuery(clientQuery, GenerationType.CORRECTION);
+            log.debug("AutoResponder: Corrected client query for message ID {}: {}", messageDTO.getId(), correctedQuery);
+        } catch (MLException e) {
+            log.warn("AutoResponder: Failed to correct client query for message ID {} due to TextProcessingService error. Using original query. Error: {}",
+                    messageDTO.getId(), e.getMessage(), e);
+            correctedQuery = clientQuery;
+        } catch (Exception e) {
+            log.error("AutoResponder: Unexpected error correcting client query for message ID {}. Using original query. Error: {}",
+                    messageDTO.getId(), e.getMessage(), e);
+            correctedQuery = clientQuery;
+        }
+
+
+        try {
+            relevantAnswers = answerSearchService.findRelevantAnswers(
                     correctedQuery,
                     companyId,
                     null
             );
-
-            relevantAnswers.forEach(System.out::println);
 
             log.debug("AutoResponder: Found {} relevant answers for chat ID {}", relevantAnswers.size(), chat.getId());
 
@@ -113,47 +132,51 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
 
             if (bestAnswer.isPresent()) {
                 AnswerSearchResultItem answer = bestAnswer.get();
+                String originalAnswerText = answer.getAnswer().getAnswer();
+                String finalAnswerText = originalAnswerText;
 
-                String finalAnswerText;
                 try {
-                    finalAnswerText = textProcessingService.processQuery(answer.getAnswer().getAnswer(), GenerationType.REWRITE);
+                    finalAnswerText = textProcessingService.processQuery(originalAnswerText, GenerationType.REWRITE);
                     log.debug("AutoResponder: Rewritten answer text for chat ID {}: {}", chat.getId(), finalAnswerText);
+                } catch (MLException e) {
+                    log.warn("AutoResponder: Failed to rewrite answer text for chat ID {} due to TextProcessingService error. Using original answer. Error: {}",
+                            chat.getId(), e.getMessage(), e);
+                    finalAnswerText = originalAnswerText;
                 } catch (Exception e) {
-                    log.error("AutoResponder: Failed to rewrite answer for chat ID {}: {}", chat.getId(), e.getMessage(), e);
-                    finalAnswerText = answer.getAnswer().getAnswer();
+                    log.error("AutoResponder: Unexpected error rewriting answer text for chat ID {}. Using original answer. Error: {}",
+                            chat.getId(), e.getMessage(), e);
+                    finalAnswerText = originalAnswerText;
                 }
-                // TODO: Обработать CORRECTION_THEN_REWRITE
 
                 sendAutoResponderMessage(chat, finalAnswerText);
 
 
             } else {
+                log.info("AutoResponder: No relevant answers found for chat ID {}. Publishing escalation event.", chat.getId());
                 if (chat.getStatus() == ChatStatus.PENDING_AUTO_RESPONDER) {
-                    log.info("AutoResponder: Publishing escalation event for chat ID {}...", chat.getId());
                     eventPublisher.publishEvent(new AutoResponderEscalationEvent(this, chat.getId(), chat.getClient().getId()));
+                    sendAutoResponderMessage(chat, "Извините, я не смог найти ответ на ваш вопрос. Передаю ваш вопрос оператору.");
                     log.info("AutoResponder: Escalation event published for chat ID {}.", chat.getId());
-
                 } else {
                     log.debug("AutoResponder: Chat ID {} is already escalated (status {}). Not re-escalating.", chat.getId(), chat.getStatus());
                 }
             }
 
-        } catch (AnswerSearchException | MLException e) {
-            log.error("AutoResponder: Error processing message ID {} for chat ID {}: {}",
-                    messageDTO.getId(), messageDTO.getChatDto().getId(), e.getMessage(), e);
+        } catch (AnswerSearchException e) {
+            log.error("AutoResponder: Error during answer search for message ID {} in chat ID {}: {}",
+                    messageDTO.getId(), chat.getId(), e.getMessage(), e);
 
             if (chat.getStatus() == ChatStatus.PENDING_AUTO_RESPONDER) {
-                log.warn("AutoResponder: Publishing escalation event due to processing error for chat ID {}...", chat.getId());
+                log.warn("AutoResponder: Publishing escalation event due to answer search error for chat ID {}...", chat.getId());
                 eventPublisher.publishEvent(new AutoResponderEscalationEvent(this, chat.getId(), chat.getClient().getId()));
-                sendAutoResponderMessage(chat, "Извините, возникла проблема при обработке вашего запроса. Передаю ваш вопрос оператору.");
-                log.warn("AutoResponder: Escalation event published for chat ID {} due to error.", chat.getId());
+                sendAutoResponderMessage(chat, "Извините, возникла проблема при поиске ответа. Передаю ваш вопрос оператору.");
+                log.warn("AutoResponder: Escalation event published for chat ID {} due to search error.", chat.getId());
             }
-            throw new AutoResponderException("Error in auto-responder processing for chat " + chat.getId(), e);
-
+            throw new AutoResponderException("Error in auto-responder answer search for chat " + chat.getId(), e);
 
         } catch (Exception e) {
             log.error("AutoResponder: Unexpected error processing message ID {} for chat ID {}: {}",
-                    messageDTO.getId(), messageDTO.getChatDto().getId(), e.getMessage(), e);
+                    messageDTO.getId(), chat.getId(), e.getMessage(), e);
             if (chat.getStatus() == ChatStatus.PENDING_AUTO_RESPONDER) {
                 log.warn("AutoResponder: Publishing escalation event due to unexpected error for chat ID {}...", chat.getId());
                 eventPublisher.publishEvent(new AutoResponderEscalationEvent(this, chat.getId(), chat.getClient().getId()));
@@ -164,7 +187,7 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
         }
 
         log.info("AutoResponder: Finished message processing for message ID {} in chat ID {}",
-                messageDTO.getId(), messageDTO.getChatDto().getId());
+                messageDTO.getId(), chat.getId());
     }
 
     @Override
