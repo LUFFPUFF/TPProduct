@@ -7,9 +7,9 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Исправлена ошибка отправки сообщений оператором во внешние сервисы">
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/impl/ExternalMessagingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/impl/ExternalMessagingServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" afterDir="false" />
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Исправлен конфигурационный файл">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/DialogPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/DialogPage.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -295,7 +295,7 @@
       <workItem from="1746400167280" duration="6329000" />
       <workItem from="1746426971864" duration="29000" />
       <workItem from="1746442732834" duration="51000" />
-      <workItem from="1746456991072" duration="28979000" />
+      <workItem from="1746456991072" duration="30621000" />
     </task>
     <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
       <option name="closed" value="true" />
@@ -505,7 +505,23 @@
       <option name="project" value="LOCAL" />
       <updated>1746492065017</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Исправлены ошибки с зацикливанием и бинов и работа автоответчик">
+      <option name="closed" value="true" />
+      <created>1746492716408</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1746492716408</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Исправлен конфигурационный файл">
+      <option name="closed" value="true" />
+      <created>1746492763607</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1746492763607</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -535,7 +551,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="merged auth,company,subscription modules and frontend into main" />
     <MESSAGE value="DX-114 configuration nginx, fixed docker, fixed code after last merge" />
     <MESSAGE value="DX-43 Доработана система сокетов, а также улучшен модуль интеграций с внешними системами" />
     <MESSAGE value="merge DX-43 from main" />
@@ -556,10 +571,11 @@
     <MESSAGE value="исправлен контроллер итеграций" />
     <MESSAGE value="DX-154 Исправлена ошибка с настройкой бина TelegramDialogBot" />
     <MESSAGE value="DX-154 Исправлена ошибка с настройкой бина TelegramDialogBot, добавлен Manager для управления жизненным циклом бота, а также улучшен Listener" />
-    <MESSAGE value="Исправлен конфигурационный файл" />
     <MESSAGE value="DX-156 Исправлен сервис по настройке интеграции" />
     <MESSAGE value="Исправлена и обработана ошибка на падение ai-service" />
     <MESSAGE value="Исправлена ошибка отправки сообщений оператором во внешние сервисы" />
-    <option name="LAST_COMMIT_MESSAGE" value="Исправлена ошибка отправки сообщений оператором во внешние сервисы" />
+    <MESSAGE value="Исправлены ошибки с зацикливанием и бинов и работа автоответчик" />
+    <MESSAGE value="Исправлен конфигурационный файл" />
+    <option name="LAST_COMMIT_MESSAGE" value="Исправлен конфигурационный файл" />
   </component>
 </project>

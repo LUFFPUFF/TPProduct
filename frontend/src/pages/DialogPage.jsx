@@ -12,19 +12,53 @@ const DialogPage = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [mobileView, setMobileView] = useState("dialogs"); // dialogs | chat | client
 
+    const POLLING_INTERVAL_MS = 3000;
+
     useEffect(() => {
-        setIsLoading(true);
-        fetch(API.dialogs.getAll)
-            .then((res) => res.json())
-            .then((data) => {
-                console.log("Полученные диалоги:", data)
-                setDialogs(data);
-                if (data.length > 0) {
-                    setSelectedDialog(data[0]);
+        let pollingInterval = null;
+
+        const fetchDialogs = async () => {
+            try {
+                console.log("Fetching dialogs...");
+                const res = await fetch(API.dialogs.getAll);
+                if (!res.ok) {
+                    throw new Error(`HTTP error! status: ${res.status}`);
                 }
-            })
-            .catch((err) => console.error("Ошибка загрузки диалогов:", err))
-            .finally(() => setIsLoading(false));
+                const data = await res.json();
+                console.log("Полученные диалоги:", data);
+
+                setDialogs(data);
+
+                if (selectedDialog) {
+                    const updatedSelectedDialog = data.find(dialog => dialog.id === selectedDialog.id);
+                    if (updatedSelectedDialog) {
+                        setSelectedDialog(updatedSelectedDialog);
+                    } else {
+                        setSelectedDialog(data.length > 0 ? data[0] : null);
+                    }
+                } else if (data.length > 0) {
+                    setSelectedDialog(data[0]);
+                    console.log(`Selecting the first dialog ID ${data[0].id}`);
+                }
+
+
+            } catch (err) {
+                console.error("Ошибка загрузки или обновления диалогов:", err);
+            } finally {
+            }
+        };
+
+        fetchDialogs();
+
+        pollingInterval = setInterval(fetchDialogs, POLLING_INTERVAL_MS);
+
+        return () => {
+            console.log("Clearing dialog polling interval.");
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+            }
+        };
+
     }, []);
 
     const handleSelectDialog = (dialogId) => {
