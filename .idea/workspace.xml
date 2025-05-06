@@ -7,9 +7,10 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Исправлен конфигурационный файл">
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Исправлена и обработана ошибка на падение ai-service">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/impl/IntegrationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/impl/IntegrationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/template/services/answer/impl/PredefinedAnswerServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/template/services/answer/impl/PredefinedAnswerServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/impl/ChatMessageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/impl/ChatMessageServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -295,7 +296,7 @@
       <workItem from="1746400167280" duration="6329000" />
       <workItem from="1746426971864" duration="29000" />
       <workItem from="1746442732834" duration="51000" />
-      <workItem from="1746456991072" duration="26489000" />
+      <workItem from="1746456991072" duration="28623000" />
     </task>
     <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
       <option name="closed" value="true" />
@@ -481,7 +482,23 @@
       <option name="project" value="LOCAL" />
       <updated>1746488294928</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="DX-156 Исправлен сервис по настройке интеграции">
+      <option name="closed" value="true" />
+      <created>1746489931510</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1746489931510</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Исправлена и обработана ошибка на падение ai-service">
+      <option name="closed" value="true" />
+      <created>1746490901172</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1746490901172</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -511,7 +528,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added activity diagram, usecase diagrams for operator and administrator" />
     <MESSAGE value="DX-91 DX-93 added company and subscription module" />
     <MESSAGE value="merged auth,company,subscription modules and frontend into main" />
     <MESSAGE value="DX-114 configuration nginx, fixed docker, fixed code after last merge" />
@@ -535,6 +551,8 @@
     <MESSAGE value="DX-154 Исправлена ошибка с настройкой бина TelegramDialogBot" />
     <MESSAGE value="DX-154 Исправлена ошибка с настройкой бина TelegramDialogBot, добавлен Manager для управления жизненным циклом бота, а также улучшен Listener" />
     <MESSAGE value="Исправлен конфигурационный файл" />
-    <option name="LAST_COMMIT_MESSAGE" value="Исправлен конфигурационный файл" />
+    <MESSAGE value="DX-156 Исправлен сервис по настройке интеграции" />
+    <MESSAGE value="Исправлена и обработана ошибка на падение ai-service" />
+    <option name="LAST_COMMIT_MESSAGE" value="Исправлена и обработана ошибка на падение ai-service" />
   </component>
 </project>

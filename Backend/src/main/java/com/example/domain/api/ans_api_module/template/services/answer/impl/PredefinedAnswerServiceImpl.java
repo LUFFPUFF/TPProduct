@@ -4,6 +4,7 @@ import com.example.database.model.ai_module.PredefinedAnswer;
 import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.repository.ai_module.PredefinedAnswerRepository;
 import com.example.database.repository.company_subscription_module.CompanyRepository;
+import com.example.domain.api.ans_api_module.answer_finder.domain.TrustScore;
 import com.example.domain.api.ans_api_module.answer_finder.domain.dto.PredefinedAnswerDto;
 import com.example.domain.api.ans_api_module.template.mapper.PredefinedAnswerMapper;
 import com.example.domain.api.ans_api_module.template.services.answer.PredefinedAnswerService;
@@ -45,6 +46,7 @@ public class PredefinedAnswerServiceImpl implements PredefinedAnswerService {
         PredefinedAnswer predefinedAnswer = answerMapper.toEntity(dto);
         predefinedAnswer.setCompany(company);
         predefinedAnswer.setCreatedAt(LocalDateTime.now());
+        predefinedAnswer.setTrustScore(new TrustScore(0.0));
 
         PredefinedAnswer savedAnswer = answerRepository.save(predefinedAnswer);
 

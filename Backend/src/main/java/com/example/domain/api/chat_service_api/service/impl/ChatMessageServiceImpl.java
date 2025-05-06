@@ -14,6 +14,8 @@ import com.example.database.repository.company_subscription_module.UserRepositor
 import com.example.database.repository.crm_module.ClientRepository;
 import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
+import com.example.domain.api.chat_service_api.exception_handler.exception.ExternalMessagingException;
+import com.example.domain.api.chat_service_api.integration.service.IExternalMessagingService;
 import com.example.domain.api.chat_service_api.mapper.ChatMessageMapper;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
 import com.example.domain.api.chat_service_api.model.dto.MessageStatusUpdateDTO;
@@ -47,6 +49,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     private final ClientRepository clientRepository;
     private final ChatMessageMapper chatMessageMapper;
     private final WebSocketMessagingService messagingService;
+    private final IExternalMessagingService externalMessagingService;
 
     @Override
     @Transactional
@@ -94,7 +97,16 @@ public class ChatMessageServiceImpl implements IChatMessageService {
         String destination = "/topic/chat/" + chat.getId() + "/messages";
         messagingService.sendMessage(destination, savedMessageDTO);
 
-        // TODO: Если отправитель - клиент, и чат в статусе ASSIGNED/IN_PROGRESS - создать уведомление для назначенного оператора.
+        if (senderType == ChatMessageSenderType.OPERATOR && savedMessage.getContent() != null && !savedMessage.getContent().trim().isEmpty()) {
+            log.info("Processing message from OPERATOR for external sending to chat ID {}", chat.getId());
+            try {
+                externalMessagingService.sendMessageToExternal(chat.getId(), savedMessage.getContent());
+                log.info("Operator message for chat ID {} successfully placed for external sending.", chat.getId());
+            } catch (ExternalMessagingException e) {
+                log.error("Failed to place operator message for chat ID {} into external sending queue.", chat.getId(), e);
+            }
+        }
+
 
         return savedMessageDTO;
     }
