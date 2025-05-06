@@ -9,6 +9,7 @@
   <component name="ChangeListManager">
     <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="DX-43 исправлены ошибки TelegramBot и создание клиента">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/test/java/com/example/domain/api/chat_service_api/service/impl/UserServiceImplTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/test/java/com/example/domain/api/chat_service_api/service/impl/UserServiceImplTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +36,7 @@
         <option value="Dockerfile" />
         <option value="package-info" />
         <option value="Interface" />
+        <option value="AnnotationType" />
         <option value="Class" />
       </list>
     </option>
@@ -42,7 +44,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="DX-131" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -56,7 +58,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/LUFFPUFF/TPProduct.git&quot;,
-    &quot;accountId&quot;: &quot;a3f74b8e-a871-4247-90dd-37c2485cf801&quot;
+    &quot;accountId&quot;: &quot;913571b6-6cd4-4666-8fb1-af53c611b363&quot;
   }
 }</component>
   <component name="KubernetesApiPersistence">{}</component>
@@ -84,17 +86,10 @@
     "Docker.Docker: Compose Deployment.executor": "Run",
     "Docker.frontend/Dockerfile.executor": "Run",
     "Downloaded.Files.Path.Enabled": "false",
-    "JUnit.AutoResponderServiceImplTest.executor": "Run",
-    "JUnit.ClientServiceImplTest.executor": "Run",
-    "JUnit.CompanyMembersServiceImplTest.executor": "Run",
-    "JUnit.ExternalMessagingServiceImplTest.executor": "Run",
-    "JUnit.FileProcessorServiceImplTest.executor": "Run",
-    "JUnit.LeastBusyAssignmentServiceTest.executor": "Run",
-    "JUnit.NotificationServiceImplTest.executor": "Run",
-    "JUnit.SubscriptionPriceCalculateServiceImplTest.executor": "Run",
-    "JUnit.SubscriptionServiceImplTest.executor": "Run",
-    "JUnit.TextProcessingServiceTest.executor": "Run",
-    "JUnit.UserServiceImplTest.executor": "Run",
+    "JUnit.ChatMessageServiceImplIT.executor": "Run",
+    "JUnit.ChatMessageServiceImplTest.executor": "Run",
+    "JUnit.ChatServiceImplTest.executor": "Run",
+    "JUnit.java in Backend.executor": "Run",
     "Maven.Backend [clean,install].executor": "Run",
     "Repository.Attach.Annotations": "false",
     "Repository.Attach.JavaDocs": "false",
@@ -130,16 +125,17 @@
   }
 }]]></component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.example.domain.api.chat_service_api.service.impl" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\123\IdeaProjects\TPProduct\docs\test_reports" />
+      <recent name="C:\Users\123\IdeaProjects\TPProduct\Backend\src\test\java\com\example\domain\api\chat_service_api\service\impl" />
       <recent name="C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\ui\description_api" />
       <recent name="C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\resources" />
       <recent name="C:\Users\Admin\IdeaProjects\TPProduct" />
-      <recent name="C:\Users\Admin\IdeaProjects\TPProduct\Backend" />
-      <recent name="C:\Users\Admin\IdeaProjects\TPProduct\Diagrams\UseCaseDiagrams" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
-      <recent name="com.example.domain.api.ans_api_module.service.impl" />
-      <recent name="com.example.domain.api.ans_api_module.correction_answer.service" />
       <recent name="com.example.domain.dto" />
     </key>
   </component>
@@ -217,9 +213,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.java in Backend" />
-        <item itemvalue="JUnit.All in Backend" />
-        <item itemvalue="JUnit.ExternalMessagingServiceImplTest" />
         <item itemvalue="Spring Boot.SpringBootStartApplication" />
+        <item itemvalue="JUnit.ExternalMessagingServiceImplTest" />
+        <item itemvalue="JUnit.All in Backend" />
         <item itemvalue="Docker.frontend/Dockerfile" />
       </list>
     </recent_temporary>
@@ -227,8 +223,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26053.27" />
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26053.27" />
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.18034.62" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.18034.62" />
       </set>
     </attachedChunks>
   </component>
@@ -304,7 +300,8 @@
       <workItem from="1746087607069" duration="4240000" />
       <workItem from="1746139029181" duration="7426000" />
       <workItem from="1746180500085" duration="994000" />
-      <workItem from="1746181515774" duration="27768000" />
+      <workItem from="1746181515774" duration="31815000" />
+      <workItem from="1746302123019" duration="7132000" />
     </task>
     <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
       <option name="closed" value="true" />
@@ -362,7 +359,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746194633470</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="DX-43 исправлены ошибки TelegramBot и создание клиента">
+      <option name="closed" value="true" />
+      <created>1746214244063</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1746214244063</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -387,7 +392,8 @@
     <MESSAGE value="DX-43 Доработана система сокетов, а также улучшен модуль интеграций с внешними системами" />
     <MESSAGE value="merge DX-43 from main" />
     <MESSAGE value="DX-43 исправлены ошибки при клонировании чатов, а также добавлена возможность назначать оператора" />
-    <MESSAGE value="DX-43 исправлены ошибки TelegramBot и создание клиента" />
-    <option name="LAST_COMMIT_MESSAGE" value="DX-43 исправлены ошибки TelegramBot и создание клиента" />
+    <MESSAGE value="DX-66 Разработаны контроллеры для маршрутизации данных между бекендом и фронтендом. Созданы md описания для Chat Module и загрузки шаблонных ответов" />
+    <MESSAGE value="DX-66 Разработаны контроллеры для маршрутизации данных между бекендом и фронтендом. Созданы md описания для Chat Module и загрузки шаблонных ответов" />
+    <option name="LAST_COMMIT_MESSAGE" value="DX-66 Разработаны контроллеры для маршрутизации данных между бекендом и фронтендом. Созданы md описания для Chat Module и загрузки шаблонных ответов" />
   </component>
 </project>

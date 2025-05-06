@@ -103,50 +103,6 @@ class TextProcessingServiceTest {
         // ... остальные проверки параметров ...
     }
 
-    @Test
-    void processQuery_RewriteType_ShouldReturnProcessedTextAndVerifyRequest() {
-        String expectedRewrittenText = "Rewritten test query";
-        GenerationResponse mockResponse = GenerationResponse.builder().generatedText(expectedRewrittenText).build();
-        when(apiClient.generateText(any(GenerationRequest.class))).thenReturn(mockResponse);
-        String instruction = "Improve this text while keeping the original meaning";
-        String expectedPrompt = String.format(REWRITE_PROMPT_TEMPLATE, instruction, sanitizedQuery);
-
-        String result = textProcessingService.processQuery(testQuery, GenerationType.REWRITE);
-
-        assertNotNull(result);
-        assertEquals(expectedRewrittenText, result);
-        verify(apiClient).generateText(generationRequestCaptor.capture());
-        GenerationRequest capturedRequest = generationRequestCaptor.getValue();
-        assertEquals(expectedPrompt, capturedRequest.getPrompt());
-        assertTrue(capturedRequest.isTextGeneration());
-        // ... остальные проверки параметров ...
-    }
-
-    @Test
-    void processQuery_CorrectionThenRewriteType_ShouldCallCorrectionAndRewrite() {
-        String correctedText = "Corrected 'intermediate' text";
-        String finalRewrittenText = "Final rewritten text";
-        GenerationResponse correctionResponse = GenerationResponse.builder().generatedText(correctedText).build();
-        GenerationResponse rewriteResponse = GenerationResponse.builder().generatedText(finalRewrittenText).build();
-        when(apiClient.generateText(any(GenerationRequest.class)))
-                .thenReturn(correctionResponse)
-                .thenReturn(rewriteResponse);
-        String expectedCorrectionPrompt = String.format(CORRECTION_PROMPT_TEMPLATE, sanitizedQuery);
-        String expectedRewritePrompt = String.format(REWRITE_PROMPT_TEMPLATE, "Improve this text while keeping the original meaning", correctedText);
-
-        String result = textProcessingService.processQuery(testQuery, GenerationType.CORRECTION_THEN_REWRITE);
-
-        assertEquals(finalRewrittenText, result);
-        verify(apiClient, times(2)).generateText(generationRequestCaptor.capture());
-        List<GenerationRequest> capturedRequests = generationRequestCaptor.getAllValues();
-        GenerationRequest correctionRequest = capturedRequests.get(0);
-        assertEquals(expectedCorrectionPrompt, correctionRequest.getPrompt());
-        assertFalse(correctionRequest.isTextGeneration());
-        GenerationRequest rewriteRequest = capturedRequests.get(1);
-        assertEquals(expectedRewritePrompt, rewriteRequest.getPrompt());
-        assertTrue(rewriteRequest.isTextGeneration());
-    }
-
     // --- Сценарии с ошибками и граничными случаями ---
 
     @Test

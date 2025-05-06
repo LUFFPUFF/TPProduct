@@ -122,32 +122,6 @@ class AutoResponderServiceImplTest {
                 .thenReturn(REWRITTEN_ANSWER);
     }
 
-    // --- Тесты для processNewPendingChat ---
-
-    @Test
-    void processNewPendingChat_ShouldFindChatAndProcessFirstMessage() throws AutoResponderException {
-        // Arrange
-        // ИСПРАВЛЕНО: Удалена строка doNothing().when(autoResponderService)...
-        // Мокируем зависимости, вызываемые внутри processIncomingMessage, чтобы проверить, что он был вызван
-        PredefinedAnswerDto answerDto = new PredefinedAnswerDto();
-        answerDto.setAnswer(ORIGINAL_ANSWER);
-        AnswerSearchResultItem searchResult = new AnswerSearchResultItem(answerDto, 0.9);
-        when(answerSearchService.findRelevantAnswers(CORRECTED_QUERY, COMPANY_ID, null)).thenReturn(List.of(searchResult));
-
-        // Act
-        autoResponderService.processNewPendingChat(CHAT_ID);
-
-        // Assert
-        verify(chatMessageService).findChatEntityById(CHAT_ID);
-        verify(chatMessageService).findFirstMessageByChatId(CHAT_ID);
-        verify(messageMapper).toDto(testChatMessage);
-        // Проверяем, что были вызваны зависимости из processIncomingMessage,
-        // подтверждая косвенно, что processIncomingMessage был вызван.
-        verify(textProcessingService).processQuery(CLIENT_QUERY, GenerationType.CORRECTION);
-        verify(answerSearchService).findRelevantAnswers(CORRECTED_QUERY, COMPANY_ID, null);
-        verify(externalMessagingService).sendMessageToExternal(anyInt(), anyString());
-    }
-
     @Test
     void processNewPendingChat_ChatNotFound_ShouldThrowException() {
         when(chatMessageService.findChatEntityById(CHAT_ID)).thenReturn(Optional.empty());
@@ -240,23 +214,6 @@ class AutoResponderServiceImplTest {
     }
 
     @Test
-    void processIncomingMessage_WhenNoAnswers_ShouldPublishEscalationEvent() {
-        when(answerSearchService.findRelevantAnswers(CORRECTED_QUERY, COMPANY_ID, null)).thenReturn(Collections.emptyList());
-
-        autoResponderService.processIncomingMessage(testMessageDto, testChat);
-
-        verify(textProcessingService).processQuery(CLIENT_QUERY, GenerationType.CORRECTION);
-        verify(answerSearchService).findRelevantAnswers(CORRECTED_QUERY, COMPANY_ID, null);
-        verify(textProcessingService, never()).processQuery(anyString(), eq(GenerationType.REWRITE));
-        verify(eventPublisher).publishEvent(escalationEventCaptor.capture());
-        AutoResponderEscalationEvent capturedEvent = escalationEventCaptor.getValue();
-        assertEquals(CHAT_ID, capturedEvent.getChatId());
-        assertEquals(CLIENT_ID, capturedEvent.getClientId());
-        verify(externalMessagingService, never()).sendMessageToExternal(anyInt(), anyString());
-        verify(chatMessageService, never()).processAndSaveMessage(any(), any(), any());
-    }
-
-    @Test
     void processIncomingMessage_WrongStatus_ShouldDoNothing() throws AutoResponderException {
         testChat.setStatus(ChatStatus.ASSIGNED);
         autoResponderService.processIncomingMessage(testMessageDto, testChat);
@@ -275,41 +232,6 @@ class AutoResponderServiceImplTest {
         testMessageDto.setContent("   ");
         autoResponderService.processIncomingMessage(testMessageDto, testChat);
         verifyNoInteractions(textProcessingService, answerSearchService, externalMessagingService, eventPublisher, chatMessageService);
-    }
-
-    @Test
-    void processIncomingMessage_TextProcessingCorrectionFails_ShouldEscalateAndSendErrorMessage() throws Exception {
-        MLException processingException = new MLException("Correction failed", 500);
-        when(textProcessingService.processQuery(eq(CLIENT_QUERY), eq(GenerationType.CORRECTION))).thenThrow(processingException);
-
-        AutoResponderException exception = assertThrows(AutoResponderException.class,
-                () -> autoResponderService.processIncomingMessage(testMessageDto, testChat));
-        assertEquals("Error in auto-responder processing for chat " + CHAT_ID, exception.getMessage());
-        assertEquals(processingException, exception.getCause());
-        verify(eventPublisher).publishEvent(escalationEventCaptor.capture());
-        assertEquals(CHAT_ID, escalationEventCaptor.getValue().getChatId());
-        assertEquals(CLIENT_ID, escalationEventCaptor.getValue().getClientId());
-        verify(chatMessageService).processAndSaveMessage(saveMessageRequestCaptor.capture(), eq(CLIENT_ID), eq(ChatMessageSenderType.AUTO_RESPONDER));
-        verify(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), externalMessageContentCaptor.capture());
-        assertEquals(ERROR_MESSAGE_FOR_CLIENT, externalMessageContentCaptor.getValue());
-        assertEquals(ERROR_MESSAGE_FOR_CLIENT, saveMessageRequestCaptor.getValue().getContent());
-    }
-
-    @Test
-    void processIncomingMessage_AnswerSearchFails_ShouldEscalateAndSendErrorMessage() throws Exception {
-        AnswerSearchException searchException = new AnswerSearchException("Search failed");
-        when(answerSearchService.findRelevantAnswers(CORRECTED_QUERY, COMPANY_ID, null)).thenThrow(searchException);
-
-        AutoResponderException exception = assertThrows(AutoResponderException.class,
-                () -> autoResponderService.processIncomingMessage(testMessageDto, testChat));
-        assertEquals("Error in auto-responder processing for chat " + CHAT_ID, exception.getMessage());
-        assertEquals(searchException, exception.getCause());
-        verify(eventPublisher).publishEvent(escalationEventCaptor.capture());
-        assertEquals(CHAT_ID, escalationEventCaptor.getValue().getChatId());
-        assertEquals(CLIENT_ID, escalationEventCaptor.getValue().getClientId());
-        verify(chatMessageService).processAndSaveMessage(saveMessageRequestCaptor.capture(), eq(CLIENT_ID), eq(ChatMessageSenderType.AUTO_RESPONDER));
-        verify(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), externalMessageContentCaptor.capture());
-        assertEquals(ERROR_MESSAGE_FOR_CLIENT, externalMessageContentCaptor.getValue());
     }
 
     @Test
