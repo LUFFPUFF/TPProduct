@@ -7,9 +7,7 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Доработан README.md">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Доработан README.md и добавлен чек лист" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -57,7 +55,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/LUFFPUFF/TPProduct.git&quot;,
-    &quot;accountId&quot;: &quot;913571b6-6cd4-4666-8fb1-af53c611b363&quot;
+    &quot;accountId&quot;: &quot;a3f74b8e-a871-4247-90dd-37c2485cf801&quot;
   }
 }</component>
   <component name="KubernetesApiPersistence">{}</component>
@@ -128,11 +126,11 @@
       <recent name="com.example.domain.api.chat_service_api.service.impl" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\123\IdeaProjects\TPProduct\docs\check_list" />
       <recent name="C:\Users\123\IdeaProjects\TPProduct\docs\Diagrams" />
       <recent name="C:\Users\123\IdeaProjects\TPProduct\docs\test_reports" />
       <recent name="C:\Users\123\IdeaProjects\TPProduct\Backend\src\test\java\com\example\domain\api\chat_service_api\service\impl" />
       <recent name="C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\java\com\example\ui\description_api" />
-      <recent name="C:\Users\123\IdeaProjects\TPProduct\Backend\src\main\resources" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.example.domain.dto" />
@@ -222,8 +220,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.18034.62" />
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.18034.62" />
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26053.27" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26053.27" />
       </set>
     </attachedChunks>
   </component>
@@ -301,6 +299,7 @@
       <workItem from="1746180500085" duration="994000" />
       <workItem from="1746181515774" duration="31815000" />
       <workItem from="1746302123019" duration="7132000" />
+      <workItem from="1746518460206" duration="201000" />
     </task>
     <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
       <option name="closed" value="true" />
@@ -390,7 +389,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746515969493</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Доработан README.md и добавлен чек лист">
+      <option name="closed" value="true" />
+      <created>1746518645415</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1746518645415</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -420,6 +427,7 @@
     <MESSAGE value="Удалена директория stats" />
     <MESSAGE value="Исправлены диаграммы" />
     <MESSAGE value="Доработан README.md" />
-    <option name="LAST_COMMIT_MESSAGE" value="Доработан README.md" />
+    <MESSAGE value="Доработан README.md и добавлен чек лист" />
+    <option name="LAST_COMMIT_MESSAGE" value="Доработан README.md и добавлен чек лист" />
   </component>
 </project>
