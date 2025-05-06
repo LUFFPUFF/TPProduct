@@ -10,55 +10,21 @@ const DialogPage = () => {
     const [selectedDialog, setSelectedDialog] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [mobileView, setMobileView] = useState("dialogs"); // dialogs | chat | client
-
-    const POLLING_INTERVAL_MS = 3000;
+    const [mobileView, setMobileView] = useState("dialogs");
 
     useEffect(() => {
-        let pollingInterval = null;
-
-        const fetchDialogs = async () => {
-            try {
-                console.log("Fetching dialogs...");
-                const res = await fetch(API.dialogs.getAll);
-                if (!res.ok) {
-                    throw new Error(`HTTP error! status: ${res.status}`);
-                }
-                const data = await res.json();
-                console.log("Полученные диалоги:", data);
-
+        setIsLoading(true);
+        fetch(API.dialogs.getAll)
+            .then((res) => res.json())
+            .then((data) => {
+                console.log("Полученные диалоги:", data)
                 setDialogs(data);
-
-                if (selectedDialog) {
-                    const updatedSelectedDialog = data.find(dialog => dialog.id === selectedDialog.id);
-                    if (updatedSelectedDialog) {
-                        setSelectedDialog(updatedSelectedDialog);
-                    } else {
-                        setSelectedDialog(data.length > 0 ? data[0] : null);
-                    }
-                } else if (data.length > 0) {
+                if (data.length > 0) {
                     setSelectedDialog(data[0]);
-                    console.log(`Selecting the first dialog ID ${data[0].id}`);
                 }
-
-
-            } catch (err) {
-                console.error("Ошибка загрузки или обновления диалогов:", err);
-            } finally {
-            }
-        };
-
-        fetchDialogs();
-
-        pollingInterval = setInterval(fetchDialogs, POLLING_INTERVAL_MS);
-
-        return () => {
-            console.log("Clearing dialog polling interval.");
-            if (pollingInterval) {
-                clearInterval(pollingInterval);
-            }
-        };
-
+            })
+            .catch((err) => console.error("Ошибка загрузки диалогов:", err))
+            .finally(() => setIsLoading(false));
     }, []);
 
     const handleSelectDialog = (dialogId) => {
@@ -86,7 +52,7 @@ const DialogPage = () => {
                 const updatedChats = await fetch(API.dialogs.getAll).then((r) => r.json());
                 console.log("Обновлённый список чатов:", updatedChats);
                 setDialogs(updatedChats);
-                handleSelectDialog(newChat.id); // открой новый чат
+                handleSelectDialog(newChat.id);
             } else {
                 console.error("Ошибка при создании тестового чата");
             }
