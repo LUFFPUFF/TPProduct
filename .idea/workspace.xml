@@ -7,7 +7,9 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Исправлен конфигурационный файл" />
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="&#10;DX 118: Написан отчет, отражающий состояние проекта на момент завершения 2 аттестации">
+      <change afterPath="$PROJECT_DIR$/docs/Presentation/presentation_2аtta.pptx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -294,7 +296,7 @@
       <workItem from="1746426971864" duration="29000" />
       <workItem from="1746442732834" duration="51000" />
       <workItem from="1746456991072" duration="30621000" />
-      <workItem from="1746513179838" duration="302000" />
+      <workItem from="1746513179838" duration="633000" />
     </task>
     <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
       <option name="closed" value="true" />
@@ -520,7 +522,23 @@
       <option name="project" value="LOCAL" />
       <updated>1746492763607</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="&#10;DX 118: Написан отчет, отражающий состояние проекта на момент завершения 2 аттестации">
+      <option name="closed" value="true" />
+      <created>1746513600390</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1746513600390</updated>
+    </task>
+    <task id="LOCAL-00030" summary="&#10;DX 118: Написан отчет, отражающий состояние проекта на момент завершения 2 аттестации">
+      <option name="closed" value="true" />
+      <created>1746513671905</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1746513671905</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -550,7 +568,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="DX-114 configuration nginx, fixed docker, fixed code after last merge" />
     <MESSAGE value="DX-43 Доработана система сокетов, а также улучшен модуль интеграций с внешними системами" />
     <MESSAGE value="merge DX-43 from main" />
     <MESSAGE value="DX-43 исправлены ошибки при клонировании чатов, а также добавлена возможность назначать оператора" />
@@ -575,6 +592,7 @@
     <MESSAGE value="Исправлена ошибка отправки сообщений оператором во внешние сервисы" />
     <MESSAGE value="Исправлены ошибки с зацикливанием и бинов и работа автоответчик" />
     <MESSAGE value="Исправлен конфигурационный файл" />
-    <option name="LAST_COMMIT_MESSAGE" value="Исправлен конфигурационный файл" />
+    <MESSAGE value="&#10;DX 118: Написан отчет, отражающий состояние проекта на момент завершения 2 аттестации" />
+    <option name="LAST_COMMIT_MESSAGE" value="&#10;DX 118: Написан отчет, отражающий состояние проекта на момент завершения 2 аттестации" />
   </component>
 </project>
