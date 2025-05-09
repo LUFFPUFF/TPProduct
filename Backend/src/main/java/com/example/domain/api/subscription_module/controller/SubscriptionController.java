@@ -1,10 +1,7 @@
 package com.example.domain.api.subscription_module.controller;
 
 import com.example.domain.api.subscription_module.service.SubscriptionService;
-import com.example.domain.dto.PriceDto;
-import com.example.domain.dto.SubscribeDataDto;
-import com.example.domain.dto.SubscriptionDto;
-import com.example.domain.dto.SubscriptionPriceReqDto;
+import com.example.domain.dto.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -25,9 +22,9 @@ public class SubscriptionController {
         return ResponseEntity.ok(subscribeService.subscribe(subscribeDataDto));
     }
 
-    @PostMapping("/renew")
-    public ResponseEntity<SubscriptionDto> renewSubscription(@RequestBody @Validated SubscribeDataDto subscribeDataDto) {
-        return ResponseEntity.ok(subscribeService.renew(subscribeDataDto));
+    @PostMapping("/extend")
+    public ResponseEntity<SubscriptionDto> extendSubscription(@RequestBody @Validated SubscribeExtendDataDto subscribeDataDto) {
+        return ResponseEntity.ok(subscribeService.extendSubscription(subscribeDataDto));
     }
 
     @GetMapping("/get")
@@ -40,7 +37,15 @@ public class SubscriptionController {
         subscribeService.cancel();
         return true;
     }
-
+    @GetMapping("/price/extend")
+    public ResponseEntity<PriceDto> extendPriceSubscription(
+            @RequestParam @Min(1) @Max(240) Integer months_count,
+            @RequestParam @Min(0) @Max(1000) Integer operators_count) {
+        SubscriptionExtendPriceDto subscriptionExtendPriceDto = SubscriptionExtendPriceDto.builder()
+                .operators_count(operators_count)
+                .months_count(months_count).build();
+        return ResponseEntity.ok(subscribeService.getExtendPrice(subscriptionExtendPriceDto));
+    }
     @GetMapping("/price")
     public ResponseEntity<PriceDto> getSubscriptionPrice(
             @RequestParam @Min(1) @Max(240) Integer months_count,
@@ -50,11 +55,7 @@ public class SubscriptionController {
                 .operators_count(operators_count)
                 .build();
 
-        return ResponseEntity.ok(
-                PriceDto.builder()
-                        .price(subscribeService.countPrice(subscriptionPriceDto))
-                        .build()
-        );
+        return ResponseEntity.ok(subscribeService.countPrice(subscriptionPriceDto));
     }
 
 
