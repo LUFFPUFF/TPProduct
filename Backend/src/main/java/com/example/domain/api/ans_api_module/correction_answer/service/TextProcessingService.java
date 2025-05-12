@@ -43,8 +43,52 @@ public class TextProcessingService {
         };
     }
 
+    public String generateGeneralAnswer(String userQuery, String companyDescription) throws MLException {
+        if (companyDescription == null || companyDescription.trim().isEmpty()) {
+            throw new MLException("Company description is required for general answer generation", 400);
+        }
+
+        String prompt = buildGeneralAnswerPrompt(userQuery, companyDescription);
+        log.debug("Generated prompt for general answer: {}", prompt);
+
+        GenerationRequest request = GenerationRequest.builder()
+                .prompt(prompt)
+                .temperature(defaultApiParams.getTemperature())
+                .maxNewTokens(defaultApiParams.getMaxNewTokens())
+                .topP(defaultApiParams.getTopP())
+                .doSample(defaultApiParams.isDoSample())
+                .stream(false)
+                .isTextGeneration(true)
+                .build();
+
+        GenerationResponse response = apiClient.generateText(request);
+
+        String generatedText = response.getGeneratedText();
+
+        if (generatedText == null || generatedText.trim().isEmpty()) {
+            log.warn("ML service returned empty/null text for general answer generation.");
+            return "";
+        }
+
+
+        return generatedText.trim();
+    }
+
+    private String buildGeneralAnswerPrompt(String userQuery, String companyDescription) {
+        return "Ты - помощник компании. Ответь на вопрос клиента, используя ТОЛЬКО предоставленную информацию о компании.\n" +
+                "Не придумывай информацию, которой нет в описании. Если информация отсутствует, так и скажи.\n\n" +
+                "Информация о компании:\n" +
+                companyDescription +
+                "\n\n" +
+                "Вопрос клиента:\n" +
+                userQuery +
+                "\n\n" +
+                "Ответ:";
+    }
+
     private String processCorrection(String query) {
-        String prompt = buildCorrectionPrompt(query);
+        String prompt = "Исправь орфографические, пунктуационные и грамматические ошибки в следующем предложении " +
+                "строго соблюдая нормы современного русского языка. Дай только исправленный вариант без пояснений: " + query;
         GenerationRequest request = createGenerationRequest(prompt);
 
         GenerationResponse response = retryGenerateTextCall(request, "correction");
@@ -52,14 +96,14 @@ public class TextProcessingService {
     }
 
     private String processRewrite(String query) {
-        String prompt = buildRewritePrompt("Перепиши следующий корпоративный ответ, сделав его более дружелюбным, теплым и естественным, но при этом не перегруженным деталями. " +
-                "Сделай так, чтобы ответ звучал приветливо и было ощущение личного общения. " +
-                "Также убедись, что ответ остается коротким и по делу.", query);
+        String prompt = "Перепиши корпоративный ответ, сделав его теплее и дружелюбнее. " +
+                "Пиши по-человечески, кратко (до 200 символов) и строго выдай только сам ответ — без пояснений: " + query;
         GenerationRequest request = createGenerationRequestRewrite(prompt);
 
         GenerationResponse response = retryGenerateTextCall(request, "rewrite");
         return extractProcessedText(response, query);
     }
+
 
     private String processCorrectionThenRewrite(String query) {
         String correctedText = processCorrection(query);
@@ -116,7 +160,16 @@ public class TextProcessingService {
             log.debug("Attempt {}/{} for {} task", context.getRetryCount() + 1, MAX_RETRIES, taskName);
             try {
                 validate(request);
-                return apiClient.generateText(request);
+                GenerationResponse response = apiClient.generateText(request);
+
+                log.debug("API Response for {}: {}", taskName,
+                        response != null ? response.toString() : "NULL RESPONSE");
+
+                if (response == null || response.getGeneratedText() == null) {
+                    throw new MLException("Empty response from AI service", 500);
+                }
+
+                return response;
             } catch (ConstraintViolationException e) {
                 log.error("Validation failed for {} task: {}", taskName, e.getConstraintViolations());
                 throw new MLException("Validation failed", 400, e);
@@ -127,12 +180,6 @@ public class TextProcessingService {
     private String buildCorrectionPrompt(String originalText) {
         return String.format(PromptConfig.getDefault().correctionPromptTemplate(),
                 sanitizeInput(originalText));
-    }
-
-    private String buildRewritePrompt(String instruction, String textToRewrite) {
-        return String.format(PromptConfig.getDefault().rewritePromptTemplate(),
-                sanitizeInput(instruction),
-                sanitizeInput(textToRewrite));
     }
 
     private String sanitizeInput(String input) {

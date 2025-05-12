@@ -7,8 +7,10 @@ import com.example.database.model.chats_messages_module.message.ChatMessage;
 import com.example.domain.api.ans_api_module.answer_finder.dto.AnswerSearchResultItem;
 import com.example.domain.api.ans_api_module.answer_finder.exception.AnswerSearchException;
 import com.example.domain.api.ans_api_module.answer_finder.service.AnswerSearchService;
+import com.example.domain.api.ans_api_module.correction_answer.dto.GenerationRequest;
 import com.example.domain.api.ans_api_module.correction_answer.exception.MLException;
 import com.example.domain.api.ans_api_module.correction_answer.service.GenerationType;
+import com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingApiClient;
 import com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService;
 import com.example.domain.api.ans_api_module.event.AutoResponderEscalationEvent;
 import com.example.domain.api.ans_api_module.exception.AutoResponderException;
@@ -25,6 +27,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,8 +43,8 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
     private final IExternalMessagingService externalMessagingService;
     private final ApplicationEventPublisher eventPublisher;
 
-    private Integer AUTO_RESPONDER_INTERNAL_USER_ID;
     private static final ChatMessageSenderType AUTO_RESPONDER_SENDER_TYPE = ChatMessageSenderType.AUTO_RESPONDER;
+    private static final double RELEVANCE_THRESHOLD = 0.6;
 
     @Override
     public void processNewPendingChat(Integer chatId) throws AutoResponderException {
@@ -64,7 +67,7 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
                 ChatMessage firstMessage = firstClientMessageOptional.get();
                 MessageDto firstMessageDTO = messageMapper.toDto(firstMessage);
 
-                processIncomingMessageTest(firstMessageDTO, chat);
+                processIncomingMessage(firstMessageDTO, chat);
             } else {
                 log.warn("AutoResponder: No first message found in new pending chat ID {}", chatId);
             }
@@ -81,7 +84,6 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
 
     }
 
-    @Override
     public void processIncomingMessage(MessageDto messageDTO, Chat chat) throws AutoResponderException {
         log.info("AutoResponder: Processing incoming message ID {} for chat ID {}",
                 messageDTO.getId(), messageDTO.getChatDto().getId());
@@ -94,14 +96,18 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
 
         String clientQuery = messageDTO.getContent();
         Integer companyId = chat.getCompany() != null ? chat.getCompany().getId() : null;
+        String companyDescription = (chat.getCompany() != null && chat.getCompany().getCompanyDescription() != null)
+                ? chat.getCompany().getCompanyDescription()
+                : null;
+
 
         if (clientQuery == null || clientQuery.trim().isEmpty()) {
             log.warn("AutoResponder: Received empty client query in message ID {}. Skipping processing.", messageDTO.getId());
             return;
         }
 
-        String correctedQuery = clientQuery;
-        List<AnswerSearchResultItem> relevantAnswers = null;
+        String correctedQuery;
+        List<AnswerSearchResultItem> relevantAnswers = Collections.emptyList();
 
         try {
             correctedQuery = textProcessingService.processQuery(clientQuery, GenerationType.CORRECTION);
@@ -116,6 +122,8 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
             correctedQuery = clientQuery;
         }
 
+        boolean answerFound = false;
+        String autoResponderResponse = null;
 
         try {
             relevantAnswers = answerSearchService.findRelevantAnswers(
@@ -124,41 +132,71 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
                     null
             );
 
-            log.debug("AutoResponder: Found {} relevant answers for chat ID {}", relevantAnswers.size(), chat.getId());
+            log.debug("AutoResponder: Found {} relevant answers for chat ID {}. Query: {}",
+                    relevantAnswers.size(), chat.getId(), correctedQuery);
 
             Optional<AnswerSearchResultItem> bestAnswer = relevantAnswers.stream()
                     .findFirst();
 
-
-            if (bestAnswer.isPresent()) {
+            if (bestAnswer.isPresent() && bestAnswer.get().getScore() >= RELEVANCE_THRESHOLD) {
                 AnswerSearchResultItem answer = bestAnswer.get();
                 String originalAnswerText = answer.getAnswer().getAnswer();
-                String finalAnswerText = originalAnswerText;
+                log.info("AutoResponder: Found relevant predefined answer (score {}) for chat ID {}.",
+                        answer.getScore(), chat.getId());
 
                 try {
-                    finalAnswerText = textProcessingService.processQuery(originalAnswerText, GenerationType.REWRITE);
-                    log.debug("AutoResponder: Rewritten answer text for chat ID {}: {}", chat.getId(), finalAnswerText);
+                    autoResponderResponse = textProcessingService.processQuery(originalAnswerText, GenerationType.REWRITE);
+                    log.debug("AutoResponder: Rewritten predefined answer for chat ID {}: {}", chat.getId(), autoResponderResponse);
                 } catch (MLException e) {
-                    log.warn("AutoResponder: Failed to rewrite answer text for chat ID {} due to TextProcessingService error. Using original answer. Error: {}",
+                    log.warn("AutoResponder: Failed to rewrite predefined answer for chat ID {} due to TextProcessingService error. Using original answer. Error: {}",
                             chat.getId(), e.getMessage(), e);
-                    finalAnswerText = originalAnswerText;
+                    autoResponderResponse = originalAnswerText;
                 } catch (Exception e) {
-                    log.error("AutoResponder: Unexpected error rewriting answer text for chat ID {}. Using original answer. Error: {}",
+                    log.error("AutoResponder: Unexpected error rewriting predefined answer for chat ID {}. Using original answer. Error: {}",
                             chat.getId(), e.getMessage(), e);
-                    finalAnswerText = originalAnswerText;
+                    autoResponderResponse = originalAnswerText;
                 }
 
-                sendAutoResponderMessage(chat, finalAnswerText);
-
+                answerFound = true;
 
             } else {
-                log.info("AutoResponder: No relevant answers found for chat ID {}. Publishing escalation event.", chat.getId());
+                log.info("AutoResponder: No relevant predefined answer found (or score < {}) for chat ID {}. Attempting general generation.",
+                        RELEVANCE_THRESHOLD, chat.getId());
+
+                if (companyDescription != null && !companyDescription.trim().isEmpty()) {
+                    try {
+
+                        autoResponderResponse = textProcessingService.generateGeneralAnswer(correctedQuery, companyDescription);
+
+                        if (autoResponderResponse != null && !autoResponderResponse.trim().isEmpty()) {
+                            log.info("AutoResponder: Successfully generated general answer for chat ID {}.", chat.getId());
+                            answerFound = true;
+                        } else {
+                            log.warn("AutoResponder: General answer generation returned empty/null response for chat ID {}.", chat.getId());
+                        }
+
+                    } catch (MLException e) {
+                        log.warn("AutoResponder: Failed to generate general answer for chat ID {} due to TextProcessingService error. Error: {}",
+                                chat.getId(), e.getMessage(), e);
+                    } catch (Exception e) {
+                        log.error("AutoResponder: Unexpected error generating general answer for chat ID {}. Error: {}",
+                                chat.getId(), e.getMessage(), e);
+                    }
+                } else {
+                    log.warn("AutoResponder: Company description is missing or empty for chat ID {}. Cannot generate general answer.", chat.getId());
+                }
+            }
+
+            if (answerFound && autoResponderResponse != null && !autoResponderResponse.trim().isEmpty()) {
+                sendAutoResponderMessage(chat, autoResponderResponse);
+            } else {
+                log.info("AutoResponder: Could not find or generate a suitable answer for chat ID {}. Publishing escalation event.", chat.getId());
                 if (chat.getStatus() == ChatStatus.PENDING_AUTO_RESPONDER) {
                     eventPublisher.publishEvent(new AutoResponderEscalationEvent(this, chat.getId(), chat.getClient().getId()));
-                    sendAutoResponderMessage(chat, "Извините, я не смог найти ответ на ваш вопрос. Передаю ваш вопрос оператору.");
+                    sendAutoResponderMessage(chat, "Извините, я не смог найти ответ на ваш вопрос и сгенерировать подходящий ответ. Передаю ваш вопрос оператору.");
                     log.info("AutoResponder: Escalation event published for chat ID {}.", chat.getId());
                 } else {
-                    log.debug("AutoResponder: Chat ID {} is already escalated (status {}). Not re-escalating.", chat.getId(), chat.getStatus());
+                    log.debug("AutoResponder: Chat ID {} is already escalated or handled (status {}). Not re-escalating.", chat.getId(), chat.getStatus());
                 }
             }
 
@@ -190,25 +228,6 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
                 messageDTO.getId(), chat.getId());
     }
 
-    //TODO пока не поднимем нейронку будет так
-    public void processIncomingMessageTest(MessageDto messageDTO, Chat chat) {
-        Integer companyId = chat.getCompany() != null ? chat.getCompany().getId() : null;
-
-        List<AnswerSearchResultItem> relevantAnswers = answerSearchService.findRelevantAnswers(
-                messageDTO.getContent(),
-                companyId,
-                null
-        );
-
-        Optional<AnswerSearchResultItem> bestAnswer = relevantAnswers.stream()
-                .findFirst();
-
-        if (bestAnswer.isPresent()) {
-            AnswerSearchResultItem bestAnswerItem = bestAnswer.get();
-            sendAutoResponderMessage(chat, bestAnswerItem.getAnswer().getAnswer());
-        }
-    }
-
     @Override
     public void stopForChat(Integer chatId) {
         //TODO какая должна быть логика остановки автоответчика?
@@ -222,7 +241,7 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
         messageRequest.setExternalMessageId(null);
         messageRequest.setReplyToExternalMessageId(null);
 
-        AUTO_RESPONDER_INTERNAL_USER_ID = chat.getClient().getId();
+        Integer AUTO_RESPONDER_INTERNAL_USER_ID = chat.getClient().getId();
 
         messageRequest.setSenderId(AUTO_RESPONDER_INTERNAL_USER_ID);
         messageRequest.setSenderType(AUTO_RESPONDER_SENDER_TYPE);
@@ -248,7 +267,5 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
                 // TODO: Что делать при ошибке внешней отправки? Залогировать, уведомить оператора?
             }
         }
-
-
     }
 }

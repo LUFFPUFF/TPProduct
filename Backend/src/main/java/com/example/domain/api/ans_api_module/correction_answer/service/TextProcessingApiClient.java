@@ -44,6 +44,7 @@ public class TextProcessingApiClient {
         String requestBody;
         try {
             requestBody = objectMapper.writeValueAsString(request);
+            log.debug("Sending request to AI service: {}", requestBody);
         } catch (IOException e) {
             throw new MLException("Failed to serialize request", -1, e);
         }
@@ -52,34 +53,29 @@ public class TextProcessingApiClient {
 
         try {
             HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+            log.debug("Received response from AI service: {}", response.body());
 
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                return objectMapper.readValue(response.body(), GenerationResponse.class);
-            } else {
-                String errorBody = response.body();
+                GenerationResponse parsedResponse = objectMapper.readValue(response.body(), GenerationResponse.class);
 
-                if (response.statusCode() >= 400) {
-                    List<String> apiValidationErrors = extractValidationErrorsFromErrorBody(errorBody);
-                    if (!apiValidationErrors.isEmpty()) {
-                        log.debug("API Validation Error ({}): {}", response.statusCode(), errorBody);
-                        throw new MLException("API validation failed", response.statusCode(), apiValidationErrors);
-                    }
+                if (parsedResponse.getGeneratedText() == null) {
+                    log.error("AI service returned null generated text. Full response: {}", response.body());
+                    throw new MLException("AI service returned null generated text", 500);
                 }
-                log.error("API returned non-2xx status code {}: {}", response.statusCode(), errorBody);
-                throw new MLException("API request failed with status code " + response.statusCode(), response.statusCode());
+
+                return parsedResponse;
+            } else {
+                log.error("AI service error response ({}): {}", response.statusCode(), response.body());
+                throw new MLException("AI service returned error: " + response.body(), response.statusCode());
             }
         } catch (IOException e) {
-            log.error("Network or IO error during API request: {}", e.getMessage(), e);
-            throw new MLException("Network or IO error", -1, e);
+            log.error("Network/IO error calling AI service", e);
+            throw new MLException("Network error calling AI service", -1, e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            log.error("API Request Interrupted: {}", e.getMessage(), e);
-            throw new MLException("API request interrupted", -1, e);
-        } catch (Exception e) {
-            log.error("Unexpected error during API request processing: {}", e.getMessage(), e);
-            throw new MLException("Unexpected error calling API", -1, e);
+            log.error("Request interrupted", e);
+            throw new MLException("Request interrupted", -1, e);
         }
-
     }
 
     private HttpRequest createRequest(URI uri, String requestBody) {

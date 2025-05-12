@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface IIntegrationService {
 
-    List<CompanyTelegramConfiguration> getAllTelegramConfigurations(Integer companyId);
+    List<CompanyTelegramConfiguration> getAllTelegramConfigurations();
 
-    List<CompanyMailConfiguration> getAllMailConfigurations(Integer companyId);
+    List<CompanyMailConfiguration> getAllMailConfigurations();
 
     CompanyTelegramConfiguration getTelegramConfigurationById(Integer id);
 

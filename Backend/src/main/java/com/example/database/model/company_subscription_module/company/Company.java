@@ -31,6 +31,9 @@ public class Company {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "company_description")
+    private String companyDescription;
+
     @Override
     public String toString() {
         return "Company{" +

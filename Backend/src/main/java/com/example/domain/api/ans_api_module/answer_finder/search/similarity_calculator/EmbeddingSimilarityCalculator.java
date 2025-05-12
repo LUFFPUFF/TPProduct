@@ -41,7 +41,7 @@ public class EmbeddingSimilarityCalculator implements SimilarityCalculator {
 
         for (PredefinedAnswer answer : potentialAnswers) {
             if (answer != null && answer.getId() != null && answer.getAnswer() != null && !answer.getAnswer().trim().isEmpty()) {
-                answerTexts.add(answer.getAnswer());
+                answerTexts.add(answer.getTitle());
                 answerIdsInOrder.add(answer.getId());
             } else {
                 log.warn("Пропущен некорректный PredefinedAnswer (ID: {}, текст: {}) при подготовке текстов для расчета сходства.",

@@ -37,38 +37,22 @@ public class IntegrationController {
 
     @PostMapping("/create/email")
     public ResponseEntity<IntegrationMailDto> createIntegrationEmail(@RequestBody CreateMailConfigurationRequest request) {
-
         CompanyMailConfiguration companyMailConfiguration = integrationService.createCompanyMailConfiguration(request);
         return ResponseEntity.ok(integrationMapper.toDto(companyMailConfiguration));
     }
 
     @GetMapping("/telegram")
     public ResponseEntity<List<IntegrationTelegramDto>> getAllIntegrationTelegram() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
-        User currentUser = currentUserOpt
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
         List<IntegrationTelegramDto> telegramDtos = integrationMapper.toDto(
-                integrationService.getAllTelegramConfigurations(currentUser.getCompany().getId()));
+                integrationService.getAllTelegramConfigurations());
         return ResponseEntity.ok(telegramDtos);
     }
 
     @GetMapping("/email")
     public ResponseEntity<List<IntegrationMailDto>> getAllIntegrationEmail() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Optional<User> currentUserOpt = getCurrentAppUser(authentication.getName());
-        User currentUser = currentUserOpt
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
         List<IntegrationMailDto> mailDtos = integrationMapper.toDtoList(
-                integrationService.getAllMailConfigurations(currentUser.getCompany().getId()));
+                integrationService.getAllMailConfigurations());
 
         return ResponseEntity.ok(mailDtos);
     }
-
-    private Optional<User> getCurrentAppUser(String email) {
-        return userRepository.findByEmail(email);
-    }
-
 }

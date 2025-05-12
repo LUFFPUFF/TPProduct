@@ -33,7 +33,7 @@ public class PredefinedAnswer {
     private String answer;
 
     @Column(name = "trust_score")
-    private TrustScore trustScore;
+    private TrustScore trustScore = new TrustScore(0.0);
 
     @Column(name = "created_at")
     @CreationTimestamp

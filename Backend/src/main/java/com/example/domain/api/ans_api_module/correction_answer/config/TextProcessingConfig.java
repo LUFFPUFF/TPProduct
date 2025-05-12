@@ -3,6 +3,7 @@ package com.example.domain.api.ans_api_module.correction_answer.config;
 import com.example.domain.api.ans_api_module.correction_answer.config.promt.PromptConfig;
 import com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingApiClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -52,9 +53,12 @@ public class TextProcessingConfig {
 
     @Bean
     public TextProcessingApiClient textProcessingApiClient(
-            MLServiceConfig serviceConfig,
+            MLServiceConfig config,
             ObjectMapper objectMapper) {
-        return new TextProcessingApiClient(serviceConfig, objectMapper);
+
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+
+        return new TextProcessingApiClient(config, objectMapper);
     }
 
 }

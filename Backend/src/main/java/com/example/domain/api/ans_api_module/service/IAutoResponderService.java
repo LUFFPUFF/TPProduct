@@ -22,8 +22,6 @@ public interface IAutoResponderService {
      */
     void processIncomingMessage(MessageDto messageDTO, Chat chat) throws AutoResponderException;
 
-    void processIncomingMessageTest(MessageDto messageDTO, Chat chat);
-
     /**
      * Останавливает работу автоответчика для указанного чата.
      * Вызывается, например, ChatService при эскалации чата на оператора.

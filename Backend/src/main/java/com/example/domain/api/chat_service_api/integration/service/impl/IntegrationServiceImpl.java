@@ -1,5 +1,6 @@
 package com.example.domain.api.chat_service_api.integration.service.impl;
 
+import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.company_subscription_module.company.CompanyMailConfiguration;
 import com.example.database.model.company_subscription_module.company.CompanyTelegramConfiguration;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
@@ -9,9 +10,10 @@ import com.example.database.repository.company_subscription_module.UserRepositor
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
 import com.example.domain.api.chat_service_api.integration.dto.rest.CreateMailConfigurationRequest;
 import com.example.domain.api.chat_service_api.integration.dto.rest.CreateTelegramConfigurationRequest;
-import com.example.domain.api.chat_service_api.integration.mapper.IntegrationMapper;
 import com.example.domain.api.chat_service_api.integration.service.IIntegrationService;
 import com.example.domain.api.chat_service_api.integration.telegram.TelegramBotManager;
+import com.example.domain.security.UserContext;
+import com.example.domain.security.UserContextHolder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -30,15 +33,32 @@ public class IntegrationServiceImpl implements IIntegrationService {
     private final CompanyMailConfigurationRepository companyMailConfigurationRepository;
     private final UserRepository userRepository;
     private final TelegramBotManager telegramBotManager;
+    private final UserContextHolder userContextHolder;
 
     @Override
-    public List<CompanyTelegramConfiguration> getAllTelegramConfigurations(Integer companyId) {
-        return companyTelegramConfigurationRepository.findAllByCompanyId(companyId);
+    public List<CompanyTelegramConfiguration> getAllTelegramConfigurations() {
+        UserContext userContext = userContextHolder.getUserContext();
+        Optional<User> user = userRepository.findById(userContext.getUserId());
+
+        if (user.isPresent()) {
+            User userEntity = user.get();
+            return companyTelegramConfigurationRepository.findAllByCompanyId(userEntity.getCompany().getId());
+        }
+        throw new ResourceNotFoundException("User with id " + userContext.getUserId() + " not found");
     }
 
     @Override
-    public List<CompanyMailConfiguration> getAllMailConfigurations(Integer companyId) {
-        return companyMailConfigurationRepository.findAllByCompanyId(companyId);
+    public List<CompanyMailConfiguration> getAllMailConfigurations() {
+        UserContext userContext = userContextHolder.getUserContext();
+        Optional<User> user = userRepository.findById(userContext.getUserId());
+
+        if (user.isPresent()) {
+            User userEntity = user.get();
+
+            return companyMailConfigurationRepository.findAllByCompanyId(userEntity.getCompany().getId());
+        }
+
+        throw new ResourceNotFoundException("User with id " + userContext.getUserId() + " not found");
     }
 
     @Override
@@ -56,23 +76,26 @@ public class IntegrationServiceImpl implements IIntegrationService {
     @Override
     @Transactional
     public CompanyTelegramConfiguration createCompanyTelegramConfiguration(CreateTelegramConfigurationRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = getCurrentAppUser(authentication.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found"));
 
-        Integer companyId = currentUser.getCompany().getId();
-        if (companyId == null) {
-            throw new ResourceNotFoundException("Authenticated user is not associated with a company.");
+        UserContext userContext = userContextHolder.getUserContext();
+        Optional<User> user = userRepository.findById(userContext.getUserId());
+
+        Company company = null;
+
+        if (user.isPresent()) {
+            User userEntity = user.get();
+            company = userEntity.getCompany();
         }
 
-        Optional<CompanyTelegramConfiguration> existingConfigOpt = companyTelegramConfigurationRepository.findByCompanyId(companyId);
+        Optional<CompanyTelegramConfiguration> existingConfigOpt = companyTelegramConfigurationRepository
+                .findByCompanyId(Objects.requireNonNull(company).getId());
         CompanyTelegramConfiguration config;
 
         if (existingConfigOpt.isPresent()) {
             config = existingConfigOpt.get();
         } else {
             config = new CompanyTelegramConfiguration();
-            config.setCompany(currentUser.getCompany());
+            config.setCompany(company);
             config.setCreatedAt(LocalDateTime.now());
         }
 
@@ -82,7 +105,7 @@ public class IntegrationServiceImpl implements IIntegrationService {
 
         CompanyTelegramConfiguration savedConfig = companyTelegramConfigurationRepository.save(config);
 
-        telegramBotManager.startOrUpdatePollingForCompany(companyId);
+        telegramBotManager.startOrUpdatePollingForCompany(company.getId());
 
         return savedConfig;
     }
@@ -90,24 +113,26 @@ public class IntegrationServiceImpl implements IIntegrationService {
     @Override
     @Transactional
     public CompanyMailConfiguration createCompanyMailConfiguration(CreateMailConfigurationRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = getCurrentAppUser(authentication.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found"));
+        UserContext userContext = userContextHolder.getUserContext();
+        Optional<User> user = userRepository.findById(userContext.getUserId());
 
-        Integer companyId = currentUser.getCompany().getId();
-        if (companyId == null) {
-            throw new ResourceNotFoundException("Authenticated user is not associated with a company.");
+        Company company = null;
+
+        if (user.isPresent()) {
+            User userEntity = user.get();
+            company = userEntity.getCompany();
         }
 
 
-        Optional<CompanyMailConfiguration> existingConfigOpt = companyMailConfigurationRepository.findByCompanyId(companyId);
+        Optional<CompanyMailConfiguration> existingConfigOpt = companyMailConfigurationRepository
+                .findByCompanyId(Objects.requireNonNull(company).getId());
         CompanyMailConfiguration config;
 
         if (existingConfigOpt.isPresent()) {
             config = existingConfigOpt.get();
         } else {
             config = new CompanyMailConfiguration();
-            config.setCompany(currentUser.getCompany());
+            config.setCompany(company);
             config.setCreatedAt(LocalDateTime.now());
         }
 
@@ -120,9 +145,5 @@ public class IntegrationServiceImpl implements IIntegrationService {
 
 
         return companyMailConfigurationRepository.save(config);
-    }
-
-    private Optional<User> getCurrentAppUser(String email) {
-        return userRepository.findByEmail(email);
     }
 }
