@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface UserRoleRepository extends JpaRepository<UserRole, Integer> {
 
-    @Query("SELECT role FROM UserRole WHERE user.email = :email")
+    @Query("SELECT ur.role FROM UserRole ur WHERE ur.user.email = :email")
     List<Role> findRolesByEmail(@Param("email") String email);
 
     void deleteByUserAndRole(User user, Role role);

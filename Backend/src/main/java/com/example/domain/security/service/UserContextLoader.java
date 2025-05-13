@@ -8,6 +8,7 @@ import com.example.database.repository.company_subscription_module.UserRoleRepos
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
 import com.example.domain.security.model.UserContext;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserContextLoader {
 
     private final UserRepository userRepository;
@@ -53,11 +55,14 @@ public class UserContextLoader {
 
             String username = authentication.getName();
             User user = userRepository.findByEmail(username)
-                    .orElseThrow(() -> new ResourceNotFoundException("User with username " + username + " not found"));
+                    .orElseThrow(() -> {
+                        log.error("Authenticated user with username {} not found in database.", username);
+                        return new ResourceNotFoundException("Authenticated user not found in database");
+                    });
 
-            Set<Role> roles = authentication.getAuthorities().stream()
-                    .filter(Role.class::isInstance)
-                    .map(Role.class::cast)
+            List<UserRole> userRolesEntities = userRoleRepository.findByUserId(user.getId());
+            Set<Role> roles = userRolesEntities.stream()
+                    .map(UserRole::getRole)
                     .collect(Collectors.toSet());
 
             return buildUserContext(user, roles);

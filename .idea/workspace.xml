@@ -7,10 +7,8 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="DX-125, 129, 152 Доработана система автоответчика, разработан начальный уровень SecurityContextHolder, улучшен поиск шаблонных ответов на основе trustScore">
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="DX-155 Исправлена ошибка при регистрации нового пользователя">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RoleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RoleServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/chats_messages_module/ChatRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/chats_messages_module/ChatRepository.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/job/AnswerItemProcessListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/job/AnswerItemProcessListener.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/job/AnswerItemWriteListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/job/AnswerItemWriteListener.class" afterDir="false" />
@@ -431,7 +429,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746518724295</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="DX-155 Исправлена ошибка при регистрации нового пользователя">
+      <option name="closed" value="true" />
+      <created>1747150384776</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1747150384776</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -463,7 +469,8 @@
     <MESSAGE value="Доработан README.md" />
     <MESSAGE value="Доработан README.md и добавлен чек лист" />
     <MESSAGE value="DX-125, 129, 152 Доработана система автоответчика, разработан начальный уровень SecurityContextHolder, улучшен поиск шаблонных ответов на основе trustScore" />
-    <option name="LAST_COMMIT_MESSAGE" value="DX-125, 129, 152 Доработана система автоответчика, разработан начальный уровень SecurityContextHolder, улучшен поиск шаблонных ответов на основе trustScore" />
+    <MESSAGE value="DX-155 Исправлена ошибка при регистрации нового пользователя" />
+    <option name="LAST_COMMIT_MESSAGE" value="DX-155 Исправлена ошибка при регистрации нового пользователя" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

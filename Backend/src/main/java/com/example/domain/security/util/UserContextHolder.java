@@ -45,6 +45,4 @@ public class UserContextHolder {
         }
         return context;
     }
-
-
 }
