@@ -7,27 +7,10 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Исправлена ошибка загрузки ролей пользователя">
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Исправлена ошибка TelegramApiClient">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/impl/IntegrationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/impl/IntegrationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/chats_messages_module/ChatRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/chats_messages_module/ChatRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/job/AnswerItemProcessListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/job/AnswerItemProcessListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/job/AnswerItemWriteListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/job/AnswerItemWriteListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/listener/UploadJobListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/listener/UploadJobListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/processor/AnswerItemProcessor.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/batch/processor/AnswerItemProcessor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/security/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/security/config/SecurityConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/controller/ChatWebSocketController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/controller/ChatWebSocketController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/dto/rest/CreateTelegramConfigurationRequest$CreateTelegramConfigurationRequestBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/dto/rest/CreateTelegramConfigurationRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/dto/rest/CreateTelegramConfigurationRequest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramBotManager$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramBotManager$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/IChatService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/IChatService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/impl/ChatMessageServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/impl/ChatMessageServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/impl/ChatServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/impl/ChatServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/ui/controller/ChatUiController.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/ui/controller/ChatUiController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/service/impl/RoleServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/service/impl/RoleServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/pages/IntegrationsPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/IntegrationsPage.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -121,7 +104,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.SpringBootStartApplication.executor": "Debug",
+    "Spring Boot.SpringBootStartApplication.executor": "Run",
     "extract.method.default.visibility": "private",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
@@ -447,7 +430,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747153451975</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Исправлена ошибка TelegramApiClient">
+      <option name="closed" value="true" />
+      <created>1747158064592</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1747158064592</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -481,7 +472,8 @@
     <MESSAGE value="DX-125, 129, 152 Доработана система автоответчика, разработан начальный уровень SecurityContextHolder, улучшен поиск шаблонных ответов на основе trustScore" />
     <MESSAGE value="DX-155 Исправлена ошибка при регистрации нового пользователя" />
     <MESSAGE value="Исправлена ошибка загрузки ролей пользователя" />
-    <option name="LAST_COMMIT_MESSAGE" value="Исправлена ошибка загрузки ролей пользователя" />
+    <MESSAGE value="Исправлена ошибка TelegramApiClient" />
+    <option name="LAST_COMMIT_MESSAGE" value="Исправлена ошибка TelegramApiClient" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -63,7 +63,7 @@ export default function IntegrationsPage() {
                 }
                 payload = {
                     botToken: botToken,
-                    botName: botUsername
+                    botUsername: botUsername
                 };
             } else if (selectedIntegration.name === "Почту") {
                 if (!email || !emailPassword || !imapHost) {
@@ -310,7 +310,7 @@ export default function IntegrationsPage() {
                                         type="text"
                                         value={botUsername}
                                         onChange={(e) => setBotUsername(e.target.value)}
-                                        placeholder="Имя бота"
+                                        placeholder="Имя пользователя бота (например, mybot)"
                                         className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
                                     />
                                 )}
