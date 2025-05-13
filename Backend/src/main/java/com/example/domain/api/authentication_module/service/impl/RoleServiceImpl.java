@@ -32,6 +32,7 @@ public class RoleServiceImpl implements RoleService  {
             return true;
         }).orElseThrow(NotFoundUserException::new);
     }
+
     @Override
     @Transactional
     public List<Role> getUserRoles(String email){

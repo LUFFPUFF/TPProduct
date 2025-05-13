@@ -1,11 +1,14 @@
 package com.example.domain.api.authentication_module.service.impl;
 
+import com.example.database.model.company_subscription_module.user_roles.user.Role;
+import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.repository.company_subscription_module.UserRepository;
 import com.example.domain.api.authentication_module.cache.AuthCacheService;
 import com.example.domain.api.authentication_module.exception_handler_auth.EmailExistsException;
 import com.example.domain.api.authentication_module.exception_handler_auth.InvalidRegistrationCodeException;
 import com.example.domain.api.authentication_module.security.jwtUtils.JWTUtilsService;
 import com.example.domain.api.authentication_module.service.interfaces.RegistrationService;
+import com.example.domain.api.authentication_module.service.interfaces.RoleService;
 import com.example.domain.dto.RegistrationDto;
 import com.example.domain.dto.TokenDto;
 import com.example.domain.dto.mapper.MapperDto;
@@ -30,6 +33,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
     private final AuthCacheService authCacheService;
+    private final RoleService roleService;
 
     @Override
     @Transactional
@@ -52,13 +56,19 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
+    @Transactional
     public TokenDto checkRegistrationCode(String registrationCode) {
         return authCacheService.getRegistrationCode(registrationCode)
-                .map( registrationDto ->{
-                userRepository.save(mapperDto.toEntityUserFromRegistration(registrationDto));
-               return jWTUtilsService.generateTokensByUser(userDetailsService.loadUserByUsername(registrationDto.getEmail()));
-        })
-        .orElseThrow(InvalidRegistrationCodeException::new);
+                .map( registrationDto -> {
+                    User newUser = mapperDto.toEntityUserFromRegistration(registrationDto);
+
+                    userRepository.save(newUser);
+
+                    roleService.addRole(registrationDto.getEmail(), Role.USER);
+
+                    return jWTUtilsService.generateTokensByUser(userDetailsService.loadUserByUsername(registrationDto.getEmail()));
+                })
+                .orElseThrow(InvalidRegistrationCodeException::new);
     }
 
     private String generateRegistrationCode() {
