@@ -12,6 +12,7 @@ import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoun
 import com.example.domain.api.chat_service_api.integration.dto.rest.CreateMailConfigurationRequest;
 import com.example.domain.api.chat_service_api.integration.dto.rest.CreateTelegramConfigurationRequest;
 import com.example.domain.api.chat_service_api.integration.service.IIntegrationService;
+import com.example.domain.api.chat_service_api.integration.telegram.TelegramBotManager;
 import com.example.domain.security.aop.annotation.RequireRole;
 import com.example.domain.security.model.UserContext;
 import com.example.domain.security.util.UserContextHolder;
@@ -32,6 +33,7 @@ public class IntegrationServiceImpl implements IIntegrationService {
     private final CompanyTelegramConfigurationRepository companyTelegramConfigurationRepository;
     private final CompanyMailConfigurationRepository companyMailConfigurationRepository;
     private final UserRepository userRepository;
+    private final TelegramBotManager telegramBotManager;
 
     @Override
     @RequireRole(allowedRoles = {Role.MANAGER})
@@ -90,7 +92,16 @@ public class IntegrationServiceImpl implements IIntegrationService {
     @RequireRole(allowedRoles = {Role.MANAGER})
     public CompanyTelegramConfiguration createCompanyTelegramConfiguration(CreateTelegramConfigurationRequest request) throws AccessDeniedException {
 
-        Company company = getCompany();
+        UserContext userContext = UserContextHolder.getRequiredContext();
+        Integer companyId = userContext.getCompanyId();
+
+        if (companyId == null) {
+            throw new AccessDeniedException("User is not associated with a company.");
+        }
+
+        Optional<User> userOpt = userRepository.findById(userContext.getUserId());
+        User userEntity = userOpt.orElseThrow(() -> new ResourceNotFoundException("User with id " + userContext.getUserId() + " not found"));
+        Company company = userEntity.getCompany();
 
         Optional<CompanyTelegramConfiguration> existingConfigOpt = companyTelegramConfigurationRepository
                 .findByCompanyId(Objects.requireNonNull(company).getId());
@@ -109,6 +120,8 @@ public class IntegrationServiceImpl implements IIntegrationService {
         config.setUpdatedAt(LocalDateTime.now());
 
         CompanyTelegramConfiguration savedConfig = companyTelegramConfigurationRepository.save(config);
+        telegramBotManager.startOrUpdatePollingForCompany(company.getId());
+
         return savedConfig;
     }
 

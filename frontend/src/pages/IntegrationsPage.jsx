@@ -18,8 +18,8 @@ export default function IntegrationsPage() {
     const [integrations, setIntegrations] = useState(initialIntegrations);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedIntegration, setSelectedIntegration] = useState(null);
-    const [token, setToken] = useState("");
-    const [botName, setBotName] = useState("");
+    const [botToken, setBotToken] = useState("");
+    const [botUsername, setBotUsername] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -37,8 +37,8 @@ export default function IntegrationsPage() {
     const handleConnectClick = (integration) => {
         setSelectedIntegration(integration);
         setModalOpen(true);
-        setToken("");
-        setBotName("");
+        setBotToken("");
+        setBotUsername("");
         setEmail("");
         setEmailPassword("");
         setImapHost("");
@@ -55,15 +55,15 @@ export default function IntegrationsPage() {
 
         try {
             if (selectedIntegration.name === "Telegram") {
-                if (!token || !botName) {
+                if (!botToken || !botUsername) {
                     const msg = "Введите токен и имя бота";
                     console.warn(msg);
                     setError(msg);
                     return;
                 }
                 payload = {
-                    botToken: token,
-                    botName: botName
+                    botToken: botToken,
+                    botName: botUsername
                 };
             } else if (selectedIntegration.name === "Почту") {
                 if (!email || !emailPassword || !imapHost) {
@@ -78,13 +78,13 @@ export default function IntegrationsPage() {
                     imapHost
                 };
             } else {
-                if (!token) {
+                if (!botToken) {
                     const msg = "Введите токен";
                     console.warn(msg);
                     setError(msg);
                     return;
                 }
-                payload = { token };
+                payload = { token: botToken };
             }
 
             let url = API.integrations.connect;
@@ -118,8 +118,8 @@ export default function IntegrationsPage() {
             );
 
             setModalOpen(false);
-            setToken("");
-            setBotName("");
+            setBotToken("");
+            setBotUsername("");
             setEmail("");
             setEmailPassword("");
             setImapHost("");
@@ -299,8 +299,8 @@ export default function IntegrationsPage() {
                             <>
                                 <input
                                     type="text"
-                                    value={token}
-                                    onChange={(e) => setToken(e.target.value)}
+                                    value={botToken}
+                                    onChange={(e) => setBotToken(e.target.value)}
                                     placeholder="Токен"
                                     className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
                                 />
@@ -308,8 +308,8 @@ export default function IntegrationsPage() {
                                 {selectedIntegration?.name === "Telegram" && (
                                     <input
                                         type="text"
-                                        value={botName}
-                                        onChange={(e) => setBotName(e.target.value)}
+                                        value={botUsername}
+                                        onChange={(e) => setBotUsername(e.target.value)}
                                         placeholder="Имя бота"
                                         className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
                                     />
@@ -323,8 +323,8 @@ export default function IntegrationsPage() {
                             <button
                                 onClick={() => {
                                     setModalOpen(false);
-                                    setToken("");
-                                    setBotName("");
+                                    setBotToken("");
+                                    setBotUsername("");
                                     setImapHost("");
                                     setSelectedIntegration(null);
                                     setError("");
@@ -339,8 +339,8 @@ export default function IntegrationsPage() {
                                 disabled={
                                     loading ||
                                     (selectedIntegration?.name === "Почту"
-                                        ? !(token && botName && imapHost)
-                                        : !token)
+                                        ? !(botToken && botUsername && imapHost)
+                                        : !botToken)
                                 }
                                 className={`${
                                     loading
