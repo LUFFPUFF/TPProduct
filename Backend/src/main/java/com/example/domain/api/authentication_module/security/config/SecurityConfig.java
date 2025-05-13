@@ -41,7 +41,6 @@ public class SecurityConfig  {
                         .requestMatchers("/test/no-perm").denyAll()
                         .requestMatchers("/test/auth-only").authenticated()
                         .anyRequest().permitAll()
-
                 )
                 .exceptionHandling(exp -> exp
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))

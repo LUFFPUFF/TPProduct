@@ -13,7 +13,12 @@ import java.util.List;
 
 @Repository
 public interface UserRoleRepository extends JpaRepository<UserRole, Integer> {
+
     @Query("SELECT role FROM UserRole WHERE user.email = :email")
     List<Role> findRolesByEmail(@Param("email") String email);
+
     void deleteByUserAndRole(User user, Role role);
+
+    List<UserRole> findByUserId(Integer userId);
+
 }

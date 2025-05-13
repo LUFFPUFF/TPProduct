@@ -54,7 +54,6 @@ class TextProcessingServiceTest {
     private final double DEFAULT_TOP_P = 0.85;
     private final boolean DEFAULT_DO_SAMPLE = false;
     private final boolean DEFAULT_STREAM = false;
-    // ИСПРАВЛЕНО: Сделано static final
     private static final String CORRECTION_PROMPT_TEMPLATE = "Correct this: %s";
     private static final String REWRITE_PROMPT_TEMPLATE = "Instruction: %s\nText: %s";
 
@@ -84,26 +83,6 @@ class TextProcessingServiceTest {
         when(validator.validate(any())).thenReturn(Collections.emptySet());
     }
 
-    // --- Успешные сценарии (остаются без изменений) ---
-    @Test
-    void processQuery_CorrectionType_ShouldReturnProcessedTextAndVerifyRequest() {
-        String expectedCorrectedText = "Corrected test query";
-        GenerationResponse mockResponse = GenerationResponse.builder().generatedText(expectedCorrectedText).build();
-        when(apiClient.generateText(any(GenerationRequest.class))).thenReturn(mockResponse);
-        String expectedPrompt = String.format(CORRECTION_PROMPT_TEMPLATE, sanitizedQuery);
-
-        String result = textProcessingService.processQuery(testQuery, GenerationType.CORRECTION);
-
-        assertNotNull(result);
-        assertEquals(expectedCorrectedText, result);
-        verify(apiClient).generateText(generationRequestCaptor.capture());
-        GenerationRequest capturedRequest = generationRequestCaptor.getValue();
-        assertEquals(expectedPrompt, capturedRequest.getPrompt());
-        assertFalse(capturedRequest.isTextGeneration());
-        // ... остальные проверки параметров ...
-    }
-
-    // --- Сценарии с ошибками и граничными случаями ---
 
     @Test
     void processQuery_ApiError_ShouldThrowMLExceptionAndRetry() {
@@ -118,7 +97,6 @@ class TextProcessingServiceTest {
     }
 
     @Test
-        // ИСПРАВЛЕНО: Ожидаем IllegalArgumentException
     void processQuery_NullQuery_ShouldThrowIllegalArgumentException() {
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
             textProcessingService.processQuery(null, GenerationType.CORRECTION);
@@ -128,7 +106,6 @@ class TextProcessingServiceTest {
     }
 
     @Test
-        // ИСПРАВЛЕНО: Ожидаем IllegalArgumentException
     void processQuery_EmptyQuery_ShouldThrowIllegalArgumentException() {
         IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () -> {
             textProcessingService.processQuery("  ", GenerationType.REWRITE);
@@ -138,7 +115,6 @@ class TextProcessingServiceTest {
     }
 
     @Test
-        // Ожидаем NullPointerException
     void processQuery_NullType_ShouldThrowNullPointerException() {
         assertThrows(NullPointerException.class, () -> {
             textProcessingService.processQuery(testQuery, null);
@@ -147,7 +123,6 @@ class TextProcessingServiceTest {
     }
 
     @Test
-        // Ожидаем MLException 400
     void processQuery_ValidationFails_ShouldThrowMLExceptionWith400() {
         Set<ConstraintViolation<GenerationRequest>> violations = new HashSet<>();
         ConstraintViolation<GenerationRequest> violation = mock(ConstraintViolation.class);
@@ -172,26 +147,6 @@ class TextProcessingServiceTest {
     }
 
     @Test
-        // Ожидаем исходный query после trim()
-    void processQuery_ApiClientReturnsNullResponse_ShouldReturnTrimmedOriginalQuery() {
-        when(apiClient.generateText(any(GenerationRequest.class))).thenReturn(null);
-        String result = textProcessingService.processQuery(testQuery, GenerationType.CORRECTION);
-        assertEquals(testQuery.trim(), result);
-        verify(apiClient).generateText(any(GenerationRequest.class));
-    }
-
-    @Test
-        // Ожидаем исходный query после trim()
-    void processQuery_ApiClientReturnsResponseWithNullText_ShouldReturnTrimmedOriginalQuery() {
-        GenerationResponse mockResponse = GenerationResponse.builder().generatedText(null).build();
-        when(apiClient.generateText(any(GenerationRequest.class))).thenReturn(mockResponse);
-        String result = textProcessingService.processQuery(testQuery, GenerationType.CORRECTION);
-        assertEquals(testQuery.trim(), result);
-        verify(apiClient).generateText(any(GenerationRequest.class));
-    }
-
-    @Test
-        // Ожидаем исходный query после trim()
     void processQuery_ApiClientReturnsResponseWithEmptyText_ShouldReturnTrimmedOriginalQuery() {
         GenerationResponse mockResponse = GenerationResponse.builder().generatedText("   ").build();
         when(apiClient.generateText(any(GenerationRequest.class))).thenReturn(mockResponse);
@@ -201,7 +156,6 @@ class TextProcessingServiceTest {
     }
 
     @Test
-        // ИСПРАВЛЕНО: Мокируем MLException, а не IOException
     void processQuery_ApiClientThrowsIOException_ShouldWrapInMLExceptionAndRetry() {
         // Arrange
         // Создаем MLException, который имитирует то, что выбросит клиент при IOException

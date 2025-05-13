@@ -16,6 +16,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Controller;
 
+import java.nio.file.AccessDeniedException;
+
 @Controller
 @RequiredArgsConstructor
 @Slf4j
@@ -73,7 +75,11 @@ public class ChatWebSocketController {
      */
     @MessageMapping("/chat.claimChat")
     public void claimChat(@Payload @Valid AssignChatRequestDTO assignRequest) {
-        chatService.assignOperatorToChat(assignRequest);
+        try {
+            chatService.assignChat(assignRequest);
+        } catch (AccessDeniedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -84,6 +90,6 @@ public class ChatWebSocketController {
      */
     @MessageMapping("/chat.closeChat")
     public void closeChat(@Payload @Valid CloseChatRequestDTO closeRequest) {
-        chatService.closeChat(closeRequest);
+        chatService.closeChatByCurrentUser(closeRequest.getChatId());
     }
 }

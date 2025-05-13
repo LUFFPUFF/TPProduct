@@ -45,4 +45,10 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
     int updateStatus(@Param("chatId") Integer chatId,
                      @Param("status") ChatStatus status,
                      @Param("assignedAt") LocalDateTime assignedAt);
+
+    List<Chat> findByCompanyIdAndStatusIn(Integer companyId, Collection<ChatStatus> statuses);
+
+    Optional<Chat> findFirstByClientIdAndCompanyIdAndChatChannelAndStatusInOrderByCreatedAtDesc(Integer clientId, Integer companyId, ChatChannel chatChannel, Collection<ChatStatus> statuses);
+
+    List<Chat> findByClientIdAndCompanyId(Integer clientId, Integer companyId);
 }

@@ -20,7 +20,8 @@ public class UserRole {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-    @Enumerated
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
 

@@ -1,12 +1,17 @@
 package com.example.domain.api.chat_service_api.integration.dto.rest;
 
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-@Builder
 public class CreateTelegramConfigurationRequest {
+
+    @JsonProperty("botToken")
     private String botToken;
-    private String botName;
+
+    @JsonProperty("botUsername")
+    private String botUsername;
+
+    @JsonProperty("chatId")
     private Long chatId;
 }
