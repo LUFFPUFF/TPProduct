@@ -15,8 +15,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class SendMessageCommand {
+
     private ChatChannel channel;
+
     private Integer chatId;
+
     private Integer companyId;
 
     private String content;
@@ -24,7 +27,8 @@ public class SendMessageCommand {
     private Long telegramChatId;
 
     private String toEmailAddress;
-    private String fromEmailAddress;
-    private String subject;
 
+    private String fromEmailAddress;
+
+    private String subject;
 }

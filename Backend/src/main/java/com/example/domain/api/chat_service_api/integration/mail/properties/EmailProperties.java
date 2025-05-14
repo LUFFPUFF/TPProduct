@@ -26,4 +26,7 @@ public class EmailProperties {
 
     @Value("${email.imap_folder}")
     private String imapFolder;
+
+    @Value("${email.polling_interval_ms:10000}")
+    private Long pollingIntervalMs;
 }

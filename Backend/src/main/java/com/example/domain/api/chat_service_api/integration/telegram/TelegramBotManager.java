@@ -134,7 +134,6 @@ public class TelegramBotManager {
         companyTelegramConfigurationRepository.findByCompanyIdAndBotTokenIsNotNullAndBotTokenIsNot(companyId, "")
                 .ifPresentOrElse(
                         config -> {
-                            // Используем TelegramApiClient для отправки сообщения
                             telegramApiClient.sendMessage(config.getBotToken(), chatId, text);
                             log.debug("Sent message to chat ID {} using bot for company ID {}", chatId, companyId);
                         },

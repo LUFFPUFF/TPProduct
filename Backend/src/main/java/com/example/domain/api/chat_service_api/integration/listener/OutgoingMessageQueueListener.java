@@ -84,7 +84,7 @@ public class OutgoingMessageQueueListener {
                                 String fromEmailAddress = sendCommand.getFromEmailAddress();
                                 String subject = sendCommand.getSubject();
                                 if (toEmailAddress != null && fromEmailAddress != null) {
-                                    emailDialogBot.sendMessage(toEmailAddress, subject, sendCommand.getContent(), fromEmailAddress);
+                                    emailDialogBot.sendMessage(companyId, toEmailAddress, subject, sendCommand.getContent());
                                     log.info("Message sent via EmailDialogBot for chat ID {} (company ID {})", sendCommand.getChatId(), companyId);
                                 } else {
                                     log.error("Email addresses not found in SendMessageCommand for chat ID {} (company ID {})", sendCommand.getChatId(), companyId);
@@ -115,6 +115,5 @@ public class OutgoingMessageQueueListener {
                 // TODO: Обработать ошибку обработки: залогировать, возможно, положить команду в очередь ошибок
             }
         }
-        log.info("Outgoing message queue listener thread finished.");
     }
 }
