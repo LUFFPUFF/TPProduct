@@ -52,6 +52,9 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     private final WebSocketMessagingService messagingService;
     private final IExternalMessagingService externalMessagingService;
 
+    private static final int MAX_CONTENT_LENGTH = 255;
+    private static final String TRUNCATE_INDICATOR = "...";
+
     @Override
     @Transactional
     public MessageDto processAndSaveMessage(SendMessageRequestDTO messageRequest, Integer senderId, ChatMessageSenderType senderType) {
@@ -80,7 +83,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
         message.setSenderOperator(senderOperator);
         message.setSenderClient(senderClient);
         message.setSenderType(senderType);
-        message.setContent(messageRequest.getContent());
+        message.setContent(truncateContent(messageRequest.getContent(), MAX_CONTENT_LENGTH, TRUNCATE_INDICATOR));
         message.setExternalMessageId(messageRequest.getExternalMessageId());
         message.setReplyToExternalMessageId(messageRequest.getReplyToExternalMessageId());
         message.setSentAt(LocalDateTime.now());
@@ -188,8 +191,6 @@ public class ChatMessageServiceImpl implements IChatMessageService {
 
     @Override
     @Transactional(readOnly = true)
-    @RequireRole(allowedRoles = {Role.MANAGER, Role.OPERATOR})
-    @CheckChatCompanyAccess(idParamName = "chatId")
     public Optional<ChatMessage> findFirstMessageByChatId(Integer chatId) {
         Optional<ChatMessage> firstMessage = chatMessageRepository.findFirstByChatIdOrderBySentAtAsc(chatId);
         if (firstMessage.isPresent()) {
@@ -202,8 +203,6 @@ public class ChatMessageServiceImpl implements IChatMessageService {
 
     @Override
     @Transactional(readOnly = true)
-    @RequireRole(allowedRoles = {Role.MANAGER, Role.OPERATOR})
-    @CheckChatCompanyAccess(idParamName = "chatId")
     public Optional<Chat> findChatEntityById(Integer chatId) {
         return chatRepository.findById(chatId);
     }
@@ -263,5 +262,19 @@ public class ChatMessageServiceImpl implements IChatMessageService {
             log.info("Chat {} status updated to IN_PROGRESS (operator {} sent {} messages)",
                     chat.getId(), operator.getId(), operatorMessagesCount);
         }
+    }
+
+    private String truncateContent(String content, int maxLength, String truncateIndicator) {
+        if (content == null) {
+            return null;
+        }
+        if (content.length() <= maxLength) {
+            return content;
+        }
+        if (maxLength <= truncateIndicator.length()) {
+            return "";
+        }
+        String truncated = content.substring(0, maxLength - truncateIndicator.length());
+        return truncated + truncateIndicator;
     }
 }

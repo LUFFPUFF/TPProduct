@@ -11,6 +11,7 @@ import com.example.database.repository.company_subscription_module.UserRepositor
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
 import com.example.domain.api.chat_service_api.integration.dto.rest.CreateMailConfigurationRequest;
 import com.example.domain.api.chat_service_api.integration.dto.rest.CreateTelegramConfigurationRequest;
+import com.example.domain.api.chat_service_api.integration.mail.dialog_bot.EmailDialogBot;
 import com.example.domain.api.chat_service_api.integration.service.IIntegrationService;
 import com.example.domain.api.chat_service_api.integration.telegram.TelegramBotManager;
 import com.example.domain.security.aop.annotation.RequireRole;
@@ -34,6 +35,7 @@ public class IntegrationServiceImpl implements IIntegrationService {
     private final CompanyMailConfigurationRepository companyMailConfigurationRepository;
     private final UserRepository userRepository;
     private final TelegramBotManager telegramBotManager;
+    private final EmailDialogBot emailDialogBot;
 
     @Override
     @RequireRole(allowedRoles = {Role.MANAGER})
@@ -92,15 +94,7 @@ public class IntegrationServiceImpl implements IIntegrationService {
     @RequireRole(allowedRoles = {Role.MANAGER})
     public CompanyTelegramConfiguration createCompanyTelegramConfiguration(CreateTelegramConfigurationRequest request) throws AccessDeniedException {
 
-        UserContext userContext = UserContextHolder.getRequiredContext();
-        Integer companyId = userContext.getCompanyId();
-
-        if (companyId == null) {
-            throw new AccessDeniedException("User is not associated with a company.");
-        }
-
-        Optional<User> userOpt = userRepository.findById(userContext.getUserId());
-        User userEntity = userOpt.orElseThrow(() -> new ResourceNotFoundException("User with id " + userContext.getUserId() + " not found"));
+        User userEntity = getUser();
         Company company = userEntity.getCompany();
 
         Optional<CompanyTelegramConfiguration> existingConfigOpt = companyTelegramConfigurationRepository
@@ -143,18 +137,43 @@ public class IntegrationServiceImpl implements IIntegrationService {
             config.setCreatedAt(LocalDateTime.now());
         }
 
-        config.setEmailAddress(request.getEmail() != null ? request.getEmail().trim() : null);
-        config.setAppPassword(request.getPassword() != null ? request.getPassword().trim() : null);
-        config.setImapServer(request.getImapHost() != null ? request.getImapHost().trim() : null);
+        config.setEmailAddress(request.getEmailAddress() != null ? request.getEmailAddress().trim() : null);
+        config.setAppPassword(request.getAppPassword() != null ? request.getAppPassword().trim() : null);
+        config.setImapServer(getImapServer(config));
+        config.setSmtpServer(getSmtpServer(config));
         config.setImapPort(993);
         config.setFolder("INBOX");
         config.setUpdatedAt(LocalDateTime.now());
 
+        CompanyMailConfiguration configuration = companyMailConfigurationRepository.save(config);
 
-        return companyMailConfigurationRepository.save(config);
+        emailDialogBot.startOrUpdatePollingForCompany(company.getId());
+
+        return configuration;
+    }
+
+    private String getSmtpServer(CompanyMailConfiguration config) {
+        if (config.getEmailAddress().contains("gmail")) {
+            return "smtp.gmail.com";
+        } else {
+            return "smtp.yandex.com";
+        }
+    }
+
+    private String getImapServer(CompanyMailConfiguration config) {
+        if (config.getEmailAddress().contains("gmail")) {
+            return "imap.gmail.com";
+        } else {
+            return "imap.yandex.com";
+        }
     }
 
     private Company getCompany() throws AccessDeniedException {
+        User userEntity = getUser();
+        return userEntity.getCompany();
+    }
+
+    private User getUser() throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer companyId = userContext.getCompanyId();
 
@@ -163,7 +182,6 @@ public class IntegrationServiceImpl implements IIntegrationService {
         }
 
         Optional<User> userOpt = userRepository.findById(userContext.getUserId());
-        User userEntity = userOpt.orElseThrow(() -> new ResourceNotFoundException("User with id " + userContext.getUserId() + " not found"));
-        return userEntity.getCompany();
+        return userOpt.orElseThrow(() -> new ResourceNotFoundException("User with id " + userContext.getUserId() + " not found"));
     }
 }

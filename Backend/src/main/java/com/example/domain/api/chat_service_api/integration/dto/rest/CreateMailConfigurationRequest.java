@@ -1,6 +1,6 @@
 package com.example.domain.api.chat_service_api.integration.dto.rest;
 
-import com.example.database.model.company_subscription_module.company.Company;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,8 +8,9 @@ import lombok.Data;
 @Builder
 public class CreateMailConfigurationRequest {
 
-    private String email;
-    private String password;
-    private String imapHost;
+    @JsonProperty("emailAddress")
+    private String emailAddress;
 
+    @JsonProperty("appPassword")
+    private String appPassword;
 }

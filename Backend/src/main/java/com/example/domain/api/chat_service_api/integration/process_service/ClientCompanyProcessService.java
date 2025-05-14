@@ -43,6 +43,9 @@ public class ClientCompanyProcessService {
     private final IAssignmentService assignmentService;
     private final ChatRepository chatRepository;
 
+    private static final int MAX_CONTENT_LENGTH = 255;
+    private static final String TRUNCATE_INDICATOR = "...";
+
     @Transactional
     public void processTelegram(TelegramResponse telegramResponse) {
         CompanyTelegramConfiguration configuration =
@@ -93,49 +96,73 @@ public class ClientCompanyProcessService {
     }
 
     @Transactional
-    public void processEmail(String companyGmailUsername, EmailResponse emailResponse) {
-        CompanyMailConfiguration gmailConfiguration =
-                gmailConfigurationRepository.findByEmailAddress(companyGmailUsername)
-                        .orElseThrow(() -> new ResourceNotFoundException("Gmail configuration not found"));
+    public void processEmail(String companyEmailAddress, EmailResponse emailResponse) {
+        log.info("Processing incoming email for account: {}", companyEmailAddress);
+        CompanyMailConfiguration mailConfiguration =
+                gmailConfigurationRepository.findByEmailAddress(companyEmailAddress)
+                        .orElseThrow(() -> new ResourceNotFoundException("Email configuration not found for address: " + companyEmailAddress));
 
-        Company company = gmailConfiguration.getCompany();
+        Company company = mailConfiguration.getCompany();
         String clientEmail = emailResponse.getFrom();
 
         Client client = clientService.findByName(clientEmail)
-                .orElseGet(() -> clientService.createClient(clientEmail, company.getId(), null));
+                .orElseGet(() -> {
+                    log.info("Creating new client for email address: {}", clientEmail);
+                    return clientService.createClient(clientEmail, company.getId(), null);
+                });
 
         Optional<Chat> existingOpenChat = chatService.findOpenChatByClientAndChannel(client.getId(), ChatChannel.Email);
 
-        if (existingOpenChat.isPresent()) {
+        String fullEmailContent = formatEmailContent(emailResponse);
 
+        if (existingOpenChat.isPresent()) {
             Chat chat = existingOpenChat.get();
+            log.info("Processing incoming email for existing chat ID {}.", chat.getId());
 
             SendMessageRequestDTO messageRequest = new SendMessageRequestDTO();
-            messageRequest.setChatId(existingOpenChat.get().getId());
-            messageRequest.setContent("Subject: " + emailResponse.getSubject() + "\n\n" + emailResponse.getContent());
+            messageRequest.setChatId(chat.getId());
+            messageRequest.setContent(truncateContent(fullEmailContent, MAX_CONTENT_LENGTH, TRUNCATE_INDICATOR));
             messageRequest.setSenderId(client.getId());
             messageRequest.setSenderType(ChatMessageSenderType.CLIENT);
+            // TODO: Возможно, стоит сохранить полное содержимое письма в отдельном поле или в файле, если оно длинное
 
             MessageDto messageDto = chatMessageService.processAndSaveMessage(messageRequest,
                     messageRequest.getSenderId(),
                     messageRequest.getSenderType());
 
             if (containsOperatorRequest(emailResponse.getContent())) {
-                log.info("Operator request detected in chat {}", chat.getId());
+                log.info("Operator request detected in Email chat {}", chat.getId());
                 assignOperatorToChat(chat);
             } else {
                 processAutoResponder(chat, messageDto);
             }
+            log.info("Processed incoming email message (chat ID {}).", chat.getId());
 
         } else {
+            log.info("Creating new chat for incoming email from {}.", clientEmail);
             CreateChatRequestDTO createChatRequest = new CreateChatRequestDTO();
             createChatRequest.setClientId(client.getId());
             createChatRequest.setCompanyId(company.getId());
             createChatRequest.setChatChannel(ChatChannel.Email);
-            createChatRequest.setInitialMessageContent(formatEmailContent(emailResponse));
+            createChatRequest.setInitialMessageContent(truncateContent(fullEmailContent, MAX_CONTENT_LENGTH, TRUNCATE_INDICATOR));
 
             chatService.createChat(createChatRequest);
+            log.info("Created new chat for email client {}.", clientEmail);
         }
+    }
+
+    private String truncateContent(String content, int maxLength, String truncateIndicator) {
+        if (content == null) {
+            return null;
+        }
+        if (content.length() <= maxLength) {
+            return content;
+        }
+        if (maxLength <= truncateIndicator.length()) {
+            return "";
+        }
+        String truncated = content.substring(0, maxLength - truncateIndicator.length());
+        return truncated + truncateIndicator;
     }
 
     private String formatEmailContent(EmailResponse emailResponse) {

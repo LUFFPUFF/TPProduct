@@ -5,6 +5,11 @@ spring:
     livereload:
       enabled: false
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username:
+
 
   datasource:
     url: jdbc:postgresql://localhost:5432/ans_machine_db
@@ -119,6 +124,8 @@ email:
   imap_ssl_enable: true
   imap_store: "imaps"
   imap_folder: "INBOX"
+  polling_interval_ms: 10000
+
 
 nlp:
   lemmatizer:

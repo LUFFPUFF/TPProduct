@@ -63,7 +63,7 @@ public class BotPollingProcess implements Runnable {
             try {
                 List<Update> updates = telegramApiClient.getUpdates(configuration.getBotToken(), offset);
                 for (Update update : updates) {
-                    processUpdate(update, botId, configuration.getBotUsername()); // Передаем ID и имя бота
+                    processUpdate(update, botId, configuration.getBotUsername());
                     offset = update.getUpdateId() + 1;
                 }
                 Thread.sleep(POLLING_INTERVAL_MS);

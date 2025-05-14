@@ -94,7 +94,7 @@ public class ExternalMessagingServiceImpl implements IExternalMessagingService {
                             });
 
                     String fromEmailAddress  = mailConfig.getEmailAddress();
-                    String emailSubject = "Re: Ваш чат #" + chat.getId();
+                    String emailSubject = "Company DialogX - чат с клиентом";
 
                     sendMessageCommand = SendMessageCommand.builder()
                             .channel(ChatChannel.Email)

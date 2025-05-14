@@ -52,6 +52,7 @@ import static com.example.domain.api.chat_service_api.service.impl.LeastBusyAssi
 @Service
 @RequiredArgsConstructor
 @Slf4j
+//TODO полный рефакторинг ChatServiceImpl
 public class ChatServiceImpl implements IChatService {
 
     private final ChatRepository chatRepository;

@@ -2,20 +2,16 @@ package com.example.domain.api.chat_service_api.integration.mail.parser;
 
 import com.example.database.model.company_subscription_module.company.CompanyMailConfiguration;
 import com.example.domain.api.chat_service_api.integration.mail.properties.EmailProperties;
-import com.example.domain.api.chat_service_api.integration.mail.response.EmailResponse;
 
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 
 public class YandexParser extends AbstractEmailParser {
 
-    private final EmailProperties emailProperties;
-
     public YandexParser(CompanyMailConfiguration emailConfig,
-                        BlockingQueue<EmailResponse> messageQueue,
+                        BlockingQueue<Object> incomingMessageQueue,
                         EmailProperties emailProperties) {
-        super(emailConfig, emailProperties, messageQueue);
-        this.emailProperties = emailProperties;
+        super(emailConfig, incomingMessageQueue, emailProperties);
     }
 
     @Override

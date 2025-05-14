@@ -29,6 +29,9 @@ public class CompanyMailConfiguration {
     @Column(name = "imap_server", nullable = false)
     private String imapServer;
 
+    @Column(name = "smtp_server")
+    private String smtpServer;
+
     @Column(name = "imap_port", nullable = false)
     private Integer imapPort = 993;
 
