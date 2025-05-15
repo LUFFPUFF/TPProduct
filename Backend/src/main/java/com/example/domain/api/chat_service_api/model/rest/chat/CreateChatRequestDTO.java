@@ -18,4 +18,6 @@ public class CreateChatRequestDTO {
 
     @Size(max = 1000)
     private String initialMessageContent;
+
+    private String externalChatId;
 }

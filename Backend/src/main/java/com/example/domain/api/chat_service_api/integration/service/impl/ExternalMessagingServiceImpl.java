@@ -9,12 +9,12 @@ import com.example.database.model.crm_module.client.Client;
 import com.example.database.repository.chats_messages_module.ChatRepository;
 import com.example.database.repository.company_subscription_module.CompanyMailConfigurationRepository;
 import com.example.database.repository.company_subscription_module.CompanyTelegramConfigurationRepository;
+import com.example.database.repository.company_subscription_module.CompanyWhatsappConfigurationRepository;
 import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.exception.ExternalMessagingException;
 import com.example.domain.api.chat_service_api.integration.listener.SendMessageCommand;
 import com.example.domain.api.chat_service_api.integration.service.IExternalMessagingService;
-import com.example.domain.api.chat_service_api.service.IChatMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,6 +31,7 @@ public class ExternalMessagingServiceImpl implements IExternalMessagingService {
     private final BlockingQueue<Object> outgoingMessageQueue;
     private final CompanyMailConfigurationRepository mailConfigRepository;
     private final CompanyTelegramConfigurationRepository companyTelegramConfigurationRepository;
+    private final CompanyWhatsappConfigurationRepository whatsappConfigurationRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -64,7 +65,7 @@ public class ExternalMessagingServiceImpl implements IExternalMessagingService {
             throw new ResourceNotFoundException("Company not found or invalid for chat ID " + chatId);
         }
 
-        Object sendMessageCommand;
+        SendMessageCommand sendMessageCommand;
         try {
             switch (channel) {
                 case Telegram -> {
@@ -105,6 +106,51 @@ public class ExternalMessagingServiceImpl implements IExternalMessagingService {
                             .toEmailAddress(clientEmailAddress)
                             .fromEmailAddress(fromEmailAddress)
                             .subject(emailSubject)
+                            .build();
+                }
+
+                case WhatsApp -> {
+                    String whatsappRecipientPhoneNumber = client.getName();
+                    if (whatsappRecipientPhoneNumber == null || whatsappRecipientPhoneNumber.trim().isEmpty()) {
+                        log.error("Client phone number not found for chat ID {} (client ID {}). Cannot send WhatsApp message.", chatId, client.getId());
+                        throw new ResourceNotFoundException("Client phone number not found for WhatsApp messaging.");
+                    }
+
+                    whatsappConfigurationRepository.findByCompanyIdAndAccessTokenIsNotNullAndAccessTokenIsNot(company.getId(), "")
+                            .orElseThrow(() -> {
+                                log.error("WhatsApp configuration not found for company ID {} (chat ID {}).", company.getId(), chatId);
+                                return new ResourceNotFoundException("WhatsApp configuration not found for company ID " + company.getId());
+                            });
+
+                    sendMessageCommand = SendMessageCommand.builder()
+                            .channel(ChatChannel.WhatsApp)
+                            .chatId(Math.toIntExact(Long.valueOf(chatId)))
+                            .companyId(company.getId())
+                            .content(messageContent)
+                            .whatsappRecipientPhoneNumber(whatsappRecipientPhoneNumber)
+                            .build();
+                }
+
+                case VK -> {
+                    String vkPeerIdStr = chat.getExternalChatId();
+                    if (vkPeerIdStr == null || vkPeerIdStr.trim().isEmpty()) {
+                        log.error("External chat ID (VK peer ID) not found in chat {} for VK channel.", chatId);
+                        throw new ExternalMessagingException("VK peer ID is missing for VK chat.");
+                    }
+                    long vkPeerId;
+                    try {
+                        vkPeerId = Long.parseLong(vkPeerIdStr);
+                    } catch (NumberFormatException e) {
+                        log.error("Invalid VK peer ID format in chat {}: {}", chatId, vkPeerIdStr);
+                        throw new ExternalMessagingException("Invalid VK peer ID format.");
+                    }
+
+                    sendMessageCommand = SendMessageCommand.builder()
+                            .channel(ChatChannel.VK)
+                            .chatId(chatId)
+                            .companyId(company.getId())
+                            .content(messageContent)
+                            .vkPeerId(vkPeerId)
                             .build();
                 }
 

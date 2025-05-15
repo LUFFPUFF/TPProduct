@@ -11,7 +11,7 @@ import com.example.database.repository.company_subscription_module.UserRepositor
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
 import com.example.domain.api.chat_service_api.integration.dto.rest.CreateMailConfigurationRequest;
 import com.example.domain.api.chat_service_api.integration.dto.rest.CreateTelegramConfigurationRequest;
-import com.example.domain.api.chat_service_api.integration.mail.dialog_bot.EmailDialogBot;
+import com.example.domain.api.chat_service_api.integration.mail.manager.EmailDialogManager;
 import com.example.domain.api.chat_service_api.integration.service.IIntegrationService;
 import com.example.domain.api.chat_service_api.integration.telegram.TelegramBotManager;
 import com.example.domain.security.aop.annotation.RequireRole;
@@ -35,7 +35,7 @@ public class IntegrationServiceImpl implements IIntegrationService {
     private final CompanyMailConfigurationRepository companyMailConfigurationRepository;
     private final UserRepository userRepository;
     private final TelegramBotManager telegramBotManager;
-    private final EmailDialogBot emailDialogBot;
+    private final EmailDialogManager emailDialogManager;
 
     @Override
     @RequireRole(allowedRoles = {Role.MANAGER})
@@ -147,7 +147,7 @@ public class IntegrationServiceImpl implements IIntegrationService {
 
         CompanyMailConfiguration configuration = companyMailConfigurationRepository.save(config);
 
-        emailDialogBot.startOrUpdatePollingForCompany(company.getId());
+        emailDialogManager.startOrUpdatePollingForCompany(company.getId());
 
         return configuration;
     }

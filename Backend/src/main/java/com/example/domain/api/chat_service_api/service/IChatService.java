@@ -59,6 +59,8 @@ public interface IChatService {
      */
     Optional<Chat> findOpenChatByClientAndChannel(Integer clientId, ChatChannel channel);
 
+    Optional<Chat> findOpenChatByClientAndChannelAndExternalId(Integer clientId, ChatChannel channel, String externalChatId);
+
     /**
      * Находит первый открытый чат для клиента (без учета канала).
      * Предполагается для внутренней логики, не привязан к UserContext.

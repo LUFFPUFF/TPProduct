@@ -5,11 +5,6 @@ spring:
     livereload:
       enabled: false
 
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username:
-
 
   datasource:
     url: jdbc:postgresql://localhost:5432/ans_machine_db
