@@ -43,7 +43,7 @@ public class SecurityConfig  {
         .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth","/api/registration").permitAll()
+                        .requestMatchers("/api/auth/**","/api/registration/**").permitAll()
                         .requestMatchers("/api/subscription/extend","/api/company/add").hasAuthority(Role.MANAGER.getAuthority())
                         .requestMatchers("/test/operator-only").hasAuthority(Role.OPERATOR.getAuthority())
                         .requestMatchers("/api/ui/","/api/company/get").hasAnyAuthority(Role.OPERATOR.getAuthority(), Role.MANAGER.getAuthority())
