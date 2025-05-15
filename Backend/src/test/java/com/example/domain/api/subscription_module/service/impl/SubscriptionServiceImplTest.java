@@ -273,7 +273,7 @@ class SubscriptionServiceImplTest {
         BigDecimal calculatedPrice = new BigDecimal("500.75");
         when(subscriptionPriceCalculateService.calculateTotalPrice(priceReqDto)).thenReturn(calculatedPrice);
 
-        Float result = subscriptionService.countPrice(priceReqDto);
+        Float result = subscriptionService.countPrice(priceReqDto).getPrice();
 
         assertNotNull(result);
         assertEquals(calculatedPrice.floatValue(), result);

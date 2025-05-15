@@ -1,8 +1,12 @@
 package com.example.domain.api.authentication_module.security.config;
 
 import com.example.database.model.company_subscription_module.user_roles.user.Role;
+import com.example.domain.api.authentication_module.security.filter.SubscriptionCheckFilter;
+import com.example.domain.api.authentication_module.security.jwtUtils.AuthCookieService;
 import com.example.domain.api.authentication_module.security.jwtUtils.JwtRequestFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -10,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,6 +28,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 public class SecurityConfig  {
     private final JwtRequestFilter jwtRequestFilter;
+    private final AuthCookieService authCookieService;
+    private final SubscriptionCheckFilter subscriptionCheckFilter;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -30,22 +37,36 @@ public class SecurityConfig  {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(CsrfConfigurer::disable)
+        http
+                .csrf(CsrfConfigurer::disable)
+                .anonymous(AbstractHttpConfigurer::disable)
         .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/test/all-perm").permitAll()
-                        .requestMatchers("/test/manager-only").hasAuthority(Role.MANAGER.getAuthority())
+                        .requestMatchers("/api/auth/**","/api/registration/**").permitAll()
+                        .requestMatchers("/api/subscription/extend","/api/company/add").hasAuthority(Role.MANAGER.getAuthority())
                         .requestMatchers("/test/operator-only").hasAuthority(Role.OPERATOR.getAuthority())
-                        .requestMatchers("/test/company-data").hasAnyAuthority(Role.OPERATOR.getAuthority(), Role.MANAGER.getAuthority())
+                        .requestMatchers("/api/ui/**","/api/company/get").hasAnyAuthority(Role.OPERATOR.getAuthority(), Role.MANAGER.getAuthority())
                         .requestMatchers("/test/no-perm").denyAll()
                         .requestMatchers("/test/auth-only").authenticated()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(exp -> exp
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\": \"Unauthorized\"}");
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            authCookieService.ExpireTokenCookie(response);
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\": \"Access Denied\"}");
+                        })
+                )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-                .formLogin(withDefaults())
+                .addFilterAfter(subscriptionCheckFilter, UsernamePasswordAuthenticationFilter.class)
+                .formLogin(AbstractHttpConfigurer::disable)
                 .logout(logout -> logout.logoutSuccessUrl("/all-perm"));
 
         return http.build();

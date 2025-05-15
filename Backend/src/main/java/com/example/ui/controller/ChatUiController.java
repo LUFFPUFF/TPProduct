@@ -1,6 +1,13 @@
 package com.example.ui.controller;
 
 import com.example.database.model.chats_messages_module.chat.ChatStatus;
+import com.example.database.model.company_subscription_module.company.Company;
+import com.example.database.model.company_subscription_module.user_roles.user.User;
+import com.example.database.model.crm_module.client.Client;
+import com.example.domain.api.authentication_module.service.interfaces.CurrentUserDataService;
+import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundException;
+import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
+import com.example.domain.api.chat_service_api.exception_handler.exception.service.ChatServiceException;
 import com.example.domain.api.chat_service_api.model.dto.ChatDTO;
 import com.example.domain.api.chat_service_api.model.dto.ChatDetailsDTO;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
@@ -8,6 +15,7 @@ import com.example.domain.api.chat_service_api.model.rest.chat.AssignChatRequest
 import com.example.domain.api.chat_service_api.model.rest.chat.CreateChatRequestDTO;
 import com.example.domain.api.chat_service_api.service.*;
 import com.example.ui.mapper.chat.UIMessageMapper;
+import com.example.ui.mapper.chat.UINotificationMapper;
 import com.example.ui.mapper.chat.UiChatMapper;
 import com.example.ui.dto.chat.ChatUIDetailsDTO;
 import com.example.ui.dto.chat.UIChatDto;
@@ -35,6 +43,13 @@ public class ChatUiController {
     private final IChatService chatService;
     private final UiChatMapper chatMapper;
     private final UIMessageMapper messageMapper;
+    private final UINotificationMapper notificationMapper;
+    private final CurrentUserDataService userDataService;
+
+    private Integer getCurrentOperatorId() {
+
+        return userDataService.getUser().getId();
+    }
 
     /**
      * Получает полные детали конкретного чата по его ID.

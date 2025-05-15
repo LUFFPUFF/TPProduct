@@ -43,6 +43,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 }
 
                 putContext(tokens.getAccess_token());
+            }else {
+                authCookieService.ExpireTokenCookie(response);
             }
         }
 
