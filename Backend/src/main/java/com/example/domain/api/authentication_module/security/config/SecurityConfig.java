@@ -4,6 +4,7 @@ import com.example.database.model.company_subscription_module.user_roles.user.Ro
 import com.example.domain.api.authentication_module.security.filter.SubscriptionCheckFilter;
 import com.example.domain.api.authentication_module.security.jwtUtils.AuthCookieService;
 import com.example.domain.api.authentication_module.security.jwtUtils.JwtRequestFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.context.annotation.Bean;
@@ -51,16 +52,21 @@ public class SecurityConfig  {
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exp -> exp
-                        .authenticationEntryPoint(
-                                (request, response, authException) -> response.sendRedirect("/login")
-                        )
-                        .accessDeniedHandler((request, response, accessDeniedException) ->{
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\": \"Unauthorized\"}");
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
                             authCookieService.ExpireTokenCookie(response);
-                            response.sendRedirect("https://dialogx.ru/login");
-                        }))
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"error\": \"Access Denied\"}");
+                        })
+                )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(subscriptionCheckFilter, UsernamePasswordAuthenticationFilter.class)
-                .formLogin(withDefaults())
+                .formLogin(AbstractHttpConfigurer::disable)
                 .logout(logout -> logout.logoutSuccessUrl("/all-perm"));
 
         return http.build();
