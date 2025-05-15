@@ -48,7 +48,9 @@ public class SecurityConfig  {
                         .anyRequest().permitAll()
                 )
                 .exceptionHandling(exp -> exp
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                        .authenticationEntryPoint(
+                                (request, response, authException) -> response.sendRedirect("/login")
+                        )
                         .accessDeniedHandler((request, response, accessDeniedException) ->{
                             authCookieService.ExpireTokenCookie(response);
                             response.sendRedirect("/login");
