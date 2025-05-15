@@ -56,7 +56,7 @@ public class SecurityConfig  {
                         )
                         .accessDeniedHandler((request, response, accessDeniedException) ->{
                             authCookieService.ExpireTokenCookie(response);
-                            response.sendRedirect("/login");
+                            response.sendRedirect("https://dialogx.ru/login");
                         }))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(subscriptionCheckFilter, UsernamePasswordAuthenticationFilter.class)
