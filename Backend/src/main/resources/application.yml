@@ -170,6 +170,8 @@ websocket:
       user-destination-prefix: /user
 subscription:
   price: 790
+server:
+  forward-headers-strategy: framework
 
 
 
