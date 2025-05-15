@@ -22,6 +22,8 @@ public class SendMessageCommand {
 
     private Integer companyId;
 
+    private Long vkPeerId;
+
     private String content;
 
     private Long telegramChatId;
@@ -31,4 +33,6 @@ public class SendMessageCommand {
     private String fromEmailAddress;
 
     private String subject;
+
+    private String whatsappRecipientPhoneNumber;
 }

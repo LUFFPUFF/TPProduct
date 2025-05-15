@@ -51,4 +51,11 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
     Optional<Chat> findFirstByClientIdAndCompanyIdAndChatChannelAndStatusInOrderByCreatedAtDesc(Integer clientId, Integer companyId, ChatChannel chatChannel, Collection<ChatStatus> statuses);
 
     List<Chat> findByClientIdAndCompanyId(Integer clientId, Integer companyId);
+
+    Optional<Chat> findFirstByClientIdAndChatChannelAndExternalChatIdAndStatusInOrderByCreatedAtDesc(
+            Integer clientId,
+            ChatChannel chatChannel,
+            String externalChatId,
+            Collection<ChatStatus> statuses
+    );
 }

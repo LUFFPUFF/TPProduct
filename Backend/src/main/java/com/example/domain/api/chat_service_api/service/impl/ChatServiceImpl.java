@@ -85,7 +85,7 @@ public class ChatServiceImpl implements IChatService {
             throw new ChatServiceException("Open chat already exists for this client and channel.");
         }
 
-        Chat chat = createChatEntity(client, company, createRequest.getChatChannel());
+        Chat chat = createChatEntity(client, company, createRequest);
         log.debug("Created initial chat entity with ID: {}", chat.getId());
 
         Chat savedChat = chatRepository.save(chat);
@@ -274,6 +274,29 @@ public class ChatServiceImpl implements IChatService {
         }
         return foundChat;
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Chat> findOpenChatByClientAndChannelAndExternalId(Integer clientId, ChatChannel channel, String externalChatId) {
+        if (clientId == null || channel == null || externalChatId == null || externalChatId.trim().isEmpty()) {
+            log.warn("Attempted to search for chat with null/empty parameters: clientId={}, channel={}, externalChatId={}", clientId, channel, externalChatId);
+            return Optional.empty();
+        }
+
+        Optional<Chat> foundChat = chatRepository
+                .findFirstByClientIdAndChatChannelAndExternalChatIdAndStatusInOrderByCreatedAtDesc(
+                        clientId, channel, externalChatId, OPEN_CHAT_STATUSES);
+
+        if(foundChat.isPresent()) {
+            log.debug("Found open chat ID {} for client {} on channel {} with external ID {}",
+                    foundChat.get().getId(), clientId, channel, externalChatId);
+        } else {
+            log.debug("No open chat found for client {} on channel {} with external ID {}",
+                    clientId, channel, externalChatId);
+        }
+        return foundChat;
+    }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -555,16 +578,17 @@ public class ChatServiceImpl implements IChatService {
         throw new UnsupportedOperationException("findChatByExternalId Not implemented yet");
     }
 
-    private Chat createChatEntity(Client client, Company company, ChatChannel channel) {
+    private Chat createChatEntity(Client client, Company company, CreateChatRequestDTO createChatRequestDTO) {
         Chat chat = new Chat();
         chat.setClient(client);
         chat.setCompany(company);
-        chat.setChatChannel(channel);
+        chat.setChatChannel(createChatRequestDTO.getChatChannel());
         chat.setStatus(ChatStatus.PENDING_AUTO_RESPONDER);
         chat.setCreatedAt(LocalDateTime.now());
         chat.setUser(null);
         chat.setAssignedAt(null);
         chat.setClosedAt(null);
+        chat.setExternalChatId(createChatRequestDTO.getExternalChatId() != null ? createChatRequestDTO.getExternalChatId() : null);
         log.debug("Created initial chat entity.");
 
         return chat;

@@ -1,7 +1,9 @@
 package com.example.domain.api.chat_service_api.integration.listener;
 
-import com.example.domain.api.chat_service_api.integration.mail.dialog_bot.EmailDialogBot;
+import com.example.domain.api.chat_service_api.integration.mail.manager.EmailDialogManager;
 import com.example.domain.api.chat_service_api.integration.telegram.TelegramBotManager;
+import com.example.domain.api.chat_service_api.integration.vk.VkBotManager;
+import com.example.domain.api.chat_service_api.integration.whats_app.WhatsappBotManager;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,9 @@ public class OutgoingMessageQueueListener {
     private final BlockingQueue<Object> outgoingMessageQueue;
 
     private final TelegramBotManager telegramBotManager;
-    private final EmailDialogBot emailDialogBot;
+    private final EmailDialogManager emailDialogManager;
+    private final VkBotManager vkBotManager;
+    private final WhatsappBotManager whatsappBotManager;
 
     private volatile boolean running = true;
     private Thread listenerThread;
@@ -59,6 +63,8 @@ public class OutgoingMessageQueueListener {
 
                 if (command instanceof SendMessageCommand sendCommand) {
                     Integer companyId = sendCommand.getCompanyId();
+                    Integer chatId = sendCommand.getChatId();
+
                     if (companyId == null) {
                         log.error("SendMessageCommand received without company ID. Cannot route message.");
                         continue;
@@ -84,10 +90,28 @@ public class OutgoingMessageQueueListener {
                                 String fromEmailAddress = sendCommand.getFromEmailAddress();
                                 String subject = sendCommand.getSubject();
                                 if (toEmailAddress != null && fromEmailAddress != null) {
-                                    emailDialogBot.sendMessage(companyId, toEmailAddress, subject, sendCommand.getContent());
+                                    emailDialogManager.sendMessage(companyId, toEmailAddress, subject, sendCommand.getContent());
                                     log.info("Message sent via EmailDialogBot for chat ID {} (company ID {})", sendCommand.getChatId(), companyId);
                                 } else {
                                     log.error("Email addresses not found in SendMessageCommand for chat ID {} (company ID {})", sendCommand.getChatId(), companyId);
+                                }
+                                break;
+
+                            case VK:
+                                Long vkPeerId = sendCommand.getVkPeerId();
+                                vkBotManager.sendVkMessage(companyId, vkPeerId, sendCommand.getContent());
+                                log.info("Message sent via VkBotManager for peer ID {} (company ID {})", vkPeerId, companyId);
+                                break;
+
+                            case WhatsApp:
+                                String whatsappRecipientPhoneNumber = sendCommand.getWhatsappRecipientPhoneNumber();
+
+                                if (whatsappRecipientPhoneNumber != null && !whatsappRecipientPhoneNumber.trim().isEmpty()) {
+                                    whatsappBotManager.sendWhatsappMessage(companyId, whatsappRecipientPhoneNumber, sendCommand.getContent());
+                                    log.info("Message sent via WhatsappBotManager to phone {} (company ID {})", whatsappRecipientPhoneNumber, companyId);
+                                } else {
+                                    log.error("WhatsApp recipient phone number not found in SendMessageCommand for chat ID {} " +
+                                            "(company ID {}). Attempting to resolve from chat...", chatId, companyId);
                                 }
                                 break;
 
