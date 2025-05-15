@@ -1,15 +1,20 @@
 package com.example.domain.api.authentication_module.security;
 
+import com.example.database.model.company_subscription_module.user_roles.user.Role;
 import com.example.database.repository.company_subscription_module.UserRepository;
 import com.example.database.repository.company_subscription_module.UserRoleRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -26,4 +31,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                         userRoleRepository.findRolesByEmail(email)))
                 .orElseThrow(() -> new UsernameNotFoundException(email));
     }
+
+
 }

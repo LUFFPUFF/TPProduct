@@ -1,7 +1,9 @@
 package com.example.domain.api.subscription_module.service.impl;
 
+import com.example.database.model.company_subscription_module.subscription.Subscription;
 import com.example.domain.api.subscription_module.config.SubscriptionConfig;
 import com.example.domain.api.subscription_module.service.SubscriptionPriceCalculateService;
+import com.example.domain.dto.SubscriptionExtendPriceDto;
 import com.example.domain.dto.SubscriptionPriceReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,21 @@ public class SubscriptionPriceCalculateServiceImpl implements SubscriptionPriceC
         int months= subscriptionPriceReqDto.getMonths_count();
         int people = subscriptionPriceReqDto.getOperators_count();
         BigDecimal discount = (new BigDecimal("0.5").min(calculateDiscountMonths(months).add(calculateDiscountPeople(people))));
+        BigDecimal totalPrice = BigDecimal.ONE.subtract(discount);
+        totalPrice = totalPrice.multiply(subscriptionConfig.getPrice())
+                .multiply(BigDecimal.valueOf(people))
+                .multiply(BigDecimal.valueOf(months)).setScale(2, RoundingMode.HALF_DOWN);
+
+        return totalPrice;
+    }
+
+    @Override
+    public BigDecimal calculateTotalPrice(SubscriptionExtendPriceDto subscriptionPriceReqDto, Subscription subscription) {
+        int months= subscriptionPriceReqDto.getMonths_count();
+        int people = subscriptionPriceReqDto.getOperators_count();
+        BigDecimal discount = (new BigDecimal("0.5")
+                .min(calculateDiscountMonths(months)
+                        .add(calculateDiscountPeople(people+subscription.getCountOperators()))));
         BigDecimal totalPrice = BigDecimal.ONE.subtract(discount);
         totalPrice = totalPrice.multiply(subscriptionConfig.getPrice())
                 .multiply(BigDecimal.valueOf(people))

@@ -26,7 +26,6 @@ public class SubscribeDataMapper {
         subscription.setCreatedAt(LocalDateTime.now());
         subscription.setUpdatedAt(LocalDateTime.now());
         subscription.setStatus(SubscriptionStatus.ACTIVE);
-
         switch (dataDto.getTariff()){
             case TEST -> {
                 subscription.setMaxOperators(1);
