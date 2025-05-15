@@ -15,6 +15,7 @@ import com.example.domain.api.chat_service_api.model.rest.chat.AssignChatRequest
 import com.example.domain.api.chat_service_api.model.rest.chat.CreateChatRequestDTO;
 import com.example.domain.api.chat_service_api.service.*;
 import com.example.ui.mapper.chat.UIMessageMapper;
+import com.example.ui.mapper.chat.UINotificationMapper;
 import com.example.ui.mapper.chat.UiChatMapper;
 import com.example.ui.dto.chat.ChatUIDetailsDTO;
 import com.example.ui.dto.chat.UIChatDto;

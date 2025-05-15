@@ -5,16 +5,11 @@ spring:
     livereload:
       enabled: false
 
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username:
-
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/ans_machine_db
-    username: nikita
-    password: nikita090504
+    url: jdbc:postgresql://postgres:5432/ans_machine_db
+    username: postgres
+    password: p855060123d
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
@@ -78,7 +73,7 @@ jwt:
   secret: "sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3"
   access-expiration: 100000
   refresh-expiration: 86400000
-  isLocal: true
+  isLocal: false
 
 # Настройки чатов
 chat:
@@ -124,8 +119,6 @@ email:
   imap_ssl_enable: true
   imap_store: "imaps"
   imap_folder: "INBOX"
-  polling_interval_ms: 10000
-
 
 nlp:
   lemmatizer:
