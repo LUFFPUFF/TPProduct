@@ -28,8 +28,7 @@ import com.example.domain.api.chat_service_api.model.rest.chat.CloseChatRequestD
 import com.example.domain.api.chat_service_api.model.rest.chat.CreateChatRequestDTO;
 import com.example.domain.api.chat_service_api.model.rest.mesage.SendMessageRequestDTO;
 import com.example.domain.api.chat_service_api.service.*;
-import com.example.domain.security.aop.annotation.RequireRole;
-import com.example.domain.security.aop.annotation.SecureChatAccess;
+
 import com.example.domain.security.model.UserContext;
 import com.example.domain.security.util.UserContextHolder;
 import lombok.RequiredArgsConstructor;
@@ -114,7 +113,6 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-    @RequireRole(allowedRoles = {Role.MANAGER, Role.OPERATOR})
     public ChatDetailsDTO createChatWithOperatorFromUI(CreateChatRequestDTO createRequest) throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
         User currentUser = userService.findById(userContext.getUserId())
@@ -190,8 +188,7 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-    @RequireRole(allowedRoles = {Role.MANAGER})
-    @SecureChatAccess(idParamName = "chatId")
+
     public ChatDetailsDTO requestOperatorEscalation(Integer chatId, Integer clientId) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
@@ -239,8 +236,7 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-    @RequireRole(allowedRoles = {Role.MANAGER})
-    @SecureChatAccess(idParamName = "chatId")
+
     public void linkOperatorToChat(Integer chatId, Integer operatorId) {
         UserContext userContext = UserContextHolder.getRequiredContext();
         User currentUser = userService.findById(userContext.getUserId())
@@ -313,8 +309,7 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-    @RequireRole(allowedRoles = {Role.MANAGER})
-    @SecureChatAccess(idParamName = "assignRequest", idMethodName = "getChatId")
+
     public ChatDetailsDTO assignChat(AssignChatRequestDTO assignRequest) throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
 
@@ -366,8 +361,7 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-    @RequireRole(allowedRoles = {Role.MANAGER, Role.OPERATOR})
-    @SecureChatAccess(idParamName = "chatId")
+
     public ChatDetailsDTO closeChatByCurrentUser(Integer chatId) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
@@ -393,7 +387,7 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional(readOnly = true)
-    @SecureChatAccess(idParamName = "chatId")
+
     public ChatDetailsDTO getChatDetails(Integer chatId) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
@@ -429,7 +423,7 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional(readOnly = true)
-    @RequireRole(allowedRoles = {Role.MANAGER, Role.OPERATOR})
+
     public List<ChatDTO> getMyChats(Set<ChatStatus> statuses) throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer currentUserId = userContext.getUserId();
@@ -460,7 +454,7 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional(readOnly = true)
-    @RequireRole(allowedRoles = {Role.MANAGER, Role.OPERATOR})
+
     public List<ChatDTO> getChatsForCurrentUser(Set<ChatStatus> statuses) {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer currentUserId = userContext.getUserId();
@@ -500,7 +494,7 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional(readOnly = true)
-    @RequireRole(allowedRoles = {Role.MANAGER})
+
     public List<ChatDTO> getOperatorChats(Integer operatorId, Set<ChatStatus> statuses) throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer userCompanyId = userContext.getCompanyId();
@@ -532,7 +526,7 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional(readOnly = true)
-    @RequireRole(allowedRoles = {Role.MANAGER, Role.OPERATOR})
+
     public List<ChatDTO> getMyCompanyWaitingChats() throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer userCompanyId = userContext.getCompanyId();
@@ -550,8 +544,7 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-    @RequireRole(allowedRoles = {Role.MANAGER, Role.OPERATOR})
-    @SecureChatAccess(idParamName = "chatId")
+
     public void updateChatStatus(Integer chatId, ChatStatus newStatus) {
         UserContext userContext = UserContextHolder.getRequiredContext();
 
@@ -617,8 +610,7 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-    @RequireRole(allowedRoles = {Role.MANAGER, Role.OPERATOR})
-    @SecureChatAccess(idParamName = "chatId")
+
     public MessageDto sendOperatorMessage(Integer chatId, String content) {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer currentUserId = userContext.getUserId();
@@ -651,7 +643,7 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-    @RequireRole(allowedRoles = {Role.MANAGER, Role.OPERATOR, Role.USER})
+
     public ChatDetailsDTO createTestChatForCurrentUser() throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer currentUserId = userContext.getUserId();
@@ -692,8 +684,7 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-    @RequireRole(allowedRoles = {Role.MANAGER, Role.OPERATOR})
-    @SecureChatAccess(idParamName = "chatId")
+
     public void markClientMessagesAsReadByCurrentUser(Integer chatId, Collection<Integer> messageIds) {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer currentUserId = userContext.getUserId();

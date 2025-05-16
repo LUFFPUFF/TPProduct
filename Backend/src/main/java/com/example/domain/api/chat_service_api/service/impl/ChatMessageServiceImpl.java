@@ -23,8 +23,7 @@ import com.example.domain.api.chat_service_api.model.dto.MessageStatusUpdateDTO;
 import com.example.domain.api.chat_service_api.model.rest.mesage.SendMessageRequestDTO;
 import com.example.domain.api.chat_service_api.service.IChatMessageService;
 import com.example.domain.api.chat_service_api.service.WebSocketMessagingService;
-import com.example.domain.security.aop.annotation.CheckChatCompanyAccess;
-import com.example.domain.security.aop.annotation.RequireRole;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -117,8 +116,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
 
     @Override
     @Transactional(readOnly = true)
-    @RequireRole(allowedRoles = {Role.MANAGER, Role.OPERATOR})
-    @CheckChatCompanyAccess(idParamName = "chatId")
+
     public List<MessageDto> getMessagesByChatId(Integer chatId) {
         List<ChatMessage> messages = chatMessageRepository.findByChatIdOrderBySentAtAsc(chatId);
 
@@ -129,8 +127,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
 
     @Override
     @Transactional
-    @RequireRole(allowedRoles = {Role.MANAGER, Role.OPERATOR})
-    @CheckChatCompanyAccess(idParamName = "messageId")
+
     public MessageDto updateMessageStatus(Integer messageId, MessageStatus newStatus) {
         ChatMessage message = chatMessageRepository.findById(messageId)
                 .orElseThrow(() -> new ResourceNotFoundException("Message with ID " + messageId + " not found."));
@@ -153,8 +150,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
 
     @Override
     @Transactional
-    @RequireRole(allowedRoles = {Role.MANAGER, Role.OPERATOR})
-    @CheckChatCompanyAccess(idParamName = "chatId")
+
     public int markClientMessagesAsRead(Integer chatId, Integer operatorId, Collection<Integer> messageIds) {
         if (messageIds == null || messageIds.isEmpty()) {
             return 0;
@@ -208,8 +204,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     }
 
     @Override
-    @RequireRole(allowedRoles = {Role.MANAGER, Role.OPERATOR})
-    @CheckChatCompanyAccess(idParamName = "chatId")
+
     public int updateOperatorMessageStatusByExternalId(Integer chatId, String externalMessageId, MessageStatus newStatus) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));

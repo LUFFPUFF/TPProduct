@@ -1,10 +1,12 @@
 package com.example.domain.api.authentication_module.exception_handler_auth;
 
+import com.example.domain.exception.AbstractException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(value = HttpStatus.UNAUTHORIZED, reason = "Ошибка аутентификации")
-public class InvalidTokenSignException extends RuntimeException {
+public class InvalidTokenSignException extends AbstractException {
+
     public InvalidTokenSignException() {
+        super("Ошибка аутентификации", HttpStatus.UNAUTHORIZED);
     }
 }
