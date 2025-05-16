@@ -14,7 +14,7 @@ import com.example.domain.api.chat_service_api.integration.dto.rest.CreateTelegr
 import com.example.domain.api.chat_service_api.integration.mail.dialog_bot.EmailDialogBot;
 import com.example.domain.api.chat_service_api.integration.service.IIntegrationService;
 import com.example.domain.api.chat_service_api.integration.telegram.TelegramBotManager;
-import com.example.domain.security.aop.annotation.RequireRole;
+
 import com.example.domain.security.model.UserContext;
 import com.example.domain.security.util.UserContextHolder;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,6 @@ public class IntegrationServiceImpl implements IIntegrationService {
     private final EmailDialogBot emailDialogBot;
 
     @Override
-    @RequireRole(allowedRoles = {Role.MANAGER})
     public List<CompanyTelegramConfiguration> getAllTelegramConfigurations() throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer companyId = userContext.getCompanyId();
@@ -50,7 +49,7 @@ public class IntegrationServiceImpl implements IIntegrationService {
     }
 
     @Override
-    @RequireRole(allowedRoles = {Role.MANAGER})
+
     public List<CompanyMailConfiguration> getAllMailConfigurations() throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer companyId = userContext.getCompanyId();
@@ -91,7 +90,7 @@ public class IntegrationServiceImpl implements IIntegrationService {
 
     @Override
     @Transactional
-    @RequireRole(allowedRoles = {Role.MANAGER})
+
     public CompanyTelegramConfiguration createCompanyTelegramConfiguration(CreateTelegramConfigurationRequest request) throws AccessDeniedException {
 
         User userEntity = getUser();
@@ -121,7 +120,7 @@ public class IntegrationServiceImpl implements IIntegrationService {
 
     @Override
     @Transactional
-    @RequireRole(allowedRoles = {Role.MANAGER})
+
     public CompanyMailConfiguration createCompanyMailConfiguration(CreateMailConfigurationRequest request) throws AccessDeniedException {
         Company company = getCompany();
 
