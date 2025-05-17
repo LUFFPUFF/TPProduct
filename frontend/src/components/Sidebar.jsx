@@ -50,7 +50,7 @@ const Sidebar = () => {
                         }`}
                         style={{ overflow: 'hidden' }}
                     >
-                        <NavLink to="/information" className="text-lg hover:text-[#2a4992]">Информация</NavLink>
+                        <NavLink to="/company" className="text-lg hover:text-[#2a4992]">Информация</NavLink>
                         <NavLink to="/integration" className="text-lg hover:text-[#2a4992]">Интеграции</NavLink>
                         <NavLink to="/subscription" className="text-lg hover:text-[#2a4992]">Подписка</NavLink>
                         <NavLink to="/templates" className="text-lg hover:text-[#2a4992]">Шаблонные ответы</NavLink>
