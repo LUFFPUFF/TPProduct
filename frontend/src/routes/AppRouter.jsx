@@ -43,7 +43,6 @@ const AppRouter = ({ isAuthenticated, userRole }) => {
                 <Route path="/integration" element={<IntegrationsPage />} />
                 <Route path="/templates" element={<TemplatesPage />} />
                 <Route path="/company" element={<CompanyPage />} />
-                <Route path="/admin" element={<AdminPage />} />
             </Route>
         </Routes>
     );
