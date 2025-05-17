@@ -4,11 +4,15 @@ import AppRouter from "./routes/AppRouter";
 import "./index.css";
 
 const App = () => {
+    const isAuthenticated = !!localStorage.getItem("email");
+    //const userRole = localStorage.getItem("role");
+
     return (
         <Router>
             <div className="flex flex-col min-h-screen">
                 <main className="flex-grow">
-                    <AppRouter />
+                    {/*AppRouter isAuthenticated={isAuthenticated} userRole={userRole} />*/}
+                    <AppRouter isAuthenticated={isAuthenticated}/>
                 </main>
             </div>
         </Router>

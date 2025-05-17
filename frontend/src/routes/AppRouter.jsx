@@ -1,30 +1,50 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import RegistrationPage from "../pages/RegistrationPage.jsx";
-import HomePage from "../pages/HomePage.jsx";
-import LoginPage from "../pages/LoginPage.jsx";
-import DialogPage from "../pages/DialogPage.jsx";
-import SubscriptionsPage from "../pages/SubscriptionsPage.jsx";
-import IntegrationsPage from "../pages/IntegrationsPage.jsx";
-import TemplatesPage from "../pages/TemplatesPage.jsx";
-import StatsPage from "../pages/StatsPage.jsx";
-import UserPage from "../pages/UserPage.jsx";
-import CompanyPage from "../pages/CompanyPage.jsx";
+import HomePage from "../pages/HomePage";
+import LoginPage from "../pages/LoginPage";
+import RegistrationPage from "../pages/RegistrationPage";
+import DialogPage from "../pages/DialogPage";
+import SubscriptionsPage from "../pages/SubscriptionsPage";
+import IntegrationsPage from "../pages/IntegrationsPage";
+import TemplatesPage from "../pages/TemplatesPage";
+import UserPage from "../pages/UserPage";
+import StatsPage from "../pages/StatsPage";
+import CompanyPage from "../pages/CompanyPage";
+import ForbiddenPage from "../pages/ForbiddenPage";
+import PrivateRoute from "./PrivateRoute";
 
-
-const AppRouter = () => {
+const AppRouter = ({ isAuthenticated, userRole }) => {
     return (
         <Routes>
+            {/* Доступные всем */}
             <Route path="/" element={<HomePage />} />
-            <Route path="/register" element={<RegistrationPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/dialogs" element={<DialogPage />} />
-            <Route path="/subscription" element={<SubscriptionsPage />} />
-            <Route path="/integration" element={<IntegrationsPage />} />
-            <Route path="/templates" element={<TemplatesPage />} />
-            <Route path="/stats" element={<StatsPage />} />
-            <Route path="/settings" element={<UserPage />} />
-            <Route path="/company" element={<CompanyPage />} />
+            <Route path="/register" element={<RegistrationPage />} />
+            <Route path="/forbidden" element={<ForbiddenPage />} />
+
+            {/* Защищённые маршруты */}
+            <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
+                <Route path="/dialogs" element={<DialogPage />} />
+                <Route path="/settings" element={<UserPage />} />
+                <Route path="/stats" element={<StatsPage />} />
+            </Route>
+
+            {/* Защищённые + ограничение по роли */}
+            <Route
+                element={
+                    <PrivateRoute
+                        isAuthenticated={isAuthenticated}
+                        allowedRoles={["admin"]}
+                        userRole={userRole}
+                    />
+                }
+            >
+                <Route path="/subscription" element={<SubscriptionsPage />} />
+                <Route path="/integration" element={<IntegrationsPage />} />
+                <Route path="/templates" element={<TemplatesPage />} />
+                <Route path="/company" element={<CompanyPage />} />
+                <Route path="/admin" element={<AdminPage />} />
+            </Route>
         </Routes>
     );
 };
