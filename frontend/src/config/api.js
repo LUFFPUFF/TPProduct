@@ -38,6 +38,9 @@ const API = {
         sendSelfMessage: `${API_BASE_URL}/ui/chats/create-test-chat`,
         updateStatus: (id) => `${API_BASE_URL}/dialogs/${id}/status`,
     },
+    stats: {
+        get: `${API_BASE_URL}/stats`,
+    }
 };
 
 export default API;

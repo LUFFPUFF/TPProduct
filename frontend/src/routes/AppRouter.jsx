@@ -7,6 +7,7 @@ import DialogPage from "../pages/DialogPage.jsx";
 import SubscriptionsPage from "../pages/SubscriptionsPage.jsx";
 import IntegrationsPage from "../pages/IntegrationsPage.jsx";
 import TemplatesPage from "../pages/TemplatesPage.jsx";
+import StatsPage from "../pages/StatsPage.jsx";
 
 
 const AppRouter = () => {
@@ -19,7 +20,7 @@ const AppRouter = () => {
             <Route path="/subscription" element={<SubscriptionsPage />} />
             <Route path="/integration" element={<IntegrationsPage />} />
             <Route path="/templates" element={<TemplatesPage />} />
-            {/*<Route path="/crm" element={<CrmPage />} />*/}
+            <Route path="/stats" element={<StatsPage />} />
         </Routes>
     );
 };
