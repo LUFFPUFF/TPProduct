@@ -40,6 +40,9 @@ const API = {
     },
     stats: {
         get: `${API_BASE_URL}/stats`,
+    },
+    settings: {
+        get: `${API_BASE_URL}/settings/`,
     }
 };
 

@@ -8,6 +8,7 @@ import SubscriptionsPage from "../pages/SubscriptionsPage.jsx";
 import IntegrationsPage from "../pages/IntegrationsPage.jsx";
 import TemplatesPage from "../pages/TemplatesPage.jsx";
 import StatsPage from "../pages/StatsPage.jsx";
+import UserPage from "../pages/UserPage.jsx";
 
 
 const AppRouter = () => {
@@ -21,6 +22,7 @@ const AppRouter = () => {
             <Route path="/integration" element={<IntegrationsPage />} />
             <Route path="/templates" element={<TemplatesPage />} />
             <Route path="/stats" element={<StatsPage />} />
+            <Route path="/settings" element={<UserPage />} />
         </Routes>
     );
 };
