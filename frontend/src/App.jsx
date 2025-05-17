@@ -2,9 +2,11 @@ import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import AppRouter from "./routes/AppRouter";
 import "./index.css";
+import {getCookie} from "./utils/cookies.js";
 
 const App = () => {
-    const isAuthenticated = !!localStorage.getItem("email");
+    const accessToken = getCookie("access_token");
+    const isAuthenticated = !!accessToken;
     //const userRole = localStorage.getItem("role");
 
     return (
