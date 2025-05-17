@@ -9,6 +9,7 @@ import IntegrationsPage from "../pages/IntegrationsPage.jsx";
 import TemplatesPage from "../pages/TemplatesPage.jsx";
 import StatsPage from "../pages/StatsPage.jsx";
 import UserPage from "../pages/UserPage.jsx";
+import CompanyPage from "../pages/CompanyPage.jsx";
 
 
 const AppRouter = () => {
@@ -23,6 +24,7 @@ const AppRouter = () => {
             <Route path="/templates" element={<TemplatesPage />} />
             <Route path="/stats" element={<StatsPage />} />
             <Route path="/settings" element={<UserPage />} />
+            <Route path="/company" element={<CompanyPage />} />
         </Routes>
     );
 };
