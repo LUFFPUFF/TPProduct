@@ -3,7 +3,6 @@ package com.example.domain.api.ans_api_module.answer_finder.nlp.lemmatizer.impl;
 import com.example.domain.api.ans_api_module.answer_finder.exception.NlpException;
 import com.example.domain.api.ans_api_module.answer_finder.nlp.lemmatizer.Lemmatizer;
 import com.example.domain.api.ans_api_module.answer_finder.nlp.lemmatizer.config.NlpProperties;
-import com.example.domain.api.ans_api_module.answer_finder.nlp.lemmatizer.dto.UdpipeRequest;
 import com.example.domain.api.ans_api_module.answer_finder.nlp.lemmatizer.dto.UdpipeResponse;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.retry.Retry;

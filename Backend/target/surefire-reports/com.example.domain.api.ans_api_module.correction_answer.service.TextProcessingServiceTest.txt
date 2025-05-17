@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.53 s -- in com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.90 s -- in com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest

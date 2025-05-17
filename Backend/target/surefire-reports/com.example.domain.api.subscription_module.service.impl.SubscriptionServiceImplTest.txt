@@ -1,4 +1,84 @@
 -------------------------------------------------------------------------------
 Test set: com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest
 -------------------------------------------------------------------------------
-Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.324 s -- in com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest
+Tests run: 15, Failures: 4, Errors: 2, Skipped: 0, Time elapsed: 0.331 s <<< FAILURE! -- in com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest
+com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_UserAndSubscriptionExist_ShouldReturnDto -- Time elapsed: 0.008 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.example.domain.api.authentication_module.service.interfaces.CurrentUserDataService.getUser()" because "this.currentUserDataService" is null
+	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImpl.getSubscription(SubscriptionServiceImpl.java:116)
+	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_UserAndSubscriptionExist_ShouldReturnDto(SubscriptionServiceImplTest.java:227)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.subscribe_NewUser_ShouldCreateCompanySubscriptionAndUpdateUser -- Time elapsed: 0.005 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.example.domain.api.authentication_module.service.interfaces.CurrentUserDataService.getUserEmail()" because "this.currentUserDataService" is null
+	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImpl.subscribe(SubscriptionServiceImpl.java:47)
+	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.subscribe_NewUser_ShouldCreateCompanySubscriptionAndUpdateUser(SubscriptionServiceImplTest.java:159)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
+com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_UserHasNoCompany_ShouldThrowNotFoundUserException -- Time elapsed: 0.007 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <com.example.domain.api.authentication_module.exception_handler_auth.NotFoundUserException> but was: <java.lang.NullPointerException>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3128)
+	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_UserHasNoCompany_ShouldThrowNotFoundUserException(SubscriptionServiceImplTest.java:250)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: java.lang.NullPointerException: Cannot invoke "com.example.domain.api.authentication_module.service.interfaces.CurrentUserDataService.getUser()" because "this.currentUserDataService" is null
+	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImpl.getSubscription(SubscriptionServiceImpl.java:116)
+	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.lambda$getSubscription_UserHasNoCompany_ShouldThrowNotFoundUserException$2(SubscriptionServiceImplTest.java:251)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
+	... 6 more
+
+com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_SubscriptionNotFound_ShouldThrowNotFoundSubscriptionException -- Time elapsed: 0.005 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <com.example.domain.api.subscription_module.exception_handler_subscription.NotFoundSubscriptionException> but was: <java.lang.NullPointerException>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3128)
+	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_SubscriptionNotFound_ShouldThrowNotFoundSubscriptionException(SubscriptionServiceImplTest.java:261)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: java.lang.NullPointerException: Cannot invoke "com.example.domain.api.authentication_module.service.interfaces.CurrentUserDataService.getUser()" because "this.currentUserDataService" is null
+	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImpl.getSubscription(SubscriptionServiceImpl.java:116)
+	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.lambda$getSubscription_SubscriptionNotFound_ShouldThrowNotFoundSubscriptionException$3(SubscriptionServiceImplTest.java:262)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
+	... 6 more
+
+com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.subscribe_UserAlreadyInCompany_ShouldThrowAlreadyInCompanyException -- Time elapsed: 0.004 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <com.example.domain.api.subscription_module.exception_handler_subscription.AlreadyInCompanyException> but was: <java.lang.NullPointerException>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3128)
+	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.subscribe_UserAlreadyInCompany_ShouldThrowAlreadyInCompanyException(SubscriptionServiceImplTest.java:194)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: java.lang.NullPointerException: Cannot invoke "com.example.domain.api.authentication_module.service.interfaces.CurrentUserDataService.getUserEmail()" because "this.currentUserDataService" is null
+	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImpl.subscribe(SubscriptionServiceImpl.java:47)
+	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.lambda$subscribe_UserAlreadyInCompany_ShouldThrowAlreadyInCompanyException$0(SubscriptionServiceImplTest.java:195)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
+	... 6 more
+
+com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_UserNotFound_ShouldThrowNotFoundUserException -- Time elapsed: 0.004 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <com.example.domain.api.authentication_module.exception_handler_auth.NotFoundUserException> but was: <java.lang.NullPointerException>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3128)
+	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_UserNotFound_ShouldThrowNotFoundUserException(SubscriptionServiceImplTest.java:239)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: java.lang.NullPointerException: Cannot invoke "com.example.domain.api.authentication_module.service.interfaces.CurrentUserDataService.getUser()" because "this.currentUserDataService" is null
+	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImpl.getSubscription(SubscriptionServiceImpl.java:116)
+	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.lambda$getSubscription_UserNotFound_ShouldThrowNotFoundUserException$1(SubscriptionServiceImplTest.java:240)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
+	... 6 more
+

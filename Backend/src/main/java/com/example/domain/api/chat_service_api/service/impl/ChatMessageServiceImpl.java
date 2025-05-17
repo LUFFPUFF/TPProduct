@@ -16,6 +16,7 @@ import com.example.database.repository.crm_module.ClientRepository;
 import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.exception.ExternalMessagingException;
+import com.example.domain.api.chat_service_api.exception_handler.exception.service.ChatServiceException;
 import com.example.domain.api.chat_service_api.integration.service.IExternalMessagingService;
 import com.example.domain.api.chat_service_api.mapper.ChatMessageMapper;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
@@ -24,11 +25,13 @@ import com.example.domain.api.chat_service_api.model.rest.mesage.SendMessageRequ
 import com.example.domain.api.chat_service_api.service.IChatMessageService;
 import com.example.domain.api.chat_service_api.service.WebSocketMessagingService;
 
+import com.example.domain.api.statistics_module.metrics.service.IChatMetricsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -50,6 +53,7 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     private final ChatMessageMapper chatMessageMapper;
     private final WebSocketMessagingService messagingService;
     private final IExternalMessagingService externalMessagingService;
+    private final IChatMetricsService chatMetricsService;
 
     private static final int MAX_CONTENT_LENGTH = 255;
     private static final String TRUNCATE_INDICATOR = "...";
@@ -59,6 +63,9 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     public MessageDto processAndSaveMessage(SendMessageRequestDTO messageRequest, Integer senderId, ChatMessageSenderType senderType) {
         Chat chat = chatRepository.findById(messageRequest.getChatId())
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + messageRequest.getChatId() + " not found"));
+
+        String companyIdStr = (chat.getCompany() != null && chat.getCompany().getId() != null) ? chat.getCompany().getId().toString() : "unknown";
+        ChatChannel channel = chat.getChatChannel() != null ? chat.getChatChannel() : ChatChannel.UNKNOWN;
 
         User senderOperator = null;
         Client senderClient = null;
@@ -90,28 +97,49 @@ public class ChatMessageServiceImpl implements IChatMessageService {
 
         // TODO: Обработка вложений messageRequest.getAttachments()
 
-        ChatMessage savedMessage = chatMessageRepository.save(message);
+        try {
+            ChatMessage savedMessage = chatMessageRepository.save(message);
 
-        chat.setLastMessageAt(savedMessage.getSentAt());
-        chatRepository.save(chat);
+            chatMetricsService.incrementMessagesSent(
+                    companyIdStr,
+                    channel,
+                    senderType
+            );
 
-        MessageDto savedMessageDTO = chatMessageMapper.toDto(savedMessage);
-
-        String destination = "/topic/chat/" + chat.getId() + "/messages";
-        messagingService.sendMessage(destination, savedMessageDTO);
-
-        if (senderType == ChatMessageSenderType.OPERATOR && savedMessage.getContent() != null && !savedMessage.getContent().trim().isEmpty()) {
-            log.info("Processing message from OPERATOR for external sending to chat ID {}", chat.getId());
-            try {
-                externalMessagingService.sendMessageToExternal(chat.getId(), savedMessage.getContent());
-                log.info("Operator message for chat ID {} successfully placed for external sending.", chat.getId());
-            } catch (ExternalMessagingException e) {
-                log.error("Failed to place operator message for chat ID {} into external sending queue.", chat.getId(), e);
+            if (savedMessage.getContent() != null) {
+                chatMetricsService.recordMessageContentLength(
+                        companyIdStr,
+                        channel,
+                        senderType,
+                        savedMessage.getContent().length()
+                );
             }
+
+            chat.setLastMessageAt(savedMessage.getSentAt());
+            chatRepository.save(chat);
+
+            MessageDto savedMessageDTO = chatMessageMapper.toDto(savedMessage);
+
+            String destination = "/topic/chat/" + chat.getId() + "/messages";
+            messagingService.sendMessage(destination, savedMessageDTO);
+
+            if (senderType == ChatMessageSenderType.OPERATOR && savedMessage.getContent() != null && !savedMessage.getContent().trim().isEmpty()) {
+                log.info("Processing message from OPERATOR for external sending to chat ID {}", chat.getId());
+                try {
+                    externalMessagingService.sendMessageToExternal(chat.getId(), savedMessage.getContent());
+                    log.info("Operator message for chat ID {} successfully placed for external sending.", chat.getId());
+                } catch (ExternalMessagingException e) {
+                    log.error("Failed to place operator message for chat ID {} into external sending queue.", chat.getId(), e);
+                }
+            }
+            return savedMessageDTO;
+        } catch (ChatNotFoundException | ResourceNotFoundException | IllegalArgumentException e) {
+            chatMetricsService.incrementChatOperationError("processAndSaveMessage", companyIdStr, e.getClass().getSimpleName());
+            throw e;
+        } catch (Exception e) {
+            chatMetricsService.incrementChatOperationError("processAndSaveMessage", companyIdStr, "UnexpectedException");
+            throw new ChatServiceException("An unexpected error occurred.", e);
         }
-
-
-        return savedMessageDTO;
     }
 
     @Override
@@ -132,44 +160,77 @@ public class ChatMessageServiceImpl implements IChatMessageService {
         ChatMessage message = chatMessageRepository.findById(messageId)
                 .orElseThrow(() -> new ResourceNotFoundException("Message with ID " + messageId + " not found."));
 
-        message.setStatus(newStatus);
-        ChatMessage updatedMessage = chatMessageRepository.save(message);
-        MessageDto updatedMessageDTO = chatMessageMapper.toDto(updatedMessage);
+        Chat chat = message.getChat();
+        String companyIdStr = (chat.getCompany() != null && chat.getCompany().getId() != null) ? chat.getCompany().getId().toString() : "unknown";
+        ChatChannel channel = chat.getChatChannel() != null ? chat.getChatChannel() : ChatChannel.UNKNOWN;
 
-        MessageStatusUpdateDTO statusUpdateDTO = new MessageStatusUpdateDTO();
-        statusUpdateDTO.setMessageId(updatedMessage.getId());
-        statusUpdateDTO.setChatId(updatedMessage.getChat().getId());
-        statusUpdateDTO.setNewStatus(updatedMessage.getStatus());
-        statusUpdateDTO.setTimestamp(LocalDateTime.now());
+        try {
+            message.setStatus(newStatus);
+            ChatMessage updatedMessage = chatMessageRepository.save(message);
 
-        String destination = "/topic/chat/" + updatedMessage.getChat().getId() + "/messages";
-        messagingService.sendMessage(destination, statusUpdateDTO);
+            chatMetricsService.incrementMessageStatusUpdated(
+                    companyIdStr,
+                    channel,
+                    newStatus.name()
+            );
 
-        return updatedMessageDTO;
+            MessageDto updatedMessageDTO = chatMessageMapper.toDto(updatedMessage);
+
+            MessageStatusUpdateDTO statusUpdateDTO = new MessageStatusUpdateDTO();
+            statusUpdateDTO.setMessageId(updatedMessage.getId());
+            statusUpdateDTO.setChatId(updatedMessage.getChat().getId());
+            statusUpdateDTO.setNewStatus(updatedMessage.getStatus());
+            statusUpdateDTO.setTimestamp(LocalDateTime.now());
+
+            String destination = "/topic/chat/" + updatedMessage.getChat().getId() + "/messages";
+            messagingService.sendMessage(destination, statusUpdateDTO);
+
+            return updatedMessageDTO;
+        } catch (ResourceNotFoundException e) {
+            chatMetricsService.incrementChatOperationError("updateMessageStatus", companyIdStr, e.getClass().getSimpleName());
+            throw e;
+        } catch (Exception e) {
+            chatMetricsService.incrementChatOperationError("updateMessageStatus", companyIdStr, "UnexpectedException");
+            throw new ChatServiceException("An unexpected error occurred.", e);
+        }
     }
 
     @Override
     @Transactional
 
     public int markClientMessagesAsRead(Integer chatId, Integer operatorId, Collection<Integer> messageIds) {
+        Chat chat = chatRepository.findById(chatId).orElse(null);
+        if (chat == null) {
+            chatMetricsService.incrementChatOperationError("markClientMessagesAsRead", "unknown", "ChatNotFound");
+            return 0;
+        }
+        String companyIdStr = (chat.getCompany() != null && chat.getCompany().getId() != null) ? chat.getCompany().getId().toString() : "unknown";
+        ChatChannel channel = chat.getChatChannel() != null ? chat.getChatChannel() : ChatChannel.UNKNOWN;
+
         if (messageIds == null || messageIds.isEmpty()) {
             return 0;
         }
 
-        int updatedCount = chatMessageRepository.markClientMessagesAsRead(chatId, MessageStatus.READ, messageIds);
+        try {
+            int updatedCount = chatMessageRepository.markClientMessagesAsRead(chatId, MessageStatus.READ, messageIds);
 
-        if (updatedCount > 0) {
-            String destination = "/topic/chat/" + chatId + "/messages";
-            for (Integer messageId : messageIds) {
-                MessageStatusUpdateDTO statusUpdateDTO = new MessageStatusUpdateDTO();
-                statusUpdateDTO.setMessageId(messageId);
-                statusUpdateDTO.setChatId(chatId);
-                statusUpdateDTO.setNewStatus(MessageStatus.READ);
-                statusUpdateDTO.setTimestamp(LocalDateTime.now());
-                messagingService.sendMessage(destination, statusUpdateDTO);
+            if (updatedCount > 0) {
+                String destination = "/topic/chat/" + chatId + "/messages";
+                for (Integer messageId : messageIds) {
+                    MessageStatusUpdateDTO statusUpdateDTO = new MessageStatusUpdateDTO();
+                    statusUpdateDTO.setMessageId(messageId);
+                    statusUpdateDTO.setChatId(chatId);
+                    statusUpdateDTO.setNewStatus(MessageStatus.READ);
+                    statusUpdateDTO.setTimestamp(LocalDateTime.now());
+                    messagingService.sendMessage(destination, statusUpdateDTO);
+                    chatMetricsService.incrementMessagesReadByOperator(companyIdStr, channel);
+                }
             }
+            return updatedCount;
+        } catch (Exception e) {
+            chatMetricsService.incrementChatOperationError("markClientMessagesAsRead", companyIdStr, e.getClass().getSimpleName());
+            throw new ChatServiceException("Failed to mark messages as read", e);
         }
-        return updatedCount;
     }
 
     @Override

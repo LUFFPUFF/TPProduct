@@ -3,9 +3,7 @@ com\example\domain\api\subscription_module\service\impl\SubscriptionServiceImplT
 com\example\domain\api\ans_api_module\correction_answer\service\TextProcessingServiceTest.class
 com\example\domain\api\chat_service_api\service\impl\NotificationServiceImplTest$1.class
 com\example\domain\api\subscription_module\service\impl\SubscriptionServiceImplTest.class
-com\example\domain\api\ans_api_module\correction_answer\service\GenerationType.class
 com\example\domain\api\chat_service_api\service\impl\UserServiceImplTest.class
-com\example\domain\api\subscription_module\service\impl\SubscriptionPriceCalculateServiceImplTest.class
 com\example\domain\api\chat_service_api\service\impl\ClientServiceImplTest.class
 com\example\domain\api\chat_service_api\service\impl\NotificationServiceImplTest.class
 com\example\domain\api\subscription_module\service\impl\SubscriptionServiceImplTest$1.class

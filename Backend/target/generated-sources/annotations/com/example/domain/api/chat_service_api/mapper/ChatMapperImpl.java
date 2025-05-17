@@ -15,8 +15,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-15T17:26:41+0300",
-    comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 21.0.7 (Microsoft)"
+    date = "2025-05-17T19:12:18+0300",
+    comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 17.0.14 (Amazon.com Inc.)"
 )
 @Component
 public class ChatMapperImpl implements ChatMapper {
@@ -76,6 +76,7 @@ public class ChatMapperImpl implements ChatMapper {
 
         Chat chat = new Chat();
 
+        chat.setExternalChatId( createChatDTO.getExternalChatId() );
         chat.setChatChannel( createChatDTO.getChatChannel() );
 
         chat.setStatus( ChatStatus.PENDING_OPERATOR );

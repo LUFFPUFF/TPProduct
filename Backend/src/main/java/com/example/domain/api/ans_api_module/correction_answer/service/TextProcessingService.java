@@ -87,9 +87,7 @@ public class TextProcessingService {
     }
 
     private String processCorrection(String query) {
-        String prompt = "Исправь орфографические, пунктуационные и грамматические ошибки в следующем предложении " +
-                "строго соблюдая нормы современного русского языка. Дай только исправленный вариант без пояснений: " + query;
-        GenerationRequest request = createGenerationRequest(prompt);
+        GenerationRequest request = createGenerationRequest(query);
 
         GenerationResponse response = retryGenerateTextCall(request, "correction");
         return extractProcessedText(response, query);
