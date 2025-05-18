@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: ai-service-container
+    ports:
+      - "8000:8000"
+    environment:
+      LLM_HF_TOKEN: ${LLM_HF_TOKEN}
+      LLM_GEMINI_API_KEY: ${LLM_GEMINI_API_KEY}
+      LLM_PROXY_API_KEY: ${LLM_PROXY_API_KEY}
+    restart: unless-stopped
