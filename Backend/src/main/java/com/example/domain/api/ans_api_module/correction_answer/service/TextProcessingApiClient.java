@@ -29,7 +29,7 @@ public class TextProcessingApiClient {
     //TODO увеличено до 5 минут потому что не тянет система
     private static final Duration TIMEOUT = Duration.ofMinutes(5);
     private static final String ENDPOINT = "/generate";
-    private static final String gg = "http://localhost:8000";
+    private static final String gg = "http://ai_service:8000";
 
     public TextProcessingApiClient(MLServiceConfig config, ObjectMapper objectMapper) {
         this.httpClient = HttpClient.newBuilder()
