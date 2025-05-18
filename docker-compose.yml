@@ -38,6 +38,19 @@ services:
     networks:
       - app_network
 
+  ai_service:
+    build: AiService
+    container_name: ai-service-container
+    ports:
+      - "8000:8000"
+    environment:
+      LLM_HF_TOKEN: ${LLM_HF_TOKEN}
+      LLM_GEMINI_API_KEY: ${LLM_GEMINI_API_KEY}
+      LLM_PROXY_API_KEY: ${LLM_PROXY_API_KEY}
+    restart: unless-stopped
+    networks:
+      - app_network
+
   postgres:
     image: postgres:17-alpine
     container_name: db_container
