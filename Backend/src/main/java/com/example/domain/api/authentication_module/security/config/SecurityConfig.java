@@ -44,6 +44,8 @@ public class SecurityConfig  {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**","/api/registration/**").permitAll()
+                        .requestMatchers("/api/statistics/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/api/subscription/extend","/api/company/add").hasAuthority(Role.MANAGER.getAuthority())
                         .requestMatchers("/test/operator-only").hasAuthority(Role.OPERATOR.getAuthority())
                         .requestMatchers("/api/ui/**","/api/company/get").hasAnyAuthority(Role.OPERATOR.getAuthority(), Role.MANAGER.getAuthority())
