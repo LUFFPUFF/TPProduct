@@ -1,6 +1,6 @@
 package com.example.domain.api.crm_module.mapper;
 
-;
+
 import com.example.database.model.crm_module.deal.Deal;
 import com.example.database.model.crm_module.deal.DealStatus;
 import com.example.database.model.crm_module.task.Task;

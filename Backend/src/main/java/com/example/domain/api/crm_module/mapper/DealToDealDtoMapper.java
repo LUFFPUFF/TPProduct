@@ -4,8 +4,9 @@ import com.example.database.model.crm_module.deal.Deal;
 import com.example.database.model.crm_module.task.Task;
 import com.example.domain.api.crm_module.dto.DealDto;
 import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
-@Mapper
+@Component
 public class DealToDealDtoMapper {
     public DealDto map(Deal deal, Task task) {
         return DealDto.builder()

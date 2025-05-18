@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-
 public class DealReqDtoToDealMapper {
     public Deal map(CreateDealDtoReq dealDto) {
         Deal deal = new Deal();
