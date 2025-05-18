@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 public class DealStage {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "name")
