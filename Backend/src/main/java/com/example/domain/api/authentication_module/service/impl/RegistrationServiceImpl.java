@@ -9,6 +9,8 @@ import com.example.domain.api.authentication_module.exception_handler_auth.Inval
 import com.example.domain.api.authentication_module.security.jwtUtils.JWTUtilsService;
 import com.example.domain.api.authentication_module.service.interfaces.RegistrationService;
 import com.example.domain.api.authentication_module.service.interfaces.RoleService;
+import com.example.domain.api.statistics_module.aop.annotation.Counter;
+import com.example.domain.api.statistics_module.aop.annotation.MeteredOperation;
 import com.example.domain.dto.RegistrationDto;
 import com.example.domain.dto.TokenDto;
 import com.example.domain.dto.mapper.MapperDto;
@@ -37,6 +39,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     @Transactional
+    @MeteredOperation(counters = @Counter(name = "attempt_total"))
     public Boolean registerUser(RegistrationDto registrationDto) {
         if(checkEmailIsAvailable(registrationDto.getEmail())) {
             registrationDto.setFullName(registrationDto.getEmail());
@@ -49,6 +52,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
     @Override
     @Transactional
+    @MeteredOperation(
+            counters = {
+                    @Counter(name = "code_sent_success_total", conditionSpEL = "#result == true"),
+                    @Counter(name = "code_sent_failure_total", conditionSpEL = "#result == false")
+            }
+    )
     public Boolean sendRegistrationCode(RegistrationDto registrationDto) {
         //TODO: Отправка сообщения на email
         authCacheService.putRegistrationCode("000000", registrationDto);
@@ -57,6 +66,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     @Transactional
+    @MeteredOperation(
+            counters = {
+                    @Counter(name = "code_check_success_total", conditionSpEL = "#result != null"),
+                    @Counter(name = "code_check_failure_invalid_total", conditionSpEL = "#throwable instanceof T(com.example.exception.InvalidRegistrationCodeException)")
+            }
+    )
     public TokenDto checkRegistrationCode(String registrationCode) {
         return authCacheService.getRegistrationCode(registrationCode)
                 .map( registrationDto -> {

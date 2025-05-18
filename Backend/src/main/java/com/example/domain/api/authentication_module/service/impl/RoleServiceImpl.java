@@ -7,6 +7,9 @@ import com.example.database.repository.company_subscription_module.UserRoleRepos
 import com.example.domain.api.authentication_module.cache.AuthCacheService;
 import com.example.domain.api.authentication_module.exception_handler_auth.NotFoundUserException;
 import com.example.domain.api.authentication_module.service.interfaces.RoleService;
+import com.example.domain.api.statistics_module.aop.annotation.Counter;
+import com.example.domain.api.statistics_module.aop.annotation.MeteredOperation;
+import com.example.domain.api.statistics_module.aop.annotation.Tag;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,13 @@ public class RoleServiceImpl implements RoleService  {
 
     @Override
     @Transactional
+    @MeteredOperation(
+            counters = @Counter(
+                    name = "added_success_total",
+                    conditionSpEL = "#result == true",
+                    tags = @Tag(key = "role_name", valueSpEL = "#role.name()")
+            )
+    )
     public boolean addRole(String userEmail, Role role) {
         authCacheService.putExpiredData(userEmail);
         return userRepository.findByEmail(userEmail).map(user -> {
@@ -38,8 +48,16 @@ public class RoleServiceImpl implements RoleService  {
     public List<Role> getUserRoles(String email){
         return userRoleRepository.findRolesByEmail(email);
     }
+
     @Override
     @Transactional
+    @MeteredOperation(
+            counters = @Counter(
+                    name = "removed_success_total",
+                    conditionSpEL = "#result == true",
+                    tags = @Tag(key = "role_name", valueSpEL = "#role.name()")
+            )
+    )
     public boolean removeRole(String userEmail, Role role) {
         authCacheService.putExpiredData(userEmail);
         return userRepository.findByEmail(userEmail).map(user -> {

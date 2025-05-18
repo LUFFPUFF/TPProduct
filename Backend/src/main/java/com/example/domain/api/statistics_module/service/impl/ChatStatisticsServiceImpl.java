@@ -2,9 +2,9 @@ package com.example.domain.api.statistics_module.service.impl;
 
 import com.example.domain.api.statistics_module.metrics.client.PrometheusQueryClient;
 import com.example.domain.api.statistics_module.model.chat.ChatSummaryStatsDTO;
-import com.example.domain.api.statistics_module.model.chat.MetricTimeSeriesDTO;
-import com.example.domain.api.statistics_module.model.chat.StatisticsQueryRequestDTO;
-import com.example.domain.api.statistics_module.model.chat.TimeSeriesDataPointDTO;
+import com.example.domain.api.statistics_module.model.metric.MetricTimeSeriesDTO;
+import com.example.domain.api.statistics_module.model.metric.StatisticsQueryRequestDTO;
+import com.example.domain.api.statistics_module.model.metric.TimeSeriesDataPointDTO;
 import com.example.domain.api.statistics_module.service.IChatStatisticsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

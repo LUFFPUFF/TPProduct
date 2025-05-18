@@ -29,6 +29,9 @@ import com.example.domain.api.chat_service_api.model.rest.chat.CreateChatRequest
 import com.example.domain.api.chat_service_api.model.rest.mesage.SendMessageRequestDTO;
 import com.example.domain.api.chat_service_api.service.*;
 
+import com.example.domain.api.statistics_module.aop.annotation.Counter;
+import com.example.domain.api.statistics_module.aop.annotation.MeteredOperation;
+import com.example.domain.api.statistics_module.aop.annotation.Tag;
 import com.example.domain.api.statistics_module.metrics.service.IChatMetricsService;
 import com.example.domain.security.model.UserContext;
 import com.example.domain.security.util.UserContextHolder;
@@ -53,6 +56,7 @@ import static com.example.domain.api.chat_service_api.service.impl.LeastBusyAssi
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@MeteredOperation(prefix = "chat_app_")
 //TODO полный рефакторинг ChatServiceImpl
 public class ChatServiceImpl implements IChatService {
 
@@ -70,25 +74,46 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
+    @MeteredOperation(
+            counters = {
+                    @Counter(
+                            name = "chats_created_total",
+                            tags = {
+                                    @Tag(key = "company_id", valueSpEL = "#result.companyId ?: 'unknown'"),
+                                    @Tag(key = "channel", valueSpEL = "#result.chatChannel?.name() ?: 'UNKNOWN'"),
+                                    @Tag(key = "from_operator_ui", valueSpEL = "'false'")
+                            }
+                    ),
+                    @Counter(
+                            name = "chats_auto_responder_handled_total",
+                            conditionSpEL = "#result.status?.name() == 'PENDING_AUTO_RESPONDER'",
+                            tags = {
+                                    @Tag(key = "company_id", valueSpEL = "#result.companyId ?: 'unknown'"),
+                                    @Tag(key = "channel", valueSpEL = "#result.chatChannel?.name() ?: 'UNKNOWN'")
+                            }
+                    )
+            }
+    )
     public ChatDetailsDTO createChat(CreateChatRequestDTO createRequest) {
         Client client = clientService.findById(createRequest.getClientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Client with ID " + createRequest.getClientId() + " not found"));
 
         Company company = client.getCompany();
+        String companyIdStrForErrorHandling = "unknown";
         if (company == null) {
             log.error("Client with ID {} is not associated with a company.", createRequest.getClientId());
+            chatMetricsService.incrementChatOperationError("createChat", companyIdStrForErrorHandling, "ClientNotAssociatedWithCompany");
             throw new ResourceNotFoundException("Client is not associated with a company.");
         }
+        companyIdStrForErrorHandling = company.getId() != null ? company.getId().toString() : "unknown";
+
 
         Optional<Chat> existingChat = findOpenChatByClientAndChannel(createRequest.getClientId(), createRequest.getChatChannel());
         if (existingChat.isPresent()) {
             log.warn("Open chat ID {} already exists for client {} on channel {}", existingChat.get().getId(), createRequest.getClientId(), createRequest.getChatChannel());
+            chatMetricsService.incrementChatOperationError("createChat", companyIdStrForErrorHandling, "OpenChatAlreadyExists");
             throw new ChatServiceException("Open chat already exists for this client and channel.");
         }
-
-
-        String companyIdStr = company.getId() != null ? company.getId().toString() : "unknown";
-        ChatChannel channel = createRequest.getChatChannel() != null ? createRequest.getChatChannel() : ChatChannel.UNKNOWN;
 
         Chat chat = createChatEntity(client, company, createRequest);
         log.debug("Created initial chat entity with ID: {}", chat.getId());
@@ -106,33 +131,25 @@ public class ChatServiceImpl implements IChatService {
                 savedChat.setLastMessageAt(savedChat.getCreatedAt());
             }
 
+            chatRepository.save(savedChat);
+
             try {
-
-                chatRepository.save(savedChat);
-
-                chatMetricsService.incrementChatsCreated(
-                        companyIdStr,
-                        channel,
-                        false
-                );
-
                 autoResponderService.processNewPendingChat(savedChat.getId());
                 log.info("Auto-responder triggered for chat ID: {}", savedChat.getId());
             } catch (AutoResponderException e) {
                 log.error("Failed to trigger auto-responder for chat ID {}: {}", savedChat.getId(), e.getMessage(), e);
-                throw new AutoResponderException(e.getMessage());
-            }
-
-            if (savedChat.getStatus() == ChatStatus.PENDING_AUTO_RESPONDER) {
-                chatMetricsService.incrementChatsAutoResponderHandled(companyIdStr, channel);
+                chatMetricsService.incrementChatOperationError("createChat_AutoResponder", companyIdStrForErrorHandling, e.getClass().getSimpleName());
+                throw e;
             }
 
             return chatMapper.toDetailsDto(savedChat);
         } catch (ResourceNotFoundException | ChatServiceException | AutoResponderException e) {
-            chatMetricsService.incrementChatOperationError("createChat", companyIdStr, e.getClass().getSimpleName());
+            if (!(e instanceof AutoResponderException)) {
+                chatMetricsService.incrementChatOperationError("createChat", companyIdStrForErrorHandling, e.getClass().getSimpleName());
+            }
             throw e;
         } catch (Exception e) {
-            chatMetricsService.incrementChatOperationError("createChat", companyIdStr, "UnexpectedException");
+            chatMetricsService.incrementChatOperationError("createChat", companyIdStrForErrorHandling, "UnexpectedException");
             log.error("Unexpected error in createChat for client {}: {}", createRequest.getClientId(), e.getMessage(), e);
             throw new ChatServiceException("An unexpected error occurred while creating the chat.", e);
         }
@@ -140,27 +157,41 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
+    @MeteredOperation(
+            counters = {
+                    @Counter(name = "chats_created_total",
+                            tags = { @Tag(key = "company_id", valueSpEL = "#result.companyId ?: 'unknown'"),
+                                    @Tag(key = "channel", valueSpEL = "#result.chatChannel?.name() ?: 'UNKNOWN'"),
+                                    @Tag(key = "from_operator_ui", valueSpEL = "'true'") }),
+                    @Counter(name = "chats_assigned_total",
+                            tags = { @Tag(key = "company_id", valueSpEL = "#result.companyId ?: 'unknown'"),
+                                    @Tag(key = "channel", valueSpEL = "#result.chatChannel?.name() ?: 'UNKNOWN'"),
+                                    @Tag(key = "auto_assigned", valueSpEL = "'false'") }),
+                    @Counter(name = "chats_operator_linked_total",
+                            tags = { @Tag(key = "company_id", valueSpEL = "#result.companyId ?: 'unknown'"),
+                                    @Tag(key = "channel", valueSpEL = "#result.chatChannel?.name() ?: 'UNKNOWN'") })
+            }
+    )
     public ChatDetailsDTO createChatWithOperatorFromUI(CreateChatRequestDTO createRequest) throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
         User currentUser = userService.findById(userContext.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("Authenticated user not found."));
 
         Client client = getClientWithCompanyCheck(createRequest.getClientId());
+        String companyIdStrForErrorHandling = (currentUser.getCompany() != null && currentUser.getCompany().getId() != null) ? currentUser.getCompany().getId().toString() : "unknown";
 
-        if (!Objects.equals(currentUser.getCompany().getId(), client.getCompany().getId())) {
+        if (!Objects.equals(Objects.requireNonNull(currentUser.getCompany()).getId(), client.getCompany().getId())) {
+            chatMetricsService.incrementChatOperationError("createChatWithOperatorFromUI", companyIdStrForErrorHandling, "CompanyMismatch");
             log.warn("User ID {} from company {} attempted to create chat with client ID {} from different company {}",
                     currentUser.getId(), currentUser.getCompany().getId(), client.getId(), client.getCompany().getId());
             throw new AccessDeniedException("Access Denied: Cannot create chat with a client from a different company.");
         }
 
         Optional<Chat> existingChat = findOpenChatByClientAndChannel(createRequest.getClientId(), createRequest.getChatChannel());
-
-        String companyIdStr = (currentUser.getCompany() != null && currentUser.getCompany().getId() != null) ? currentUser.getCompany().getId().toString() : "unknown";
-        ChatChannel channel = createRequest.getChatChannel() != null ? createRequest.getChatChannel() : ChatChannel.UNKNOWN;
-
         if (existingChat.isPresent()) {
             Chat foundChat = existingChat.get();
             if (!Objects.equals(currentUser.getCompany().getId(), foundChat.getCompany().getId())) {
+                chatMetricsService.incrementChatOperationError("createChatWithOperatorFromUI", companyIdStrForErrorHandling, "ExistingChatDifferentCompany");
                 throw new AccessDeniedException("Access Denied: Existing chat belongs to a different company.");
             }
             return chatMapper.toDetailsDto(foundChat);
@@ -168,41 +199,21 @@ public class ChatServiceImpl implements IChatService {
 
         Chat chat = createChatEntityWithOperator(client, currentUser, createRequest.getChatChannel());
 
-
         try {
             Chat savedChat = chatRepository.save(chat);
-
-            chatMetricsService.incrementChatsCreated(
-                    companyIdStr,
-                    channel,
-                    true
-            );
-
-            chatMetricsService.incrementChatsAssigned(
-                    companyIdStr,
-                    channel,
-                    false
-            );
-
-            chatMetricsService.incrementChatOperatorLinked(companyIdStr, channel);
-
             addInitialMessageIfNeeded(savedChat, client, createRequest.getInitialMessageContent());
 
             if (savedChat.getAssignedAt() != null && savedChat.getCreatedAt() != null) {
                 chatMetricsService.recordChatAssignmentTime(
-                        companyIdStr,
-                        channel,
+                        companyIdStrForErrorHandling,
+                        savedChat.getChatChannel() != null ? savedChat.getChatChannel() : ChatChannel.UNKNOWN,
                         Duration.between(savedChat.getCreatedAt(), savedChat.getAssignedAt())
                 );
             }
-
             return chatMapper.toDetailsDto(savedChat);
-        } catch (ResourceNotFoundException e) {
-            chatMetricsService.incrementChatOperationError("createChatWithOperatorFromUI", companyIdStr, e.getClass().getSimpleName());
-            throw e;
         } catch (Exception e) {
-            chatMetricsService.incrementChatOperationError("createChatWithOperatorFromUI", companyIdStr, "UnexpectedException");
-            log.error("Unexpected error in createChatWithOperatorFromUI for client {}: {}", createRequest.getClientId(), e.getMessage(), e);
+            chatMetricsService.incrementChatOperationError("createChatWithOperatorFromUI_Save", companyIdStrForErrorHandling, e.getClass().getSimpleName());
+            log.error("Unexpected error in createChatWithOperatorFromUI during save for client {}: {}", createRequest.getClientId(), e.getMessage(), e);
             throw new ChatServiceException("An unexpected error occurred.", e);
         }
     }
@@ -251,6 +262,11 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
+    @MeteredOperation(
+            counters = @Counter(name = "chats_escalated_total",
+                    tags = { @Tag(key = "company_id", valueSpEL = "#result.companyId ?: 'unknown'"),
+                            @Tag(key = "channel", valueSpEL = "#result.chatChannel?.name() ?: 'UNKNOWN'")})
+    )
     public ChatDetailsDTO requestOperatorEscalation(Integer chatId, Integer clientId) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
@@ -259,48 +275,49 @@ public class ChatServiceImpl implements IChatService {
         ChatChannel channel = chat.getChatChannel() != null ? chat.getChatChannel() : ChatChannel.UNKNOWN;
 
         if (!chat.getClient().getId().equals(clientId)) {
+            chatMetricsService.incrementChatOperationError("requestOperatorEscalation", companyIdStr, "ClientMismatch");
             throw new ChatServiceException("You are not the client of this chat.");
         }
-
         if (chat.getStatus() == ChatStatus.CLOSED || chat.getStatus() == ChatStatus.ARCHIVED) {
+            chatMetricsService.incrementChatOperationError("requestOperatorEscalation", companyIdStr, "ChatAlreadyClosed");
             throw new ChatServiceException("Chat ID " + chatId + " is already closed.");
         }
 
         autoResponderService.stopForChat(chatId);
 
+        User operatorToAssign = null;
         if (chat.getUser() == null) {
-            Optional<User> operator = assignmentService.findLeastBusyOperator(chat.getCompany().getId());
-            if (operator.isPresent()) {
-                chat.setUser(operator.get());
-                notificationService.createNotification(operator.get(), chat,
+            Optional<User> operatorOpt = assignmentService.findLeastBusyOperator(chat.getCompany().getId());
+            if (operatorOpt.isPresent()) {
+                operatorToAssign = operatorOpt.get();
+                chat.setUser(operatorToAssign);
+                notificationService.createNotification(operatorToAssign, chat,
                         "CHAT_ASSIGNED", "Вам назначен чат #" + chat.getId());
             } else {
                 messagingService.sendMessage("/topic/operators/available/new-chats", chatMapper.toDto(chat));
             }
         }
 
-
         try {
             chat.setStatus(ChatStatus.ASSIGNED);
+            if (chat.getAssignedAt() == null && operatorToAssign != null) {
+                chat.setAssignedAt(LocalDateTime.now());
+            }
             Chat updatedChat = chatRepository.save(chat);
 
-            chatMetricsService.incrementChatsEscalated(companyIdStr, channel);
-
-            chatMetricsService.recordChatAssignmentTime(
-                    companyIdStr,
-                    channel,
-                    Duration.between(updatedChat.getCreatedAt(), updatedChat.getAssignedAt())
-            );
+            if (updatedChat.getAssignedAt() != null && updatedChat.getCreatedAt() != null && operatorToAssign != null) {
+                chatMetricsService.recordChatAssignmentTime(
+                        companyIdStr,
+                        channel,
+                        Duration.between(updatedChat.getCreatedAt(), updatedChat.getAssignedAt())
+                );
+            }
 
             messagingService.sendMessage("/topic/chat/" + chat.getId() + "/status", chatMapper.toDto(updatedChat));
-
             return chatMapper.toDetailsDto(updatedChat);
-        } catch (ChatNotFoundException | ChatServiceException e) {
-            chatMetricsService.incrementChatOperationError("requestOperatorEscalation", companyIdStr, e.getClass().getSimpleName());
-            throw e;
         } catch (Exception e) {
-            chatMetricsService.incrementChatOperationError("requestOperatorEscalation", companyIdStr, "UnexpectedException");
-            throw new ChatServiceException("An unexpected error occurred.", e);
+            chatMetricsService.incrementChatOperationError("requestOperatorEscalation_Save", companyIdStr, e.getClass().getSimpleName());
+            throw new ChatServiceException("An unexpected error occurred during escalation save.", e);
         }
     }
 
@@ -318,6 +335,11 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
+    @MeteredOperation(
+            counters = @Counter(name = "chats_operator_linked_total",
+                    tags = { @Tag(key = "company_id", valueSpEL = "#chat.company?.id?.toString() ?: 'unknown'"),
+                            @Tag(key = "channel", valueSpEL = "#chat.chatChannel?.name() ?: 'UNKNOWN'")})
+    )
     public void linkOperatorToChat(Integer chatId, Integer operatorId) {
         UserContext userContext = UserContextHolder.getRequiredContext();
         User currentUser = userService.findById(userContext.getUserId())
@@ -340,8 +362,6 @@ public class ChatServiceImpl implements IChatService {
         try {
             chat.setUser(operator);
             chatRepository.save(chat);
-
-            chatMetricsService.incrementChatOperatorLinked(companyIdStr, channel);
         } catch (Exception e) {
             chatMetricsService.incrementChatOperationError("linkOperatorToChat", companyIdStr, e.getClass().getSimpleName());
             throw e;
@@ -400,6 +420,12 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
+    @MeteredOperation(
+            counters = @Counter(name = "chats_assigned_total",
+                    tags = { @Tag(key = "company_id", valueSpEL = "#result.companyId ?: 'unknown'"),
+                            @Tag(key = "channel", valueSpEL = "#result.chatChannel?.name() ?: 'UNKNOWN'"),
+                            @Tag(key = "auto_assigned", valueSpEL = "#assignRequest.operatorId == null ? 'true' : 'false'")})
+    )
     public ChatDetailsDTO assignChat(AssignChatRequestDTO assignRequest) throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
 
@@ -449,29 +475,21 @@ public class ChatServiceImpl implements IChatService {
 
             Chat updatedChat = chatRepository.save(chat);
 
-            chatMetricsService.incrementChatsAssigned(
-                    companyIdStr,
-                    channel,
-                    isAutoAssigned
-            );
+            if (updatedChat.getAssignedAt() != null && updatedChat.getCreatedAt() != null) {
+                chatMetricsService.recordChatAssignmentTime(
+                        companyIdStr,
+                        channel,
+                        Duration.between(updatedChat.getCreatedAt(), updatedChat.getAssignedAt())
+                );
+            }
+            chatMetricsService.incrementChatOperatorLinked(companyIdStr, channel);
 
             notificationService.createNotification(operatorToAssign, updatedChat, "CHAT_ASSIGNED", "Вам назначен чат #" + updatedChat.getId());
             if (chat.getStatus() == ChatStatus.PENDING_OPERATOR) {
                 messagingService.sendMessage("/topic/operators/available/chat-assignment", chatMapper.toDto(updatedChat));
             }
 
-            chatMetricsService.recordChatAssignmentTime(
-                    companyIdStr,
-                    channel,
-                    Duration.between(chat.getCreatedAt(), updatedChat.getAssignedAt())
-            );
-
-            Chat chatWithDetails = chatRepository.findById(updatedChat.getId())
-                    .orElseThrow(() -> new RuntimeException("Failed to load assigned chat details after saving"));
-
-            chatMetricsService.incrementChatOperatorLinked(companyIdStr, channel);
-
-            return chatMapper.toDetailsDto(chatWithDetails);
+            return chatMapper.toDetailsDto(chatRepository.findById(updatedChat.getId()).orElseThrow());
         } catch (ChatNotFoundException | ResourceNotFoundException | ChatServiceException e) {
             chatMetricsService.incrementChatOperationError("assignChat", companyIdStr, e.getClass().getSimpleName());
             throw e;
@@ -483,7 +501,12 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-
+    @MeteredOperation(
+            counters = @Counter(name = "chats_closed_total",
+                    tags = { @Tag(key = "company_id", valueSpEL = "#result.companyId ?: 'unknown'"),
+                            @Tag(key = "channel", valueSpEL = "#result.chatChannel?.name() ?: 'UNKNOWN'"),
+                            @Tag(key = "final_status", valueSpEL = "'CLOSED'")})
+    )
     public ChatDetailsDTO closeChatByCurrentUser(Integer chatId) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
@@ -501,12 +524,6 @@ public class ChatServiceImpl implements IChatService {
 
             Chat closedChat = chatRepository.save(chat);
 
-            chatMetricsService.incrementChatsClosed(
-                    companyIdStr,
-                    channel,
-                    ChatStatus.CLOSED
-            );
-
             if (closedChat.getCreatedAt() != null && closedChat.getClosedAt() != null) {
                 chatMetricsService.recordChatDuration(
                         companyIdStr,
@@ -521,10 +538,8 @@ public class ChatServiceImpl implements IChatService {
             }
 
             messagingService.sendMessage("/topic/chat/" + closedChat.getId() + "/status", chatMapper.toDto(closedChat));
-            Chat chatWithDetails = chatRepository.findById(closedChat.getId())
-                    .orElseThrow(() -> new RuntimeException("Failed to load closed chat details after saving"));
 
-            return chatMapper.toDetailsDto(chatWithDetails);
+            return chatMapper.toDetailsDto(chatRepository.findById(closedChat.getId()).orElseThrow());
         } catch (ChatNotFoundException | ChatServiceException e) {
             chatMetricsService.incrementChatOperationError("closeChatByCurrentUser", companyIdStr, e.getClass().getSimpleName());
             throw e;
@@ -536,7 +551,6 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional(readOnly = true)
-
     public ChatDetailsDTO getChatDetails(Integer chatId) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
@@ -759,6 +773,12 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
+    @MeteredOperation(
+            counters = @Counter(name = "operator_messages_sent_total",
+                    tags = { @Tag(key="company_id", valueSpEL="#chatEntity.company?.id?.toString() ?: 'unknown'"),
+                            @Tag(key="operator_id", valueSpEL="#userContext.userId?.toString() ?: 'unknown'"),
+                            @Tag(key="channel", valueSpEL="#chatEntity.chatChannel?.name() ?: 'UNKNOWN'")})
+    )
     public MessageDto sendOperatorMessage(Integer chatId, String content) {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer currentUserId = userContext.getUserId();

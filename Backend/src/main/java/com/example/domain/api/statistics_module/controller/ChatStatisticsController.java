@@ -1,9 +1,8 @@
 package com.example.domain.api.statistics_module.controller;
 
 
-import com.example.domain.api.statistics_module.model.chat.ChatSummaryStatsDTO;
-import com.example.domain.api.statistics_module.model.chat.MetricTimeSeriesDTO;
-import com.example.domain.api.statistics_module.model.chat.StatisticsQueryRequestDTO;
+import com.example.domain.api.statistics_module.model.metric.MetricTimeSeriesDTO;
+import com.example.domain.api.statistics_module.model.metric.StatisticsQueryRequestDTO;
 import com.example.domain.api.statistics_module.service.IChatStatisticsService;
 import com.example.domain.security.model.UserContext;
 import com.example.domain.security.service.UserContextLoader;
