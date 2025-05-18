@@ -25,7 +25,7 @@ public class DealStage {
     @Column(name = "order_index")
     private Integer orderIndex;
 
-    protected DealStage(int i, String name, String description, int orderIndex) {
+    protected DealStage(Integer i, String name, String description, Integer orderIndex) {
         this.id = i;
         this.name = name;
         this.description = description;
