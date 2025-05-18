@@ -1,10 +1,13 @@
 package com.example.domain.api.authentication_module.service.impl;
 
+import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.company_subscription_module.user_roles.user.Role;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
+import com.example.database.repository.company_subscription_module.CompanyRepository;
 import com.example.database.repository.company_subscription_module.UserRepository;
 import com.example.domain.api.authentication_module.exception_handler_auth.NotFoundUserException;
 import com.example.domain.api.authentication_module.service.interfaces.CurrentUserDataService;
+import com.example.domain.api.company_module.exception_handler_company.NotFoundCompanyException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,17 +19,32 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CurrentUserDataServiceImpl implements CurrentUserDataService {
     private final UserRepository userRepository;
+    private final CompanyRepository companyRepository;
+    private User user = null;
+    private Company company = null;
 
     @Override
     @Transactional
     public User getUser() {
-        return userRepository.findByEmail(getUserEmail()).orElseThrow(NotFoundUserException::new);
+        if(user == null) {
+            user = userRepository.findByEmail(getUserEmail()).orElseThrow(NotFoundUserException::new);
+        }
+        return user;
     }
 
     @Override
     @Transactional
     public User getUser(String email) {
         return userRepository.findByEmail(email).orElseThrow(NotFoundUserException::new);
+    }
+
+    @Override
+    @Transactional
+    public Company getUserCompany() {
+        if(company == null) {
+            company = companyRepository.findById(getUser().getId()).orElseThrow(NotFoundCompanyException::new);
+        }
+        return company;
     }
 
     @Override

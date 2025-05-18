@@ -3,6 +3,8 @@ package com.example.database.model.crm_module.deal;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.model.crm_module.client.Client;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
