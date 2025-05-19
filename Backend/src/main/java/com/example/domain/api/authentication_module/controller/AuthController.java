@@ -2,6 +2,7 @@ package com.example.domain.api.authentication_module.controller;
 
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.repository.company_subscription_module.UserRepository;
+import com.example.domain.api.authentication_module.dto.AuthDataDto;
 import com.example.domain.api.authentication_module.security.jwtUtils.AuthCookieService;
 import com.example.domain.api.authentication_module.service.interfaces.AuthService;
 import com.example.domain.dto.EmailDto;
@@ -36,8 +37,8 @@ public class AuthController {
         authCookieService.ExpireTokenCookie(resp);
         return ResponseEntity.ok().body(true);
     }
-    @GetMapping("/data/{id}")
-    public ResponseEntity<User> getData(@PathVariable("id") String id) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userRepository.findById(Integer.valueOf(id)).get());
+    @GetMapping("/data")
+    public ResponseEntity<AuthDataDto> getData(HttpServletRequest req) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.getData(req));
     }
 }

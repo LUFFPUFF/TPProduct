@@ -5,7 +5,8 @@ import com.example.database.model.company_subscription_module.user_roles.user.Us
 import com.example.database.repository.company_subscription_module.UserRepository;
 import com.example.domain.api.authentication_module.cache.AuthCacheService;
 import com.example.domain.api.authentication_module.exception_handler_auth.EmailExistsException;
-import com.example.domain.api.authentication_module.exception_handler_auth.InvalidRegistrationCodeException;
+import com.example.domain.api.authentication_module.exception_handler_auth.InvalidCodeException;
+import com.example.domain.api.authentication_module.exception_handler_auth.NotFoundCodeException;
 import com.example.domain.api.authentication_module.security.jwtUtils.JWTUtilsService;
 import com.example.domain.api.authentication_module.service.interfaces.RegistrationService;
 import com.example.domain.api.authentication_module.service.interfaces.RoleService;
@@ -13,7 +14,6 @@ import com.example.domain.dto.RegistrationDto;
 import com.example.domain.dto.TokenDto;
 import com.example.domain.dto.mapper.MapperDto;
 
-import jakarta.security.auth.message.config.AuthConfig;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +50,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Transactional
     public Boolean sendRegistrationCode(RegistrationDto registrationDto) {
         //TODO: Отправка сообщения на email
-        authCacheService.putRegistrationCode("000000", registrationDto);
+        authCacheService.putRegistrationCode(generateRegistrationCode(), registrationDto);
         return true;
     }
 
@@ -61,14 +60,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         return authCacheService.getRegistrationCode(registrationCode)
                 .map( registrationDto -> {
                     User newUser = mapperDto.toEntityUserFromRegistration(registrationDto);
-
                     userRepository.save(newUser);
-
                     roleService.addRole(registrationDto.getEmail(), Role.USER);
-
                     return jWTUtilsService.generateTokensByUser(userDetailsService.loadUserByUsername(registrationDto.getEmail()));
                 })
-                .orElseThrow(InvalidRegistrationCodeException::new);
+                .orElseThrow(NotFoundCodeException::new);
     }
 
     private String generateRegistrationCode() {

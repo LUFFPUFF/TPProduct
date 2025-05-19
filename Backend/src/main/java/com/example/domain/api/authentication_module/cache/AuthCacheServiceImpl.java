@@ -32,6 +32,21 @@ public class AuthCacheServiceImpl implements AuthCacheService {
     }
 
     @Override
+    public void putChangePasswordCode(String changePasswordCode, String email) {
+        String emailCache = redisTemplate.opsForValue().get("pass-code: " + changePasswordCode);
+        if(emailCache != null) {
+            registrationRedisTemplate.delete("pass-code: "+changePasswordCode);
+        }
+        redisTemplate.opsForValue().set("pass-code: " + changePasswordCode, email);
+        redisTemplate.expire("pass-code: " + changePasswordCode, 8, TimeUnit.MINUTES);
+    }
+
+    @Override
+    public Optional<String> getChangePasswordCode(String email) {
+        return Optional.ofNullable(redisTemplate.opsForValue().get("pass-code: " + email));
+    }
+
+    @Override
     public void putRefreshToken(String refreshToken, String email) {
         redisTemplate.opsForValue().set(refreshToken, email);
         redisTemplate.expire(refreshToken, 4, TimeUnit.DAYS);
