@@ -13,20 +13,20 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: ${DB_HIKARI_MAX_POOL_SIZE}
-      minimum-idle: ${DB_HIKARI_MIN_IDLE}
+      maximum-pool-size: ${DB_HIKARI_MAX_POOL_SIZE:20}
+      minimum-idle: ${DB_HIKARI_MIN_IDLE:10}
       idle-timeout: 30000
       max-lifetime: 1800000
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: ${JPA_DDL_AUTO}
-      show-sql: ${JPA_SHOW_SQL}
+      ddl-auto: ${JPA_DDL_AUTO:update}
+      show-sql: ${JPA_SHOW_SQL:true}
     properties:
       hibernate:
-        format_sql: ${JPA_FORMAT_SQL}
-        use_sql_comments: ${JPA_USE_SQL_COMMENTS}
+        format_sql: ${JPA_FORMAT_SQL:true}
+        use_sql_comments: ${JPA_USE_SQL_COMMENTS:true}
     open-in-view: false
 
   data:
@@ -37,24 +37,24 @@ spring:
   task:
     execution:
       pool:
-        core-size: ${TASK_EXECUTION_CORE_SIZE}
-        max-size: ${TASK_EXECUTION_MAX_SIZE}
-        queue-capacity: ${TASK_EXECUTION_QUEUE_CAPACITY}
+        core-size: ${TASK_EXECUTION_CORE_SIZE:10}
+        max-size: ${TASK_EXECUTION_MAX_SIZE:20}
+        queue-capacity: ${TASK_EXECUTION_QUEUE_CAPACITY:50}
         keep-alive: 30s
 
   servlet:
     multipart:
-      max-file-size: ${MULTIPART_MAX_FILE_SIZE}
-      max-request-size: ${MULTIPART_MAX_REQUEST_SIZE}
+      max-file-size: ${MULTIPART_MAX_FILE_SIZE:10MB}
+      max-request-size: ${MULTIPART_MAX_REQUEST_SIZE:20MB}
 
   batch:
     jdbc:
-      initialize-schema:  ${BATCH_SCHEMA_INIT}
+      initialize-schema:  ${BATCH_SCHEMA_INIT:always}
     job:
       enabled: true
 
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${SERVER_PORT}
   forward-headers-strategy: framework
 
 jwt:
@@ -65,12 +65,12 @@ jwt:
 
 email:
   imap_host:
-    yandex: ${YANDEX_IMAP_HOST}
-    gmail: ${GMAIL_IMAP_HOST}
+    yandex: ${YANDEX_IMAP_HOST:imap.yandex.com}
+    gmail: ${GMAIL_IMAP_HOST:imap.gmail.com}
   imap_port: 993
   imap_ssl_enable: true
-  imap_store: ${EMAIL_IMAP_STORE}
-  imap_folder: ${EMAIL_IMAP_FOLDER}
+  imap_store: ${EMAIL_IMAP_STORE:imaps}
+  imap_folder: ${EMAIL_IMAP_FOLDER:INBOX}
   polling_interval_ms: 10000
 
 nlp:
@@ -110,8 +110,8 @@ ml:
 websocket:
   endpoint: /ws
   allowed-origins:
-#    - "http://localhost:3000"
-#    - "http://localhost:4200"
+    #    - "http://localhost:3000"
+    #    - "http://localhost:4200"
     - "*"
   heartbeat:
     interval: 30000
@@ -155,10 +155,3 @@ websocket:
 
 subscription:
   price: 790
-
-
-
-
-
-
-
