@@ -12,10 +12,10 @@ import com.example.database.model.company_subscription_module.user_roles.user.Us
 import com.example.database.model.crm_module.client.Client;
 import com.example.database.repository.chats_messages_module.ChatMessageRepository;
 import com.example.database.repository.chats_messages_module.ChatRepository;
-import com.example.database.repository.company_subscription_module.UserRepository;
 import com.example.domain.api.ans_api_module.event.AutoResponderEscalationEvent;
 import com.example.domain.api.ans_api_module.exception.AutoResponderException;
 import com.example.domain.api.ans_api_module.service.IAutoResponderService;
+import com.example.domain.api.chat_service_api.event.chat.*;
 import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.exception.service.ChatServiceException;
@@ -24,7 +24,6 @@ import com.example.domain.api.chat_service_api.model.dto.ChatDTO;
 import com.example.domain.api.chat_service_api.model.dto.ChatDetailsDTO;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
 import com.example.domain.api.chat_service_api.model.rest.chat.AssignChatRequestDTO;
-import com.example.domain.api.chat_service_api.model.rest.chat.CloseChatRequestDTO;
 import com.example.domain.api.chat_service_api.model.rest.chat.CreateChatRequestDTO;
 import com.example.domain.api.chat_service_api.model.rest.mesage.SendMessageRequestDTO;
 import com.example.domain.api.chat_service_api.service.*;
@@ -34,9 +33,8 @@ import com.example.domain.security.util.UserContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -61,14 +59,13 @@ public class ChatServiceImpl implements IChatService {
     private final ChatMapper chatMapper;
     private final ChatMessageRepository chatMessageRepository;
     private final IAssignmentService assignmentService;
-    private final WebSocketMessagingService messagingService;
     private final INotificationService notificationService;
     private final IAutoResponderService autoResponderService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
     public ChatDetailsDTO createChat(CreateChatRequestDTO createRequest) {
-
         Client client = clientService.findById(createRequest.getClientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Client with ID " + createRequest.getClientId() + " not found"));
 
@@ -80,8 +77,9 @@ public class ChatServiceImpl implements IChatService {
 
         Optional<Chat> existingChat = findOpenChatByClientAndChannel(createRequest.getClientId(), createRequest.getChatChannel());
         if (existingChat.isPresent()) {
-            log.warn("Open chat ID {} already exists for client {} on channel {}", existingChat.get().getId(), createRequest.getClientId(), createRequest.getChatChannel());
-            throw new ChatServiceException("Open chat already exists for this client and channel.");
+            Chat foundChat = existingChat.get();
+            log.warn("Open chat ID {} already exists for client {} on channel {}", foundChat.getId(), createRequest.getClientId(), createRequest.getChatChannel());
+            return chatMapper.toDetailsDto(foundChat);
         }
 
         Chat chat = createChatEntity(client, company, createRequest);
@@ -91,22 +89,23 @@ public class ChatServiceImpl implements IChatService {
         log.info("Saved initial chat entity with ID: {}", savedChat.getId());
 
         if (createRequest.getInitialMessageContent() != null && !createRequest.getInitialMessageContent().isBlank()) {
-            ChatMessage firstMessage = createChatMessageEntity(savedChat, client, null,
-                    ChatMessageSenderType.CLIENT, createRequest.getInitialMessageContent(), null, null);
-            chatMessageRepository.save(firstMessage);
-            savedChat.setLastMessageAt(firstMessage.getSentAt());
+            savedChat = buildSendMessageRequest(createRequest, client, savedChat);
         } else {
             savedChat.setLastMessageAt(savedChat.getCreatedAt());
+            savedChat = chatRepository.save(savedChat);
         }
-
-        chatRepository.save(savedChat);
 
         try {
             autoResponderService.processNewPendingChat(savedChat.getId());
             log.info("Auto-responder triggered for chat ID: {}", savedChat.getId());
-        } catch (AutoResponderException e) { log.error("Failed to trigger auto-responder for chat ID {}: {}", savedChat.getId(), e.getMessage(), e);
+        } catch (AutoResponderException e) {
+            log.error("Failed to trigger auto-responder for chat ID {}: {}", savedChat.getId(), e.getMessage(), e);
             throw new AutoResponderException(e.getMessage());
         }
+
+        ChatDTO chatDto = chatMapper.toDto(savedChat);
+        eventPublisher.publishEvent(new NewPendingChatEvent(this, chatDto, company.getId()));
+        log.debug("Published NewPendingChatEvent for chat ID {}", savedChat.getId());
 
         return chatMapper.toDetailsDto(savedChat);
     }
@@ -128,20 +127,37 @@ public class ChatServiceImpl implements IChatService {
 
         Optional<Chat> existingChat = findOpenChatByClientAndChannel(createRequest.getClientId(), createRequest.getChatChannel());
         if (existingChat.isPresent()) {
-            Chat foundChat = existingChat.get();
-            if (!Objects.equals(currentUser.getCompany().getId(), foundChat.getCompany().getId())) {
-                throw new AccessDeniedException("Access Denied: Existing chat belongs to a different company.");
-            }
-            return chatMapper.toDetailsDto(foundChat);
+            return chatMapper.toDetailsDto(existingChat.get());
         }
 
         Chat chat = createChatEntityWithOperator(client, currentUser, createRequest.getChatChannel());
-
         Chat savedChat = chatRepository.save(chat);
 
-        addInitialMessageIfNeeded(savedChat, client, createRequest.getInitialMessageContent());
+        if (StringUtils.hasText(createRequest.getInitialMessageContent())) {
+            savedChat = buildSendMessageRequest(createRequest, client, savedChat);
+        }
+
+        ChatDTO chatDto = chatMapper.toDto(savedChat);
+        eventPublisher.publishEvent(new ChatAssignedToOperatorEvent(this, chatDto, currentUser.getEmail(), currentUser.getCompany().getId()));
+        eventPublisher.publishEvent(new ChatStatusChangedEvent(this, savedChat.getId(), chatDto));
+        log.debug("Published ChatAssignedToOperatorEvent and ChatStatusChangedEvent for UI-created chat ID {}", savedChat.getId());
 
         return chatMapper.toDetailsDto(savedChat);
+    }
+
+    private Chat buildSendMessageRequest(CreateChatRequestDTO createRequest, Client client, Chat savedChat) {
+        SendMessageRequestDTO messageDto = new SendMessageRequestDTO();
+        messageDto.setChatId(savedChat.getId());
+        messageDto.setContent(createRequest.getInitialMessageContent());
+        messageDto.setSenderId(client.getId());
+        messageDto.setSenderType(ChatMessageSenderType.CLIENT);
+        messageDto.setExternalMessageId(null);
+        messageDto.setReplyToExternalMessageId(null);
+
+        chatMessageService.processAndSaveMessage(messageDto, messageDto.getSenderId(), messageDto.getSenderType());
+
+        savedChat = chatRepository.findById(savedChat.getId()).orElseThrow(() -> new ChatNotFoundException("Chat not found after saving initial message"));
+        return savedChat;
     }
 
     private Chat createChatEntityWithOperator(Client client, User operator, ChatChannel channel) {
@@ -188,7 +204,6 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-
     public ChatDetailsDTO requestOperatorEscalation(Integer chatId, Integer clientId) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
@@ -203,21 +218,50 @@ public class ChatServiceImpl implements IChatService {
 
         autoResponderService.stopForChat(chatId);
 
+        User previouslyAssignedOperator = chat.getUser();
+        ChatStatus previousStatus = chat.getStatus();
+        boolean operatorAssignedThisTime = false;
+
         if (chat.getUser() == null) {
-            Optional<User> operator = assignmentService.findLeastBusyOperator(chat.getCompany().getId());
-            if (operator.isPresent()) {
-                chat.setUser(operator.get());
-                notificationService.createNotification(operator.get(), chat,
-                        "CHAT_ASSIGNED", "Вам назначен чат #" + chat.getId());
+            Optional<User> operatorOpt = assignmentService.findLeastBusyOperator(chat.getCompany().getId());
+            if (operatorOpt.isPresent()) {
+                User operator = operatorOpt.get();
+                chat.setUser(operator);
+                chat.setAssignedAt(LocalDateTime.now());
+                notificationService.createNotification(operator, chat,
+                        "CHAT_ASSIGNED_ESCALATION", "Вам назначен чат #" + chat.getId() + " после эскалации.");
+                operatorAssignedThisTime = true;
             } else {
-                messagingService.sendMessage("/topic/operators/available/new-chats", chatMapper.toDto(chat));
+                if (chat.getStatus() != ChatStatus.PENDING_OPERATOR) {
+                    chat.setStatus(ChatStatus.PENDING_OPERATOR);
+                }
             }
         }
 
-        chat.setStatus(ChatStatus.ASSIGNED);
-        Chat updatedChat = chatRepository.save(chat);
+        if (chat.getUser() != null && chat.getStatus() != ChatStatus.ASSIGNED && chat.getStatus() != ChatStatus.IN_PROGRESS) {
+            chat.setStatus(ChatStatus.ASSIGNED);
+            if (chat.getAssignedAt() == null) chat.setAssignedAt(LocalDateTime.now());
+        }
 
-        messagingService.sendMessage("/topic/chat/" + chat.getId() + "/status", chatMapper.toDto(updatedChat));
+        Chat updatedChat = chatRepository.save(chat);
+        ChatDTO chatDto = chatMapper.toDto(updatedChat);
+
+        eventPublisher.publishEvent(new ChatEscalatedToOperatorEvent(this, chatDto, updatedChat.getCompany().getId()));
+        log.debug("Published ChatEscalatedToOperatorEvent for chat ID {}", updatedChat.getId());
+
+        if (operatorAssignedThisTime || (updatedChat.getUser() != null && (previouslyAssignedOperator == null || !Objects.equals(previouslyAssignedOperator.getId(), updatedChat.getUser().getId())))) {
+            eventPublisher.publishEvent(new ChatAssignedToOperatorEvent(this, chatDto, updatedChat.getUser().getEmail(), updatedChat.getCompany().getId()));
+            log.debug("Published ChatAssignedToOperatorEvent for escalated chat ID {}", updatedChat.getId());
+        }
+
+        if (previousStatus != updatedChat.getStatus()) {
+            eventPublisher.publishEvent(new ChatStatusChangedEvent(this, updatedChat.getId(), chatDto));
+            log.debug("Published ChatStatusChangedEvent for escalated chat ID {}", updatedChat.getId());
+            if (updatedChat.getStatus() == ChatStatus.PENDING_OPERATOR && updatedChat.getUser() == null) {
+                eventPublisher.publishEvent(new NewPendingChatEvent(this, chatDto, updatedChat.getCompany().getId()));
+                log.debug("Published NewPendingChatEvent for escalated chat ID {} (no operator found)", updatedChat.getId());
+            }
+        }
 
         return chatMapper.toDetailsDto(updatedChat);
     }
@@ -309,7 +353,6 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-
     public ChatDetailsDTO assignChat(AssignChatRequestDTO assignRequest) throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
 
@@ -332,7 +375,6 @@ public class ChatServiceImpl implements IChatService {
             if (operatorToAssign.getCompany() == null || !Objects.equals(operatorToAssign.getCompany().getId(), userContext.getCompanyId())) {
                 throw new ChatServiceException("Cannot assign an operator from a different company.");
             }
-
         } else {
             Optional<User> autoAssignedOperator = assignmentService.assignOperator(chat);
             operatorToAssign = autoAssignedOperator.orElseThrow(() ->
@@ -340,8 +382,12 @@ public class ChatServiceImpl implements IChatService {
         }
 
         if (chat.getStatus() == ChatStatus.ASSIGNED && chat.getUser() != null && Objects.equals(chat.getUser().getId(), operatorToAssign.getId())) {
-            return chatMapper.toDetailsDto(chatRepository.findById(chat.getId()).orElseThrow());
+            log.info("Chat {} already assigned to operator {}. No changes made.", chat.getId(), operatorToAssign.getId());
+            return chatMapper.toDetailsDto(chat);
         }
+
+        User previousOperator = chat.getUser();
+        ChatStatus previousStatus = chat.getStatus();
 
         chat.setUser(operatorToAssign);
         chat.setStatus(ChatStatus.ASSIGNED);
@@ -349,14 +395,19 @@ public class ChatServiceImpl implements IChatService {
 
         Chat updatedChat = chatRepository.save(chat);
         notificationService.createNotification(operatorToAssign, updatedChat, "CHAT_ASSIGNED", "Вам назначен чат #" + updatedChat.getId());
-        if (chat.getStatus() == ChatStatus.PENDING_OPERATOR) {
-            messagingService.sendMessage("/topic/operators/available/chat-assignment", chatMapper.toDto(updatedChat));
+
+        ChatDTO chatDto = chatMapper.toDto(updatedChat);
+        eventPublisher.publishEvent(new ChatAssignedToOperatorEvent(this, chatDto, operatorToAssign.getEmail(), updatedChat.getCompany().getId()));
+        log.debug("Published ChatAssignedToOperatorEvent for chat ID {} to operator {}", updatedChat.getId(), operatorToAssign.getEmail());
+
+        if (previousStatus != updatedChat.getStatus() ||
+                (previousOperator == null && updatedChat.getUser() != null) ||
+                (previousOperator != null && !Objects.equals(previousOperator.getId(), updatedChat.getUser().getId()))) {
+            eventPublisher.publishEvent(new ChatStatusChangedEvent(this, updatedChat.getId(), chatDto));
+            log.debug("Published ChatStatusChangedEvent for chat ID {} (status/operator change)", updatedChat.getId());
         }
 
-        Chat chatWithDetails = chatRepository.findById(updatedChat.getId())
-                .orElseThrow(() -> new RuntimeException("Failed to load assigned chat details after saving"));
-
-        return chatMapper.toDetailsDto(chatWithDetails);
+        return chatMapper.toDetailsDto(chatRepository.findById(updatedChat.getId()).orElseThrow());
     }
 
     @Override
@@ -370,24 +421,38 @@ public class ChatServiceImpl implements IChatService {
             throw new ChatServiceException("Chat with ID " + chatId + " is already closed or archived.");
         }
 
+        ChatStatus previousStatus = chat.getStatus();
+        User assignedOperator = chat.getUser();
+
         chat.setStatus(ChatStatus.CLOSED);
         chat.setClosedAt(LocalDateTime.now());
 
         Chat closedChat = chatRepository.save(chat);
+
         if (closedChat.getUser() != null) {
             notificationService.createNotification(closedChat.getUser(), closedChat, "CHAT_CLOSED", "Чат #" + closedChat.getId() + " был закрыт.");
         }
 
-        messagingService.sendMessage("/topic/chat/" + closedChat.getId() + "/status", chatMapper.toDto(closedChat));
-        Chat chatWithDetails = chatRepository.findById(closedChat.getId())
-                .orElseThrow(() -> new RuntimeException("Failed to load closed chat details after saving"));
+        ChatDTO chatDto = chatMapper.toDto(closedChat);
 
-        return chatMapper.toDetailsDto(chatWithDetails);
+        eventPublisher.publishEvent(new ChatClosedEvent(
+                this,
+                chatDto,
+                assignedOperator != null ? assignedOperator.getEmail() : null,
+                closedChat.getCompany().getId()
+        ));
+        log.debug("Published ChatClosedEvent for chat ID {}", closedChat.getId());
+
+        if (previousStatus != closedChat.getStatus()) {
+            eventPublisher.publishEvent(new ChatStatusChangedEvent(this, closedChat.getId(), chatDto));
+            log.debug("Published ChatStatusChangedEvent for chat ID {} (closed)", closedChat.getId());
+        }
+
+        return chatMapper.toDetailsDto(chatRepository.findById(closedChat.getId()).orElseThrow());
     }
 
     @Override
     @Transactional(readOnly = true)
-
     public ChatDetailsDTO getChatDetails(Integer chatId) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
@@ -423,7 +488,6 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional(readOnly = true)
-
     public List<ChatDTO> getMyChats(Set<ChatStatus> statuses) throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer currentUserId = userContext.getUserId();
@@ -454,7 +518,6 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional(readOnly = true)
-
     public List<ChatDTO> getChatsForCurrentUser(Set<ChatStatus> statuses) {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer currentUserId = userContext.getUserId();
@@ -494,7 +557,6 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional(readOnly = true)
-
     public List<ChatDTO> getOperatorChats(Integer operatorId, Set<ChatStatus> statuses) throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer userCompanyId = userContext.getCompanyId();
@@ -526,7 +588,6 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional(readOnly = true)
-
     public List<ChatDTO> getMyCompanyWaitingChats() throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer userCompanyId = userContext.getCompanyId();
@@ -544,13 +605,9 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-
     public void updateChatStatus(Integer chatId, ChatStatus newStatus) {
-        UserContext userContext = UserContextHolder.getRequiredContext();
-
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
-
 
         chat.setStatus(newStatus);
         if (newStatus == ChatStatus.CLOSED) {
@@ -560,9 +617,6 @@ public class ChatServiceImpl implements IChatService {
         }
 
         chatRepository.save(chat);
-        log.info("Chat ID {} status changed to {} by user {}", chatId, newStatus, userContext.getUserId());
-
-        messagingService.sendMessage("/topic/chat/" + chatId + "/status", chatMapper.toDto(chat));
     }
 
     @Override
@@ -610,10 +664,15 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-
     public MessageDto sendOperatorMessage(Integer chatId, String content) {
         UserContext userContext = UserContextHolder.getRequiredContext();
-        Integer currentUserId = userContext.getUserId();
+        Integer operatorId  = userContext.getUserId();
+
+        SendMessageRequestDTO messageRequest = new SendMessageRequestDTO();
+        messageRequest.setChatId(chatId);
+        messageRequest.setContent(content);
+        messageRequest.setSenderId(operatorId);
+        messageRequest.setSenderType(ChatMessageSenderType.OPERATOR);
 
         Chat chatEntity = chatRepository.findById(chatId)
                 .orElseThrow(() -> {
@@ -627,23 +686,14 @@ public class ChatServiceImpl implements IChatService {
             throw new ChatServiceException("Cannot send message to chat with status: " + chatEntity.getStatus() + ". Allowed statuses: ASSIGNED, IN_PROGRESS.");
         }
 
-        SendMessageRequestDTO serviceRequest = new SendMessageRequestDTO();
-        serviceRequest.setChatId(chatEntity.getId());
-        serviceRequest.setContent(content);
-
-        serviceRequest.setSenderId(currentUserId);
-        serviceRequest.setSenderType(ChatMessageSenderType.OPERATOR);
-
-        return chatMessageService.processAndSaveMessage(
-                serviceRequest,
-                serviceRequest.getSenderId(),
-                serviceRequest.getSenderType()
+        return chatMessageService.processAndSaveMessage(messageRequest,
+                messageRequest.getSenderId(),
+                messageRequest.getSenderType()
         );
     }
 
     @Override
     @Transactional
-
     public ChatDetailsDTO createTestChatForCurrentUser() throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer currentUserId = userContext.getUserId();
@@ -684,7 +734,6 @@ public class ChatServiceImpl implements IChatService {
 
     @Override
     @Transactional
-
     public void markClientMessagesAsReadByCurrentUser(Integer chatId, Collection<Integer> messageIds) {
         UserContext userContext = UserContextHolder.getRequiredContext();
         Integer currentUserId = userContext.getUserId();

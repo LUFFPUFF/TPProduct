@@ -47,7 +47,6 @@ public class ChatUiController {
     private final CurrentUserDataService userDataService;
 
     private Integer getCurrentOperatorId() {
-
         return userDataService.getUser().getId();
     }
 

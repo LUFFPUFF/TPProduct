@@ -28,6 +28,8 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Intege
 
     List<ChatMessage> findByChatIdOrderBySentAtAsc(Integer chatId);
 
+    Optional<ChatMessage> findByIdAndExternalMessageId(Integer id, String externalMessageId);
+
     @Modifying
     @Query("UPDATE ChatMessage m SET m.status = :status WHERE m.id = :messageId")
     int updateStatus(@Param("messageId") Integer messageId, @Param("status") MessageStatus status);

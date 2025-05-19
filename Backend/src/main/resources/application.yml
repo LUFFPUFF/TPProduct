@@ -1,137 +1,88 @@
 spring:
   application:
     name: Backend
+  main:
+    allow-bean-definition-overriding: true
   devtools:
     livereload:
       enabled: false
 
-
   datasource:
-    url: jdbc:postgresql://postgres:5432/ans_machine_db
-    username: postgres
-    password: p855060123d
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 20
-      minimum-idle: 10
+      maximum-pool-size: ${DB_HIKARI_MAX_POOL_SIZE}
+      minimum-idle: ${DB_HIKARI_MIN_IDLE}
       idle-timeout: 30000
       max-lifetime: 1800000
-
-  data:
-    redis:
-      host: redis
-      port: 6379
-
-  task:
-    execution:
-      pool:
-        core-size: 10
-        max-size: 20
-        queue-capacity: 50
-        keep-alive: 30s
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
-      show-sql: true
+      ddl-auto: ${JPA_DDL_AUTO}
+      show-sql: ${JPA_SHOW_SQL}
     properties:
       hibernate:
-        format_sql: true
-        use_sql_comments: true
+        format_sql: ${JPA_FORMAT_SQL}
+        use_sql_comments: ${JPA_USE_SQL_COMMENTS}
     open-in-view: false
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+
+  task:
+    execution:
+      pool:
+        core-size: ${TASK_EXECUTION_CORE_SIZE}
+        max-size: ${TASK_EXECUTION_MAX_SIZE}
+        queue-capacity: ${TASK_EXECUTION_QUEUE_CAPACITY}
+        keep-alive: 30s
 
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 20MB
+      max-file-size: ${MULTIPART_MAX_FILE_SIZE}
+      max-request-size: ${MULTIPART_MAX_REQUEST_SIZE}
 
   batch:
     jdbc:
-      initialize-schema: always
+      initialize-schema:  ${BATCH_SCHEMA_INIT}
     job:
       enabled: true
 
-  main:
-    allow-bean-definition-overriding: true
-
-
-validation:
-  file-upload:
-    max-file-size: 10MB
-    allowed-file-types:
-      - "image/png"
-      - "image/jpeg"
-      - "application/pdf"
-
-file-upload:
-  location: /uploads
-  clamav-host: localhost
-  clamav-port: 3310
+server:
+  port: ${SERVER_PORT:8080}
+  forward-headers-strategy: framework
 
 jwt:
-  secret: "sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3"
-  access-expiration: 100000
-  refresh-expiration: 86400000
+  secret: ${JWT_SECRET}
+  access-expiration: ${JWT_ACCESS_EXPIRATION}
+  refresh-expiration: ${JWT_REFRESH_EXPIRATION}
   isLocal: false
-
-# Настройки чатов
-chat:
-  limits:
-    max-messages-per-chat: 1000
-    max-attachments-per-message: 5
-    max-message-length: 1000
-    max-chats-per-user: 10
-    max-users-per-chat: 5
-    message-rate-limit: 60
-    attachment-max-size: 10MB
-  lifetime:
-    inactive-chat-close-time: PT24H
-  status:
-    active: ACTIVE
-    closed: CLOSED
-    pending: PENDING
-
-# Настройки уведомлений
-notification:
-  interval: 5s
-  templates:
-    new-message: "Новое сообщение от %s: %s"
-    operator-typing: "Оператор печатает..."
-
-telegram:
-  username: dialog_x_qanswer_bot
-  token: 7520341907:AAFkCZPkx7d676-qwLMuAhfL4jaXWlU_Blg
-
-vk:
-  bot:
-    token:
-  group:
-    id:
-  api:
-    version: 5.199
 
 email:
   imap_host:
-    yandex: "imap.yandex.com"
-    gmail: "imap.gmail.com"
+    yandex: ${YANDEX_IMAP_HOST}
+    gmail: ${GMAIL_IMAP_HOST}
   imap_port: 993
   imap_ssl_enable: true
-  imap_store: "imaps"
-  imap_folder: "INBOX"
+  imap_store: ${EMAIL_IMAP_STORE}
+  imap_folder: ${EMAIL_IMAP_FOLDER}
   polling_interval_ms: 10000
-
 
 nlp:
   lemmatizer:
     implementation: external-api
-    api-url: https://lindat.mff.cuni.cz/services/udpipe/api/process
+    api-url: ${NLP_LEMMATIZER_API_URL}
     connectTimeoutMillis: 5000
     read-timeout-millis: 30000
   api:
     client:
-      embedding-api-url: https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2
-      apiKey: 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
+      embedding-api-url: ${NLP_EMBEDDING_API_URL}
+      apiKey: ${NLP_EMBEDDING_API_KEY}
       connection-timeout-millis: 5000
       read-timeout-millis: 30000
       max-batch-size: 50
@@ -143,11 +94,11 @@ answersearch:
 
 ml:
   service:
-    base-url: http://localhost:8000/generate
+    base-url: ${ML_SERVICE_BASE_URL}
   prompts:
-    correction-prompt-template: "Исправь орфографические, пунктуационные и грамматические ошибки в следующем предложении, строго соблюдая нормы современного русского языка. Дай только исправленный вариант без пояснений: %s"
-    rewrite-instruction-template: "Перепиши следующий корпоративный ответ, сделав его более дружелюбным, теплым и естественным, но при этом не перегруженным деталями. Сделай так, чтобы ответ звучал приветливо и было ощущение личного общения. Также убедись, что ответ остается коротким и по делу."
-    rewrite-prompt-template: "%sШаблонный ответ: %s. Дай только измененный вариант."
+    correction-prompt-template: ${PROMPT_CORRECTION}
+    rewrite-instruction-template: ${PROMPT_REWRITE_INSTRUCTION}
+    rewrite-prompt-template: ${PROMPT_REWRITE}
   params:
     temperature: 0.7
     max-new-tokens: 150
@@ -155,25 +106,56 @@ ml:
     do-sample: false
     stream: false
     max-retries: 3
+
 websocket:
   endpoint: /ws
-  allowed-origins: "http://localhost:8080"
+  allowed-origins:
+#    - "http://localhost:3000"
+#    - "http://localhost:4200"
+    - "*"
   heartbeat:
-    interval: 30000 # Интервал отправки heartbeat (пингов) от сервера клиенту (мс)
-    timeout: 10000  # Время ожидания ответа на пинг перед разрывом соединения (мс)
+    interval: 30000
+    timeout: 10000
   message:
-    buffer-size: 16384 # Размер буфера входящих сообщений (байты)
-    send-timeout: 3000 # Таймаут отправки сообщения (мс)
+    buffer-size: 16384
+    send-timeout: 3000
+  transport-message-size-limit: 131072
   stomp:
     simple-broker:
       enabled: true
-      destination-prefix: /topic/,/queue/
-      application-destination-prefix: /app
-      user-destination-prefix: /user
+      destination-prefixes:
+        - /topic/
+        - /queue/
+    application-destination-prefix: /app
+    user-destination-prefix: /user
+  topics:
+    company:
+      pending-chats: ${TOPIC_PENDING_CHATS_COMPANY}
+      assigned-chats: ${TOPIC_ASSIGNED_CHATS_COMPANY}
+    chat:
+      base: ${TOPIC_BASE_CHATS}
+      status: ${TOPIC_STATUS_CHATS}
+      messages: ${TOPIC_MESSAGES_CHATS}
+      typing: ${TOPIC_TYPING_CHATS}
+    user:
+      base: ${TOPIC_BASE_USER}
+      notifications: ${TOPIC_NOTIFICATIONS_USER}
+      assigned-chats: ${TOPIC_ASSIGNED_CHATS_USER}
+      chat-closed: ${TOPIC_CLOSED_CHAT_USER}
+  security:
+    jwt:
+      header-name: Authorization
+      token-prefix: "Bearer "
+  broker:
+    task-scheduler-pool-size: 2
+    inbound-channel-core-pool-size: 4
+    inbound-channel-max-pool-size: 8
+    outbound-channel-core-pool-size: 4
+    outbound-channel-max-pool-size: 8
+
 subscription:
   price: 790
-server:
-  forward-headers-strategy: framework
+
 
 
 

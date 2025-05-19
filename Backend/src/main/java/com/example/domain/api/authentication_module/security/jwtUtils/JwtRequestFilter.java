@@ -72,5 +72,4 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         return tokenDto;
     }
 
-
 }

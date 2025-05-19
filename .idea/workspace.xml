@@ -8,141 +8,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="fix jwtfilter">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/fa0ae2bb-c4c2-407d-9196-c5342e35f0be.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/fa0ae2bb-c4c2-407d-9196-c5342e35f0be.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/exception_handler_auth/AuthValidationException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/exception_handler_auth/EmailExistsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/exception_handler_auth/EmailExistsException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/exception_handler_auth/InvalidRegistrationCodeException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/exception_handler_auth/InvalidRegistrationCodeException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/exception_handler_auth/InvalidTokenSignException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/exception_handler_auth/InvalidTokenSignException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/exception_handler_auth/NotFoundUserException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/exception_handler_auth/NotFoundUserException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/exception_handler_auth/WrongPasswordException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/exception_handler_auth/WrongPasswordException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/AuthServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/AuthServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/impl/IntegrationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/impl/IntegrationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/Backend.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/database/repository/chats_messages_module/ChatMessageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/database/repository/chats_messages_module/ChatMessageRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/jwtUtils/JwtRequestFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/jwtUtils/JwtRequestFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/config/WebSocketConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/config/WebSocketConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/controller/ChatWebSocketController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/WebSocketMessagingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/WebSocketMessagingService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/impl/ChatMessageServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/impl/ChatMessageServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/impl/ChatServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/impl/ChatServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/company_module/exception_handler_company/CountOfOperatorsException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/company_module/exception_handler_company/NotFoundCompanyException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/company_module/exception_handler_company/NotFoundCompanyException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/company_module/exception_handler_company/SelfMemberDisbandException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/company_module/exception_handler_company/SelfMemberDisbandException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/subscription_module/exception_handler_subscription/AlreadyInCompanyException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/subscription_module/exception_handler_subscription/AlreadyInCompanyException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/subscription_module/exception_handler_subscription/MaxOperatorsCountException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/subscription_module/exception_handler_subscription/MaxOperatorsCountException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/subscription_module/exception_handler_subscription/NotFoundSubscriptionException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/subscription_module/exception_handler_subscription/NotFoundSubscriptionException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/subscription_module/exception_handler_subscription/PaymentTransactionException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/subscription_module/exception_handler_subscription/PaymentTransactionException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/subscription_module/exception_handler_subscription/SubtractOperatorException.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/subscription_module/exception_handler_subscription/SubtractOperatorException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/security/aop/AccessControlAspect.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/security/aop/ChatAccessControlAspect.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/security/aop/SecureChatAccessAspect.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/security/aop/annotation/CheckChatCompanyAccess.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/security/aop/annotation/RequireRole.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/security/aop/annotation/SecureChatAccess.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/answer-json.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/application.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/model/ai_module/PredefinedAnswer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/model/chats_messages_module/chat/ChatChannel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/model/company_subscription_module/company/Company.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/model/company_subscription_module/company/CompanyMailConfiguration.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/model/company_subscription_module/user_roles/UserRole.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/model/company_subscription_module/user_roles/user/Role.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/chats_messages_module/ChatRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/company_subscription_module/CompanyMailConfigurationRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/company_subscription_module/CompanyTelegramConfigurationRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/company_subscription_module/UserRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/company_subscription_module/UserRoleRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/crm_module/ClientRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/answer_finder/controller/AnswerSearchController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/answer_finder/dto/rest/AnswerSearchRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/answer_finder/search/AnswerMatcher.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/answer_finder/search/similarity_calculator/EmbeddingSimilarityCalculator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/correction_answer/config/MLParamsConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/correction_answer/config/TextProcessingConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/correction_answer/dto/GenerationResponse$GenerationResponseBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/correction_answer/dto/GenerationResponse$Metadata.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/correction_answer/dto/GenerationResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/correction_answer/service/TextProcessingApiClient.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/correction_answer/service/TextProcessingService$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/correction_answer/service/TextProcessingService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/service/impl/AutoResponderServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/mapper/PredefinedAnswerMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/mapper/PredefinedAnswerMapperImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/services/answer/PredefinedAnswerService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/services/answer/impl/FileProcessorServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/ans_api_module/template/services/answer/impl/PredefinedAnswerServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/controller/RegistrationController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/security/UserDetailsServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/security/config/SecurityConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/security/jwtUtils/JWTUtilsService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/security/jwtUtils/impl/JWTUtilsServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/service/impl/RoleServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/service/impl/UserDataServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/service/interfaces/RegistrationService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/service/interfaces/RoleService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/authentication_module/service/interfaces/UserDataService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/controller/ChatWebSocketController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/config/IntegrationConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/controller/IntegrationController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/dto/IntegrationMailDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/dto/IntegrationTelegramDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/dto/rest/CreateMailConfigurationRequest$CreateMailConfigurationRequestBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/dto/rest/CreateMailConfigurationRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/dto/rest/CreateTelegramConfigurationRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/listener/OutgoingMessageQueueListener$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/listener/OutgoingMessageQueueListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/listener/SendMessageCommand$SendMessageCommandBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/listener/SendMessageCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/mail/dialog_bot/EmailDialogBot.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/mail/dialog_bot/EmailParserFactory.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/mail/parser/AbstractEmailParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/mail/parser/GmailParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/mail/parser/YandexParser.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/mail/properties/EmailProperties.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapperImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/process_service/ClientCompanyProcessService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/service/IIntegrationService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/service/impl/ExternalMessagingServiceImpl$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/service/impl/ExternalMessagingServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/service/impl/IntegrationServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/BotPollingProcess.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramApiClient.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramApiResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramApiUserResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramBotManager$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramBotManager.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramResponse$TelegramResponseBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/integration/telegram/TelegramResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/IChatMessageService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/IChatService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/IClientService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/impl/ChatMessageServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/impl/ChatServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/impl/ClientServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/chat_service_api/service/security/IChatSecurityService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/subscription_module/controller/SubscriptionController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/subscription_module/service/SubscriptionService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/subscription_module/service/impl/SubscriptionPriceCalculateServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/api/subscription_module/service/impl/SubscriptionServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/dto/PriceDto$PriceDtoBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/dto/PriceDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/dto/UserCompanyRolesDto$UserCompanyRolesDtoBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/dto/UserCompanyRolesDto.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/security/aop/AccessControlAspect.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/security/aop/ChatAccessControlAspect.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/security/aop/SecureChatAccessAspect.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/security/aop/annotation/CheckChatCompanyAccess.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/security/aop/annotation/RequireRole.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/security/aop/annotation/SecureChatAccess.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/security/config/WebConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/security/context/UserContextInterceptor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/security/model/UserContext$UserContextBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/security/model/UserContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/security/service/UserContextLoader.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/domain/security/util/UserContextHolder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/ui/config/BatchInfrastructureConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/ui/controller/ChatUiController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/ui/controller/PredefinedAnswerUIController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/ui/dto/chat/rest/CreateUiTestChatRequest$CreateUiTestChatRequestBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/ui/mapper/chat/UINotificationMapper.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/ui/mapper/chat/UINotificationMapperImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/ui/run/SpringBootStartApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/ui/controller/ChatUiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/ui/controller/ChatUiController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/ui/description_api/API-chat_module.md" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/ui/description_api/API-chat_module.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -170,6 +51,7 @@
         <option value="Interface" />
         <option value="AnnotationType" />
         <option value="Exception" />
+        <option value="Record" />
         <option value="Class" />
       </list>
     </option>
@@ -199,7 +81,7 @@
   &quot;isMigrated&quot;: true
 }</component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -237,7 +119,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.SpringBootStartApplication.executor": "Run",
     "extract.method.default.visibility": "private",
-    "git-widget-placeholder": "DX-162",
+    "git-widget-placeholder": "DX-178",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/Admin/Desktop/postgresql-42.7.3.jar",
     "node.js.detected.package.eslint": "true",

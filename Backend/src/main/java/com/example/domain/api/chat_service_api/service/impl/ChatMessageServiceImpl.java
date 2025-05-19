@@ -13,19 +13,22 @@ import com.example.database.repository.chats_messages_module.ChatMessageReposito
 import com.example.database.repository.chats_messages_module.ChatRepository;
 import com.example.database.repository.company_subscription_module.UserRepository;
 import com.example.database.repository.crm_module.ClientRepository;
+import com.example.domain.api.chat_service_api.event.chat.ChatStatusChangedEvent;
+import com.example.domain.api.chat_service_api.event.message.ChatMessageSentEvent;
+import com.example.domain.api.chat_service_api.event.message.ChatMessageStatusUpdatedEvent;
 import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.exception.ExternalMessagingException;
 import com.example.domain.api.chat_service_api.integration.service.IExternalMessagingService;
+import com.example.domain.api.chat_service_api.mapper.ChatMapper;
 import com.example.domain.api.chat_service_api.mapper.ChatMessageMapper;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
-import com.example.domain.api.chat_service_api.model.dto.MessageStatusUpdateDTO;
 import com.example.domain.api.chat_service_api.model.rest.mesage.SendMessageRequestDTO;
 import com.example.domain.api.chat_service_api.service.IChatMessageService;
-import com.example.domain.api.chat_service_api.service.WebSocketMessagingService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,8 +51,9 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     private final UserRepository userRepository;
     private final ClientRepository clientRepository;
     private final ChatMessageMapper chatMessageMapper;
-    private final WebSocketMessagingService messagingService;
     private final IExternalMessagingService externalMessagingService;
+    private final ApplicationEventPublisher eventPublisher;
+    private final ChatMapper chatMapper;
 
     private static final int MAX_CONTENT_LENGTH = 255;
     private static final String TRUNCATE_INDICATOR = "...";
@@ -97,8 +101,10 @@ public class ChatMessageServiceImpl implements IChatMessageService {
 
         MessageDto savedMessageDTO = chatMessageMapper.toDto(savedMessage);
 
-        String destination = "/topic/chat/" + chat.getId() + "/messages";
-        messagingService.sendMessage(destination, savedMessageDTO);
+        eventPublisher.publishEvent(new ChatMessageSentEvent(this, savedMessageDTO));
+        log.debug("Published ChatMessageSentEvent for message ID {}", savedMessage.getId());
+
+        eventPublisher.publishEvent(new ChatStatusChangedEvent(this, chat.getId(), chatMapper.toDto(chat)));
 
         if (senderType == ChatMessageSenderType.OPERATOR && savedMessage.getContent() != null && !savedMessage.getContent().trim().isEmpty()) {
             log.info("Processing message from OPERATOR for external sending to chat ID {}", chat.getId());
@@ -110,13 +116,11 @@ public class ChatMessageServiceImpl implements IChatMessageService {
             }
         }
 
-
         return savedMessageDTO;
     }
 
     @Override
     @Transactional(readOnly = true)
-
     public List<MessageDto> getMessagesByChatId(Integer chatId) {
         List<ChatMessage> messages = chatMessageRepository.findByChatIdOrderBySentAtAsc(chatId);
 
@@ -136,14 +140,8 @@ public class ChatMessageServiceImpl implements IChatMessageService {
         ChatMessage updatedMessage = chatMessageRepository.save(message);
         MessageDto updatedMessageDTO = chatMessageMapper.toDto(updatedMessage);
 
-        MessageStatusUpdateDTO statusUpdateDTO = new MessageStatusUpdateDTO();
-        statusUpdateDTO.setMessageId(updatedMessage.getId());
-        statusUpdateDTO.setChatId(updatedMessage.getChat().getId());
-        statusUpdateDTO.setNewStatus(updatedMessage.getStatus());
-        statusUpdateDTO.setTimestamp(LocalDateTime.now());
-
-        String destination = "/topic/chat/" + updatedMessage.getChat().getId() + "/messages";
-        messagingService.sendMessage(destination, statusUpdateDTO);
+        eventPublisher.publishEvent(new ChatMessageStatusUpdatedEvent(this, updatedMessageDTO));
+        log.debug("Published ChatMessageStatusUpdatedEvent for message ID {} to status {}", updatedMessage.getId(), newStatus);
 
         return updatedMessageDTO;
     }
@@ -156,18 +154,25 @@ public class ChatMessageServiceImpl implements IChatMessageService {
             return 0;
         }
 
-        int updatedCount = chatMessageRepository.markClientMessagesAsRead(chatId, MessageStatus.READ, messageIds);
+        List<ChatMessage> messagesToUpdate = chatMessageRepository.findAllById(messageIds).stream()
+                .filter(msg -> Objects.equals(msg.getChat().getId(), chatId) &&
+                        msg.getSenderType() == ChatMessageSenderType.CLIENT &&
+                        msg.getStatus() != MessageStatus.READ)
+                .toList();
 
-        if (updatedCount > 0) {
-            String destination = "/topic/chat/" + chatId + "/messages";
-            for (Integer messageId : messageIds) {
-                MessageStatusUpdateDTO statusUpdateDTO = new MessageStatusUpdateDTO();
-                statusUpdateDTO.setMessageId(messageId);
-                statusUpdateDTO.setChatId(chatId);
-                statusUpdateDTO.setNewStatus(MessageStatus.READ);
-                statusUpdateDTO.setTimestamp(LocalDateTime.now());
-                messagingService.sendMessage(destination, statusUpdateDTO);
-            }
+        if (messagesToUpdate.isEmpty()) {
+            return 0;
+        }
+
+        int updatedCount = 0;
+        for (ChatMessage message : messagesToUpdate) {
+            message.setStatus(MessageStatus.READ);
+            chatMessageRepository.save(message);
+            updatedCount++;
+
+            MessageDto updatedMessageDTO = chatMessageMapper.toDto(message);
+            eventPublisher.publishEvent(new ChatMessageStatusUpdatedEvent(this, updatedMessageDTO));
+            log.debug("Published ChatMessageStatusUpdatedEvent for read client message ID {}", updatedMessageDTO.getId());
         }
         return updatedCount;
     }
@@ -204,33 +209,32 @@ public class ChatMessageServiceImpl implements IChatMessageService {
     }
 
     @Override
-
     public int updateOperatorMessageStatusByExternalId(Integer chatId, String externalMessageId, MessageStatus newStatus) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found"));
 
-        int updatedCount = chatMessageRepository.updateOperatorMessageStatusByExternalId(chatId, newStatus, externalMessageId);
-
-        if (updatedCount > 0) {
-            Optional<ChatMessage> updatedMsgOptional = chatMessageRepository.findByExternalMessageId(externalMessageId)
-                    .filter(msg -> Objects.equals(msg.getChat().getId(), chatId));
-
-            if (updatedMsgOptional.isPresent()) {
-                ChatMessage updatedMsg = updatedMsgOptional.get();
-                MessageStatusUpdateDTO statusUpdateDTO = new MessageStatusUpdateDTO();
-                statusUpdateDTO.setMessageId(updatedMsg.getId());
-                statusUpdateDTO.setChatId(updatedMsg.getChat().getId());
-                statusUpdateDTO.setNewStatus(newStatus);
-                statusUpdateDTO.setTimestamp(LocalDateTime.now());
-
-                String destination = "/topic/chat/" + chat.getId() + "/messages";
-                messagingService.sendMessage(destination, statusUpdateDTO);
-            } else {
-                log.warn("Warning: Updated status for external message ID {} in chat {}, but could not retrieve updated message for WS notification.", externalMessageId, chatId);
-            }
+        Optional<ChatMessage> messageOptional = chatMessageRepository.findByIdAndExternalMessageId(chatId, externalMessageId);
+        if (messageOptional.isEmpty()) {
+            log.warn("Message with external ID {} not found in chat {} for status update by external ID.", externalMessageId, chatId);
+            return 0;
         }
 
-        return updatedCount;
+        ChatMessage message = messageOptional.get();
+        if (message.getStatus() == newStatus) {
+            log.debug("Operator message {} (external ID {}) in chat {} already has status {}. No event published.",
+                    message.getId(), externalMessageId, chatId, newStatus);
+            return 0;
+        }
+
+        message.setStatus(newStatus);
+        ChatMessage updatedMessage = chatMessageRepository.save(message);
+
+        MessageDto updatedMessageDTO = chatMessageMapper.toDto(updatedMessage);
+        eventPublisher.publishEvent(new ChatMessageStatusUpdatedEvent(this, updatedMessageDTO));
+        log.debug("Published ChatMessageStatusUpdatedEvent for operator message ID {} (external ID {}), new status {}",
+                updatedMessage.getId(), externalMessageId, newStatus);
+
+        return 1;
     }
 
     @Override
@@ -239,24 +243,21 @@ public class ChatMessageServiceImpl implements IChatMessageService {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private void checkAndUpdateChatStatus(Chat chat, User operator) {
-        if (chat.getStatus() != ChatStatus.ASSIGNED) {
-            return;
+    private boolean checkAndUpdateChatStatus(Chat chat, User operator) {
+        boolean statusChanged = false;
+        if (chat.getStatus() == ChatStatus.ASSIGNED) {
+            if (chat.getUser() == null || Objects.equals(chat.getUser().getId(), operator.getId())) {
+                if (chat.getUser() == null) {
+                    chat.setUser(operator);
+                    if (chat.getAssignedAt() == null) chat.setAssignedAt(LocalDateTime.now());
+                }
+                chat.setStatus(ChatStatus.IN_PROGRESS);
+                statusChanged = true;
+                log.info("Chat {} status updated to IN_PROGRESS by operator {}", chat.getId(), operator.getId());
+            }
         }
 
-        long operatorMessagesCount = chatMessageRepository.countByChatAndSenderOperatorAndSenderType(
-                chat,
-                operator,
-                ChatMessageSenderType.OPERATOR
-        );
-
-        if (operatorMessagesCount >= 5) {
-            chat.setStatus(ChatStatus.IN_PROGRESS);
-            chatRepository.save(chat);
-
-            log.info("Chat {} status updated to IN_PROGRESS (operator {} sent {} messages)",
-                    chat.getId(), operator.getId(), operatorMessagesCount);
-        }
+        return statusChanged;
     }
 
     private String truncateContent(String content, int maxLength, String truncateIndicator) {
