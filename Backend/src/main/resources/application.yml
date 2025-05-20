@@ -1,88 +1,137 @@
 spring:
   application:
     name: Backend
-  main:
-    allow-bean-definition-overriding: true
   devtools:
     livereload:
       enabled: false
 
+
   datasource:
-    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:postgresql://postgres:5432/ans_machine_db
+    username: postgres
+    password: p855060123d
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: ${DB_HIKARI_MAX_POOL_SIZE:20}
-      minimum-idle: ${DB_HIKARI_MIN_IDLE:10}
+      maximum-pool-size: 20
+      minimum-idle: 10
       idle-timeout: 30000
       max-lifetime: 1800000
 
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: ${JPA_DDL_AUTO:update}
-      show-sql: ${JPA_SHOW_SQL:true}
-    properties:
-      hibernate:
-        format_sql: ${JPA_FORMAT_SQL:true}
-        use_sql_comments: ${JPA_USE_SQL_COMMENTS:true}
-    open-in-view: false
-
   data:
     redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
+      host: redis
+      port: 6379
 
   task:
     execution:
       pool:
-        core-size: ${TASK_EXECUTION_CORE_SIZE:10}
-        max-size: ${TASK_EXECUTION_MAX_SIZE:20}
-        queue-capacity: ${TASK_EXECUTION_QUEUE_CAPACITY:50}
+        core-size: 10
+        max-size: 20
+        queue-capacity: 50
         keep-alive: 30s
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+    open-in-view: false
 
   servlet:
     multipart:
-      max-file-size: ${MULTIPART_MAX_FILE_SIZE:10MB}
-      max-request-size: ${MULTIPART_MAX_REQUEST_SIZE:20MB}
+      max-file-size: 10MB
+      max-request-size: 20MB
 
   batch:
     jdbc:
-      initialize-schema:  ${BATCH_SCHEMA_INIT:always}
+      initialize-schema: always
     job:
       enabled: true
 
-server:
-  port: 8080
-  forward-headers-strategy: framework
+  main:
+    allow-bean-definition-overriding: true
+
+
+validation:
+  file-upload:
+    max-file-size: 10MB
+    allowed-file-types:
+      - "image/png"
+      - "image/jpeg"
+      - "application/pdf"
+
+file-upload:
+  location: /uploads
+  clamav-host: localhost
+  clamav-port: 3310
 
 jwt:
-  secret: ${JWT_SECRET}
-  access-expiration: ${JWT_ACCESS_EXPIRATION}
-  refresh-expiration: ${JWT_REFRESH_EXPIRATION}
+  secret: "sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3"
+  access-expiration: 100000
+  refresh-expiration: 86400000
   isLocal: false
+
+# Настройки чатов
+chat:
+  limits:
+    max-messages-per-chat: 1000
+    max-attachments-per-message: 5
+    max-message-length: 1000
+    max-chats-per-user: 10
+    max-users-per-chat: 5
+    message-rate-limit: 60
+    attachment-max-size: 10MB
+  lifetime:
+    inactive-chat-close-time: PT24H
+  status:
+    active: ACTIVE
+    closed: CLOSED
+    pending: PENDING
+
+# Настройки уведомлений
+notification:
+  interval: 5s
+  templates:
+    new-message: "Новое сообщение от %s: %s"
+    operator-typing: "Оператор печатает..."
+
+telegram:
+  username: dialog_x_qanswer_bot
+  token: 7520341907:AAFkCZPkx7d676-qwLMuAhfL4jaXWlU_Blg
+
+vk:
+  bot:
+    token:
+  group:
+    id:
+  api:
+    version: 5.199
 
 email:
   imap_host:
-    yandex: ${YANDEX_IMAP_HOST:imap.yandex.com}
-    gmail: ${GMAIL_IMAP_HOST:imap.gmail.com}
+    yandex: "imap.yandex.com"
+    gmail: "imap.gmail.com"
   imap_port: 993
   imap_ssl_enable: true
-  imap_store: ${EMAIL_IMAP_STORE:imaps}
-  imap_folder: ${EMAIL_IMAP_FOLDER:INBOX}
+  imap_store: "imaps"
+  imap_folder: "INBOX"
   polling_interval_ms: 10000
+
 
 nlp:
   lemmatizer:
     implementation: external-api
-    api-url: ${NLP_LEMMATIZER_API_URL}
+    api-url: https://lindat.mff.cuni.cz/services/udpipe/api/process
     connectTimeoutMillis: 5000
     read-timeout-millis: 30000
   api:
     client:
-      embedding-api-url: ${NLP_EMBEDDING_API_URL}
-      apiKey: ${NLP_EMBEDDING_API_KEY}
+      embedding-api-url: https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2
+      apiKey: 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
       connection-timeout-millis: 5000
       read-timeout-millis: 30000
       max-batch-size: 50
@@ -94,11 +143,11 @@ answersearch:
 
 ml:
   service:
-    base-url: ${ML_SERVICE_BASE_URL}
+    base-url: http://localhost:8000/generate
   prompts:
-    correction-prompt-template: ${PROMPT_CORRECTION}
-    rewrite-instruction-template: ${PROMPT_REWRITE_INSTRUCTION}
-    rewrite-prompt-template: ${PROMPT_REWRITE}
+    correction-prompt-template: "Исправь орфографические, пунктуационные и грамматические ошибки в следующем предложении, строго соблюдая нормы современного русского языка. Дай только исправленный вариант без пояснений: %s"
+    rewrite-instruction-template: "Перепиши следующий корпоративный ответ, сделав его более дружелюбным, теплым и естественным, но при этом не перегруженным деталями. Сделай так, чтобы ответ звучал приветливо и было ощущение личного общения. Также убедись, что ответ остается коротким и по делу."
+    rewrite-prompt-template: "%sШаблонный ответ: %s. Дай только измененный вариант."
   params:
     temperature: 0.7
     max-new-tokens: 150
@@ -130,22 +179,22 @@ websocket:
     user-destination-prefix: /user
   topics:
     company:
-      pending-chats: ${TOPIC_PENDING_CHATS_COMPANY}
-      assigned-chats: ${TOPIC_ASSIGNED_CHATS_COMPANY}
+      pending-chats: /topic/company/{companyId}/chats/pending
+      assigned-chats: /topic/company/{companyId}/chats/assigned
     chat:
-      base: ${TOPIC_BASE_CHATS}
-      status: ${TOPIC_STATUS_CHATS}
-      messages: ${TOPIC_MESSAGES_CHATS}
-      typing: ${TOPIC_TYPING_CHATS}
+      base: /topic/chat/{chatId}
+      status: /status
+      messages: /messages
+      typing: /typing
     user:
-      base: ${TOPIC_BASE_USER}
-      notifications: ${TOPIC_NOTIFICATIONS_USER}
-      assigned-chats: ${TOPIC_ASSIGNED_CHATS_USER}
-      chat-closed: ${TOPIC_CLOSED_CHAT_USER}
+      base: /user/{userId}/queue
+      notifications: /notifications
+      assigned-chats: /chats/assigned
+      chat-closed: /chats/closed
   security:
     jwt:
       header-name: Authorization
-      token-prefix: "Bearer "
+      token-prefix: Bearer\
   broker:
     task-scheduler-pool-size: 2
     inbound-channel-core-pool-size: 4
@@ -155,3 +204,5 @@ websocket:
 
 subscription:
   price: 790
+server:
+  forward-headers-strategy: framework
