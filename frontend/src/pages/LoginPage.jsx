@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../config/api";
+import { useAuth } from "../utils/AuthContext";
 
 export const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
+    const { setUser } = useAuth(); // используем AuthContext
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -29,14 +31,8 @@ export const LoginPage = () => {
         };
 
         if (email === testUser.email && password === testUser.password) {
-            localStorage.setItem("email", testUser.email);
-            setMessage("Вход выполнен успешно!");
-            setEmail("");
-            setPassword("");
-
-            setTimeout(() => {
-                navigate("/dialogs"); // изменено
-            }, 1000);
+            setUser({ email: testUser.email });
+            navigate("/dialogs");
             return;
         }
 
@@ -50,14 +46,8 @@ export const LoginPage = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                localStorage.setItem("email", data.email);
-                setMessage("Вход выполнен успешно!");
-                setEmail("");
-                setPassword("");
-
-                setTimeout(() => {
-                    navigate("/dialogs"); // изменено
-                }, 1000);
+                setUser({ email: data.email });
+                navigate("/dialogs");
             } else {
                 setMessage("Неверный email или пароль.");
             }
