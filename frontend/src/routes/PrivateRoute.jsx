@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import {useAuth} from "../utils/AuthContext.js";
+import {useAuth} from "../utils/AuthContext.jsx";
 
 const PrivateRoute = ({ allowedRoles }) => {
     const { user, loading } = useAuth();
