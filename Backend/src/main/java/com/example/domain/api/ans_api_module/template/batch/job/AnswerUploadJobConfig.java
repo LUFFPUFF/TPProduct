@@ -37,38 +37,39 @@ import java.util.Optional;
 @Configuration
 @RequiredArgsConstructor
 public class AnswerUploadJobConfig {
-
-    private final JobRepository jobRepository;
-    private final PlatformTransactionManager transactionManager;
-
-    @Bean
-    public Job answerUploadJob(Step answerUploadStep, UploadJobListener jobListener) {
-        return new JobBuilder("answerUploadJob", jobRepository)
-                .incrementer(new RunIdIncrementer())
-                .listener(jobListener)
-                .start(answerUploadStep)
-                .build();
-    }
-
-    @Bean
-    public Step answerUploadStep(
-            AnswerItemReader reader,
-            AnswerItemProcessor processor,
-            AnswerItemWriter writer) {
-
-        return new StepBuilder("answerUploadStep", jobRepository)
-                .<PredefinedAnswerUploadDto, PredefinedAnswer>chunk(500, transactionManager)
-                .reader(reader)
-                .processor(processor)
-                .writer(writer)
-                .faultTolerant()
-                .skip(TextProcessingException.class)
-                .skip(ValidationException.class)
-                .skip(DataIntegrityViolationException.class)
-                .noSkip(FileNotFoundException.class)
-                .skipLimit(100)
-                .retry(Exception.class)
-                .retryLimit(3)
-                .build();
-    }
+//
+//    private final JobRepository jobRepository;
+//    private final PlatformTransactionManager transactionManager;
+//
+//    @Bean
+//    public Job answerUploadJob(Step answerUploadStep, UploadJobListener jobListener) {
+//        return new JobBuilder("answerUploadJob", jobRepository)
+//                .incrementer(new RunIdIncrementer())
+//                .listener(jobListener)
+//                .start(answerUploadStep)
+//                .build();
+//    }
+//
+//    @Bean
+//    public Step answerUploadStep(
+//            AnswerItemReader reader,
+//            AnswerItemProcessor processor,
+//            AnswerItemWriter writer) {
+//
+//        return new StepBuilder("answerUploadStep", jobRepository)
+//                .<PredefinedAnswerUploadDto, PredefinedAnswer>chunk(500, transactionManager)
+//                .reader(reader)
+//                .processor(processor)
+//                .writer(writer)
+//                .faultTolerant()
+//                .skip(TextProcessingException.class)
+//                .skip(ValidationException.class)
+//                .skip(DataIntegrityViolationException.class)
+//                .noSkip(FileNotFoundException.class)
+//                .skipLimit(100)
+//                .retry(Exception.class)
+//                .retryLimit(3)
+//                .build();
+//    }
+//
 }
