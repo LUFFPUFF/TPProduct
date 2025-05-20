@@ -36,13 +36,15 @@ const UserPage = () => {
         setError("");
 
         try {
-            const isoDate = convertToISOString(birthdate); // преобразуем дату
+            const isoDate = convertToISOString(birthdate);
 
             const payload = {
                 fullName: name,
                 birthday: isoDate,
                 gender: gender,
             };
+
+            console.log("Отправка данных пользователя:", payload);
 
             const response = await fetch(API.settings.set, {
                 method: "POST",
@@ -51,6 +53,9 @@ const UserPage = () => {
                 },
                 body: JSON.stringify(payload),
             });
+
+            const responseData = await response.json();
+            console.log("Ответ сервера:", responseData);
 
             if (!response.ok) throw new Error("Ошибка при обновлении данных");
 
