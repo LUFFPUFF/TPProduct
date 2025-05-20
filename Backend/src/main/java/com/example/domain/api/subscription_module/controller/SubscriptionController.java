@@ -29,7 +29,13 @@ public class SubscriptionController {
 
     @GetMapping("/get")
     public ResponseEntity<SubscriptionDto> getSubscription() {
-        return ResponseEntity.ok(subscribeService.getSubscription());
+        SubscriptionDto subscriptionDto = subscribeService.getSubscription();
+        System.out.println("---------------------------------------" +
+                "" +
+                "" +subscriptionDto.getEndSubscription() +
+                "" +
+                "-----------------------------------------------------");
+        return ResponseEntity.ok(subscriptionDto);
     }
 
     @PostMapping("/cancel")
