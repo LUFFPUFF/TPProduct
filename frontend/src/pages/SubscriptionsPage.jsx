@@ -30,7 +30,7 @@ export default function SubscriptionsPage() {
     };
     useEffect(() => {
         if (subscriptionInfo) {
-            console.log("endSubscription value:", subscriptionInfo?.endSubscription);
+            console.log("endSubscription value:", subscriptionInfo?.end_subscription);
             console.log("Subscription Info обновлён:", subscriptionInfo);
         }
     }, [subscriptionInfo]);
@@ -251,8 +251,8 @@ export default function SubscriptionsPage() {
                     <div className="text-black text-base sm:text-lg mb-6">
                         Подписка активна до{" "}
                         <strong>
-                            {subscriptionInfo.endSubscription
-                                ? new Date(subscriptionInfo.endSubscription).toLocaleString("ru-RU", {
+                            {subscriptionInfo.end_subscription
+                                ? new Date(subscriptionInfo.end_subscription).toLocaleString("ru-RU", {
                                     day: "2-digit",
                                     month: "long",
                                     year: "numeric",
