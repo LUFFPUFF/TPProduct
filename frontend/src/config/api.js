@@ -45,6 +45,7 @@ const API = {
     },
     settings: {
         get: `${API_BASE_URL}/settings/get`,
+        set: `${API_BASE_URL}/settings/set`,
     },
     company: {
         get: `${API_BASE_URL}/company/`,
