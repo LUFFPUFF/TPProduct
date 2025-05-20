@@ -24,6 +24,7 @@ export default function SubscriptionsPage() {
 
             const data = await response.json();
             setSubscriptionInfo(data);
+            console.log("Subscription Info:", subscriptionInfo);
         } catch (error) {
             console.error("Ошибка при получении подписки:", error);
         }
