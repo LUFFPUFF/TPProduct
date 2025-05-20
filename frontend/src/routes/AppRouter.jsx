@@ -13,7 +13,7 @@ import CompanyPage from "../pages/CompanyPage";
 import ForbiddenPage from "../pages/ForbiddenPage";
 import PrivateRoute from "./PrivateRoute";
 
-const AppRouter = ({ isAuthenticated, userRole }) => {
+const AppRouter = () => {
     return (
         <Routes>
             {/* Доступные всем */}
@@ -23,20 +23,16 @@ const AppRouter = ({ isAuthenticated, userRole }) => {
             <Route path="/forbidden" element={<ForbiddenPage />} />
 
             {/* Защищённые маршруты */}
-            <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
+            <Route element={<PrivateRoute />}>
                 <Route path="/dialogs" element={<DialogPage />} />
                 <Route path="/settings" element={<UserPage />} />
                 <Route path="/stats" element={<StatsPage />} />
             </Route>
 
-            {/* Защищённые + ограничение по роли */}
+            {/* Защищённые + ограниченные по ролям */}
             <Route
                 element={
-                    <PrivateRoute
-                        isAuthenticated={isAuthenticated}
-                        allowedRoles={["admin"]}
-                        userRole={userRole}
-                    />
+                    <PrivateRoute allowedRoles={["MANAGER"]} />
                 }
             >
                 <Route path="/subscription" element={<SubscriptionsPage />} />
