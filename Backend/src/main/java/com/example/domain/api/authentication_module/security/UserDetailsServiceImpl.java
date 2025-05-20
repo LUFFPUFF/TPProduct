@@ -24,7 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return Optional.of(currentUserDataService.getUser()).map(user -> new User(
+        return Optional.of(currentUserDataService.getUser(email)).map(user -> new User(
                         user.getEmail(),
                         user.getPassword(),
                         userRoleRepository.findRolesByEmail(email)))
