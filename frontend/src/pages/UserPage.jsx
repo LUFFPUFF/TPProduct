@@ -1,14 +1,63 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import Sidebar from "../components/Sidebar";
+import API from "../config/api.js";
 
 const UserPage = () => {
     const [name, setName] = useState("");
     const [birthdate, setBirthdate] = useState("");
     const [gender, setGender] = useState("");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await fetch(API.settings.get);
+                if (!response.ok) throw new Error("Ошибка при загрузке данных");
+
+                const data = await response.json();
+                setName(data.name || "");
+                setBirthdate(data.birthdate || "");
+                setGender(data.gender || "");
+            } catch (error) {
+                console.error("Ошибка при получении данных пользователя:", error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setSuccess(false);
+        setError("");
+
+        try {
+            const response = await fetch(API.settings.set, {
+                method: "POST", // Или POST, если так на сервере
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name, birthdate, gender }),
+            });
+
+            if (!response.ok) throw new Error("Ошибка при обновлении данных");
+
+            setSuccess(true);
+        } catch (err) {
+            console.error("Ошибка при отправке:", err);
+            setError("Не удалось сохранить изменения.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="flex flex-col lg:flex-row">
+            {/* Sidebar */}
             <div className="md:hidden absolute top-4 left-4 z-50">
                 <button
                     onClick={() => setIsSidebarOpen(true)}
@@ -28,8 +77,7 @@ const UserPage = () => {
             {isSidebarOpen && (
                 <>
                     <div
-                        className="fixed inset-0 z-40"
-                        style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+                        className="fixed inset-0 z-40 bg-black bg-opacity-50"
                         onClick={() => setIsSidebarOpen(false)}
                     />
                     <div className="fixed top-0 left-0 w-64 h-full z-50 bg-white shadow-lg overflow-y-auto">
@@ -52,7 +100,7 @@ const UserPage = () => {
             <main className="flex-1 px-4 sm:px-6 md:px-12 py-8 bg-[#e6e5ea] min-h-screen">
                 <h1 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-10">Пользователь</h1>
 
-                <form className="space-y-6 max-w-full sm:max-w-xl">
+                <form className="space-y-6 max-w-full sm:max-w-xl" onSubmit={handleSubmit}>
                     <div>
                         <label className="block text-base sm:text-lg font-bold mb-1">ФИО</label>
                         <input
@@ -98,12 +146,17 @@ const UserPage = () => {
                         </button>
                     </div>
 
+                    {/* Статус отправки */}
+                    {success && <p className="text-green-600 font-medium">Данные успешно сохранены!</p>}
+                    {error && <p className="text-red-600 font-medium">{error}</p>}
+
                     <div className="flex flex-col sm:flex-row gap-4 !pt-70 sm:pt-35">
                         <button
                             type="submit"
                             className="bg-[#092155] hover:bg-[#2a4992] active:bg-[#dadee7] text-white px-6 py-3 rounded-md active:text-black transition-all duration-150 ease-in-out transform active:scale-95 w-full sm:w-auto"
+                            disabled={loading}
                         >
-                            Сохранить изменения
+                            {loading ? "Сохранение..." : "Сохранить изменения"}
                         </button>
                         <button
                             type="button"
