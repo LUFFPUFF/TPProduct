@@ -24,12 +24,16 @@ export default function SubscriptionsPage() {
 
             const data = await response.json();
             setSubscriptionInfo(data);
-            console.log("Subscription Info:", subscriptionInfo);
         } catch (error) {
             console.error("Ошибка при получении подписки:", error);
         }
     };
-
+    useEffect(() => {
+        if (subscriptionInfo) {
+            console.log("endSubscription value:", subscriptionInfo?.endSubscription);
+            console.log("Subscription Info обновлён:", subscriptionInfo);
+        }
+    }, [subscriptionInfo]);
     const fetchSoloPrice = async (months) => {
         try {
             const url = `${API.subscriptions.price}?months_count=${months}&operators_count=1`;
@@ -102,7 +106,7 @@ export default function SubscriptionsPage() {
 
     useEffect(() => {
         fetchSoloPrice(soloMonths);
-        fetchSubscription(); // добавили
+        fetchSubscription();
     }, [soloMonths]);
 
     useEffect(() => {
