@@ -36,12 +36,20 @@ const UserPage = () => {
         setError("");
 
         try {
+            const isoDate = convertToISOString(birthdate); // преобразуем дату
+
+            const payload = {
+                fullName: name,
+                birthday: isoDate,
+                gender: gender,
+            };
+
             const response = await fetch(API.settings.set, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ name, birthdate, gender }),
+                body: JSON.stringify(payload),
             });
 
             if (!response.ok) throw new Error("Ошибка при обновлении данных");
@@ -53,6 +61,12 @@ const UserPage = () => {
         } finally {
             setLoading(false);
         }
+    };
+    const convertToISOString = (dateString) => {
+        // Предполагается формат ввода: "дд.мм.гггг"
+        const [day, month, year] = dateString.split(".");
+        const date = new Date(`${year}-${month}-${day}T00:00:00.000Z`);
+        return date.toISOString();
     };
 
     return (
