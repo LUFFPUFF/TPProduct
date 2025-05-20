@@ -24,6 +24,7 @@ export default function SubscriptionsPage() {
 
             const data = await response.json();
             setSubscriptionInfo(data);
+            console.log("Subscription Info:", subscriptionInfo);
         } catch (error) {
             console.error("Ошибка при получении подписки:", error);
         }
@@ -245,7 +246,17 @@ export default function SubscriptionsPage() {
                 {subscriptionInfo?.status === "ACTIVE" && (
                     <div className="text-black text-base sm:text-lg mb-6">
                         Подписка активна до{" "}
-                        <strong>{new Date(subscriptionInfo.endSubscription).toLocaleString("ru-RU")}</strong>
+                        <strong>
+                            {subscriptionInfo.endSubscription
+                                ? new Date(subscriptionInfo.endSubscription).toLocaleString("ru-RU", {
+                                    day: "2-digit",
+                                    month: "long",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                })
+                                : "Дата недоступна"}
+                        </strong>
                     </div>
                 )}
                 <h1 className="text-2xl sm:text-3xl font-bold text-black mb-4 sm:mb-6">

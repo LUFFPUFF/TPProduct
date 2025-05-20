@@ -92,7 +92,7 @@ export default function IntegrationsPage() {
             if (selectedIntegration.name === "Telegram") {
                 url = API.integrations.createTGIntegration;
             } else if (selectedIntegration.name === "Почту") {
-                url = API.integrations.getMailIntegration;
+                url = API.integrations.createMailIntegration;
             }
 
             console.log("Отправка запроса:", url, payload);
@@ -161,6 +161,36 @@ export default function IntegrationsPage() {
             alert("Не удалось отключить интеграцию: " + err.message);
         }
     };
+    useEffect(() => {
+        const fetchConnectedIntegrations = async () => {
+            try {
+                const [tgRes, mailRes] = await Promise.all([
+                    fetch(API.integrations.status.getTGIntegration),
+                    fetch(API.integrations.status.getMailIntegration),
+                ]);
+
+                const [tgData, mailData] = await Promise.all([
+                    tgRes.ok ? tgRes.json() : [],
+                    mailRes.ok ? mailRes.json() : [],
+                ]);
+
+                setIntegrations((prev) =>
+                    prev.map((item) => {
+                        if (item.name === "Telegram") {
+                            return { ...item, connected: tgData.length > 0 };
+                        } else if (item.name === "Почту") {
+                            return { ...item, connected: mailData.length > 0 };
+                        }
+                        return item;
+                    })
+                );
+            } catch (err) {
+                console.error("Ошибка при загрузке статуса интеграций:", err);
+            }
+        };
+
+        fetchConnectedIntegrations();
+    }, []);
 
     const connectedItems = integrations.filter((i) => i.connected)
 
