@@ -47,7 +47,7 @@ public class PredefinedAnswerUIController {
     private final CompanyService companyService;
 
     private final JobLauncher jobLauncher;
-    private final Job answerUploadJob;
+    //   private final Job answerUploadJob;
 
     private Optional<User> getCurrentAppUser(String email) {
         return userRepository.findByEmail(email);
@@ -281,15 +281,15 @@ public class PredefinedAnswerUIController {
                     .addString("overwrite", overwrite)
                     .toJobParameters();
 
-            JobExecution jobExecution = jobLauncher.run(answerUploadJob, jobParameters);
+            // JobExecution jobExecution = jobLauncher.run(answerUploadJob, jobParameters);
 
-            long writeCount = jobExecution.getStepExecutions().stream()
-                    .mapToLong(org.springframework.batch.core.StepExecution::getWriteCount)
-                    .sum();
+//             long writeCount = jobExecution.getStepExecutions().stream()
+//                    .mapToLong(org.springframework.batch.core.StepExecution::getWriteCount)
+//                    .sum();
 
             UploadResultResponse response = UploadResultResponse.builder()
-                    .status(jobExecution.getStatus().name())
-                    .processedCount((int) writeCount)
+//                    .status(jobExecution.getStatus().name())
+//                    .processedCount((int) writeCount)
                     .build();
 
             return ResponseEntity.ok(response);
