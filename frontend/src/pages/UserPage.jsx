@@ -37,7 +37,7 @@ const UserPage = () => {
 
         try {
             const response = await fetch(API.settings.set, {
-                method: "POST", // Или POST, если так на сервере
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -131,8 +131,8 @@ const UserPage = () => {
                             onChange={(e) => setGender(e.target.value)}
                         >
                             <option value="">Не выбран</option>
-                            <option value="male">Мужской</option>
-                            <option value="female">Женский</option>
+                            <option value="MALE">Мужской</option>
+                            <option value="FEMALE">Женский</option>
                         </select>
                     </div>
 
@@ -146,7 +146,6 @@ const UserPage = () => {
                         </button>
                     </div>
 
-                    {/* Статус отправки */}
                     {success && <p className="text-green-600 font-medium">Данные успешно сохранены!</p>}
                     {error && <p className="text-red-600 font-medium">{error}</p>}
 
