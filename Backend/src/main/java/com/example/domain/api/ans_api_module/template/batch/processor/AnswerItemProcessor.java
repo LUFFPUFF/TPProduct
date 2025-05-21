@@ -17,14 +17,11 @@ import org.springframework.stereotype.Component;
 public class AnswerItemProcessor implements ItemProcessor<PredefinedAnswerUploadDto, PredefinedAnswer> {
 
     private final CompanyRepository companyRepository;
-    private final AnswerValidationService validationService;
-
     private final PredefinedAnswerMapper answerMapper;
 
     @NotNull
     @Override
     public PredefinedAnswer process(@NotNull PredefinedAnswerUploadDto dto) {
-        validationService.validateAnswerDto(dto);
         PredefinedAnswer answer = answerMapper.toEntity(dto);
         answer.setCompany(companyRepository.findById(dto.getCompanyDto().getId())
                 .orElseThrow(() -> new RuntimeException("Company not found")));

@@ -17,4 +17,8 @@ public interface CompanyWhatsappConfigurationRepository extends JpaRepository<Co
     Optional<CompanyWhatsappConfiguration> findByCompanyIdAndAccessTokenIsNotNullAndAccessTokenIsNot(Integer companyId, String emptyToken);
 
     Optional<CompanyWhatsappConfiguration> findByPhoneNumberId(Long phoneNumberId);
+
+    Optional<CompanyWhatsappConfiguration> findByCompanyId(Integer companyId);
+
+    List<CompanyWhatsappConfiguration> findAllByCompanyId(Integer companyId);
 }

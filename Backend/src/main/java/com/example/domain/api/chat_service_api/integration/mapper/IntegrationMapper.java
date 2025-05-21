@@ -2,29 +2,40 @@ package com.example.domain.api.chat_service_api.integration.mapper;
 
 import com.example.database.model.company_subscription_module.company.CompanyMailConfiguration;
 import com.example.database.model.company_subscription_module.company.CompanyTelegramConfiguration;
+import com.example.database.model.company_subscription_module.company.CompanyVkConfiguration;
+import com.example.database.model.company_subscription_module.company.CompanyWhatsappConfiguration;
 import com.example.domain.api.chat_service_api.integration.dto.IntegrationMailDto;
 import com.example.domain.api.chat_service_api.integration.dto.IntegrationTelegramDto;
+import com.example.domain.api.chat_service_api.integration.dto.IntegrationVkDto;
+import com.example.domain.api.chat_service_api.integration.dto.IntegrationWhatsappDto;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface IntegrationMapper {
 
-    CompanyTelegramConfiguration toEntity(IntegrationTelegramDto integrationTelegramDto);
+    @Mapping(source = "company", target = "companyDto")
+    IntegrationTelegramDto toTelegramDto(CompanyTelegramConfiguration entity);
 
-    IntegrationTelegramDto toDto(CompanyTelegramConfiguration companyTelegramConfiguration);
+    List<IntegrationTelegramDto> toTelegramDtoList(List<CompanyTelegramConfiguration> entities);
 
-    CompanyMailConfiguration toEntity(IntegrationMailDto integrationMailDto);
+    @Mapping(source = "company", target = "companyDto")
+    IntegrationMailDto toMailDto(CompanyMailConfiguration entity);
 
-    IntegrationMailDto toDto(CompanyMailConfiguration companyMailConfiguration);
+    List<IntegrationMailDto> toMailDtoList(List<CompanyMailConfiguration> entities);
 
-    List<CompanyTelegramConfiguration> toEntity(List<IntegrationTelegramDto> integrationTelegramDtoList);
+    @Mapping(source = "company", target = "companyDto")
+    IntegrationWhatsappDto toWhatsappDto(CompanyWhatsappConfiguration entity);
 
-    List<IntegrationTelegramDto> toDto(List<CompanyTelegramConfiguration> companyTelegramConfigurations);
+    List<IntegrationWhatsappDto> toWhatsappDtoList(List<CompanyWhatsappConfiguration> entities);
 
-    List<CompanyMailConfiguration> toEntityList( List<IntegrationMailDto> integrationMailDto);
+    @Mapping(source = "company", target = "companyDto")
+    @Mapping(target = "active", expression = "java(entity.isActive())")
+    IntegrationVkDto toVkDto(CompanyVkConfiguration entity);
 
-    List<IntegrationMailDto> toDtoList(List<CompanyMailConfiguration> companyMailConfiguration);
+    List<IntegrationVkDto> toVkDtoList(List<CompanyVkConfiguration> entities);
+
 
 }

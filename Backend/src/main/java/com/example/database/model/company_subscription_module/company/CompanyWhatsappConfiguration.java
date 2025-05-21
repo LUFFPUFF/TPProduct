@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "company_whatsapp_configurations")
 @Data
@@ -26,4 +28,10 @@ public class CompanyWhatsappConfiguration {
 
     @Column(name = "verify_token")
     private String verifyToken;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }

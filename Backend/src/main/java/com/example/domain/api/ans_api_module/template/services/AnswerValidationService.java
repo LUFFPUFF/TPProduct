@@ -29,10 +29,6 @@ public class AnswerValidationService {
         if (dto.getAnswer().length() > 5000) {
             throw new ValidationException("Answer exceeds maximum length of 5000 characters");
         }
-
-        if (dto.getTitle().length() > 255) {
-            throw new ValidationException("Title exceeds maximum length of 255 characters");
-        }
     }
 
     public void validateForUpdate(PredefinedAnswerUploadDto dto, Long existingId) {

@@ -17,4 +17,8 @@ public interface CompanyVkConfigurationRepository extends JpaRepository<CompanyV
     Optional<CompanyVkConfiguration> findByCompanyIdAndAccessTokenIsNotNullAndAccessTokenIsNot(Integer companyId, String emptyToken);
 
     Optional<CompanyVkConfiguration> findByCommunityId(Long communityId);
+
+    Optional<CompanyVkConfiguration> findByCompanyId(Integer companyId);
+
+    List<CompanyVkConfiguration> findAllByCompanyId(Integer companyId);
 }

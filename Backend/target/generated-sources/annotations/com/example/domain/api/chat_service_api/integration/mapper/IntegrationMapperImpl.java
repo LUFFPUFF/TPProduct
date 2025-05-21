@@ -1,9 +1,15 @@
 package com.example.domain.api.chat_service_api.integration.mapper;
 
+import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.company_subscription_module.company.CompanyMailConfiguration;
 import com.example.database.model.company_subscription_module.company.CompanyTelegramConfiguration;
+import com.example.database.model.company_subscription_module.company.CompanyVkConfiguration;
+import com.example.database.model.company_subscription_module.company.CompanyWhatsappConfiguration;
 import com.example.domain.api.chat_service_api.integration.dto.IntegrationMailDto;
 import com.example.domain.api.chat_service_api.integration.dto.IntegrationTelegramDto;
+import com.example.domain.api.chat_service_api.integration.dto.IntegrationVkDto;
+import com.example.domain.api.chat_service_api.integration.dto.IntegrationWhatsappDto;
+import com.example.domain.dto.CompanyDto;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
@@ -11,137 +17,154 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-15T17:26:41+0300",
+    date = "2025-05-21T14:34:24+0300",
     comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 21.0.7 (Microsoft)"
 )
 @Component
 public class IntegrationMapperImpl implements IntegrationMapper {
 
     @Override
-    public CompanyTelegramConfiguration toEntity(IntegrationTelegramDto integrationTelegramDto) {
-        if ( integrationTelegramDto == null ) {
-            return null;
-        }
-
-        CompanyTelegramConfiguration companyTelegramConfiguration = new CompanyTelegramConfiguration();
-
-        companyTelegramConfiguration.setId( integrationTelegramDto.getId() );
-        companyTelegramConfiguration.setChatTelegramId( integrationTelegramDto.getChatTelegramId() );
-        companyTelegramConfiguration.setBotUsername( integrationTelegramDto.getBotUsername() );
-        companyTelegramConfiguration.setBotToken( integrationTelegramDto.getBotToken() );
-        companyTelegramConfiguration.setCreatedAt( integrationTelegramDto.getCreatedAt() );
-        companyTelegramConfiguration.setUpdatedAt( integrationTelegramDto.getUpdatedAt() );
-
-        return companyTelegramConfiguration;
-    }
-
-    @Override
-    public IntegrationTelegramDto toDto(CompanyTelegramConfiguration companyTelegramConfiguration) {
-        if ( companyTelegramConfiguration == null ) {
+    public IntegrationTelegramDto toTelegramDto(CompanyTelegramConfiguration entity) {
+        if ( entity == null ) {
             return null;
         }
 
         IntegrationTelegramDto integrationTelegramDto = new IntegrationTelegramDto();
 
-        integrationTelegramDto.setId( companyTelegramConfiguration.getId() );
-        integrationTelegramDto.setChatTelegramId( companyTelegramConfiguration.getChatTelegramId() );
-        integrationTelegramDto.setBotUsername( companyTelegramConfiguration.getBotUsername() );
-        integrationTelegramDto.setBotToken( companyTelegramConfiguration.getBotToken() );
-        integrationTelegramDto.setCreatedAt( companyTelegramConfiguration.getCreatedAt() );
-        integrationTelegramDto.setUpdatedAt( companyTelegramConfiguration.getUpdatedAt() );
+        integrationTelegramDto.setCompanyDto( companyToCompanyDto( entity.getCompany() ) );
+        integrationTelegramDto.setId( entity.getId() );
+        integrationTelegramDto.setChatTelegramId( entity.getChatTelegramId() );
+        integrationTelegramDto.setBotUsername( entity.getBotUsername() );
+        integrationTelegramDto.setBotToken( entity.getBotToken() );
+        integrationTelegramDto.setCreatedAt( entity.getCreatedAt() );
+        integrationTelegramDto.setUpdatedAt( entity.getUpdatedAt() );
 
         return integrationTelegramDto;
     }
 
     @Override
-    public CompanyMailConfiguration toEntity(IntegrationMailDto integrationMailDto) {
-        if ( integrationMailDto == null ) {
+    public List<IntegrationTelegramDto> toTelegramDtoList(List<CompanyTelegramConfiguration> entities) {
+        if ( entities == null ) {
             return null;
         }
 
-        CompanyMailConfiguration companyMailConfiguration = new CompanyMailConfiguration();
+        List<IntegrationTelegramDto> list = new ArrayList<IntegrationTelegramDto>( entities.size() );
+        for ( CompanyTelegramConfiguration companyTelegramConfiguration : entities ) {
+            list.add( toTelegramDto( companyTelegramConfiguration ) );
+        }
 
-        companyMailConfiguration.setId( integrationMailDto.getId() );
-        companyMailConfiguration.setEmailAddress( integrationMailDto.getEmailAddress() );
-        companyMailConfiguration.setAppPassword( integrationMailDto.getAppPassword() );
-        companyMailConfiguration.setImapServer( integrationMailDto.getImapServer() );
-        companyMailConfiguration.setCreatedAt( integrationMailDto.getCreatedAt() );
-        companyMailConfiguration.setUpdatedAt( integrationMailDto.getUpdatedAt() );
-
-        return companyMailConfiguration;
+        return list;
     }
 
     @Override
-    public IntegrationMailDto toDto(CompanyMailConfiguration companyMailConfiguration) {
-        if ( companyMailConfiguration == null ) {
+    public IntegrationMailDto toMailDto(CompanyMailConfiguration entity) {
+        if ( entity == null ) {
             return null;
         }
 
         IntegrationMailDto integrationMailDto = new IntegrationMailDto();
 
-        integrationMailDto.setId( companyMailConfiguration.getId() );
-        integrationMailDto.setEmailAddress( companyMailConfiguration.getEmailAddress() );
-        integrationMailDto.setAppPassword( companyMailConfiguration.getAppPassword() );
-        integrationMailDto.setImapServer( companyMailConfiguration.getImapServer() );
-        integrationMailDto.setCreatedAt( companyMailConfiguration.getCreatedAt() );
-        integrationMailDto.setUpdatedAt( companyMailConfiguration.getUpdatedAt() );
+        integrationMailDto.setCompanyDto( companyToCompanyDto( entity.getCompany() ) );
+        integrationMailDto.setId( entity.getId() );
+        integrationMailDto.setEmailAddress( entity.getEmailAddress() );
+        integrationMailDto.setAppPassword( entity.getAppPassword() );
+        integrationMailDto.setImapServer( entity.getImapServer() );
+        integrationMailDto.setCreatedAt( entity.getCreatedAt() );
+        integrationMailDto.setUpdatedAt( entity.getUpdatedAt() );
 
         return integrationMailDto;
     }
 
     @Override
-    public List<CompanyTelegramConfiguration> toEntity(List<IntegrationTelegramDto> integrationTelegramDtoList) {
-        if ( integrationTelegramDtoList == null ) {
+    public List<IntegrationMailDto> toMailDtoList(List<CompanyMailConfiguration> entities) {
+        if ( entities == null ) {
             return null;
         }
 
-        List<CompanyTelegramConfiguration> list = new ArrayList<CompanyTelegramConfiguration>( integrationTelegramDtoList.size() );
-        for ( IntegrationTelegramDto integrationTelegramDto : integrationTelegramDtoList ) {
-            list.add( toEntity( integrationTelegramDto ) );
+        List<IntegrationMailDto> list = new ArrayList<IntegrationMailDto>( entities.size() );
+        for ( CompanyMailConfiguration companyMailConfiguration : entities ) {
+            list.add( toMailDto( companyMailConfiguration ) );
         }
 
         return list;
     }
 
     @Override
-    public List<IntegrationTelegramDto> toDto(List<CompanyTelegramConfiguration> companyTelegramConfigurations) {
-        if ( companyTelegramConfigurations == null ) {
+    public IntegrationWhatsappDto toWhatsappDto(CompanyWhatsappConfiguration entity) {
+        if ( entity == null ) {
             return null;
         }
 
-        List<IntegrationTelegramDto> list = new ArrayList<IntegrationTelegramDto>( companyTelegramConfigurations.size() );
-        for ( CompanyTelegramConfiguration companyTelegramConfiguration : companyTelegramConfigurations ) {
-            list.add( toDto( companyTelegramConfiguration ) );
+        IntegrationWhatsappDto integrationWhatsappDto = new IntegrationWhatsappDto();
+
+        integrationWhatsappDto.setCompanyDto( companyToCompanyDto( entity.getCompany() ) );
+        integrationWhatsappDto.setId( entity.getId() );
+        integrationWhatsappDto.setVerifyToken( entity.getVerifyToken() );
+        integrationWhatsappDto.setCreatedAt( entity.getCreatedAt() );
+
+        return integrationWhatsappDto;
+    }
+
+    @Override
+    public List<IntegrationWhatsappDto> toWhatsappDtoList(List<CompanyWhatsappConfiguration> entities) {
+        if ( entities == null ) {
+            return null;
+        }
+
+        List<IntegrationWhatsappDto> list = new ArrayList<IntegrationWhatsappDto>( entities.size() );
+        for ( CompanyWhatsappConfiguration companyWhatsappConfiguration : entities ) {
+            list.add( toWhatsappDto( companyWhatsappConfiguration ) );
         }
 
         return list;
     }
 
     @Override
-    public List<CompanyMailConfiguration> toEntityList(List<IntegrationMailDto> integrationMailDto) {
-        if ( integrationMailDto == null ) {
+    public IntegrationVkDto toVkDto(CompanyVkConfiguration entity) {
+        if ( entity == null ) {
             return null;
         }
 
-        List<CompanyMailConfiguration> list = new ArrayList<CompanyMailConfiguration>( integrationMailDto.size() );
-        for ( IntegrationMailDto integrationMailDto1 : integrationMailDto ) {
-            list.add( toEntity( integrationMailDto1 ) );
+        IntegrationVkDto integrationVkDto = new IntegrationVkDto();
+
+        integrationVkDto.setCompanyDto( companyToCompanyDto( entity.getCompany() ) );
+        integrationVkDto.setId( entity.getId() );
+        integrationVkDto.setCommunityId( entity.getCommunityId() );
+        integrationVkDto.setCommunityName( entity.getCommunityName() );
+        integrationVkDto.setCreatedAt( entity.getCreatedAt() );
+
+        integrationVkDto.setActive( entity.isActive() );
+
+        return integrationVkDto;
+    }
+
+    @Override
+    public List<IntegrationVkDto> toVkDtoList(List<CompanyVkConfiguration> entities) {
+        if ( entities == null ) {
+            return null;
+        }
+
+        List<IntegrationVkDto> list = new ArrayList<IntegrationVkDto>( entities.size() );
+        for ( CompanyVkConfiguration companyVkConfiguration : entities ) {
+            list.add( toVkDto( companyVkConfiguration ) );
         }
 
         return list;
     }
 
-    @Override
-    public List<IntegrationMailDto> toDtoList(List<CompanyMailConfiguration> companyMailConfiguration) {
-        if ( companyMailConfiguration == null ) {
+    protected CompanyDto companyToCompanyDto(Company company) {
+        if ( company == null ) {
             return null;
         }
 
-        List<IntegrationMailDto> list = new ArrayList<IntegrationMailDto>( companyMailConfiguration.size() );
-        for ( CompanyMailConfiguration companyMailConfiguration1 : companyMailConfiguration ) {
-            list.add( toDto( companyMailConfiguration1 ) );
-        }
+        CompanyDto.CompanyDtoBuilder companyDto = CompanyDto.builder();
 
-        return list;
+        companyDto.id( company.getId() );
+        companyDto.name( company.getName() );
+        companyDto.contactEmail( company.getContactEmail() );
+        companyDto.createdAt( company.getCreatedAt() );
+        companyDto.updatedAt( company.getUpdatedAt() );
+
+        return companyDto.build();
     }
 }

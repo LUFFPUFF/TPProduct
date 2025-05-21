@@ -42,6 +42,8 @@ public class SecurityConfig  {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/auth/**","/api/registration/**").permitAll()
+                        .requestMatchers("/api/ui/integration/**").permitAll()
+                        .requestMatchers("/api/answers/**").permitAll()
                         .requestMatchers("/api/subscription/extend","/api/company/add").hasAuthority(Role.MANAGER.getAuthority())
                         .requestMatchers("/test/operator-only").hasAuthority(Role.OPERATOR.getAuthority())
                         .requestMatchers("/api/ui/**","/api/company/get").hasAnyAuthority(Role.OPERATOR.getAuthority(), Role.MANAGER.getAuthority())

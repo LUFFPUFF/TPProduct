@@ -99,6 +99,14 @@ public class PredefinedAnswerController {
             @RequestParam(defaultValue = "false") String overwrite) {
 
         try {
+
+            if (file.getContentType() != null && file.getContentType().contains("xml")) {
+                String content = new String(file.getBytes());
+                if (!content.contains("<title>") || !content.contains("<answer>")) {
+                    throw new IllegalArgumentException("XML-файл должен содержать элементы <title> и <answer>");
+                }
+            }
+
             if (file.isEmpty()) {
                 throw new IllegalArgumentException("Файл не может быть пустым");
             }
