@@ -8,7 +8,7 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/ans_machine_db
-    username: nikita
+    username: postgres
     password: nikita090504
     driver-class-name: org.postgresql.Driver
     hikari:

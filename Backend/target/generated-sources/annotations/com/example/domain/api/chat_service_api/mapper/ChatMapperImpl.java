@@ -3,6 +3,7 @@ package com.example.domain.api.chat_service_api.mapper;
 import com.example.database.model.chats_messages_module.chat.Chat;
 import com.example.database.model.chats_messages_module.chat.ChatStatus;
 import com.example.database.model.chats_messages_module.message.ChatMessage;
+import com.example.database.model.company_subscription_module.company.Company;
 import com.example.domain.api.chat_service_api.model.dto.ChatDTO;
 import com.example.domain.api.chat_service_api.model.dto.ChatDetailsDTO;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-18T22:36:21+0300",
+    date = "2025-05-21T22:30:10+0300",
     comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 21.0.7 (Microsoft)"
 )
 @Component
@@ -57,6 +58,7 @@ public class ChatMapperImpl implements ChatMapper {
         chatDetailsDTO.setClient( clientMapper.toInfoDTO( chat.getClient() ) );
         chatDetailsDTO.setOperator( userMapper.toInfoDTO( chat.getUser() ) );
         chatDetailsDTO.setMessages( chatMessageListToMessageDtoList( chat.getMessages() ) );
+        chatDetailsDTO.setCompanyId( chatCompanyId( chat ) );
         chatDetailsDTO.setId( chat.getId() );
         chatDetailsDTO.setChatChannel( chat.getChatChannel() );
         chatDetailsDTO.setStatus( chat.getStatus() );
@@ -97,5 +99,13 @@ public class ChatMapperImpl implements ChatMapper {
         }
 
         return list1;
+    }
+
+    private Integer chatCompanyId(Chat chat) {
+        Company company = chat.getCompany();
+        if ( company == null ) {
+            return null;
+        }
+        return company.getId();
     }
 }

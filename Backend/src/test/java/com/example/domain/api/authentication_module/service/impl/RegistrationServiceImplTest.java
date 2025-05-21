@@ -9,7 +9,7 @@ import com.example.domain.api.authentication_module.exception_handler_auth.Inval
 import com.example.domain.api.authentication_module.security.jwtUtils.JWTUtilsService;
 import com.example.domain.api.authentication_module.service.interfaces.RegistrationService;
 import com.example.domain.api.authentication_module.service.interfaces.RoleService;
-import com.example.domain.api.statistics_module.aop.ChatMetricsAspect;
+import com.example.domain.api.statistics_module.aop.MetricsAspect;
 import com.example.domain.dto.RegistrationDto;
 import com.example.domain.dto.TokenDto;
 import com.example.domain.dto.mapper.MapperDto;
@@ -43,7 +43,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = {
         RegistrationServiceImpl.class,
-        ChatMetricsAspect.class,
+        MetricsAspect.class,
         RegistrationServiceImplTest.TestConfig.class
 })
 class RegistrationServiceImplTest {

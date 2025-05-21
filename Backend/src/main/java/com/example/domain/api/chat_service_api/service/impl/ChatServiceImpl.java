@@ -79,8 +79,8 @@ public class ChatServiceImpl implements IChatService {
                     @Counter(
                             name = "chats_created_total",
                             tags = {
-                                    @Tag(key = "company_id", valueSpEL = "#result.companyId ?: 'unknown'"),
-                                    @Tag(key = "channel", valueSpEL = "#result.chatChannel?.name() ?: 'UNKNOWN'"),
+                                    @Tag(key = "company_id", valueSpEL = "#result != null && #result.companyId != null ? T(com.example.domain.api.statistics_module.metrics.util.MetricsTagSanitizer).sanitize(#result.companyId.toString()) : 'unknown'"),
+                                    @Tag(key = "channel", valueSpEL = "#result != null && #result.chatChannel != null ? T(com.example.domain.api.statistics_module.metrics.util.MetricsTagSanitizer).sanitize(#result.chatChannel.toString()) : 'UNKNOWN'"),
                                     @Tag(key = "from_operator_ui", valueSpEL = "'false'")
                             }
                     ),
@@ -337,7 +337,7 @@ public class ChatServiceImpl implements IChatService {
     @Transactional
     @MeteredOperation(
             counters = @Counter(name = "chats_operator_linked_total",
-                    tags = { @Tag(key = "company_id", valueSpEL = "#chat.company?.id?.toString() ?: 'unknown'"),
+                    tags = {@Tag(key = "company_id", valueSpEL = "#chat.company?.id?.toString() ?: 'unknown'"),
                             @Tag(key = "channel", valueSpEL = "#chat.chatChannel?.name() ?: 'UNKNOWN'")})
     )
     public void linkOperatorToChat(Integer chatId, Integer operatorId) {

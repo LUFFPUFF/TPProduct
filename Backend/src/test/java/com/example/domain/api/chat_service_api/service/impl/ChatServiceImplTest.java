@@ -2,7 +2,6 @@ package com.example.domain.api.chat_service_api.service.impl;
 
 import com.example.database.model.chats_messages_module.chat.Chat;
 import com.example.database.model.chats_messages_module.chat.ChatChannel;
-import com.example.database.model.chats_messages_module.chat.ChatMessageSenderType;
 import com.example.database.model.chats_messages_module.chat.ChatStatus;
 import com.example.database.model.chats_messages_module.message.ChatMessage;
 import com.example.database.model.company_subscription_module.company.Company;
@@ -18,7 +17,7 @@ import com.example.domain.api.chat_service_api.model.dto.ChatDetailsDTO;
 import com.example.domain.api.chat_service_api.model.dto.client.ClientInfoDTO; // <--- Импортируем ClientInfoDTO
 import com.example.domain.api.chat_service_api.model.rest.chat.CreateChatRequestDTO;
 import com.example.domain.api.chat_service_api.service.*;
-import com.example.domain.api.statistics_module.aop.ChatMetricsAspect;
+import com.example.domain.api.statistics_module.aop.MetricsAspect;
 import com.example.domain.api.statistics_module.metrics.service.IChatMetricsService;
 import com.example.domain.security.util.UserContextHolder;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -49,7 +48,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = {
         ChatServiceImpl.class,
-        ChatMetricsAspect.class,
+        MetricsAspect.class,
         ChatServiceImplTest.TestConfig.class
 })
 class ChatServiceImplTest {

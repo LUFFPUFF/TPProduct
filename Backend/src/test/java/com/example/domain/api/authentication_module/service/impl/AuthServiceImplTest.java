@@ -7,10 +7,9 @@ import com.example.domain.api.authentication_module.exception_handler_auth.NotFo
 import com.example.domain.api.authentication_module.exception_handler_auth.WrongPasswordException;
 import com.example.domain.api.authentication_module.security.jwtUtils.JWTUtilsService;
 import com.example.domain.api.authentication_module.service.interfaces.AuthService;
-import com.example.domain.api.statistics_module.aop.ChatMetricsAspect; // Импортируем аспект
+import com.example.domain.api.statistics_module.aop.MetricsAspect; // Импортируем аспект
 import com.example.domain.dto.TokenDto;
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Tags;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,13 +32,12 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 // Указываем классы, которые нужно загрузить в контекст для этого теста
 @SpringBootTest(classes = {
         AuthServiceImpl.class,
-        ChatMetricsAspect.class,
+        MetricsAspect.class,
         AuthServiceImplTest.TestConfig.class
 })
 class AuthServiceImplTest {

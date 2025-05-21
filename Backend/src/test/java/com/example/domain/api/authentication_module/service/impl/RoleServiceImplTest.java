@@ -8,7 +8,7 @@ import com.example.database.repository.company_subscription_module.UserRoleRepos
 import com.example.domain.api.authentication_module.cache.AuthCacheService;
 import com.example.domain.api.authentication_module.exception_handler_auth.NotFoundUserException;
 import com.example.domain.api.authentication_module.service.interfaces.RoleService; // Используем интерфейс
-import com.example.domain.api.statistics_module.aop.ChatMetricsAspect;
+import com.example.domain.api.statistics_module.aop.MetricsAspect;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = {
         RoleServiceImpl.class,
-        ChatMetricsAspect.class,
+        MetricsAspect.class,
         RoleServiceImplTest.TestConfig.class
 })
 class RoleServiceImplTest {

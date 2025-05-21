@@ -32,7 +32,7 @@ import java.lang.reflect.Method;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ChatMetricsAspect {
+public class MetricsAspect {
 
     private final MeterRegistry meterRegistry;
     private final ApplicationContext applicationContext;

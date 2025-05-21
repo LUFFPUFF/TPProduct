@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -54,10 +55,12 @@ public class ChatMetricsServiceImpl implements IChatMetricsService {
 
     @Override
     public void incrementChatsCreated(String companyId, ChatChannel channel, boolean fromOperatorUI) {
+        log.info("Incrementing chats_created_total: companyId={}, channel={}, fromOperatorUI={}",
+                companyId, (channel != null ? channel.name() : "null_channel"), fromOperatorUI);
         Counter.builder(CHATS_CREATED_TOTAL)
                 .description("Общее количество созданных чатов")
                 .tag(TAG_COMPANY_ID, sanitizeTag(companyId))
-                .tag(TAG_CHANNEL, sanitizeTag(channel.name()))
+                .tag(TAG_CHANNEL, sanitizeTag(Objects.requireNonNull(channel).name()))
                 .tag(TAG_FROM_OPERATOR_UI, String.valueOf(fromOperatorUI))
                 .register(registry)
                 .increment();

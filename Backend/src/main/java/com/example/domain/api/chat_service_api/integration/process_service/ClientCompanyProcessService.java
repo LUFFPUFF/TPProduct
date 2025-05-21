@@ -15,20 +15,23 @@ import com.example.database.repository.company_subscription_module.CompanyWhatsa
 import com.example.domain.api.ans_api_module.exception.AutoResponderException;
 import com.example.domain.api.ans_api_module.service.IAutoResponderService;
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
-import com.example.domain.api.chat_service_api.exception_handler.exception.service.ChatServiceException;
 import com.example.domain.api.chat_service_api.integration.mail.response.EmailResponse;
 import com.example.domain.api.chat_service_api.integration.telegram.TelegramResponse;
 import com.example.domain.api.chat_service_api.integration.vk.reponse.VkResponse;
 import com.example.domain.api.chat_service_api.integration.whats_app.model.response.WhatsappResponse;
+import com.example.domain.api.chat_service_api.model.dto.ChatDetailsDTO;
 import com.example.domain.api.chat_service_api.model.rest.chat.CreateChatRequestDTO;
 import com.example.domain.api.chat_service_api.model.rest.mesage.SendMessageRequestDTO;
 import com.example.domain.api.chat_service_api.service.*;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
+import com.example.domain.api.statistics_module.metrics.service.IChatMetricsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Slf4j
@@ -46,29 +49,40 @@ public class ClientCompanyProcessService {
     private final IAutoResponderService autoResponderService;
     private final IAssignmentService assignmentService;
     private final ChatRepository chatRepository;
+    private final IChatMetricsService chatMetricsService;
 
     private static final int MAX_CONTENT_LENGTH = 255;
     private static final String TRUNCATE_INDICATOR = "...";
 
     @Transactional
     public void processTelegram(TelegramResponse telegramResponse) {
+        log.info("Processing incoming Telegram message from bot: {}, user: {}", telegramResponse.getBotUsername(), telegramResponse.getUsername());
         CompanyTelegramConfiguration configuration =
                 telegramConfigurationRepository.findByBotUsername(telegramResponse.getBotUsername())
-                        .orElseThrow(() -> new ResourceNotFoundException("Telegram configuration not found"));
+                        .orElseThrow(() -> {
+                            log.error("Telegram configuration not found for bot: {}", telegramResponse.getBotUsername());
+                            return new ResourceNotFoundException("Telegram configuration not found for bot: " + telegramResponse.getBotUsername());
+                        });
 
         Company company = configuration.getCompany();
         String telegramUsername = telegramResponse.getUsername();
+        String companyIdStr = company.getId() != null ? company.getId().toString() : "unknown_company";
 
         Client client = clientService.findByName(telegramUsername)
-                .orElseGet(() -> clientService.createClient(telegramUsername, company.getId(), null));
+                .orElseGet(() -> {
+                    log.info("Client with Telegram username '{}' not found for company ID {}. Creating new client.", telegramUsername, company.getId());
+                    return clientService.createClient(telegramUsername, company.getId(), null);
+                });
+        log.debug("Using client ID {} for Telegram user '{}'", client.getId(), telegramUsername);
 
         Optional<Chat> existingOpenChat = chatService.findOpenChatByClientAndChannel(client.getId(), ChatChannel.Telegram);
 
         if (existingOpenChat.isPresent()) {
             Chat chat = existingOpenChat.get();
+            log.info("Found existing open Telegram chat ID {} for client ID {}", chat.getId(), client.getId());
 
             SendMessageRequestDTO messageRequest = new SendMessageRequestDTO();
-            messageRequest.setChatId(existingOpenChat.get().getId());
+            messageRequest.setChatId(chat.getId());
             messageRequest.setContent(telegramResponse.getText());
             messageRequest.setSenderId(client.getId());
             messageRequest.setSenderType(ChatMessageSenderType.CLIENT);
@@ -80,23 +94,42 @@ public class ClientCompanyProcessService {
             );
 
             if (containsOperatorRequest(telegramResponse.getText())) {
-                log.info("Operator request detected in chat {}", chat.getId());
+                log.info("Operator request detected in Telegram chat {}", chat.getId());
                 assignOperatorToChat(chat);
             } else {
                 processAutoResponder(chat, messageDto);
             }
-
-            log.info("Processed incoming message for chat ID {}.", chat.getId() + " - " + messageDto);
         } else {
+            log.info("No existing open Telegram chat found for client ID {}. Creating new chat.", client.getId());
             CreateChatRequestDTO createChatRequest = new CreateChatRequestDTO();
             createChatRequest.setClientId(client.getId());
             createChatRequest.setCompanyId(company.getId());
             createChatRequest.setChatChannel(ChatChannel.Telegram);
             createChatRequest.setInitialMessageContent(telegramResponse.getText());
 
-            chatService.createChat(createChatRequest);
-        }
+            try {
+                ChatDetailsDTO createdChatDetails = chatService.createChat(createChatRequest);
 
+                if (createdChatDetails.getCompanyId() != null && createdChatDetails.getChatChannel() != null) {
+                    chatMetricsService.incrementChatsCreated(
+                        createdChatDetails.getCompanyId().toString(),
+                        createdChatDetails.getChatChannel(),
+                        false
+                    );
+                } else {
+                    log.warn("Could not explicitly increment chats_created_total metric for new Telegram chat: createdChatDetails or its fields are null.");
+                }
+
+
+            } catch (Exception e) {
+                log.error("Failed to create Telegram chat for client ID {}: {}", client.getId(), e.getMessage(), e);
+                chatMetricsService.incrementChatOperationError(
+                        "ClientCompanyProcessService.processTelegram.createChat",
+                        companyIdStr,
+                        e.getClass().getSimpleName()
+                );
+            }
+        }
     }
 
     @Transactional
@@ -104,31 +137,34 @@ public class ClientCompanyProcessService {
         log.info("Processing incoming email for account: {}", companyEmailAddress);
         CompanyMailConfiguration mailConfiguration =
                 gmailConfigurationRepository.findByEmailAddress(companyEmailAddress)
-                        .orElseThrow(() -> new ResourceNotFoundException("Email configuration not found for address: " + companyEmailAddress));
+                        .orElseThrow(() -> {
+                            log.error("Email configuration not found for address: {}", companyEmailAddress);
+                            return new ResourceNotFoundException("Email configuration not found for address: " + companyEmailAddress);
+                        });
 
         Company company = mailConfiguration.getCompany();
         String clientEmail = emailResponse.getFrom();
+        String companyIdStr = company.getId() != null ? company.getId().toString() : "unknown_company";
 
         Client client = clientService.findByName(clientEmail)
                 .orElseGet(() -> {
-                    log.info("Creating new client for email address: {}", clientEmail);
+                    log.info("Client with email '{}' not found for company ID {}. Creating new client.", clientEmail, company.getId());
                     return clientService.createClient(clientEmail, company.getId(), null);
                 });
+        log.debug("Using client ID {} for email '{}'", client.getId(), clientEmail);
 
         Optional<Chat> existingOpenChat = chatService.findOpenChatByClientAndChannel(client.getId(), ChatChannel.Email);
-
         String fullEmailContent = formatEmailContent(emailResponse);
 
         if (existingOpenChat.isPresent()) {
             Chat chat = existingOpenChat.get();
-            log.info("Processing incoming email for existing chat ID {}.", chat.getId());
+            log.info("Found existing open Email chat ID {} for client ID {}", chat.getId(), client.getId());
 
             SendMessageRequestDTO messageRequest = new SendMessageRequestDTO();
             messageRequest.setChatId(chat.getId());
             messageRequest.setContent(truncateContent(fullEmailContent, MAX_CONTENT_LENGTH, TRUNCATE_INDICATOR));
             messageRequest.setSenderId(client.getId());
             messageRequest.setSenderType(ChatMessageSenderType.CLIENT);
-            // TODO: Возможно, стоит сохранить полное содержимое письма в отдельном поле или в файле, если оно длинное
 
             MessageDto messageDto = chatMessageService.processAndSaveMessage(messageRequest,
                     messageRequest.getSenderId(),
@@ -140,35 +176,61 @@ public class ClientCompanyProcessService {
             } else {
                 processAutoResponder(chat, messageDto);
             }
-            log.info("Processed incoming email message (chat ID {}).", chat.getId());
-
+            log.info("Processed incoming Email message for chat ID {}. Message content snippet: {}", chat.getId(), truncateContent(messageDto.getContent(), 50, "..."));
         } else {
-            log.info("Creating new chat for incoming email from {}.", clientEmail);
+            log.info("No existing open Email chat found for client ID {}. Creating new chat.", client.getId());
             CreateChatRequestDTO createChatRequest = new CreateChatRequestDTO();
             createChatRequest.setClientId(client.getId());
             createChatRequest.setCompanyId(company.getId());
             createChatRequest.setChatChannel(ChatChannel.Email);
             createChatRequest.setInitialMessageContent(truncateContent(fullEmailContent, MAX_CONTENT_LENGTH, TRUNCATE_INDICATOR));
 
-            chatService.createChat(createChatRequest);
-            log.info("Created new chat for email client {}.", clientEmail);
+            try {
+                log.debug("Attempting to create new Email chat with request: {}", createChatRequest);
+                ChatDetailsDTO createdChatDetails = chatService.createChat(createChatRequest);
+
+                if (createdChatDetails != null && createdChatDetails.getCompanyId() != null && createdChatDetails.getChatChannel() != null) {
+                    chatMetricsService.incrementChatsCreated(
+                        createdChatDetails.getCompanyId().toString(),
+                        createdChatDetails.getChatChannel(),
+                        false
+                    );
+                } else {
+                    log.warn("Could not explicitly increment chats_created_total metric for new Email chat: createdChatDetails or its fields are null.");
+                }
+
+
+            } catch (Exception e) {
+                log.error("Failed to create Email chat for client ID {}: {}", client.getId(), e.getMessage(), e);
+                chatMetricsService.incrementChatOperationError(
+                        "ClientCompanyProcessService.processEmail.createChat",
+                        companyIdStr,
+                        e.getClass().getSimpleName()
+                );
+            }
         }
     }
 
     @Transactional
     public void processVk(VkResponse vkResponse) {
+        log.info("Processing incoming VK message from community: {}, user: {}", vkResponse.getCommunityId(), vkResponse.getFromId());
         CompanyVkConfiguration configuration =
                 vkConfigurationRepository.findByCommunityId(vkResponse.getCommunityId())
-                        .orElseThrow(() -> new ResourceNotFoundException("VK configuration not found for community ID: " + vkResponse.getCommunityId()));
+                        .orElseThrow(() -> {
+                            log.error("VK configuration not found for community ID: {}", vkResponse.getCommunityId());
+                            return new ResourceNotFoundException("VK configuration not found for community ID: " + vkResponse.getCommunityId());
+                        });
 
         Company company = configuration.getCompany();
         Long vkUserId = vkResponse.getFromId();
+        String companyIdStr = company.getId() != null ? company.getId().toString() : "unknown_company";
 
         Client client = clientService.findByName(vkUserId.toString())
                 .orElseGet(() -> {
-                    log.info("Creating new client for VK user ID: {}", vkUserId);
+                    log.info("Client with VK User ID '{}' not found for company ID {}. Creating new client.", vkUserId, company.getId());
                     return clientService.createClient(vkUserId.toString(), company.getId(), null);
                 });
+        log.debug("Using client ID {} for VK User ID '{}'", client.getId(), vkUserId);
 
         Optional<Chat> existingOpenChat = chatService.findOpenChatByClientAndChannelAndExternalId(
                 client.getId(), ChatChannel.VK, vkResponse.getPeerId().toString());
@@ -177,14 +239,13 @@ public class ClientCompanyProcessService {
 
         if (existingOpenChat.isPresent()) {
             Chat chat = existingOpenChat.get();
-            log.info("Processing incoming VK message for existing chat ID {}.", chat.getId());
+            log.info("Found existing open VK chat ID {} (external ID {}) for client ID {}", chat.getId(), chat.getExternalChatId(), client.getId());
 
             SendMessageRequestDTO messageRequest = new SendMessageRequestDTO();
             messageRequest.setChatId(chat.getId());
             messageRequest.setContent(truncateContent(fullMessageContent, MAX_CONTENT_LENGTH, TRUNCATE_INDICATOR));
             messageRequest.setSenderId(client.getId());
             messageRequest.setSenderType(ChatMessageSenderType.CLIENT);
-            // TODO: Если текст очень длинный, сохранить его полностью где-то еще
 
             MessageDto messageDto = chatMessageService.processAndSaveMessage(
                     messageRequest,
@@ -198,9 +259,9 @@ public class ClientCompanyProcessService {
             } else {
                 processAutoResponder(chat, messageDto);
             }
-
+            log.info("Processed incoming VK message for chat ID {}. Message content snippet: {}", chat.getId(), truncateContent(messageDto.getContent(), 50, "..."));
         } else {
-            log.info("Creating new chat for incoming VK message from user {}.", vkUserId);
+            log.info("No existing open VK chat found for client ID {} and external ID {}. Creating new chat.", client.getId(), vkResponse.getPeerId().toString());
             CreateChatRequestDTO createChatRequest = new CreateChatRequestDTO();
             createChatRequest.setClientId(client.getId());
             createChatRequest.setCompanyId(company.getId());
@@ -208,8 +269,27 @@ public class ClientCompanyProcessService {
             createChatRequest.setInitialMessageContent(truncateContent(fullMessageContent, MAX_CONTENT_LENGTH, TRUNCATE_INDICATOR));
             createChatRequest.setExternalChatId(vkResponse.getPeerId().toString());
 
-            chatService.createChat(createChatRequest);
-            log.info("Created new chat for VK client {} (peer ID {}).", vkUserId, vkResponse.getPeerId());
+            try {
+                ChatDetailsDTO createdChatDetails = chatService.createChat(createChatRequest);
+
+                if (createdChatDetails != null && createdChatDetails.getCompanyId() != null && createdChatDetails.getChatChannel() != null) {
+                    chatMetricsService.incrementChatsCreated(
+                        createdChatDetails.getCompanyId().toString(),
+                        createdChatDetails.getChatChannel(),
+                        false
+                    );
+                } else {
+                    log.warn("Could not explicitly increment chats_created_total metric for new VK chat: createdChatDetails or its fields are null.");
+                }
+
+            } catch (Exception e) {
+                log.error("Failed to create VK chat for client ID {}: {}", client.getId(), e.getMessage(), e);
+                chatMetricsService.incrementChatOperationError(
+                        "ClientCompanyProcessService.processVk.createChat",
+                        companyIdStr,
+                        e.getClass().getSimpleName()
+                );
+            }
         }
     }
 
@@ -220,23 +300,28 @@ public class ClientCompanyProcessService {
 
         CompanyWhatsappConfiguration configuration =
                 whatsappConfigurationRepository.findByPhoneNumberId(whatsappResponse.getRecipientPhoneNumberId())
-                        .orElseThrow(() -> new ResourceNotFoundException("WhatsApp configuration not found for phone number ID: " + whatsappResponse.getRecipientPhoneNumberId()));
+                        .orElseThrow(() -> {
+                            log.error("WhatsApp configuration not found for phone number ID: {}", whatsappResponse.getRecipientPhoneNumberId());
+                            return new ResourceNotFoundException("WhatsApp configuration not found for phone number ID: " + whatsappResponse.getRecipientPhoneNumberId());
+                        });
 
         Company company = configuration.getCompany();
         String fromPhoneNumber = whatsappResponse.getFromPhoneNumber();
+        String companyIdStr = company.getId() != null ? company.getId().toString() : "unknown_company";
 
         Client client = clientService.findByName(fromPhoneNumber)
                 .orElseGet(() -> {
-                    log.info("Creating new client for WhatsApp phone number: {}", fromPhoneNumber);
+                    log.info("Client with WhatsApp phone '{}' not found for company ID {}. Creating new client.", fromPhoneNumber, company.getId());
                     return clientService.createClient(fromPhoneNumber, company.getId(), null);
                 });
+        log.debug("Using client ID {} for WhatsApp phone '{}'", client.getId(), fromPhoneNumber);
 
         Optional<Chat> existingOpenChat = chatService.findOpenChatByClientAndChannel(client.getId(), ChatChannel.WhatsApp);
-
         String fullMessageContent = whatsappResponse.getText();
 
         if (existingOpenChat.isPresent()) {
             Chat chat = existingOpenChat.get();
+            log.info("Found existing open WhatsApp chat ID {} for client ID {}", chat.getId(), client.getId());
 
             SendMessageRequestDTO messageRequest = new SendMessageRequestDTO();
             messageRequest.setChatId(chat.getId());
@@ -256,19 +341,39 @@ public class ClientCompanyProcessService {
             } else {
                 processAutoResponder(chat, messageDto);
             }
-
+            log.info("Processed incoming WhatsApp message for chat ID {}. Message content snippet: {}", chat.getId(), truncateContent(messageDto.getContent(), 50, "..."));
         } else {
-            log.info("Creating new chat for incoming WhatsApp message from {}.", fromPhoneNumber);
+            log.info("No existing open WhatsApp chat found for client ID {}. Creating new chat.", client.getId());
             CreateChatRequestDTO createChatRequest = new CreateChatRequestDTO();
             createChatRequest.setClientId(client.getId());
             createChatRequest.setCompanyId(company.getId());
             createChatRequest.setChatChannel(ChatChannel.WhatsApp);
             createChatRequest.setInitialMessageContent(truncateContent(fullMessageContent, MAX_CONTENT_LENGTH, TRUNCATE_INDICATOR));
 
-            chatService.createChat(createChatRequest);
-            log.info("Created new chat for WhatsApp client {} (phone {}).", client.getId(), fromPhoneNumber);
+            try {
+                ChatDetailsDTO createdChatDetails = chatService.createChat(createChatRequest);
+
+                if (createdChatDetails != null && createdChatDetails.getCompanyId() != null && createdChatDetails.getChatChannel() != null) {
+                    chatMetricsService.incrementChatsCreated(
+                        createdChatDetails.getCompanyId().toString(),
+                        createdChatDetails.getChatChannel(),
+                        false
+                    );
+                } else {
+                    log.warn("Could not explicitly increment chats_created_total metric for new WhatsApp chat: createdChatDetails or its fields are null.");
+                }
+
+            } catch (Exception e) {
+                log.error("Failed to create WhatsApp chat for client ID {}: {}", client.getId(), e.getMessage(), e);
+                chatMetricsService.incrementChatOperationError(
+                        "ClientCompanyProcessService.processWhatsapp.createChat",
+                        companyIdStr,
+                        e.getClass().getSimpleName()
+                );
+            }
         }
     }
+
 
     private String truncateContent(String content, int maxLength, String truncateIndicator) {
         if (content == null) {
@@ -314,24 +419,42 @@ public class ClientCompanyProcessService {
     }
 
     private void assignOperatorToChat(Chat chat) {
+        String companyIdStr = chat.getCompany() != null && chat.getCompany().getId() != null ? chat.getCompany().getId().toString() : "unknown";
+        ChatChannel channel = chat.getChatChannel() != null ? chat.getChatChannel() : ChatChannel.UNKNOWN;
         try {
             autoResponderService.stopForChat(chat.getId());
+            log.debug("Stopped AutoResponder for chat ID {} due to operator request.", chat.getId());
 
-            Optional<User> operator = assignmentService.findLeastBusyOperator(chat.getCompany().getId());
+            Optional<User> operatorOpt = assignmentService.findLeastBusyOperator(chat.getCompany().getId());
 
-            if (operator.isPresent()) {
-                chat.setUser(operator.get());
+            if (operatorOpt.isPresent()) {
+                User operator = operatorOpt.get();
+                chat.setUser(operator);
                 chat.setStatus(ChatStatus.ASSIGNED);
+                if (chat.getAssignedAt() == null) {
+                    chat.setAssignedAt(LocalDateTime.now());
+                }
                 chatRepository.save(chat);
-                log.info("Operator {} assigned to chat {}", operator.get().getId(), chat.getId());
+                log.info("Operator {} (ID: {}) assigned to chat ID {}", operator.getFullName(), operator.getId(), chat.getId());
+                if (chat.getAssignedAt() != null && chat.getCreatedAt() != null) {
+                    chatMetricsService.recordChatAssignmentTime(companyIdStr, channel, Duration.between(chat.getCreatedAt(), chat.getAssignedAt()));
+                }
+                chatMetricsService.incrementChatsAssigned(companyIdStr, channel, true);
+                chatMetricsService.incrementChatsEscalated(companyIdStr, channel);
+
             } else {
                 chat.setStatus(ChatStatus.PENDING_OPERATOR);
                 chatRepository.save(chat);
-                log.info("No available operators, chat {} set to PENDING_OPERATOR", chat.getId());
+                log.warn("No available operators found for company ID {}. Chat ID {} set to PENDING_OPERATOR", chat.getCompany().getId(), chat.getId());
+                chatMetricsService.incrementChatsEscalated(companyIdStr, channel);
             }
         } catch (Exception e) {
-            log.error("Failed to assign operator to chat {}: {}", chat.getId(), e.getMessage(), e);
-            throw new ChatServiceException("Failed to assign operator to chat");
+            log.error("Failed to assign operator to chat ID {}: {}", chat.getId(), e.getMessage(), e);
+            chatMetricsService.incrementChatOperationError(
+                    "ClientCompanyProcessService.assignOperatorToChat",
+                    companyIdStr,
+                    e.getClass().getSimpleName()
+            );
         }
     }
 }

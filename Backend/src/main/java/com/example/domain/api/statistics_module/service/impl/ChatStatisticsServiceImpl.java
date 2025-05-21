@@ -5,6 +5,7 @@ import com.example.domain.api.statistics_module.model.chat.ChatSummaryStatsDTO;
 import com.example.domain.api.statistics_module.model.metric.MetricTimeSeriesDTO;
 import com.example.domain.api.statistics_module.model.metric.StatisticsQueryRequestDTO;
 import com.example.domain.api.statistics_module.model.metric.TimeSeriesDataPointDTO;
+import com.example.domain.api.statistics_module.service.AbstractStatisticsService;
 import com.example.domain.api.statistics_module.service.IChatStatisticsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -22,11 +23,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
-public class ChatStatisticsServiceImpl implements IChatStatisticsService {
-
-    private final PrometheusQueryClient prometheusClient;
-    private final ObjectMapper objectMapper;
+public class ChatStatisticsServiceImpl extends AbstractStatisticsService implements IChatStatisticsService {
 
     private static final String METRIC_PREFIX = "chat_app_";
     private static final String CHATS_CREATED_TOTAL = METRIC_PREFIX + "chats_created_total";
@@ -35,6 +32,10 @@ public class ChatStatisticsServiceImpl implements IChatStatisticsService {
     private static final String CHAT_DURATION_SECONDS_SUM = METRIC_PREFIX + "chat_duration_seconds_sum";
     private static final String CHAT_DURATION_SECONDS_COUNT = METRIC_PREFIX + "chat_duration_seconds_count";
 
+    public ChatStatisticsServiceImpl(PrometheusQueryClient prometheusClient, ObjectMapper objectMapper) {
+        super(prometheusClient, objectMapper);
+    }
+
     @Override
     public Mono<ChatSummaryStatsDTO> getChatSummary(StatisticsQueryRequestDTO request) {
         String companyFilter = buildCompanyFilter(request.getCompanyId());
@@ -42,15 +43,15 @@ public class ChatStatisticsServiceImpl implements IChatStatisticsService {
 
         log.info("Requesting chat summary for company: {}, timeRange: {}", request.getCompanyId(), request.getTimeRange());
 
-        Mono<Long> totalCreatedMono = querySingleScalar(
+        Mono<Long> totalCreatedMono = querySingleScalarInternal(
                 String.format("sum(increase(%s%s%s))", CHATS_CREATED_TOTAL, companyFilter, rangeVectorSelector),
                 "Total Created Chats"
         );
-        Mono<Long> totalClosedMono = querySingleScalar(
+        Mono<Long> totalClosedMono = querySingleScalarInternal(
                 String.format("sum(increase(%s%s%s))", CHATS_CLOSED_TOTAL, companyFilter, rangeVectorSelector),
                 "Total Closed Chats"
         );
-        Mono<Long> totalMessagesMono = querySingleScalar(
+        Mono<Long> totalMessagesMono = querySingleScalarInternal(
                 String.format("sum(increase(%s%s%s))", MESSAGES_SENT_TOTAL, companyFilter, rangeVectorSelector),
                 "Total Messages Sent"
         );
@@ -61,7 +62,7 @@ public class ChatStatisticsServiceImpl implements IChatStatisticsService {
                 CHAT_DURATION_SECONDS_COUNT
         );
 
-        Mono<Double> avgDurationMono = querySingleScalarDouble(avgDurationQuery, "Average Chat Duration")
+        Mono<Double> avgDurationMono = queryScalarDouble(avgDurationQuery, "Average Chat Duration")
                 .onErrorReturn(Double.NaN);
 
         return Mono.zip(totalCreatedMono, totalClosedMono, totalMessagesMono, avgDurationMono)
@@ -125,82 +126,13 @@ public class ChatStatisticsServiceImpl implements IChatStatisticsService {
                 });
     }
 
-    private Mono<Long> querySingleScalar(String promqlQuery, String queryDescription) {
-        log.debug("Executing scalar query for [{}]: {}", queryDescription, promqlQuery);
-        return prometheusClient.query(promqlQuery)
-                .map(jsonNode -> {
-                    logPrometheusResponse(queryDescription, promqlQuery, jsonNode);
-                    if (isResultEmpty(jsonNode)) {
-                        log.info("Result is empty for scalar query [{}]. Query: {}", queryDescription, promqlQuery);
-                        return 0L;
-                    }
-                    JsonNode valueNode = jsonNode.path("data").path("result").path(0).path("value").path(1);
-                    if (valueNode.isMissingNode()) {
-                        log.warn("ValueNode is missing in Prometheus response for scalar query [{}]. Query: {}", queryDescription, promqlQuery);
-                        return 0L;
-                    }
-                    String textValue = valueNode.asText();
-                    log.info("Extracted value string for [{}]: '{}'. Query: {}", queryDescription, textValue, promqlQuery);
-                    try {
-                        double doubleValue = Double.parseDouble(textValue);
-                        return Math.round(doubleValue);
-                    } catch (NumberFormatException e) {
-                        log.error("Could not parse value '{}' to Double/Long for scalar query [{}]. Query: {}", textValue, queryDescription, promqlQuery, e);
-                        return 0L;
-                    }
-                })
-                .onErrorResume(e -> {
-                    log.error("Error executing scalar query for [{}]. Query: {}: {}", queryDescription, promqlQuery, e.getMessage(), e);
-                    return Mono.just(0L);
-                });
-    }
-
-    private Mono<Double> querySingleScalarDouble(String promqlQuery, String queryDescription) {
-        log.debug("Executing scalar double query for [{}]: {}", queryDescription, promqlQuery);
-        return prometheusClient.query(promqlQuery)
-                .map(jsonNode -> {
-                    logPrometheusResponse(queryDescription, promqlQuery, jsonNode);
-                    if (isResultEmpty(jsonNode)) {
-                        log.info("Result is empty for scalar double query [{}]. Query: {}", queryDescription, promqlQuery);
-                        return Double.NaN;
-                    }
-                    JsonNode valueNode = jsonNode.path("data").path("result").path(0).path("value").path(1);
-                    if (valueNode.isMissingNode()) {
-                        log.warn("ValueNode is missing for scalar double query [{}]. Query: {}", queryDescription, promqlQuery);
-                        return Double.NaN;
-                    }
-                    String textValue = valueNode.asText();
-                    log.info("Extracted value string for [{}]: '{}'. Query: {}", queryDescription, textValue, promqlQuery);
-                    if ("NaN".equalsIgnoreCase(textValue) || "Inf".equalsIgnoreCase(textValue) || "+Inf".equalsIgnoreCase(textValue) || "-Inf".equalsIgnoreCase(textValue)) {
-                        return Double.NaN;
-                    }
-                    try {
-                        return Double.parseDouble(textValue);
-                    } catch (NumberFormatException e) {
-                        log.error("Could not parse value '{}' to Double for scalar double query [{}]. Query: {}", textValue, queryDescription, promqlQuery, e);
-                        return Double.NaN;
-                    }
-                })
-                .onErrorResume(e -> {
-                    log.error("Error executing scalar double query for [{}]. Query: {}: {}",queryDescription, promqlQuery, e.getMessage(), e);
-                    return Mono.just(Double.NaN);
-                });
-    }
-
-    private void logPrometheusResponse(String queryDescription, String promqlQuery, JsonNode jsonNode) {
-        try {
-            log.debug("Prometheus response for [{}], Query [{}]: {}", queryDescription, promqlQuery, objectMapper.writeValueAsString(jsonNode));
-        } catch (JsonProcessingException e) {
-            log.warn("Could not serialize Prometheus response to JSON for logging. Query [{}], Description [{}], Raw: {}", promqlQuery, queryDescription, jsonNode.toString().substring(0, Math.min(jsonNode.toString().length(), 500)));
-        }
-    }
-
     private List<MetricTimeSeriesDTO> parseRangeQueryMatrixResult(JsonNode jsonNode) {
         List<MetricTimeSeriesDTO> seriesList = new ArrayList<>();
         if (jsonNode == null || !jsonNode.path("status").asText("").equals("success")) {
             log.warn("Prometheus range query was not successful or returned null. Response: {}", jsonNode != null ? jsonNode.toString().substring(0, Math.min(jsonNode.toString().length(), 500)) : "null");
             return seriesList;
         }
+
 
         JsonNode result = jsonNode.path("data").path("result");
         if (result.isMissingNode() || !result.isArray()) {
@@ -252,19 +184,6 @@ public class ChatStatisticsServiceImpl implements IChatStatisticsService {
             seriesList.add(seriesDto);
         }
         return seriesList;
-    }
-
-    private boolean isResultEmpty(JsonNode jsonNode) {
-        if (jsonNode == null || !jsonNode.path("status").asText("").equals("success")) {
-            log.warn("Prometheus query status not success or node is null.");
-            return true;
-        }
-        JsonNode result = jsonNode.path("data").path("result");
-        if (result.isMissingNode() || !result.isArray() || result.isEmpty()) {
-            log.info("Prometheus result data is missing, not an array, or empty.");
-            return true;
-        }
-        return false;
     }
 
     private String buildCompanyFilter(String companyId) {
