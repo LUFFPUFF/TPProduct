@@ -54,12 +54,21 @@ public class CurrentUserDataServiceImpl implements CurrentUserDataService {
 
     @Override
     public String getUserEmail() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+       try {
+           return SecurityContextHolder.getContext().getAuthentication().getName();
+       }catch (Exception e) {
+           return null;
+       }
     }
 
     @Override
     public List<Role> getRoleList() {
-        return SecurityContextHolder.getContext().getAuthentication()
-                .getAuthorities().stream().map(authority -> Role.valueOf(authority.getAuthority())).toList();
+        try {
+
+            return SecurityContextHolder.getContext().getAuthentication()
+                    .getAuthorities().stream().map(authority -> Role.valueOf(authority.getAuthority())).toList();
+        }catch (Exception e) {
+            return null;
+        }
     }
 }
