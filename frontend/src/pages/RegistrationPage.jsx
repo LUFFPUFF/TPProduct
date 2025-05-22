@@ -106,7 +106,7 @@ export const RegistrationPage = () => {
 
 
             setUser(loginData);
-            navigate("/dialogs");
+            navigate("/");
 
         } catch (error) {
             console.error("Confirmation error:", error);
