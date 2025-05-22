@@ -20,7 +20,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final CurrentUserDataService currentUserDataService;
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
 
