@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest
 -------------------------------------------------------------------------------
-Tests run: 15, Failures: 4, Errors: 2, Skipped: 0, Time elapsed: 0.318 s <<< FAILURE! -- in com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest
-com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_UserAndSubscriptionExist_ShouldReturnDto -- Time elapsed: 0.006 s <<< ERROR!
+Tests run: 15, Failures: 4, Errors: 2, Skipped: 0, Time elapsed: 0.226 s <<< FAILURE! -- in com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest
+com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_UserAndSubscriptionExist_ShouldReturnDto -- Time elapsed: 0.002 s <<< ERROR!
 java.lang.NullPointerException: Cannot invoke "com.example.domain.api.authentication_module.service.interfaces.CurrentUserDataService.getUser()" because "this.currentUserDataService" is null
 	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImpl.getSubscription(SubscriptionServiceImpl.java:116)
 	at com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_UserAndSubscriptionExist_ShouldReturnDto(SubscriptionServiceImplTest.java:227)
@@ -18,7 +18,7 @@ java.lang.NullPointerException: Cannot invoke "com.example.domain.api.authentica
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 
-com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_UserHasNoCompany_ShouldThrowNotFoundUserException -- Time elapsed: 0.005 s <<< FAILURE!
+com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_UserHasNoCompany_ShouldThrowNotFoundUserException -- Time elapsed: 0.003 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <com.example.domain.api.authentication_module.exception_handler_auth.NotFoundUserException> but was: <java.lang.NullPointerException>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
@@ -34,7 +34,7 @@ Caused by: java.lang.NullPointerException: Cannot invoke "com.example.domain.api
 	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
 	... 6 more
 
-com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_SubscriptionNotFound_ShouldThrowNotFoundSubscriptionException -- Time elapsed: 0.003 s <<< FAILURE!
+com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_SubscriptionNotFound_ShouldThrowNotFoundSubscriptionException -- Time elapsed: 0.002 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <com.example.domain.api.subscription_module.exception_handler_subscription.NotFoundSubscriptionException> but was: <java.lang.NullPointerException>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
@@ -66,7 +66,7 @@ Caused by: java.lang.NullPointerException: Cannot invoke "com.example.domain.api
 	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
 	... 6 more
 
-com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_UserNotFound_ShouldThrowNotFoundUserException -- Time elapsed: 0.002 s <<< FAILURE!
+com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.getSubscription_UserNotFound_ShouldThrowNotFoundUserException -- Time elapsed: 0.003 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <com.example.domain.api.authentication_module.exception_handler_auth.NotFoundUserException> but was: <java.lang.NullPointerException>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)

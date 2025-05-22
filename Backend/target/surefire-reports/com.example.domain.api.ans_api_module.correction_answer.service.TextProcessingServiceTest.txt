@@ -1,4 +1,84 @@
 -------------------------------------------------------------------------------
 Test set: com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.49 s -- in com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest
+Tests run: 8, Failures: 3, Errors: 1, Skipped: 0, Time elapsed: 1.522 s <<< FAILURE! -- in com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest
+com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.processQuery_ApiClientThrowsIOException_ShouldWrapInMLExceptionAndRetry -- Time elapsed: 0.040 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <com.example.domain.api.ans_api_module.correction_answer.exception.MLException> but was: <java.lang.NullPointerException>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3128)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.processQuery_ApiClientThrowsIOException_ShouldWrapInMLExceptionAndRetry(TextProcessingServiceTest.java:167)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: java.lang.NullPointerException: Cannot invoke "com.example.domain.api.statistics_module.metrics.service.ITextProcessingMetricsService.incrementApiRetries(String, String)" because "this.this$0.metricsService" is null
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService$1.onError(TextProcessingService.java:211)
+	at org.springframework.retry.support.RetryTemplate.doOnErrorInterceptors(RetryTemplate.java:646)
+	at org.springframework.retry.support.RetryTemplate.doExecute(RetryTemplate.java:372)
+	at org.springframework.retry.support.RetryTemplate.execute(RetryTemplate.java:230)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.retryGenerateTextCall(TextProcessingService.java:217)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processCorrection(TextProcessingService.java:144)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:79)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.lambda$processQuery_ApiClientThrowsIOException_ShouldWrapInMLExceptionAndRetry$5(TextProcessingServiceTest.java:168)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
+	... 6 more
+
+com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.processQuery_ValidationFails_ShouldThrowMLExceptionWith400 -- Time elapsed: 0.067 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <com.example.domain.api.ans_api_module.correction_answer.exception.MLException> but was: <java.lang.NullPointerException>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3128)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.processQuery_ValidationFails_ShouldThrowMLExceptionWith400(TextProcessingServiceTest.java:136)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: java.lang.NullPointerException: Cannot invoke "com.example.domain.api.statistics_module.metrics.service.ITextProcessingMetricsService.incrementApiRetries(String, String)" because "this.this$0.metricsService" is null
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService$1.onError(TextProcessingService.java:211)
+	at org.springframework.retry.support.RetryTemplate.doOnErrorInterceptors(RetryTemplate.java:646)
+	at org.springframework.retry.support.RetryTemplate.doExecute(RetryTemplate.java:372)
+	at org.springframework.retry.support.RetryTemplate.execute(RetryTemplate.java:230)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.retryGenerateTextCall(TextProcessingService.java:217)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processCorrection(TextProcessingService.java:144)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:79)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.lambda$processQuery_ValidationFails_ShouldThrowMLExceptionWith400$4(TextProcessingServiceTest.java:137)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
+	... 6 more
+
+com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.processQuery_ApiError_ShouldThrowMLExceptionAndRetry -- Time elapsed: 0.007 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <com.example.domain.api.ans_api_module.correction_answer.exception.MLException> but was: <java.lang.NullPointerException>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3128)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.processQuery_ApiError_ShouldThrowMLExceptionAndRetry(TextProcessingServiceTest.java:92)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+Caused by: java.lang.NullPointerException: Cannot invoke "com.example.domain.api.statistics_module.metrics.service.ITextProcessingMetricsService.incrementApiRetries(String, String)" because "this.this$0.metricsService" is null
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService$1.onError(TextProcessingService.java:211)
+	at org.springframework.retry.support.RetryTemplate.doOnErrorInterceptors(RetryTemplate.java:646)
+	at org.springframework.retry.support.RetryTemplate.doExecute(RetryTemplate.java:372)
+	at org.springframework.retry.support.RetryTemplate.execute(RetryTemplate.java:230)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.retryGenerateTextCall(TextProcessingService.java:217)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processCorrection(TextProcessingService.java:144)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:79)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.lambda$processQuery_ApiError_ShouldThrowMLExceptionAndRetry$0(TextProcessingServiceTest.java:93)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
+	... 6 more
+
+com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.processQuery_ApiClientReturnsResponseWithEmptyText_ShouldReturnTrimmedOriginalQuery -- Time elapsed: 0.005 s <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "com.example.domain.api.statistics_module.metrics.service.ITextProcessingMetricsService.incrementApiRetries(String, String)" because "this.this$0.metricsService" is null
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService$1.onError(TextProcessingService.java:211)
+	at org.springframework.retry.support.RetryTemplate.doOnErrorInterceptors(RetryTemplate.java:646)
+	at org.springframework.retry.support.RetryTemplate.doExecute(RetryTemplate.java:372)
+	at org.springframework.retry.support.RetryTemplate.execute(RetryTemplate.java:230)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.retryGenerateTextCall(TextProcessingService.java:217)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processCorrection(TextProcessingService.java:144)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:79)
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.processQuery_ApiClientReturnsResponseWithEmptyText_ShouldReturnTrimmedOriginalQuery(TextProcessingServiceTest.java:153)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+

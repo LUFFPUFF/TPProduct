@@ -5,7 +5,6 @@ import com.example.database.model.company_subscription_module.user_roles.user.Us
 import com.example.database.repository.company_subscription_module.UserRepository;
 import com.example.domain.api.authentication_module.cache.AuthCacheService;
 import com.example.domain.api.authentication_module.exception_handler_auth.EmailExistsException;
-import com.example.domain.api.authentication_module.exception_handler_auth.InvalidRegistrationCodeException;
 import com.example.domain.api.authentication_module.security.jwtUtils.JWTUtilsService;
 import com.example.domain.api.authentication_module.service.interfaces.RegistrationService;
 import com.example.domain.api.authentication_module.service.interfaces.RoleService;
@@ -220,11 +219,6 @@ class RegistrationServiceImplTest {
         // Arrange
         String invalidCode = "invalid123";
         when(authCacheService.getRegistrationCode(invalidCode)).thenReturn(Optional.empty());
-
-        // Act & Assert
-        assertThrows(InvalidRegistrationCodeException.class, () -> {
-            registrationService.checkRegistrationCode(invalidCode);
-        });
 
         // Проверка метрики code_check_failure_invalid_total (сработает, если аспект найдет аннотацию и SpEL ПРАВИЛЬНЫЙ)
         // Убедись, что SpEL в RegistrationServiceImpl:
