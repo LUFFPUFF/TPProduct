@@ -1,16 +1,11 @@
 import React, {useEffect, useState} from "react";
 import Footer from "../components/Footer.jsx";
 import useImage from "../assets/HomePageMan.jpg";
+import { useAuth } from "../utils/AuthContext";
 
 export const HomePage = () => {
-    const [email, setEmail] = useState(null);
-
-    useEffect(() => {
-        const storedEmail = localStorage.getItem("email");
-        if (storedEmail) {
-            setEmail(storedEmail);
-        }
-    }, []);
+    const { user } = useAuth(); // получаем user из контекста
+    const email = user?.email || null;
 
     return (
         <div className="bg-[#E6E5EA]">

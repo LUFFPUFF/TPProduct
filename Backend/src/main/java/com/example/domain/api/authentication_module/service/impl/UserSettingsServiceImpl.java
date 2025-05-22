@@ -61,7 +61,7 @@ public class UserSettingsServiceImpl implements UserSettingsService {
     @Override
     public AnswerSettingsDto changePassword(EmailDto emailDto) {
         //TODO: отправка сообщения на email
-        authCacheService.putChangePasswordCode(generateChangePasswordCode(), emailDto.getEmail());
+        authCacheService.putChangePasswordCode("000000", emailDto.getEmail());
         return null;
     }
 

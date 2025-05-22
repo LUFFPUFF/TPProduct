@@ -32,7 +32,10 @@ const AppRouter = () => {
             {/* Защищённые + ограниченные по ролям */}
             <Route
                 element={
-                    <PrivateRoute allowedRoles={["MANAGER"]} />
+                    <PrivateRoute
+                        allowedRoles={["MANAGER", "USER"]}
+                        excludeRoles={["OPERATOR"]}
+                    />
                 }
             >
                 <Route path="/subscription" element={<SubscriptionsPage />} />

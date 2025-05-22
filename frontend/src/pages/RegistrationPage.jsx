@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import API from "../config/api";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../utils/AuthContext";
 
 export const RegistrationPage = () => {
     const [email, setEmail] = useState("");
@@ -10,6 +11,7 @@ export const RegistrationPage = () => {
     const [showCodeModal, setShowCodeModal] = useState(false);
     const [confirmationCode, setConfirmationCode] = useState("");
     const [confirmMessage, setConfirmMessage] = useState("");
+    const { setUser } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,10 +36,14 @@ export const RegistrationPage = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
+                credentials: "include",
                 body: JSON.stringify({ email, password }),
             });
 
+            console.log("Register response:", response);
+
             const data = await response.json();
+            console.log("Register response data:", data);
 
             if (!response.ok) {
                 setMessage(data.message || "Ошибка регистрации.");
@@ -66,11 +72,14 @@ export const RegistrationPage = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
+                credentials: "include",
                 body: JSON.stringify({ code: confirmationCode }),
             });
 
+            console.log("Confirm code response:", response);
 
             const data = await response.json();
+            console.log("Confirm code data:", data);
 
             if (!response.ok) {
                 setConfirmMessage(data.message || "Ошибка подтверждения.");
@@ -85,7 +94,10 @@ export const RegistrationPage = () => {
                 body: JSON.stringify({ email, password }),
             });
 
+            console.log("Login response:", loginResponse);
+
             const loginData = await loginResponse.json();
+            console.log("Login response data:", loginData);
 
             if (!loginResponse.ok) {
                 setConfirmMessage(loginData.message || "Подтверждено, но не удалось войти.");
@@ -93,8 +105,8 @@ export const RegistrationPage = () => {
             }
 
 
-            // Переход на страницу диалогов
-            navigate("/dialogs");
+            setUser(loginData);
+            navigate("/subscription");
 
         } catch (error) {
             console.error("Confirmation error:", error);
