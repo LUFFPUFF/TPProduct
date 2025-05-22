@@ -90,9 +90,9 @@ export default function IntegrationsPage() {
             let url = API.integrations.connect;
 
             if (selectedIntegration.name === "Telegram") {
-                url = API.integrations.createTGIntegration;
+                url = API.integrations.TGIntegration;
             } else if (selectedIntegration.name === "Почту") {
-                url = API.integrations.createMailIntegration;
+                url = API.integrations.MailIntegration;
             }
 
             console.log("Отправка запроса:", url, payload);
@@ -165,8 +165,8 @@ export default function IntegrationsPage() {
         const fetchConnectedIntegrations = async () => {
             try {
                 const [tgRes, mailRes] = await Promise.all([
-                    fetch(API.integrations.status.getTGIntegration),
-                    fetch(API.integrations.status.getMailIntegration),
+                    fetch(API.integrations.status.TGIntegration),
+                    fetch(API.integrations.status.MailIntegration),
                 ]);
 
                 const [tgData, mailData] = await Promise.all([
