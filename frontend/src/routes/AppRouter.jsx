@@ -23,7 +23,11 @@ const AppRouter = () => {
             <Route path="/forbidden" element={<ForbiddenPage />} />
 
             {/* Защищённые маршруты */}
-            <Route element={<PrivateRoute />}>
+            <Route element={
+                <PrivateRoute
+                    allowedRoles={["MANAGER", "USER", "OPERATOR"]}
+                />
+            }>
                 <Route path="/dialogs" element={<DialogPage />} />
                 <Route path="/settings" element={<UserPage />} />
                 <Route path="/stats" element={<StatsPage />} />
