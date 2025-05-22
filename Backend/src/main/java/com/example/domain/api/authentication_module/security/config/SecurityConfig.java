@@ -58,7 +58,7 @@ public class SecurityConfig  {
                             response.getWriter().write("{\"error\": \"Unauthorized SCF\"}");
                         })
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            authCookieService.ExpireTokenCookie(response);
+
                             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                             response.setContentType("application/json");
                             response.getWriter().write("{\"error\": \"Access Denied SCF\"}");
