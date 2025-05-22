@@ -1,14 +1,17 @@
 import { Navigate, Outlet } from "react-router-dom";
-import {useAuth} from "../utils/AuthContext.jsx";
+import { useAuth } from "../utils/AuthContext.jsx";
 
-const PrivateRoute = ({ allowedRoles }) => {
+const PrivateRoute = ({ allowedRoles, excludeRoles = [] }) => {
     const { user, loading } = useAuth();
 
     if (loading) return <div>Загрузка...</div>;
 
     if (!user) return <Navigate to="/login" replace />;
 
-    if (allowedRoles && !allowedRoles.some(role => user.roles.includes(role))) {
+    const hasAllowedRole = !allowedRoles || allowedRoles.some(role => user.roles.includes(role));
+    const hasExcludedRole = excludeRoles.some(role => user.roles.includes(role));
+
+    if (!hasAllowedRole || hasExcludedRole) {
         return <Navigate to="/forbidden" replace />;
     }
 
