@@ -134,8 +134,7 @@ const UserPage = () => {
                     <div>
                         <label className="block text-base sm:text-lg font-bold mb-1">Дата рождения</label>
                         <input
-                            type="text"
-                            placeholder="дд.мм.гггг"
+                            type="date"
                             className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300"
                             value={birthdate}
                             onChange={(e) => setBirthdate(e.target.value)}
