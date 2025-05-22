@@ -17,10 +17,11 @@ const UserPage = () => {
         const fetchUserData = async () => {
             try {
                 const response = await fetch(API.settings.get);
+                console.log("Raw response (GET):", response);
                 if (!response.ok) throw new Error("Ошибка при загрузке данных");
 
                 const data = await response.json();
-                console.log("Ответ сервера (GET):", data); // ← добавлено логирование
+                console.log("Ответ сервера (GET):", data);
 
                 setName(data.name || "");
                 setBirthdate(data.birthdate || "");
@@ -60,6 +61,8 @@ const UserPage = () => {
                 },
                 body: JSON.stringify(payload),
             });
+
+            console.log("Raw response (POST):", response);
 
             const responseData = await response.json();
             console.log("Ответ сервера:", responseData);

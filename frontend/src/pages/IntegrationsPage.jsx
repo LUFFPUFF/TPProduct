@@ -164,25 +164,41 @@ export default function IntegrationsPage() {
     useEffect(() => {
         const fetchConnectedIntegrations = async () => {
             try {
-                const [tgRes, mailRes] = await Promise.all([
-                    fetch(API.integrations.status.TGIntegration),
-                    fetch(API.integrations.status.MailIntegration),
-                ]);
+                const tgRes = await fetch(API.integrations.status.TGIntegration);
+                const mailRes = await fetch(API.integrations.status.MailIntegration);
 
-                const [tgData, mailData] = await Promise.all([
-                    tgRes.ok ? tgRes.json() : [],
-                    mailRes.ok ? mailRes.json() : [],
-                ]);
+                console.group("Ответ от API по интеграциям");
 
-                console.log("Ответ от сервера по Telegram:", tgData);
-                console.log("Ответ от сервера по Почте:", mailData);
+                console.log("Telegram — статус:", tgRes.status, tgRes.statusText);
+                const tgText = await tgRes.text();
+                console.log("Telegram — raw response:", tgText);
+                let tgData = [];
+                try {
+                    tgData = JSON.parse(tgText);
+                    console.log("Telegram — parsed JSON:", tgData);
+                } catch (e) {
+                    console.error("Ошибка парсинга JSON для Telegram:", e);
+                }
+
+                console.log("Mail — статус:", mailRes.status, mailRes.statusText);
+                const mailText = await mailRes.text();
+                console.log("Mail — raw response:", mailText);
+                let mailData = [];
+                try {
+                    mailData = JSON.parse(mailText);
+                    console.log("Mail — parsed JSON:", mailData);
+                } catch (e) {
+                    console.error("Ошибка парсинга JSON для Mail:", e);
+                }
+
+                console.groupEnd();
 
                 setIntegrations((prev) =>
                     prev.map((item) => {
                         if (item.name === "Telegram") {
-                            return { ...item, connected: tgData.length > 0 };
+                            return { ...item, connected: Array.isArray(tgData) && tgData.length > 0 };
                         } else if (item.name === "Почту") {
-                            return { ...item, connected: mailData.length > 0 };
+                            return { ...item, connected: Array.isArray(mailData) && mailData.length > 0 };
                         }
                         return item;
                     })
