@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 public class ChatDetailsDTO {
     private Integer id;
+    private Integer companyId;
     private ClientInfoDTO client;
     private UserInfoDTO operator;
     private ChatChannel chatChannel;
