@@ -77,7 +77,7 @@ public class ChatServiceImpl implements IChatService {
     @MeteredOperation(
             counters = {
                     @Counter(
-                            name = "chats_created_total",
+                            name = "chat_app_chats_closed_total",
                             tags = {
                                     @Tag(key = "company_id", valueSpEL = "#result != null && #result.companyId != null ? T(com.example.domain.api.statistics_module.metrics.util.MetricsTagSanitizer).sanitize(#result.companyId.toString()) : 'unknown'"),
                                     @Tag(key = "channel", valueSpEL = "#result != null && #result.chatChannel != null ? T(com.example.domain.api.statistics_module.metrics.util.MetricsTagSanitizer).sanitize(#result.chatChannel.toString()) : 'UNKNOWN'"),
@@ -85,7 +85,7 @@ public class ChatServiceImpl implements IChatService {
                             }
                     ),
                     @Counter(
-                            name = "chats_auto_responder_handled_total",
+                            name = "chat_app_chats_auto_responder_handled_total",
                             conditionSpEL = "#result.status?.name() == 'PENDING_AUTO_RESPONDER'",
                             tags = {
                                     @Tag(key = "company_id", valueSpEL = "#result.companyId ?: 'unknown'"),
@@ -159,15 +159,15 @@ public class ChatServiceImpl implements IChatService {
     @Transactional
     @MeteredOperation(
             counters = {
-                    @Counter(name = "chats_created_total",
+                    @Counter(name = "chat_app_chats_created_total",
                             tags = { @Tag(key = "company_id", valueSpEL = "#result.companyId ?: 'unknown'"),
                                     @Tag(key = "channel", valueSpEL = "#result.chatChannel?.name() ?: 'UNKNOWN'"),
                                     @Tag(key = "from_operator_ui", valueSpEL = "'true'") }),
-                    @Counter(name = "chats_assigned_total",
+                    @Counter(name = "chat_app_chats_assigned_total",
                             tags = { @Tag(key = "company_id", valueSpEL = "#result.companyId ?: 'unknown'"),
                                     @Tag(key = "channel", valueSpEL = "#result.chatChannel?.name() ?: 'UNKNOWN'"),
                                     @Tag(key = "auto_assigned", valueSpEL = "'false'") }),
-                    @Counter(name = "chats_operator_linked_total",
+                    @Counter(name = "chat_app_chats_operator_linked_total",
                             tags = { @Tag(key = "company_id", valueSpEL = "#result.companyId ?: 'unknown'"),
                                     @Tag(key = "channel", valueSpEL = "#result.chatChannel?.name() ?: 'UNKNOWN'") })
             }
@@ -263,7 +263,7 @@ public class ChatServiceImpl implements IChatService {
     @Override
     @Transactional
     @MeteredOperation(
-            counters = @Counter(name = "chats_escalated_total",
+            counters = @Counter(name = "chat_app_chats_escalated_total",
                     tags = { @Tag(key = "company_id", valueSpEL = "#result.companyId ?: 'unknown'"),
                             @Tag(key = "channel", valueSpEL = "#result.chatChannel?.name() ?: 'UNKNOWN'")})
     )
@@ -336,7 +336,7 @@ public class ChatServiceImpl implements IChatService {
     @Override
     @Transactional
     @MeteredOperation(
-            counters = @Counter(name = "chats_operator_linked_total",
+            counters = @Counter(name = "chat_app_chats_operator_linked_total",
                     tags = {@Tag(key = "company_id", valueSpEL = "#chat.company?.id?.toString() ?: 'unknown'"),
                             @Tag(key = "channel", valueSpEL = "#chat.chatChannel?.name() ?: 'UNKNOWN'")})
     )
@@ -421,7 +421,7 @@ public class ChatServiceImpl implements IChatService {
     @Override
     @Transactional
     @MeteredOperation(
-            counters = @Counter(name = "chats_assigned_total",
+            counters = @Counter(name = "chat_app_chats_assigned_total",
                     tags = { @Tag(key = "company_id", valueSpEL = "#result.companyId ?: 'unknown'"),
                             @Tag(key = "channel", valueSpEL = "#result.chatChannel?.name() ?: 'UNKNOWN'"),
                             @Tag(key = "auto_assigned", valueSpEL = "#assignRequest.operatorId == null ? 'true' : 'false'")})
@@ -502,10 +502,10 @@ public class ChatServiceImpl implements IChatService {
     @Override
     @Transactional
     @MeteredOperation(
-            counters = @Counter(name = "chats_closed_total",
+            counters = @Counter(name = "chat_app_chats_closed_total",
                     tags = { @Tag(key = "company_id", valueSpEL = "#result.companyId ?: 'unknown'"),
                             @Tag(key = "channel", valueSpEL = "#result.chatChannel?.name() ?: 'UNKNOWN'"),
-                            @Tag(key = "final_status", valueSpEL = "'CLOSED'")})
+                            @Tag(key = "final_status", valueSpEL = "CLOSED")})
     )
     public ChatDetailsDTO closeChatByCurrentUser(Integer chatId) {
         Chat chat = chatRepository.findById(chatId)

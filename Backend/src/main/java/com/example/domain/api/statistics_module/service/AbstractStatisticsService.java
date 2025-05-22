@@ -56,31 +56,53 @@ public abstract class AbstractStatisticsService {
     }
 
     protected Mono<Long> querySingleScalarInternal(String promqlQuery, String queryDescription) {
-        log.debug("Executing scalar query for [{}]: {}", queryDescription, promqlQuery);
+        log.info("[STAT_QUERY] Executing Scalar Query for [{}]: PromQL='{}'", queryDescription, promqlQuery);
         return prometheusClient.query(promqlQuery)
                 .map(jsonNode -> {
-                    logPrometheusResponse(queryDescription, promqlQuery, jsonNode);
+                    String rawJsonResponse;
+                    try {
+                        rawJsonResponse = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode);
+                    } catch (JsonProcessingException e) {
+                        log.warn("[STAT_QUERY] Failed to serialize full Prometheus JSON response for [{}], Query [{}]: {}", queryDescription, promqlQuery, e.getMessage());
+                        if (jsonNode != null) rawJsonResponse = jsonNode.toString(); else rawJsonResponse = "JsonNode is null";
+                    }
+                    log.info("[STAT_QUERY] Raw Prometheus Response for [{}], Query [{}]:\n{}", queryDescription, promqlQuery, rawJsonResponse);
+
                     if (isResultEmptyInternal(jsonNode)) {
-                        log.info("Result is empty for scalar query [{}]. Query: {}", queryDescription, promqlQuery);
+                        log.warn("[STAT_QUERY] Result is considered empty for [{}]. Query: {}. Returning 0L.", queryDescription, promqlQuery);
                         return 0L;
                     }
-                    JsonNode valueNode = jsonNode.path("data").path("result").path(0).path("value").path(1);
+
+                    JsonNode resultDataArray = jsonNode.path("data").path("result");
+                    if (resultDataArray.isEmpty()) {
+                        log.warn("[STAT_QUERY] Prometheus 'result' array is present but empty for [{}]. Query: {}. Returning 0L.", queryDescription, promqlQuery);
+                        return 0L;
+                    }
+
+                    JsonNode firstResult = resultDataArray.path(0);
+                    JsonNode valueNode = firstResult.path("value").path(1);
+
                     if (valueNode.isMissingNode()) {
-                        log.warn("ValueNode is missing in Prometheus response for scalar query [{}]. Query: {}", queryDescription, promqlQuery);
+                        log.warn("[STAT_QUERY] ValueNode ('data.result[0].value[1]') is missing in Prometheus response for [{}]. Query: {}. First result content: {}. Returning 0L.",
+                                queryDescription, promqlQuery, firstResult.toString().substring(0, Math.min(firstResult.toString().length(), 200)));
                         return 0L;
                     }
+
                     String textValue = valueNode.asText();
-                    log.info("Extracted value string for [{}]: '{}'. Query: {}", queryDescription, textValue, promqlQuery);
+                    log.info("[STAT_QUERY] Extracted textValue for [{}]: '{}'. Query: {}", queryDescription, textValue, promqlQuery);
+
                     try {
                         double doubleValue = Double.parseDouble(textValue);
-                        return Math.round(doubleValue);
+                        long roundedValue = Math.round(doubleValue);
+                        log.info("[STAT_QUERY] Parsed doubleValue: {}, Rounded longValue: {} for [{}]. Query: {}", doubleValue, roundedValue, queryDescription, promqlQuery);
+                        return roundedValue;
                     } catch (NumberFormatException e) {
-                        log.error("Could not parse value '{}' to Double/Long for scalar query [{}]. Query: {}", textValue, queryDescription, promqlQuery, e);
+                        log.error("[STAT_QUERY] Could not parse textValue '{}' to Double/Long for [{}]. Query: {}. Returning 0L.", textValue, queryDescription, promqlQuery, e);
                         return 0L;
                     }
                 })
                 .onErrorResume(e -> {
-                    log.error("Error executing scalar query for [{}]. Query: {}: {}", queryDescription, promqlQuery, e.getMessage(), e);
+                    log.error("[STAT_QUERY] Error executing Prometheus query for [{}]. Query: {}: {}. Returning 0L.", queryDescription, promqlQuery, e.getMessage(), e);
                     return Mono.just(0L);
                 });
     }
@@ -94,15 +116,29 @@ public abstract class AbstractStatisticsService {
     }
 
     protected boolean isResultEmptyInternal(JsonNode jsonNode) {
-        if (jsonNode == null || !jsonNode.path("status").asText("").equals("success")) {
-            log.warn("Prometheus query status not success or node is null.");
+        if (jsonNode == null) {
+            log.warn("[STAT_QUERY_UTIL] Prometheus response JsonNode is null.");
+            return true;
+        }
+        String status = jsonNode.path("status").asText("");
+        if (!"success".equals(status)) {
+            log.warn("[STAT_QUERY_UTIL] Prometheus query status not 'success', was '{}'. Full response might indicate error details.", status);
             return true;
         }
         JsonNode result = jsonNode.path("data").path("result");
-        if (result.isMissingNode() || !result.isArray() || result.isEmpty()) {
-            log.info("Prometheus result data is missing, not an array, or empty.");
+        if (result.isMissingNode()) {
+            log.warn("[STAT_QUERY_UTIL] Prometheus 'data.result' path is missing.");
             return true;
         }
+        if(!result.isArray()){
+            log.warn("[STAT_QUERY_UTIL] Prometheus 'data.result' is not an array. Type: {}", result.getNodeType());
+            return true;
+        }
+        if (result.isEmpty()) {
+            log.info("[STAT_QUERY_UTIL] Prometheus 'data.result' array is present but empty (size 0).");
+            return true;
+        }
+        log.debug("[STAT_QUERY_UTIL] Prometheus result is not considered empty. Result array size: {}", result.size());
         return false;
     }
 }

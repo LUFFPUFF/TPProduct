@@ -23,7 +23,7 @@ public class ChatMetricsServiceImpl implements IChatMetricsService {
 
     private static final String METRIC_PREFIX = "chat_app_";
 
-    private static final String CHATS_CREATED_TOTAL = METRIC_PREFIX + "chats_created_total";
+    private static final String CHATS_CREATED_TOTAL = METRIC_PREFIX + "chats_total";
     private static final String CHATS_ASSIGNED_TOTAL = METRIC_PREFIX + "chats_assigned_total";
     private static final String CHATS_CLOSED_TOTAL = METRIC_PREFIX + "chats_closed_total";
     private static final String CHATS_ESCALATED_TOTAL = METRIC_PREFIX + "chats_escalated_total";
@@ -55,15 +55,25 @@ public class ChatMetricsServiceImpl implements IChatMetricsService {
 
     @Override
     public void incrementChatsCreated(String companyId, ChatChannel channel, boolean fromOperatorUI) {
-        log.info("Incrementing chats_created_total: companyId={}, channel={}, fromOperatorUI={}",
-                companyId, (channel != null ? channel.name() : "null_channel"), fromOperatorUI);
-        Counter.builder(CHATS_CREATED_TOTAL)
-                .description("Общее количество созданных чатов")
-                .tag(TAG_COMPANY_ID, sanitizeTag(companyId))
-                .tag(TAG_CHANNEL, sanitizeTag(Objects.requireNonNull(channel).name()))
-                .tag(TAG_FROM_OPERATOR_UI, String.valueOf(fromOperatorUI))
-                .register(registry)
-                .increment();
+        String sanCompanyId = sanitizeTag(companyId);
+        String sanChannel = sanitizeTag(channel != null ? channel.name() : "null_channel");
+        String sanFromUI = String.valueOf(fromOperatorUI);
+
+        log.info("Attempting to register/increment chats_created_total. companyId: '{}', channel: '{}', fromOperatorUI: '{}'",
+                sanCompanyId, sanChannel, sanFromUI);
+        try {
+            Counter counter = Counter.builder(CHATS_CREATED_TOTAL)
+                    .description("Общее количество созданных чатов")
+                    .tag(TAG_COMPANY_ID, sanCompanyId)
+                    .tag(TAG_CHANNEL, sanChannel)
+                    .tag(TAG_FROM_OPERATOR_UI, sanFromUI)
+                    .register(registry);
+            counter.increment();
+            log.info("Successfully incremented chats_created_total for companyId: {}, channel: {}", sanCompanyId, sanChannel);
+        } catch (Exception e) {
+            log.error("ERROR registering/incrementing chats_created_total: companyId={}, channel={}, fromUI={}",
+                    sanCompanyId, sanChannel, sanFromUI, e);
+        }
     }
 
     @Override

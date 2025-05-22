@@ -26,7 +26,7 @@ import java.util.Map;
 public class ChatStatisticsServiceImpl extends AbstractStatisticsService implements IChatStatisticsService {
 
     private static final String METRIC_PREFIX = "chat_app_";
-    private static final String CHATS_CREATED_TOTAL = METRIC_PREFIX + "chats_created_total";
+    private static final String CHATS_CREATED_TOTAL = METRIC_PREFIX + "chats_total";
     private static final String CHATS_CLOSED_TOTAL = METRIC_PREFIX + "chats_closed_total";
     private static final String MESSAGES_SENT_TOTAL = METRIC_PREFIX + "messages_sent_total";
     private static final String CHAT_DURATION_SECONDS_SUM = METRIC_PREFIX + "chat_duration_seconds_sum";
@@ -48,9 +48,14 @@ public class ChatStatisticsServiceImpl extends AbstractStatisticsService impleme
                 "Total Created Chats"
         );
         Mono<Long> totalClosedMono = querySingleScalarInternal(
-                String.format("sum(increase(%s%s%s))", CHATS_CLOSED_TOTAL, companyFilter, rangeVectorSelector),
-                "Total Closed Chats"
+                String.format("sum(round(rate(%s%s%s) * %d))",
+                        CHATS_CLOSED_TOTAL,
+                        companyFilter,
+                        rangeVectorSelector,
+                        parseTimeRangeToSeconds(request.getTimeRange())),
+                "Total Closed Chats (via rate)"
         );
+
         Mono<Long> totalMessagesMono = querySingleScalarInternal(
                 String.format("sum(increase(%s%s%s))", MESSAGES_SENT_TOTAL, companyFilter, rangeVectorSelector),
                 "Total Messages Sent"
