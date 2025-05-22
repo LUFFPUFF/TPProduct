@@ -4,9 +4,7 @@ import com.example.domain.api.ans_api_module.correction_answer.config.MLServiceC
 import com.example.domain.api.ans_api_module.correction_answer.dto.GenerationRequest;
 import com.example.domain.api.ans_api_module.correction_answer.dto.GenerationResponse;
 import com.example.domain.api.ans_api_module.correction_answer.exception.MLException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +27,7 @@ public class TextProcessingApiClient {
     //TODO увеличено до 5 минут потому что не тянет система
     private static final Duration TIMEOUT = Duration.ofMinutes(5);
     private static final String ENDPOINT = "/generate";
-    private static final String gg = "http://ai_service:8000";
+    private static final String AI_SERVICE_URL = "http://ai_service:8000";
 
     public TextProcessingApiClient(MLServiceConfig config, ObjectMapper objectMapper) {
         this.httpClient = HttpClient.newBuilder()
@@ -37,7 +35,7 @@ public class TextProcessingApiClient {
                 .build();
 
         this.objectMapper = objectMapper;
-        this.generateUri = URI.create(gg + ENDPOINT);
+        this.generateUri = URI.create(AI_SERVICE_URL + ENDPOINT);
     }
 
     public GenerationResponse generateText(GenerationRequest request) {

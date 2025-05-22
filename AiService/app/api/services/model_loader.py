@@ -34,6 +34,7 @@ class ModelLoaderService:
             )
 
             self.model.to(self.settings.device)
+            self.logger.info(f"Модель {self.model_name} загружена на устройство: {self.model.device}")
 
             metadata = {
                 "model_name": self.model.config._name_or_path,
@@ -44,7 +45,7 @@ class ModelLoaderService:
             return self.model, self.tokenizer, metadata
 
         except Exception as e:
-            self.logger.error(f"Ошибка загрузки: {str(e)}")
+            self.logger.error(f"Ошибка загрузки модели: {str(e)}", exc_info=True)
             raise RuntimeError(f"Не удалось загрузить модель: {str(e)}")
 
 
