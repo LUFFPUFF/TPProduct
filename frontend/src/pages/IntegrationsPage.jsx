@@ -164,8 +164,8 @@ export default function IntegrationsPage() {
     useEffect(() => {
         const fetchConnectedIntegrations = async () => {
             try {
-                const tgRes = await fetch(API.integrations.status.TGIntegration);
-                const mailRes = await fetch(API.integrations.status.MailIntegration);
+                const tgRes = await fetch(API.integrations.TGIntegration);
+                const mailRes = await fetch(API.integrations.MailIntegration);
 
                 console.group("Ответ от API по интеграциям");
 
