@@ -23,16 +23,24 @@ const UserPage = () => {
                 const data = await response.json();
                 console.log("Ответ сервера (GET):", data);
 
+                if (data.name === null || data.birthdate === null || data.gender === null) {
+                    throw new Error("Некоторые поля данных пользователя отсутствуют.");
+                }
+
+                console.log("Ответ сервера (GET):", data);
+
                 setName(data.name || "");
                 setBirthdate(data.birthdate || "");
                 setGender(data.gender || "");
             } catch (error) {
                 console.error("Ошибка при получении данных пользователя:", error);
+                setError("Ошибка при загрузке данных пользователя. Проверьте заполненность профиля.");
             }
         };
 
         fetchUserData();
     }, []);
+
 
     const handleLogout = () => {
         setUser(null);
@@ -78,9 +86,7 @@ const UserPage = () => {
         }
     };
     const convertToISOString = (dateString) => {
-        // Предполагается формат ввода: "дд.мм.гггг"
-        const [day, month, year] = dateString.split(".");
-        const date = new Date(`${year}-${month}-${day}T00:00:00.000Z`);
+        const date = new Date(dateString);
         return date.toISOString();
     };
 
