@@ -11,7 +11,10 @@ const PrivateRoute = ({ allowedRoles, excludeRoles = [] }) => {
     const hasAllowedRole = !allowedRoles || allowedRoles.some(role => user.roles.includes(role));
     const hasExcludedRole = excludeRoles.some(role => user.roles.includes(role));
 
-    if (!hasAllowedRole || hasExcludedRole) {
+    if (!hasAllowedRole) {
+        return <Navigate to="/login" replace />;
+    }
+    if (hasExcludedRole) {
         return <Navigate to="/forbidden" replace />;
     }
 
