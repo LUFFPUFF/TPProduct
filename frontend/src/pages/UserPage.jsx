@@ -89,8 +89,7 @@ const UserPage = () => {
     };
 
     return (
-        <div className="flex flex-col lg:flex-row">
-            {/* Sidebar */}
+        <div className="flex flex-col lg:flex-row overflow-hidden">
             <div className="md:hidden absolute top-4 left-4 z-50">
                 <button
                     onClick={() => setIsSidebarOpen(true)}
@@ -103,8 +102,8 @@ const UserPage = () => {
                 </button>
             </div>
 
-            <div className="hidden md:block">
-                <Sidebar/>
+            <div className="hidden md:block min-h-screen w-64">
+                <Sidebar />
             </div>
 
             {isSidebarOpen && (
