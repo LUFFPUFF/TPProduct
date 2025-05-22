@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Sidebar from "../components/Sidebar";
 import API from "../config/api.js";
+import {useAuth} from "../utils/AuthContext.jsx";
 
 const UserPage = () => {
     const [name, setName] = useState("");
@@ -10,6 +11,7 @@ const UserPage = () => {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState("");
+    const { setUser } = useAuth();
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -29,6 +31,9 @@ const UserPage = () => {
         fetchUserData();
     }, []);
 
+    const handleLogout = () => {
+        setUser(null);
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -177,6 +182,7 @@ const UserPage = () => {
                         </button>
                         <button
                             type="button"
+                            onClick={handleLogout}
                             className="bg-[#b5b6c4] text-[#0e1c44] px-6 py-2 rounded-md w-full sm:w-auto"
                         >
                             Выйти из аккаунта
