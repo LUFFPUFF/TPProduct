@@ -106,7 +106,7 @@ export const RegistrationPage = () => {
 
 
             setUser(loginData);
-            navigate("/");
+            navigate("/subscription");
 
         } catch (error) {
             console.error("Confirmation error:", error);
