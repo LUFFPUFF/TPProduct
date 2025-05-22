@@ -174,6 +174,9 @@ export default function IntegrationsPage() {
                     mailRes.ok ? mailRes.json() : [],
                 ]);
 
+                console.log("Ответ от сервера по Telegram:", tgData);
+                console.log("Ответ от сервера по Почте:", mailData);
+
                 setIntegrations((prev) =>
                     prev.map((item) => {
                         if (item.name === "Telegram") {
