@@ -4,8 +4,11 @@ import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.company_subscription_module.user_roles.user.Role;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.repository.company_subscription_module.UserRepository;
+import com.example.domain.api.authentication_module.service.interfaces.CurrentUserDataService;
 import com.example.domain.api.authentication_module.service.interfaces.RoleService;
+import com.example.domain.api.company_module.dto.MemberRoleReqDto;
 import com.example.domain.api.company_module.exception_handler_company.NotFoundCompanyException;
+import com.example.domain.api.company_module.exception_handler_company.UserNotInCompanyException;
 import com.example.domain.api.company_module.service.CompanyMembersService;
 import com.example.domain.api.company_module.exception_handler_company.SelfMemberDisbandException;
 import com.example.domain.api.subscription_module.service.SubscriptionService;
@@ -27,14 +30,17 @@ public class CompanyMembersServiceImpl implements CompanyMembersService {
     private final RoleService roleService;
     private final SubscriptionService subscriptionService;
     private final MapperDto mapperDto;
+    private final CurrentUserDataService currentUserDataService;
 
     @Override
+    @Transactional
     public List<MemberDto> findMembers(Company company) {
         return userRepository.findByCompanyId(company.getId()).stream()
                 .map(user -> MemberDto.builder()
-                .email(user.getEmail())
-                .fullName(user.getFullName())
-                .build()).toList();
+                        .email(user.getEmail())
+                        .fullName(user.getFullName())
+                        .roles(roleService.getUserRoles(user.getEmail()))
+                        .build()).toList();
     }
 
     @Override
@@ -53,7 +59,7 @@ public class CompanyMembersServiceImpl implements CompanyMembersService {
     @Override
     @Transactional
     public CompanyWithMembersDto removeMember(String memberEmail, String myEmail) {
-        if(Objects.equals(memberEmail, myEmail)) {
+        if (Objects.equals(memberEmail, myEmail)) {
             throw new SelfMemberDisbandException();
         }
         Company company = userRepository.findByEmail(myEmail).map(User::getCompany).orElseThrow(NotFoundCompanyException::new);
@@ -67,13 +73,21 @@ public class CompanyMembersServiceImpl implements CompanyMembersService {
 
     @Override
     @Transactional
-    public void leave(String email) {
-        Company company = userRepository.findByEmail(email).map(User::getCompany).orElseThrow(NotFoundCompanyException::new);
-        if(company.getContactEmail().equals(email)){
-            throw new SelfMemberDisbandException();
-        }
-        subscriptionService.subtractOperatorCount(company);
-        roleService.removeRole(email, Role.OPERATOR);
+    public void addMemberRole(MemberRoleReqDto memberRoleReqDto) {
+             if(currentUserDataService.getUser(memberRoleReqDto.getEmail().getEmail()).getCompany().equals(currentUserDataService.getUserCompany())){
+                 throw new UserNotInCompanyException();
+             }
+             roleService.addRole(memberRoleReqDto.getEmail().getEmail(), memberRoleReqDto.getRole());
     }
+
+    @Override
+    public void removeMemberRole(MemberRoleReqDto memberRoleReqDto) {
+        if(currentUserDataService.getUser(memberRoleReqDto.getEmail().getEmail()).getCompany().equals(currentUserDataService.getUserCompany())){
+            throw new UserNotInCompanyException();
+        }
+        roleService.removeRole(memberRoleReqDto.getEmail().getEmail(),memberRoleReqDto.getRole());
+    }
+
+
 
 }
