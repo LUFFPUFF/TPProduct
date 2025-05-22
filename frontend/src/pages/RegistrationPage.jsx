@@ -77,7 +77,6 @@ export const RegistrationPage = () => {
                 return;
             }
 
-            // Попытка автоматического входа после подтверждения
             const loginResponse = await fetch(API.auth.login, {
                 method: "POST",
                 headers: {
@@ -93,9 +92,6 @@ export const RegistrationPage = () => {
                 return;
             }
 
-            // Сохраняем токен и email в localStorage
-            localStorage.setItem("token", loginData.token);
-            localStorage.setItem("email", email);
 
             // Переход на страницу диалогов
             navigate("/dialogs");
@@ -114,7 +110,7 @@ export const RegistrationPage = () => {
                 <h2 className="text-3xl sm:text-4xl font-bold text-center text-black mb-6">Регистрация</h2>
 
                 {message && (
-                    <p className={`text-center mb-4 ${message.includes("успешн") ? "text-green-600" : "text-red-600"}`}>
+                    <p className={`text-center mb-4 ${message.includes("успешно") ? "text-green-600" : "text-red-600"}`}>
                         {message}
                     </p>
                 )}
