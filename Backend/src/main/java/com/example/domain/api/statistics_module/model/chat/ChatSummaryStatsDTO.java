@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
@@ -16,6 +17,6 @@ public class ChatSummaryStatsDTO {
     private Double averageChatDurationSeconds;
     private Double averageAssignmentTimeSeconds;
     private Double averageFirstResponseTimeSeconds;
-    private List<ChatsByStatusDTO> currentChatsByStatus;
-    private List<ChatsByChannelDTO> createdChatsByChannel;
+    private Map<String, Long> currentChatsByStatus;
+    private Map<String, Long> createdChatsByChannel;
 }

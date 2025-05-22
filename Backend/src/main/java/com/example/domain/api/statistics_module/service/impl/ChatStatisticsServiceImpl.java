@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -31,6 +28,15 @@ public class ChatStatisticsServiceImpl extends AbstractStatisticsService impleme
     private static final String MESSAGES_SENT_TOTAL = METRIC_PREFIX + "messages_sent_total";
     private static final String CHAT_DURATION_SECONDS_SUM = METRIC_PREFIX + "chat_duration_seconds_sum";
     private static final String CHAT_DURATION_SECONDS_COUNT = METRIC_PREFIX + "chat_duration_seconds_count";
+
+    private static final String CHAT_ASSIGNMENT_TIME_SECONDS_SUM = METRIC_PREFIX + "chat_assignment_time_seconds_sum";
+    private static final String CHAT_ASSIGNMENT_TIME_SECONDS_COUNT = METRIC_PREFIX + "chat_assignment_time_seconds_count";
+    private static final String CHAT_FIRST_RESPONSE_TIME_SECONDS_SUM = METRIC_PREFIX + "chat_first_operator_response_time_seconds_sum";
+    private static final String CHAT_FIRST_RESPONSE_TIME_SECONDS_COUNT = METRIC_PREFIX + "chat_first_operator_response_time_seconds_count";
+    private static final String CURRENT_CHATS_GAUGE = METRIC_PREFIX + "current_chats_status_gauge";
+
+    private static final String TAG_CHANNEL = "channel";
+    private static final String TAG_STATUS = "status";
 
     public ChatStatisticsServiceImpl(PrometheusQueryClient prometheusClient, ObjectMapper objectMapper) {
         super(prometheusClient, objectMapper);
@@ -47,6 +53,7 @@ public class ChatStatisticsServiceImpl extends AbstractStatisticsService impleme
                 String.format("sum(increase(%s%s%s))", CHATS_CREATED_TOTAL, companyFilter, rangeVectorSelector),
                 "Total Created Chats"
         );
+
         Mono<Long> totalClosedMono = querySingleScalarInternal(
                 String.format("sum(round(rate(%s%s%s) * %d))",
                         CHATS_CLOSED_TOTAL,
@@ -62,23 +69,77 @@ public class ChatStatisticsServiceImpl extends AbstractStatisticsService impleme
         );
 
         String avgDurationQuery = String.format(
-                "(sum(increase(%1$s%2$s%3$s)) OR on() vector(0)) / (sum(increase(%4$s%2$s%3$s)) > 0 OR on() vector(1))",
+                "(sum(increase(%s%s%s)) OR on() vector(0)) / (sum(increase(%s%s%s)) > 0 OR on() vector(1))",
                 CHAT_DURATION_SECONDS_SUM, companyFilter, rangeVectorSelector,
-                CHAT_DURATION_SECONDS_COUNT
+                CHAT_DURATION_SECONDS_COUNT, companyFilter, rangeVectorSelector
         );
 
         Mono<Double> avgDurationMono = queryScalarDouble(avgDurationQuery, "Average Chat Duration")
                 .onErrorReturn(Double.NaN);
 
-        return Mono.zip(totalCreatedMono, totalClosedMono, totalMessagesMono, avgDurationMono)
-                .map(tuple -> ChatSummaryStatsDTO.builder()
-                        .companyId(request.getCompanyId())
-                        .timeRange(request.getTimeRange())
-                        .totalChatsCreated(tuple.getT1())
-                        .totalChatsClosed(tuple.getT2())
-                        .totalMessagesSent(tuple.getT3())
-                        .averageChatDurationSeconds((tuple.getT4() == null || tuple.getT4().isNaN() || tuple.getT4().isInfinite()) ? null : tuple.getT4())
-                        .build())
+        String avgAssignmentTimeQuery = String.format(
+                "(sum(increase(%s%s%s)) OR on() vector(0)) / (sum(increase(%s%s%s)) > 0 OR on() vector(1))",
+                CHAT_ASSIGNMENT_TIME_SECONDS_SUM, companyFilter, rangeVectorSelector,
+                CHAT_ASSIGNMENT_TIME_SECONDS_COUNT, companyFilter, rangeVectorSelector
+        );
+        Mono<Double> avgAssignmentTimeMono = queryScalarDouble(avgAssignmentTimeQuery, "Average Assignment Time")
+                .onErrorReturn(Double.NaN);
+
+        String avgFirstResponseTimeQuery = String.format(
+                "(sum(increase(%s%s%s)) OR on() vector(0)) / (sum(increase(%s%s%s)) > 0 OR on() vector(1))",
+                CHAT_FIRST_RESPONSE_TIME_SECONDS_SUM, companyFilter, rangeVectorSelector,
+                CHAT_FIRST_RESPONSE_TIME_SECONDS_COUNT, companyFilter, rangeVectorSelector
+        );
+        Mono<Double> avgFirstResponseTimeMono = queryScalarDouble(avgFirstResponseTimeQuery, "Average First Operator Response Time")
+                .onErrorReturn(Double.NaN);
+
+        String createdByChannelQuery = String.format("sum by (%s) (increase(%s%s%s))",
+                TAG_CHANNEL,
+                CHATS_CREATED_TOTAL,
+                companyFilter,
+                rangeVectorSelector);
+        Mono<Map<String, Long>> createdByChannelMono = queryVectorAndParseToMap(createdByChannelQuery, TAG_CHANNEL, "Created Chats By Channel")
+                .onErrorReturn(Collections.emptyMap());
+
+        String currentByStatusQuery = String.format("sum by (%s) (%s%s)",
+                TAG_STATUS,
+                CURRENT_CHATS_GAUGE,
+                companyFilter
+        );
+        Mono<Map<String, Long>> currentByStatusMono = queryVectorAndParseToMap(currentByStatusQuery, TAG_STATUS, "Current Chats By Status")
+                .onErrorReturn(Collections.emptyMap());
+
+        List<Mono<?>> monos = Arrays.asList(
+                totalCreatedMono, totalClosedMono, totalMessagesMono, avgDurationMono,
+                avgAssignmentTimeMono, avgFirstResponseTimeMono, createdByChannelMono, currentByStatusMono
+        );
+
+
+        return Mono.zip(monos, results -> {
+                    Long totalCreated = (Long) results[0];
+                    Long totalClosed = (Long) results[1];
+                    Long totalMessages = (Long) results[2];
+                    Double avgDuration = (Double) results[3];
+                    Double avgAssignmentTime = (Double) results[4];
+                    Double avgFirstResponseTime = (Double) results[5];
+                    @SuppressWarnings("unchecked")
+                    Map<String, Long> createdByChannel = (Map<String, Long>) results[6];
+                    @SuppressWarnings("unchecked")
+                    Map<String, Long> currentByStatus = (Map<String, Long>) results[7];
+
+                    return ChatSummaryStatsDTO.builder()
+                            .companyId(request.getCompanyId())
+                            .timeRange(request.getTimeRange())
+                            .totalChatsCreated(totalCreated)
+                            .totalChatsClosed(totalClosed)
+                            .totalMessagesSent(totalMessages)
+                            .averageChatDurationSeconds((avgDuration == null || avgDuration.isNaN() || avgDuration.isInfinite()) ? null : avgDuration)
+                            .averageAssignmentTimeSeconds((avgAssignmentTime == null || avgAssignmentTime.isNaN() || avgAssignmentTime.isInfinite()) ? null : avgAssignmentTime)
+                            .averageFirstResponseTimeSeconds((avgFirstResponseTime == null || avgFirstResponseTime.isNaN() || avgFirstResponseTime.isInfinite()) ? null : avgFirstResponseTime)
+                            .createdChatsByChannel(createdByChannel.isEmpty() ? null : createdByChannel)
+                            .currentChatsByStatus(currentByStatus.isEmpty() ? null : currentByStatus)
+                            .build();
+                })
                 .doOnSuccess(summary -> log.info("Built chat summary: {}", summary))
                 .doOnError(e -> log.error("Error building chat summary for request {}: {}", request, e.getMessage(), e));
     }
@@ -90,7 +151,8 @@ public class ChatStatisticsServiceImpl extends AbstractStatisticsService impleme
         long end = request.getEndTimestamp() != null ? request.getEndTimestamp() : Instant.now().getEpochSecond();
         String step = request.getStep() != null ? request.getStep() : determineStep(start, end);
 
-        String promql = String.format("sum by (channel) (increase(%s%s[%s]))",
+        String promql = String.format("sum by (%s) (increase(%s%s[%s]))",
+                TAG_CHANNEL,
                 CHATS_CREATED_TOTAL,
                 companyFilter,
                 step
@@ -98,13 +160,14 @@ public class ChatStatisticsServiceImpl extends AbstractStatisticsService impleme
         log.info("Requesting chats created time series. Query: {}, Start: {}, End: {}, Step: {}", promql, start, end, step);
 
         return prometheusClient.queryRange(promql, start, end, step)
-                .map(this::parseRangeQueryMatrixResult)
+                .map(this::parseRangeQueryMatrixResult) // Этот метод должен быть доступен
                 .doOnSuccess(result -> log.info("Chats created time series result count: {} for query: {}", result.size(), promql))
                 .onErrorResume(e -> {
                     log.error("Failed to get chats created time series for query [{}]: {}", promql, e.getMessage(), e);
                     return Mono.just(new ArrayList<>());
                 });
     }
+
 
     @Override
     public Mono<List<MetricTimeSeriesDTO>> getAverageChatDurationTimeSeries(StatisticsQueryRequestDTO request) {
@@ -116,9 +179,9 @@ public class ChatStatisticsServiceImpl extends AbstractStatisticsService impleme
 
 
         String promql = String.format(
-                "(sum by (channel) (increase(%1$s%2$s[%3$s])) OR on(channel) vector(0)) / (sum by (channel) (increase(%4$s%2$s[%3$s])) > 0 OR on(channel) vector(1))",
-                CHAT_DURATION_SECONDS_SUM, companyFilter, subQueryRange,
-                CHAT_DURATION_SECONDS_COUNT
+                "(sum by (%s) (increase(%s%s[%s])) OR on(%s) vector(0)) / (sum by (%s) (increase(%s%s[%s])) > 0 OR on(%s) vector(1))",
+                TAG_CHANNEL, CHAT_DURATION_SECONDS_SUM, companyFilter, subQueryRange, TAG_CHANNEL,
+                TAG_CHANNEL, CHAT_DURATION_SECONDS_COUNT, companyFilter, subQueryRange, TAG_CHANNEL
         );
         log.info("Requesting avg chat duration time series. Query: {}, Start: {}, End: {}, Step: {}, SubQueryRange: {}", promql, start, end, step, subQueryRange);
 
@@ -189,6 +252,52 @@ public class ChatStatisticsServiceImpl extends AbstractStatisticsService impleme
             seriesList.add(seriesDto);
         }
         return seriesList;
+    }
+
+    protected Mono<Map<String, Long>> queryVectorAndParseToMap(String promqlQuery, String tagKeyForMap, String queryDescription) {
+        log.info("[STAT_QUERY_MAP] Executing Vector Query for [{}]: PromQL='{}'", queryDescription, promqlQuery);
+        return prometheusClient.query(promqlQuery)
+                .map(jsonNode -> {
+                    Map<String, Long> map = new HashMap<>();
+                    String rawJsonResponse = "Failed to serialize JsonNode";
+                    try {
+                        rawJsonResponse = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode);
+                    } catch (JsonProcessingException e) { }
+                    log.info("[STAT_QUERY_MAP] Raw Prometheus Response for [{}], Query [{}]:\n{}", queryDescription, promqlQuery, rawJsonResponse);
+
+                    if (isResultEmptyInternal(jsonNode)) {
+                        log.warn("[STAT_QUERY_MAP] Result is considered empty for [{}]. Query: {}. Returning empty map.", queryDescription, promqlQuery);
+                        return map;
+                    }
+
+                    JsonNode resultDataArray = jsonNode.path("data").path("result");
+                    if (resultDataArray.isEmpty()) {
+                        log.warn("[STAT_QUERY_MAP] Prometheus 'result' array is present but empty for [{}]. Query: {}. Returning empty map.", queryDescription, promqlQuery);
+                        return map;
+                    }
+
+                    for (JsonNode item : resultDataArray) {
+                        String key = item.path("metric").path(tagKeyForMap).asText("UNKNOWN_" + tagKeyForMap.toUpperCase());
+                        JsonNode valueNode = item.path("value").path(1);
+                        long count = 0;
+                        if (!valueNode.isMissingNode() && valueNode.isTextual()) {
+                            try {
+                                count = Math.round(Double.parseDouble(valueNode.asText()));
+                            } catch (NumberFormatException e) {
+                                log.warn("[STAT_QUERY_MAP] Could not parse count for [{}], key '{}', value '{}'", queryDescription, key, valueNode.asText());
+                            }
+                        }
+                        if (count > 0 || valueNode.isMissingNode() && key.equals("UNKNOWN_" + tagKeyForMap.toUpperCase())) { // Добавляем даже если count=0 для UNKNOWN
+                            map.put(key, count);
+                        }
+                    }
+                    log.info("[STAT_QUERY_MAP] Parsed map for [{}]: {}", queryDescription, map);
+                    return map;
+                })
+                .onErrorResume(e -> {
+                    log.error("[STAT_QUERY_MAP] Error executing Prometheus vector query for [{}]. Query: {}: {}", queryDescription, promqlQuery, e.getMessage(), e);
+                    return Mono.just(Collections.emptyMap());
+                });
     }
 
     private String buildCompanyFilter(String companyId) {

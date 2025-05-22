@@ -100,6 +100,27 @@ public class ChatMessageServiceImpl implements IChatMessageService {
         try {
             ChatMessage savedMessage = chatMessageRepository.save(message);
 
+            if (senderType == ChatMessageSenderType.OPERATOR &&
+                    chat.getAssignedAt() != null &&
+                    (chat.getStatus() == ChatStatus.ASSIGNED || chat.getStatus() == ChatStatus.IN_PROGRESS) &&
+                    !Boolean.TRUE.equals(chat.getHasOperatorResponded())) {
+
+                Duration firstResponseTime = Duration.between(chat.getAssignedAt(), savedMessage.getSentAt());
+                if (!firstResponseTime.isNegative() && !firstResponseTime.isZero()) {
+
+                    chatMetricsService.recordChatFirstOperatorResponseTime(
+                            companyIdStr,
+                            channel,
+                            firstResponseTime
+                    );
+
+                    chat.setHasOperatorResponded(true);
+                } else {
+                    log.warn("Calculated first operator response time is zero or negative for chat ID {}. AssignedAt: {}, SentAt: {}. Metric not recorded.",
+                            chat.getId(), chat.getAssignedAt(), savedMessage.getSentAt());
+                }
+            }
+
             chatMetricsService.incrementMessagesSent(
                     companyIdStr,
                     channel,

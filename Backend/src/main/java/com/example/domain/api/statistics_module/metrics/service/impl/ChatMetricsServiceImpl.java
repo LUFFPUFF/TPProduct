@@ -155,14 +155,22 @@ public class ChatMetricsServiceImpl implements IChatMetricsService {
 
     @Override
     public void recordChatFirstOperatorResponseTime(String companyId, ChatChannel channel, Duration duration) {
-        Timer.builder(CHAT_FIRST_RESPONSE_TIME_SECONDS)
-                .description("Время, необходимое оператору для первого ответа после первоначального сообщения или задания клиента")
-                .tag(TAG_COMPANY_ID, sanitizeTag(companyId))
-                .tag(TAG_CHANNEL, sanitizeTag(channel.name()))
-                .publishPercentiles(0.5, 0.9, 0.95, 0.99)
-                .sla(Duration.ofSeconds(15), Duration.ofSeconds(45), Duration.ofMinutes(2), Duration.ofMinutes(10))
-                .register(registry)
-                .record(duration);
+        String sanCompanyId = sanitizeTag(companyId);
+        String sanChannel = sanitizeTag(channel != null ? channel.name() : "null_channel");
+
+        try {
+            Timer.builder(CHAT_FIRST_RESPONSE_TIME_SECONDS)
+                    .description("Время, необходимое оператору для первого ответа после первоначального сообщения или задания клиента")
+                    .tag(TAG_COMPANY_ID, sanCompanyId)
+                    .tag(TAG_CHANNEL, sanChannel)
+                    .publishPercentiles(0.5, 0.9, 0.95, 0.99)
+                    .sla(Duration.ofSeconds(15), Duration.ofSeconds(45), Duration.ofMinutes(2), Duration.ofMinutes(10))
+                    .register(registry)
+                    .record(duration);
+        } catch (Exception e) {
+            log.error("METRIC_DEBUG: ERROR recording CHAT_FIRST_RESPONSE_TIME_SECONDS. Company: '{}', Channel: '{}'",
+                    sanCompanyId, sanChannel, e);
+        }
     }
 
     @Override

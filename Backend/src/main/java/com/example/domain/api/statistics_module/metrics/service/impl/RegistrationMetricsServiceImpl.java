@@ -4,8 +4,10 @@ import com.example.domain.api.statistics_module.metrics.service.IRegistrationMet
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RegistrationMetricsServiceImpl implements IRegistrationMetricsService {
@@ -26,40 +28,87 @@ public class RegistrationMetricsServiceImpl implements IRegistrationMetricsServi
 
     @Override
     public void incrementUserRegistrationAttempt() {
-        Counter.builder(REG_ATTEMPT_TOTAL).register(registry).increment();
+        try {
+            Counter.builder(REG_ATTEMPT_TOTAL)
+                    .description("Total user registration attempts")
+                    .register(registry)
+                    .increment();
+        } catch (Exception e) {
+            log.error("METRIC_DEBUG: ERROR incrementing REG_ATTEMPT_TOTAL", e);
+        }
     }
 
     @Override
     public void incrementRegistrationCodeSentSuccess() {
-        Counter.builder(REG_CODE_SENT_SUCCESS_TOTAL).register(registry).increment();
+        try {
+            Counter.builder(REG_CODE_SENT_SUCCESS_TOTAL)
+                    .description("Total successful registration code sends")
+                    .register(registry)
+                    .increment();
+        } catch (Exception e) {
+            log.error("METRIC_DEBUG: ERROR incrementing REG_CODE_SENT_SUCCESS_TOTAL", e);
+        }
     }
 
     @Override
     public void incrementRegistrationCodeSentFailure() {
-        Counter.builder(REG_CODE_SENT_FAILURE_TOTAL).register(registry).increment();
+        try {
+            Counter.builder(REG_CODE_SENT_FAILURE_TOTAL)
+                    .description("Total failed registration code sends")
+                    .register(registry)
+                    .increment();
+        } catch (Exception e) {
+            log.error("METRIC_DEBUG: ERROR incrementing REG_CODE_SENT_FAILURE_TOTAL", e);
+        }
     }
 
     @Override
     public void incrementRegistrationCodeCheckSuccess() {
-        Counter.builder(REG_CODE_CHECK_SUCCESS_TOTAL).register(registry).increment();
+        try {
+            Counter.builder(REG_CODE_CHECK_SUCCESS_TOTAL)
+                    .description("Total successful registration code checks")
+                    .register(registry)
+                    .increment();
+        } catch (Exception e) {
+            log.error("METRIC_DEBUG: ERROR incrementing REG_CODE_CHECK_SUCCESS_TOTAL", e);
+        }
     }
 
     @Override
     public void incrementRegistrationCodeCheckFailureInvalidCode() {
-        Counter.builder(REG_CODE_CHECK_FAILURE_INVALID_TOTAL).register(registry).increment();
+        try {
+            Counter.builder(REG_CODE_CHECK_FAILURE_INVALID_TOTAL)
+                    .description("Total registration code check failures due to invalid code")
+                    .register(registry)
+                    .increment();
+        } catch (Exception e) {
+            log.error("METRIC_DEBUG: ERROR incrementing REG_CODE_CHECK_FAILURE_INVALID_TOTAL", e);
+        }
     }
 
     @Override
     public void incrementRegistrationEmailExists() {
-        Counter.builder(REG_EMAIL_EXISTS_TOTAL).register(registry).increment();
+        try {
+            Counter.builder(REG_EMAIL_EXISTS_TOTAL)
+                    .description("Total registration attempts with an email that already exists")
+                    .register(registry)
+                    .increment();
+        } catch (Exception e) {
+            log.error("METRIC_DEBUG: ERROR incrementing REG_EMAIL_EXISTS_TOTAL", e);
+        }
     }
 
     @Override
     public void incrementRegistrationOperationError(String operationName, String errorType) {
-        Counter.builder(REG_OPERATION_ERRORS_TOTAL)
-                .tag(TAG_OPERATION_NAME, operationName)
-                .tag(TAG_ERROR_TYPE, errorType)
-                .register(registry)
-                .increment();
+        try {
+            Counter.builder(REG_OPERATION_ERRORS_TOTAL)
+                    .description("Total errors during registration operations")
+                    .tag(TAG_OPERATION_NAME, operationName)
+                    .tag(TAG_ERROR_TYPE, errorType)
+                    .register(registry)
+                    .increment();
+        } catch (Exception e) {
+            log.error("METRIC_DEBUG: ERROR incrementing REG_OPERATION_ERRORS_TOTAL. Operation: '{}', ErrorType: '{}'", operationName, errorType, e);
+        }
     }
 }

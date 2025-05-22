@@ -45,6 +45,9 @@ public class Chat {
     @Column(name = "status", length = 50, nullable = false)
     private ChatStatus status;
 
+    @Column(name = "has_operator_responded")
+    private Boolean hasOperatorResponded;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

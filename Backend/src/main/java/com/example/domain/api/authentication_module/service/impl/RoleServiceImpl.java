@@ -25,7 +25,7 @@ public class RoleServiceImpl implements RoleService  {
 
     @Override
     @Transactional
-    @MeteredOperation(
+    @MeteredOperation(prefix = "role_app_",
             counters = @Counter(
                     name = "added_success_total",
                     conditionSpEL = "#result == true",
@@ -51,7 +51,7 @@ public class RoleServiceImpl implements RoleService  {
 
     @Override
     @Transactional
-    @MeteredOperation(
+    @MeteredOperation(prefix = "role_app_",
             counters = @Counter(
                     name = "removed_success_total",
                     conditionSpEL = "#result == true",
