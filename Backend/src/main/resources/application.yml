@@ -5,7 +5,6 @@ spring:
     livereload:
       enabled: false
 
-
   datasource:
     url: jdbc:postgresql://postgres:5432/ans_machine_db
     username: postgres
@@ -54,6 +53,12 @@ spring:
 
   main:
     allow-bean-definition-overriding: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 
 validation:
