@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import API from "../config/api";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../utils/AuthContext";
 
 export const RegistrationPage = () => {
     const [email, setEmail] = useState("");
@@ -10,6 +11,7 @@ export const RegistrationPage = () => {
     const [showCodeModal, setShowCodeModal] = useState(false);
     const [confirmationCode, setConfirmationCode] = useState("");
     const [confirmMessage, setConfirmMessage] = useState("");
+    const { setUser } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -93,7 +95,7 @@ export const RegistrationPage = () => {
             }
 
 
-            // Переход на страницу диалогов
+            setUser(loginData);
             navigate("/dialogs");
 
         } catch (error) {
