@@ -89,7 +89,8 @@ const UserPage = () => {
     };
 
     return (
-        <div className="flex flex-col lg:flex-row overflow-hidden">
+        <div className="flex">
+            {/* Кнопка бургер-меню для мобильных устройств */}
             <div className="md:hidden absolute top-4 left-4 z-50">
                 <button
                     onClick={() => setIsSidebarOpen(true)}
@@ -97,15 +98,17 @@ const UserPage = () => {
                     aria-label="Открыть меню"
                 >
                     <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
             </div>
 
-            <div className="hidden md:block min-h-screen w-64">
+            {/* Фиксированный сайдбар на десктопе */}
+            <div className="hidden md:block fixed top-0 left-0 h-screen w-64 z-40 bg-white shadow">
                 <Sidebar />
             </div>
 
+            {/* Мобильный сайдбар */}
             {isSidebarOpen && (
                 <>
                     <div
@@ -129,7 +132,8 @@ const UserPage = () => {
                 </>
             )}
 
-            <main className="flex-1 px-4 sm:px-6 md:px-12 py-8 bg-[#e6e5ea] min-h-screen">
+            {/* Основной контент */}
+            <main className="flex-1 px-4 sm:px-6 md:pl-72 py-8 bg-[#e6e5ea] min-h-screen">
                 <h1 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-10">Пользователь</h1>
 
                 <form className="space-y-6 max-w-full sm:max-w-xl" onSubmit={handleSubmit}>
