@@ -11,7 +11,7 @@ import UserPage from "../pages/UserPage";
 import StatsPage from "../pages/StatsPage";
 import CompanyPage from "../pages/CompanyPage";
 import ForbiddenPage from "../pages/ForbiddenPage";
-import PrivateRoute from "./PrivateRoute";
+import PrivateRoute from "../routes/PrivateRoute";
 
 const AppRouter = () => {
     return (

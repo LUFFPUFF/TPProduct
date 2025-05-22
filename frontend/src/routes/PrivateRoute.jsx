@@ -13,7 +13,6 @@ const PrivateRoute = ({ allowedRoles, excludeRoles = [] }) => {
         !allowedRoles || allowedRoles.some(role => userRoles.includes(role));
 
     const isManager = userRoles.includes("MANAGER");
-    const isOperator = userRoles.includes("USER");
     const hasExcludedRole = !isManager && excludeRoles.some(role => userRoles.includes(role));
 
     if (!hasAllowedRole) return <Navigate to="/login" replace />;
@@ -22,3 +21,4 @@ const PrivateRoute = ({ allowedRoles, excludeRoles = [] }) => {
     return <Outlet />;
 };
 
+export default PrivateRoute;
