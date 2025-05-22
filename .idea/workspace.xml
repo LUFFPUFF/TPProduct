@@ -8,24 +8,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="fix jwtfilter">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/fa0ae2bb-c4c2-407d-9196-c5342e35f0be.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/fa0ae2bb-c4c2-407d-9196-c5342e35f0be.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/database/model/company_subscription_module/company/CompanyVkConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/database/model/company_subscription_module/company/CompanyVkConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/database/model/company_subscription_module/company/CompanyWhatsappConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/database/model/company_subscription_module/company/CompanyWhatsappConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/database/repository/company_subscription_module/CompanyVkConfigurationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/database/repository/company_subscription_module/CompanyVkConfigurationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/database/repository/company_subscription_module/CompanyWhatsappConfigurationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/database/repository/company_subscription_module/CompanyWhatsappConfigurationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/template/controller/PredefinedAnswerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/template/controller/PredefinedAnswerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/controller/IntegrationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/controller/IntegrationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/IIntegrationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/IIntegrationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/impl/IntegrationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/service/impl/IntegrationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AiService/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/AiService/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AiService/app/api/services/model_loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/AiService/app/api/services/model_loader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AiService/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/AiService/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/correction_answer/service/TextProcessingApiClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/correction_answer/service/TextProcessingApiClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/Backend-0.0.1-SNAPSHOT.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/Backend-0.0.1-SNAPSHOT.jar.original" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/model/company_subscription_module/company/CompanyVkConfiguration.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/database/model/company_subscription_module/company/CompanyVkConfiguration.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/model/company_subscription_module/company/CompanyWhatsappConfiguration.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/database/model/company_subscription_module/company/CompanyWhatsappConfiguration.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/company_subscription_module/CompanyVkConfigurationRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/company_subscription_module/CompanyVkConfigurationRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/company_subscription_module/CompanyWhatsappConfigurationRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/classes/com/example/database/repository/company_subscription_module/CompanyWhatsappConfigurationRepository.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/answer_finder/mapper/AnswerSearchMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/answer_finder/mapper/AnswerSearchMapperImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/JobExecutionMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/JobExecutionMapperImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/PredefinedAnswerMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/PredefinedAnswerMapperImpl.java" afterDir="false" />
@@ -43,24 +32,7 @@
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiChatMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiChatMapperImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiClientMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiClientMapperImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiUserMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiUserMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.ans_api_module.template.services.answer.impl.FileProcessorServiceImplTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.ans_api_module.template.services.answer.impl.FileProcessorServiceImplTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.chat_service_api.service.impl.ClientServiceImplTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.chat_service_api.service.impl.ClientServiceImplTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.chat_service_api.service.impl.LeastBusyAssignmentServiceTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.chat_service_api.service.impl.LeastBusyAssignmentServiceTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.chat_service_api.service.impl.NotificationServiceImplTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.chat_service_api.service.impl.NotificationServiceImplTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.chat_service_api.service.impl.UserServiceImplTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.chat_service_api.service.impl.UserServiceImplTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.subscription_module.service.impl.SubscriptionPriceCalculateServiceImplTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.subscription_module.service.impl.SubscriptionPriceCalculateServiceImplTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/TEST-com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/com.example.domain.api.ans_api_module.template.services.answer.impl.FileProcessorServiceImplTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/com.example.domain.api.ans_api_module.template.services.answer.impl.FileProcessorServiceImplTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/com.example.domain.api.chat_service_api.service.impl.ClientServiceImplTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/com.example.domain.api.chat_service_api.service.impl.ClientServiceImplTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/com.example.domain.api.chat_service_api.service.impl.LeastBusyAssignmentServiceTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/com.example.domain.api.chat_service_api.service.impl.LeastBusyAssignmentServiceTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/com.example.domain.api.chat_service_api.service.impl.UserServiceImplTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/com.example.domain.api.chat_service_api.service.impl.UserServiceImplTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/com.example.domain.api.subscription_module.service.impl.SubscriptionPriceCalculateServiceImplTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/com.example.domain.api.subscription_module.service.impl.SubscriptionPriceCalculateServiceImplTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/surefire-reports/com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/surefire-reports/com.example.domain.api.subscription_module.service.impl.SubscriptionServiceImplTest.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/test-classes/com/example/domain/api/subscription_module/service/impl/SubscriptionServiceImplTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/test-classes/com/example/domain/api/subscription_module/service/impl/SubscriptionServiceImplTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,12 +79,12 @@
     &quot;assignee&quot;: &quot;Sdr3nko&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/LUFFPUFF/TPProduct.git",
-    "accountId": "a3f74b8e-a871-4247-90dd-37c2485cf801"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/LUFFPUFF/TPProduct.git&quot;,
+    &quot;accountId&quot;: &quot;a3f74b8e-a871-4247-90dd-37c2485cf801&quot;
   }
-}]]></component>
+}</component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
@@ -136,6 +108,7 @@
     "Application.SpringBootStartApplication.executor": "Run",
     "Docker.Docker/Dockerfile.executor": "Run",
     "Docker.Docker: Compose Deployment.executor": "Run",
+    "Docker.docker-compose.yml.ai_service: Compose Deployment.executor": "Run",
     "Docker.frontend/Dockerfile.executor": "Run",
     "Downloaded.Files.Path.Enabled": "false",
     "HTTP Request.generated-requests | #1.executor": "Run",
@@ -156,7 +129,7 @@
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Spring Boot.SpringBootStartApplication.executor": "Run",
     "extract.method.default.visibility": "private",
-    "git-widget-placeholder": "DX-190",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/Admin/Desktop/postgresql-42.7.3.jar",
     "node.js.detected.package.eslint": "true",
@@ -200,17 +173,9 @@
       <command value="mvn clean install" />
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.SpringBootStartApplication">
+  <component name="RunManager" selected="Docker.docker-compose.yml.ai_service: Compose Deployment">
     <configuration name="generated-requests | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" runType="Run single request">
       <method v="2" />
-    </configuration>
-    <configuration name="All in Backend" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Backend" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
     </configuration>
     <configuration name="ExternalMessagingServiceImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Backend" />
@@ -261,13 +226,26 @@
       </deployment>
       <method v="2" />
     </configuration>
+    <configuration name="docker-compose.yml.ai_service: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="ai_service" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Docker.docker-compose.yml.ai_service: Compose Deployment" />
         <item itemvalue="Spring Boot.SpringBootStartApplication" />
         <item itemvalue="JUnit.java in Backend" />
         <item itemvalue="HTTP Request.generated-requests | #1" />
         <item itemvalue="JUnit.ExternalMessagingServiceImplTest" />
-        <item itemvalue="JUnit.All in Backend" />
       </list>
     </recent_temporary>
   </component>
