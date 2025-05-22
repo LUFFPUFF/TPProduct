@@ -50,7 +50,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Transactional
     public Boolean sendRegistrationCode(RegistrationDto registrationDto) {
         //TODO: Отправка сообщения на email
-        authCacheService.putRegistrationCode(generateRegistrationCode(), registrationDto);
+        authCacheService.putRegistrationCode("000000", registrationDto);
         return true;
     }
 
