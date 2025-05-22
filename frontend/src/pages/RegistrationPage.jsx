@@ -39,7 +39,10 @@ export const RegistrationPage = () => {
                 body: JSON.stringify({ email, password }),
             });
 
+            console.log("Register response:", response);
+
             const data = await response.json();
+            console.log("Register response data:", data);
 
             if (!response.ok) {
                 setMessage(data.message || "Ошибка регистрации.");
@@ -71,8 +74,10 @@ export const RegistrationPage = () => {
                 body: JSON.stringify({ code: confirmationCode }),
             });
 
+            console.log("Confirm code response:", response);
 
             const data = await response.json();
+            console.log("Confirm code data:", data);
 
             if (!response.ok) {
                 setConfirmMessage(data.message || "Ошибка подтверждения.");
@@ -87,7 +92,10 @@ export const RegistrationPage = () => {
                 body: JSON.stringify({ email, password }),
             });
 
+            console.log("Login response:", loginResponse);
+
             const loginData = await loginResponse.json();
+            console.log("Login response data:", loginData);
 
             if (!loginResponse.ok) {
                 setConfirmMessage(loginData.message || "Подтверждено, но не удалось войти.");
