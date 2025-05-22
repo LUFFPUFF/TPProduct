@@ -20,6 +20,8 @@ const UserPage = () => {
                 if (!response.ok) throw new Error("Ошибка при загрузке данных");
 
                 const data = await response.json();
+                console.log("Ответ сервера (GET):", data); // ← добавлено логирование
+
                 setName(data.name || "");
                 setBirthdate(data.birthdate || "");
                 setGender(data.gender || "");
