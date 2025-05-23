@@ -82,24 +82,17 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     @Transactional
     public TokenDto checkRegistrationCode(String registrationCode) {
-        try {
-            return authCacheService.getRegistrationCode(registrationCode)
-                    .map(registrationDto -> {
-                        User newUser = mapperDto.toEntityUserFromRegistration(registrationDto);
-                        userRepository.save(newUser);
-                        roleService.addRole(registrationDto.getEmail(), Role.USER);
-                        TokenDto generatedTokens = jWTUtilsService.generateTokensByUser(userDetailsService.loadUserByUsername(registrationDto.getEmail()));
-                        registrationMetricsService.incrementRegistrationCodeCheckSuccess();
-                        return generatedTokens;
-                    })
-                    .orElseThrow(() -> {
-                        registrationMetricsService.incrementRegistrationCodeCheckFailureInvalidCode();
-                        return new RuntimeException("User registration failed due to an unexpected error");
-                    });
-        } catch (Exception e) {
-            registrationMetricsService.incrementRegistrationOperationError("checkRegistrationCode", e.getClass().getSimpleName());
-            throw new RuntimeException("Code check failed due to an unexpected error", e);
-        }
+        return authCacheService.getRegistrationCode(registrationCode)
+                .map( registrationDto -> {
+                    User newUser = mapperDto.toEntityUserFromRegistration(registrationDto);
+
+                    userRepository.save(newUser);
+
+                    roleService.addRole(registrationDto.getEmail(), Role.USER);
+
+                    return jWTUtilsService.generateTokensByUser(userDetailsService.loadUserByUsername(registrationDto.getEmail()));
+                })
+                .orElseThrow(() -> new RuntimeException("User registration failed due to an unexpected error"));
     }
 
     private String generateRegistrationCode() {

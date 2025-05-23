@@ -66,6 +66,25 @@ services:
     networks:
       - app_network
 
+  prometheus:
+    image: prom/prometheus:v2.51.2
+    container_name: prometheus_container
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus_config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      - app_network
+    depends_on:
+      - backend
+
   redis:
     image: redis:7-alpine
     container_name: redis_container
@@ -79,6 +98,7 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  prometheus_data:
 
 networks:
   app_network:

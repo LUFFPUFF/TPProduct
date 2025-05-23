@@ -20,18 +20,30 @@ const TemplatesPage = () => {
     useEffect(() => {
         const fetchTemplates = async () => {
             try {
+                console.log("Запрос шаблонов по:", API.templates.getAll);
+
                 const res = await fetch(API.templates.getAll);
+
+                console.log("HTTP статус:", res.status);
+
                 const data = await res.json();
+                console.log("Ответ от сервера (JSON):", data);
+
                 if (!Array.isArray(data)) {
+                    console.error("Ошибка: получен не массив:", data);
                     throw new Error("Ожидался массив, но получен другой тип");
                 }
+
                 setTemplates(data);
             } catch (error) {
+                console.error("Ошибка при загрузке шаблонов:", error);
                 alert("Ошибка при загрузке шаблонов: " + error.message);
             }
         };
+
         fetchTemplates();
     }, []);
+
 
     const handleDeleteTemplate = async (id) => {
         if (!window.confirm("Вы уверены, что хотите удалить шаблон?")) return;
@@ -101,7 +113,7 @@ const TemplatesPage = () => {
             });
 
             const createdTemplate = await res.json();
-
+            console.log('createdTemplate' + createdTemplate);
             const updatedTemplates = [...templates];
             updatedTemplates.splice(editIndex, 1, createdTemplate);
             setTemplates(updatedTemplates);
@@ -157,8 +169,8 @@ const TemplatesPage = () => {
             }
 
             const data = await res.json();
-
-            let message = `Обработано: ${data.processedCount}\nДубликатов: ${data.duplicatesCount}`;
+            console.log('Полученный джейсон' + data)
+            let message = `Обработано: ${data.processed_count}\nДубликатов: ${data.duplicates_count}`;
             if (data.globalErrors?.length) {
                 message += `\nГлобальные ошибки:\n${data.globalErrors.join("\n")}`;
             }
@@ -171,7 +183,7 @@ const TemplatesPage = () => {
 
             alert(message);
 
-            // Перезагрузить список шаблонов
+
             const newTemplates = await fetch(API.templates.getAll).then((r) => r.json());
             setTemplates(newTemplates);
         } catch (err) {
