@@ -8,6 +8,7 @@ import com.example.domain.api.authentication_module.service.interfaces.CurrentUs
 import com.example.domain.api.authentication_module.service.interfaces.RoleService;
 import com.example.domain.api.company_module.dto.MemberRoleReqDto;
 import com.example.domain.api.company_module.exception_handler_company.NotFoundCompanyException;
+import com.example.domain.api.company_module.exception_handler_company.UserAlreadyInCompanyExeption;
 import com.example.domain.api.company_module.exception_handler_company.UserNotInCompanyException;
 import com.example.domain.api.company_module.service.CompanyMembersService;
 import com.example.domain.api.company_module.exception_handler_company.SelfMemberDisbandException;
@@ -48,6 +49,9 @@ public class CompanyMembersServiceImpl implements CompanyMembersService {
     public CompanyWithMembersDto addMember(String memberEmail, String myEmail) {
         Company company = userRepository.findByEmail(myEmail).map(User::getCompany).orElseThrow(NotFoundCompanyException::new);
         subscriptionService.addOperatorCount(company);
+        if(currentUserDataService.getUser(memberEmail).getCompany() != null){
+            throw new UserAlreadyInCompanyExeption();
+        }
         roleService.addRole(memberEmail, Role.OPERATOR);
         userRepository.updateByCompanyIdAndEmail(company.getId(), memberEmail);
         return CompanyWithMembersDto.builder()
