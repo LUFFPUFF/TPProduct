@@ -38,6 +38,7 @@ public class CompanyDto {
     public CompanyDto(Integer id, String name, String contactEmail, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
+        this.companyDescription = null;
         this.contactEmail = contactEmail;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
