@@ -151,13 +151,18 @@ const TemplatesPage = () => {
                 body: formData,
             });
 
+            console.log("Статус ответа:", res.status);
+            console.log("Заголовки ответа:", [...res.headers.entries()]);
+
             if (!res.ok) {
                 const text = await res.text();
+                console.error("Ошибка при загрузке:", text);
                 throw new Error(`Ошибка при загрузке: ${text}`);
             }
 
             const data = await res.json();
-            conosle.log('Полученный джейсон' + data)
+            console.log("Ответ от сервера:", data);
+
             let message = `Обработано: ${data.processedCount}\nДубликатов: ${data.duplicatesCount}`;
             if (data.globalErrors?.length) {
                 message += `\nГлобальные ошибки:\n${data.globalErrors.join("\n")}`;
@@ -171,10 +176,10 @@ const TemplatesPage = () => {
 
             alert(message);
 
-
             const newTemplates = await fetch(API.templates.getAll).then((r) => r.json());
             setTemplates(newTemplates);
         } catch (err) {
+            console.error("Исключение при загрузке файла:", err);
             alert("Ошибка при загрузке файла: " + err.message);
         }
     };
