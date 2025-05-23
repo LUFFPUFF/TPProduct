@@ -22,7 +22,7 @@ public class UserSettingsController {
     private final UserSettingsService userSettingsService;
     @GetMapping("/get")
     public ResponseEntity<UserDataDto> getUserData(){
-        return null;
+       return ResponseEntity.ok(userSettingsService.getUserData());
     }
 
     @PostMapping("/set")
