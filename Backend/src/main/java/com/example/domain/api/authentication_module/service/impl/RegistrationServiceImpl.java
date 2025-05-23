@@ -53,6 +53,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 registrationDto.setPassword(passwordEncoder.encode(registrationDto.getPassword()));
                 registrationDto.setCreatedAt(LocalDateTime.now());
                 registrationDto.setUpdatedAt(LocalDateTime.now());
+                sendRegistrationCode(registrationDto);
             }
             return true;
         } catch (EmailExistsException e) {
