@@ -20,19 +20,30 @@ const TemplatesPage = () => {
     useEffect(() => {
         const fetchTemplates = async () => {
             try {
+                console.log("Запрос шаблонов по:", API.templates.getAll);
+
                 const res = await fetch(API.templates.getAll);
+
+                console.log("HTTP статус:", res.status);
+
                 const data = await res.json();
-                console.log(data);
+                console.log("Ответ от сервера (JSON):", data);
+
                 if (!Array.isArray(data)) {
+                    console.error("Ошибка: получен не массив:", data);
                     throw new Error("Ожидался массив, но получен другой тип");
                 }
+
                 setTemplates(data);
             } catch (error) {
+                console.error("Ошибка при загрузке шаблонов:", error);
                 alert("Ошибка при загрузке шаблонов: " + error.message);
             }
         };
+
         fetchTemplates();
     }, []);
+
 
     const handleDeleteTemplate = async (id) => {
         if (!window.confirm("Вы уверены, что хотите удалить шаблон?")) return;
