@@ -101,7 +101,7 @@ const TemplatesPage = () => {
             });
 
             const createdTemplate = await res.json();
-
+            console.log('createdTemplate' + createdTemplate);
             const updatedTemplates = [...templates];
             updatedTemplates.splice(editIndex, 1, createdTemplate);
             setTemplates(updatedTemplates);
@@ -157,7 +157,7 @@ const TemplatesPage = () => {
             }
 
             const data = await res.json();
-
+            conosle.log('Полученный джейсон' + data)
             let message = `Обработано: ${data.processedCount}\nДубликатов: ${data.duplicatesCount}`;
             if (data.globalErrors?.length) {
                 message += `\nГлобальные ошибки:\n${data.globalErrors.join("\n")}`;
@@ -171,7 +171,7 @@ const TemplatesPage = () => {
 
             alert(message);
 
-            // Перезагрузить список шаблонов
+
             const newTemplates = await fetch(API.templates.getAll).then((r) => r.json());
             setTemplates(newTemplates);
         } catch (err) {
