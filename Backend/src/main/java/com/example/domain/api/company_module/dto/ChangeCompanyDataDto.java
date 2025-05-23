@@ -6,5 +6,6 @@ import lombok.Builder;
 @Data
 @Builder
 public class ChangeCompanyDataDto {
-    String data;
+    String name;
+    String description;
 }
