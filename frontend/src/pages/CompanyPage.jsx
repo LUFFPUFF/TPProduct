@@ -131,18 +131,21 @@ const CompanyPage = () => {
         const currentRole = employee.role;
         const email = employee.email;
 
-        // Определяем направление изменения
-        const isPromoting = currentRole === "Оператор" && newRole === "Администратор";
-        const isDemoting = currentRole === "Администратор" && newRole === "Оператор";
+        const mappedCurrentRole = currentRole === "Администратор" ? "MANAGER" : "OPERATOR";
+        const mappedNewRole = newRole === "Администратор" ? "MANAGER" : "OPERATOR";
 
-        let endpoint = null;
-
-        if (isPromoting) {
-            endpoint = API.company.giveRole
-        } else if (isDemoting) {
-            endpoint = API.company.removeRole;
-        } else {
+        if (mappedCurrentRole === mappedNewRole) {
             setEditRoleIndex(null);
+            return;
+        }
+
+        const isPromoting = mappedCurrentRole === "OPERATOR" && mappedNewRole === "MANAGER";
+        const isDemoting = mappedCurrentRole === "MANAGER" && mappedNewRole === "OPERATOR";
+
+        const endpoint = isPromoting ? API.company.giveRole : isDemoting ? API.company.removeRole : null;
+
+        if (!endpoint) {
+            alert("Некорректное изменение роли");
             return;
         }
 
@@ -152,7 +155,10 @@ const CompanyPage = () => {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ email })
+                body: JSON.stringify({
+                    email: { email },
+                    role: "MANAGER"
+                })
             });
 
             if (!response.ok) {
