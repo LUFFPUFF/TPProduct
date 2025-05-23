@@ -87,10 +87,13 @@ const UserPage = () => {
         const date = new Date(isoString);
         return date.toISOString().split("T")[0];
     };
+    const convertToISOString = (dateString) => {
+        const date = new Date(dateString);
+        return date.toISOString();
+    };
 
     return (
         <div className="flex">
-            {/* Кнопка бургер-меню для мобильных устройств */}
             <div className="md:hidden absolute top-4 left-4 z-50">
                 <button
                     onClick={() => setIsSidebarOpen(true)}
@@ -103,12 +106,10 @@ const UserPage = () => {
                 </button>
             </div>
 
-            {/* Фиксированный сайдбар на десктопе */}
             <div className="hidden md:block fixed top-0 left-0 h-screen w-64 z-40 bg-white shadow">
                 <Sidebar />
             </div>
 
-            {/* Мобильный сайдбар */}
             {isSidebarOpen && (
                 <>
                     <div
@@ -132,7 +133,7 @@ const UserPage = () => {
                 </>
             )}
 
-            {/* Основной контент */}
+
             <main className="flex-1 px-4 sm:px-6 md:pl-72 py-8 bg-[#e6e5ea] min-h-screen">
                 <h1 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-10">Пользователь</h1>
 
