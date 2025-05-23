@@ -22,6 +22,7 @@ const TemplatesPage = () => {
             try {
                 const res = await fetch(API.templates.getAll);
                 const data = await res.json();
+                console.log(data);
                 if (!Array.isArray(data)) {
                     throw new Error("Ожидался массив, но получен другой тип");
                 }
@@ -142,6 +143,8 @@ const TemplatesPage = () => {
 
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("category", "default");
+        formData.append("overwrite", "false");
 
         try {
             const res = await fetch(API.templates.upload, {
