@@ -165,8 +165,10 @@ export default function IntegrationsPage() {
         const fetchConnectedIntegrations = async () => {
             try {
                 const [tgRes, mailRes] = await Promise.all([
-                    fetch(API.integrations.status.getTGIntegration),
-                    fetch(API.integrations.status.getMailIntegration),
+                    fetch(API.integrations.TGIntegration),
+                    fetch(API.integrations.VKIntegration),
+                    fetch(API.integrations.WhatsAppIntegration),
+                    fetch(API.integrations.MailIntegration),
                 ]);
 
                 const [tgData, mailData] = await Promise.all([
