@@ -4,6 +4,8 @@ const API = {
     integrations: {
         TGIntegration: `${API_BASE_URL}/ui/integration/telegram`,
         MailIntegration: `${API_BASE_URL}/ui/integration/email`,
+        WhatsAppIntegration: `${API_BASE_URL}/ui/integration/whatsapp`,
+        VKIntegration: `${API_BASE_URL}/ui/integration/vk`,
     },
     auth: {
         login: `${API_BASE_URL}/auth/login`,
