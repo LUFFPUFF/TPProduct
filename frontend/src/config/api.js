@@ -3,7 +3,7 @@ const API_BASE_URL = "/api";
 const API = {
     integrations: {
         TGIntegration: `${API_BASE_URL}/ui/integration/telegram`,
-        MailIntegration: `${API_BASE_URL}/ui/integration/email`,
+        MailIntegration: `${API_BASE_URL}/ui/integration/mail`,
         WhatsAppIntegration: `${API_BASE_URL}/ui/integration/whatsapp`,
         VKIntegration: `${API_BASE_URL}/ui/integration/vk`,
     },
