@@ -78,6 +78,10 @@ public class CompanyMembersServiceImpl implements CompanyMembersService {
     @Override
     @Transactional
     public void addMemberRole(MemberRoleReqDto memberRoleReqDto) {
+        System.out.println("---------------------------------" +
+                "" +memberRoleReqDto.getRole()+
+                "" +memberRoleReqDto.getEmail()+
+                "--------------------------");
              if(currentUserDataService.getUser(memberRoleReqDto.getEmail().getEmail()).getCompany().equals(currentUserDataService.getUserCompany())){
                  throw new UserNotInCompanyException();
              }
