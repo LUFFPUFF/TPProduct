@@ -150,7 +150,9 @@ const CompanyPage = () => {
         }
 
         const payload = {
-            email,
+            email: {
+                email: email
+            },
             role: "MANAGER"
         };
 
@@ -183,6 +185,7 @@ const CompanyPage = () => {
             alert("Не удалось изменить роль. Попробуйте снова.");
         }
     };
+
 
 
     return (
