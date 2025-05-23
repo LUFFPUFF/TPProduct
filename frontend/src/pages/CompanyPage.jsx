@@ -151,20 +151,29 @@ const CompanyPage = () => {
             return;
         }
 
+        const payload = {
+            email,
+            role: "MANAGER"
+        };
+
+        console.log("Отправка запроса на изменение роли:");
+        console.log("Endpoint:", endpoint);
+        console.log("Payload:", JSON.stringify(payload, null, 2));
+
         try {
             const response = await fetch(endpoint, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                    email: { email },
-                    role: "MANAGER"
-                })
+                body: JSON.stringify(payload)
             });
 
+            const responseBody = await response.text();
+            console.log("Ответ от сервера:", responseBody);
+
             if (!response.ok) {
-                throw new Error("Ошибка при изменении роли");
+                throw new Error(`Ошибка при изменении роли: ${response.status}`);
             }
 
             const updatedEmployees = [...employees];
@@ -176,6 +185,7 @@ const CompanyPage = () => {
             alert("Не удалось изменить роль. Попробуйте снова.");
         }
     };
+
 
     return (
         <div className="flex flex-col md:flex-row min-h-screen bg-[#e6e5ea]">
