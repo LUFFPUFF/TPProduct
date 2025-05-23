@@ -24,16 +24,12 @@ import java.util.Objects;
 public class CurrentUserDataServiceImpl implements CurrentUserDataService {
     private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
-    private User user = null;
-    private Company company = null;
+
 
     @Override
     @Transactional
     public User getUser() {
-        if(user == null) {
-            user = userRepository.findByEmail(getUserEmail()).orElseThrow(NotFoundUserException::new);
-        }
-        return user;
+            return userRepository.findByEmail(getUserEmail()).orElseThrow(NotFoundUserException::new);
     }
 
     @Override
@@ -45,10 +41,7 @@ public class CurrentUserDataServiceImpl implements CurrentUserDataService {
     @Override
     @Transactional
     public Company getUserCompany() {
-        if(company == null) {
-            company = companyRepository.findById(getUser().getId()).orElseThrow(NotFoundCompanyException::new);
-        }
-        return company;
+        return companyRepository.findById(getUser().getId()).orElseThrow(NotFoundCompanyException::new);
     }
 
     @Override
