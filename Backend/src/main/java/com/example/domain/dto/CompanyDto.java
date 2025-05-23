@@ -28,16 +28,19 @@ public class CompanyDto {
     @Size(max = 50, message = "Контакты компании не должны превышать 50 символов")
     private String contactEmail;
 
+    private String companyDescription;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public CompanyDto() {
     }
 
-    public CompanyDto(Integer id, String name, String contactEmail, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public CompanyDto(Integer id, String name, String contactEmail, String companyDescription,
+                      LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.contactEmail = contactEmail;
+        this.companyDescription = companyDescription;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
