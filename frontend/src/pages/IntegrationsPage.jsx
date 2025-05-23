@@ -226,14 +226,8 @@ export default function IntegrationsPage() {
                 } catch (e) {
                     console.error("Ошибка парсинга JSON для Mail:", e);
                 }
-                const [tgRes, mailRes] = await Promise.all([
-                    fetch(API.integrations.TGIntegration),
-                    fetch(API.integrations.VKIntegration),
-                    fetch(API.integrations.WhatsAppIntegration),
-                    fetch(API.integrations.MailIntegration),
-                ]);
 
-                console.log("Telegram — статус:", vkRes.status, vkRes.statusText);
+                console.log("Vk — статус:", vkRes.status, vkRes.statusText);
                 const vkText = await vkRes.text();
                 console.log("Telegram — raw response:", vkText);
                 let vkData = [];
@@ -244,7 +238,7 @@ export default function IntegrationsPage() {
                     console.error("Ошибка парсинга JSON для Telegram:", e);
                 }
 
-                console.log("Telegram — статус:", whatsappRes.status, whatsappRes.statusText);
+                console.log("WhatsApp — статус:", whatsappRes.status, whatsappRes.statusText);
                 const whatsappText = await whatsappRes.text();
                 console.log("Telegram — raw response:", whatsappText);
                 let whatsappData = [];
