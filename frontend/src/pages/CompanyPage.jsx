@@ -40,7 +40,7 @@ const CompanyPage = () => {
                 setCompanyDescription(data.company.companyDescription);
                 setEmployees(
                     data.members.map((member) => ({
-                        name: member.fullName,
+                        name: member.full_name,
                         email: member.email,
                         role: mapRole(member.roles?.[0] ?? "")
                     }))
