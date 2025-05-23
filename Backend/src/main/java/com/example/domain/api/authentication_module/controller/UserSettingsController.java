@@ -4,6 +4,7 @@ import com.example.domain.api.authentication_module.dto.AnswerSettingsDto;
 import com.example.domain.api.authentication_module.dto.ChangePasswordCodeDto;
 import com.example.domain.api.authentication_module.dto.PasswordDto;
 import com.example.domain.api.authentication_module.dto.UserDataDto;
+import com.example.domain.api.authentication_module.service.interfaces.CurrentUserDataService;
 import com.example.domain.api.authentication_module.service.interfaces.UserSettingsService;
 import com.example.domain.dto.CheckCodeDto;
 import com.example.domain.dto.EmailDto;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserSettingsController {
     private final UserSettingsService userSettingsService;
+    private final CurrentUserDataService currentUserDataService;
     @GetMapping("/get")
     public ResponseEntity<UserDataDto> getUserData(){
        return ResponseEntity.ok(userSettingsService.getUserData());
@@ -27,6 +29,12 @@ public class UserSettingsController {
 
     @PostMapping("/set")
     public ResponseEntity<UserDataDto> setUserData(@RequestBody UserDataDto userDataDto){
+        System.out.println("----------------------------------" +
+                "" + currentUserDataService.getUserEmail() +
+                "" + userDataDto.getFullName() +
+                "" + userDataDto.getBirthday() +
+                "" + userDataDto.getGender() +
+                "-------------------------");
         return ResponseEntity.status(HttpStatus.CREATED).body(userSettingsService.setUserData(userDataDto));
     }
     @PostMapping("/change-password/password")
