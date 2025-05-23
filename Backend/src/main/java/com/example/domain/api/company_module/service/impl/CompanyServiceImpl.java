@@ -4,6 +4,7 @@ import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.repository.company_subscription_module.CompanyRepository;
 import com.example.database.repository.company_subscription_module.UserRepository;
+import com.example.domain.api.authentication_module.service.interfaces.RoleService;
 import com.example.domain.api.company_module.exception_handler_company.NotFoundCompanyException;
 import com.example.domain.api.company_module.service.CompanyMembersService;
 import com.example.domain.api.company_module.service.CompanyService;
@@ -26,6 +27,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     private final MapperDto mapperDto;
     private final UserRepository userRepository;
+    private final RoleService roleService;
 
     @Override
     @Transactional
@@ -65,9 +67,10 @@ public class CompanyServiceImpl implements CompanyService {
     public List<MemberDto> findMembers(Company company) {
         return userRepository.getAllByCompanyId(company.getId()).stream()
                 .map(user -> MemberDto.builder()
-                .email(user.getEmail())
-                .fullName(user.getFullName())
-                .build()).toList();
+                        .email(user.getEmail())
+                        .fullName(user.getFullName())
+                        .roles(roleService.getUserRoles(user.getEmail()))
+                        .build()).toList();
     }
 
 }
