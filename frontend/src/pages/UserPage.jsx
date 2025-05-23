@@ -55,7 +55,7 @@ const UserPage = () => {
             const isoDate = convertToISOString(birthdate);
             console.log("Name перед отправкой:", name);
             const payload = {
-                fullName: name,
+                name: name,
                 birthday: isoDate,
                 gender: gender,
             };
