@@ -86,7 +86,7 @@ public class CompanyMembersServiceImpl implements CompanyMembersService {
 
     @Override
     public void removeMemberRole(MemberRoleReqDto memberRoleReqDto) {
-        if(currentUserDataService.getUser(memberRoleReqDto.getEmail().getEmail()).getCompany().equals(currentUserDataService.getUserCompany())){
+        if(!currentUserDataService.getUser(memberRoleReqDto.getEmail().getEmail()).getCompany().equals(currentUserDataService.getUserCompany())){
             throw new UserNotInCompanyException();
         }
         roleService.removeRole(memberRoleReqDto.getEmail().getEmail(),memberRoleReqDto.getRole());
