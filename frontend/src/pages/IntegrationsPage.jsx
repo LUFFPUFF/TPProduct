@@ -23,9 +23,8 @@ export default function IntegrationsPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [email, setEmail] = useState("");
-    const [emailPassword, setEmailPassword] = useState("");
-    const [imapHost, setImapHost] = useState("");
+    const [emailAddress, setEmailAddress] = useState("");
+    const [appPassword, setAppPassword] = useState("");
     const [communityName, setCommunityName] = useState("");
     const [accessTokenVK, setAccessTokenVK] = useState("");
     const [accessTokenWA, setAccessTokenWA] = useState("");
@@ -45,9 +44,8 @@ export default function IntegrationsPage() {
         setModalOpen(true);
         setBotToken("");
         setBotUsername("");
-        setEmail("");
-        setEmailPassword("");
-        setImapHost("");
+        setEmailAddress("");
+        setAppPassword("");
         setError("");
         setCommunityName("");
         setAccessTokenVK("");
@@ -78,16 +76,15 @@ export default function IntegrationsPage() {
                     botUsername: botUsername
                 };
             } else if (selectedIntegration.name === "Почту") {
-                if (!email || !emailPassword || !imapHost) {
+                if (!emailAddress || !appPassword) {
                     const msg = "Заполните все поля для Email";
                     console.warn(msg);
                     setError(msg);
                     return;
                 }
                 payload = {
-                    email,
-                    password: emailPassword,
-                    imapHost
+                    emailAddress: emailAddress,
+                    appPassword: appPassword,
                 };
             } else if (selectedIntegration.name === "VK") {
                 if (!accessTokenVK || !communityName) {
@@ -152,9 +149,8 @@ export default function IntegrationsPage() {
             setModalOpen(false);
             setBotToken("");
             setBotUsername("");
-            setEmail("");
-            setEmailPassword("");
-            setImapHost("");
+            setEmailAddress("");
+            setAppPassword("");
             setCommunityName("");
             setAccessTokenVK("");
             setAccessTokenWA("");
@@ -202,10 +198,10 @@ export default function IntegrationsPage() {
     useEffect(() => {
         const fetchConnectedIntegrations = async () => {
             try {
-                const tgRes = await fetch(API.integrations.status.TGIntegration);
-                const mailRes = await fetch(API.integrations.status.MailIntegration);
-                const vkRes = await fetch(API.integrations.status.VKIntegration);
-                const whatsappRes = await fetch(API.integrations.status.WhatsAppIntegration);
+                const tgRes = await fetch(API.integrations.TGIntegration);
+                const mailRes = await fetch(API.integrations.MailIntegration);
+                const vkRes = await fetch(API.integrations.VKIntegration);
+                const whatsappRes = await fetch(API.integrations.WhatsAppIntegration);
 
                 console.group("Ответ от API по интеграциям");
 
@@ -389,23 +385,16 @@ export default function IntegrationsPage() {
                             <>
                                 <input
                                     type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    value={emailAddress}
+                                    onChange={(e) => setEmailAddress(e.target.value)}
                                     placeholder="Email"
                                     className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
                                 />
                                 <input
                                     type="password"
-                                    value={emailPassword}
-                                    onChange={(e) => setEmailPassword(e.target.value)}
+                                    value={appPassword}
+                                    onChange={(e) => setAppPassword(e.target.value)}
                                     placeholder="Пароль"
-                                    className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
-                                />
-                                <input
-                                    type="text"
-                                    value={imapHost}
-                                    onChange={(e) => setImapHost(e.target.value)}
-                                    placeholder="IMAP Host (например, imap.yandex.ru)"
                                     className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
                                 />
                             </>
@@ -488,9 +477,10 @@ export default function IntegrationsPage() {
                                     setModalOpen(false);
                                     setBotToken("");
                                     setBotUsername("");
-                                    setImapHost("");
                                     setSelectedIntegration(null);
                                     setError("");
+                                    setEmailAddress("");
+                                    setAppPassword("");
                                     setCommunityName("");
                                     setAccessTokenVK("");
                                     setAccessTokenWA("");
@@ -507,7 +497,7 @@ export default function IntegrationsPage() {
                                 onClick={handleSubmit}
                                 disabled={
                                     loading ||
-                                    (selectedIntegration?.name === "Почту" && !(botToken && botUsername && imapHost)) ||
+                                    (selectedIntegration?.name === "Почту" && !(emailAddress && appPassword)) ||
                                     (selectedIntegration?.name === "Telegram" && !(botToken && botUsername)) ||
                                     (selectedIntegration?.name === "VK" && !(communityId && accessTokenVK && communityName)) ||
                                     (selectedIntegration?.name === "WhatsApp" && !(phoneNumberId && accessTokenWA && verifyToken))
