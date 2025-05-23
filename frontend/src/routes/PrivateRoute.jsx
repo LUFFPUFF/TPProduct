@@ -5,18 +5,18 @@ const PrivateRoute = ({ allowedRoles, excludeRoles = [] }) => {
     const { user, loading } = useAuth();
 
     if (loading) return <div>Загрузка...</div>;
-
     if (!user) return <Navigate to="/login" replace />;
 
-    const hasAllowedRole = !allowedRoles || allowedRoles.some(role => user.roles.includes(role));
-    const hasExcludedRole = excludeRoles.some(role => user.roles.includes(role));
+    const userRoles = user.roles || [];
 
-    if (!hasAllowedRole) {
-        return <Navigate to="/login" replace />;
-    }
-    if (hasExcludedRole) {
-        return <Navigate to="/forbidden" replace />;
-    }
+    const hasAllowedRole =
+        !allowedRoles || allowedRoles.some(role => userRoles.includes(role));
+
+    const isManager = userRoles.includes("MANAGER");
+    const hasExcludedRole = !isManager && excludeRoles.some(role => userRoles.includes(role));
+
+    if (!hasAllowedRole) return <Navigate to="/login" replace />;
+    if (hasExcludedRole) return <Navigate to="/forbidden" replace />;
 
     return <Outlet />;
 };

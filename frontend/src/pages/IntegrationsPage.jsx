@@ -8,8 +8,8 @@ import API from "../config/api";
 
 const initialIntegrations = [
     {name: "Telegram", icon: telegramIcon, connected: false},
-    {name: "Whats App", icon: whatsappIcon, connected: false},
-    {name: "Вконтакте", icon: vkIcon, connected: false},
+    {name: "WhatsApp", icon: whatsappIcon, connected: false},
+    {name: "VK", icon: vkIcon, connected: false},
     {name: "Почту", icon: mailIcon, connected: false},
     {name: "Виджет", icon: null, connected: false},
 ];
@@ -26,6 +26,10 @@ export default function IntegrationsPage() {
     const [email, setEmail] = useState("");
     const [emailPassword, setEmailPassword] = useState("");
     const [imapHost, setImapHost] = useState("");
+    const [communityName, setCommunityName] = useState("");
+    const [accessTokenVK, setAccessTokenVK] = useState("");
+    const [accessTokenWA, setAccessTokenWA] = useState("");
+    const [verifyToken, setVerifyToken] = useState("");
 
     useEffect(() => {
         document.body.style.overflow = modalOpen ? "hidden" : "auto";
@@ -43,6 +47,10 @@ export default function IntegrationsPage() {
         setEmailPassword("");
         setImapHost("");
         setError("");
+        setCommunityName("");
+        setAccessTokenVK("");
+        setAccessTokenWA("");
+        setVerifyToken("");
     };
 
     const handleSubmit = async () => {
@@ -77,22 +85,40 @@ export default function IntegrationsPage() {
                     password: emailPassword,
                     imapHost
                 };
-            } else {
-                if (!botToken) {
-                    const msg = "Введите токен";
+            } else if (selectedIntegration.name === "VK") {
+                if (!accessTokenVK || !communityName) {
+                    const msg = "Заполните все поля для VK";
                     console.warn(msg);
                     setError(msg);
                     return;
                 }
-                payload = { token: botToken };
+                payload = {
+                    accessToken: accessTokenVK,
+                    communityName: communityName,
+                };
+            } else if (selectedIntegration.name === "WhatsApp") {
+                if (!accessTokenWA || !verifyToken) {
+                    const msg = "Заполните все поля для WhatsApp";
+                    console.warn(msg);
+                    setError(msg);
+                    return;
+                }
+                payload = {
+                    accessToken: accessTokenVK,
+                    verifyToken: verifyToken,
+                };
             }
 
             let url = API.integrations.connect;
 
             if (selectedIntegration.name === "Telegram") {
-                url = API.integrations.createTGIntegration;
+                url = API.integrations.TGIntegration;
             } else if (selectedIntegration.name === "Почту") {
-                url = API.integrations.createMailIntegration;
+                url = API.integrations.MailIntegration;
+            } else if (selectedIntegration.name === "VK") {
+                url = API.integrations.VKIntegration;
+            } else if (selectedIntegration.name === "WhatsApp") {
+                url = API.integrations.WhatsAppIntegration;
             }
 
             console.log("Отправка запроса:", url, payload);
@@ -113,7 +139,7 @@ export default function IntegrationsPage() {
 
             setIntegrations((prev) =>
                 prev.map((item) =>
-                    item.name === selectedIntegration.name ? { ...item, connected: true } : item
+                    item.name === selectedIntegration.name ? {...item, connected: true} : item
                 )
             );
 
@@ -123,6 +149,10 @@ export default function IntegrationsPage() {
             setEmail("");
             setEmailPassword("");
             setImapHost("");
+            setCommunityName("");
+            setAccessTokenVK("");
+            setAccessTokenWA("");
+            setVerifyToken("");
             setSelectedIntegration(null);
         } catch (err) {
             console.error("Ошибка подключения интеграции:", err);
@@ -139,8 +169,8 @@ export default function IntegrationsPage() {
 
             const response = await fetch(API.integrations.disconnect, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ integration: integrationName }),
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({integration: integrationName}),
             });
 
             console.log("Статус ответа на отключение:", response.status);
@@ -153,7 +183,7 @@ export default function IntegrationsPage() {
 
             setIntegrations((prev) =>
                 prev.map((item) =>
-                    item.name === integrationName ? { ...item, connected: false } : item
+                    item.name === integrationName ? {...item, connected: false} : item
                 )
             );
         } catch (err) {
@@ -164,22 +194,68 @@ export default function IntegrationsPage() {
     useEffect(() => {
         const fetchConnectedIntegrations = async () => {
             try {
-                const [tgRes, mailRes] = await Promise.all([
-                    fetch(API.integrations.status.getTGIntegration),
-                    fetch(API.integrations.status.getMailIntegration),
-                ]);
+                const tgRes = await fetch(API.integrations.status.TGIntegration);
+                const mailRes = await fetch(API.integrations.status.MailIntegration);
+                const vkRes = await fetch(API.integrations.status.VKIntegration);
+                const whatsappRes = await fetch(API.integrations.status.WhatsAppIntegration);
 
-                const [tgData, mailData] = await Promise.all([
-                    tgRes.ok ? tgRes.json() : [],
-                    mailRes.ok ? mailRes.json() : [],
-                ]);
+                console.group("Ответ от API по интеграциям");
+
+                console.log("Telegram — статус:", tgRes.status, tgRes.statusText);
+                const tgText = await tgRes.text();
+                console.log("Telegram — raw response:", tgText);
+                let tgData = [];
+                try {
+                    tgData = JSON.parse(tgText);
+                    console.log("Telegram — parsed JSON:", tgData);
+                } catch (e) {
+                    console.error("Ошибка парсинга JSON для Telegram:", e);
+                }
+
+                console.log("Mail — статус:", mailRes.status, mailRes.statusText);
+                const mailText = await mailRes.text();
+                console.log("Mail — raw response:", mailText);
+                let mailData = [];
+                try {
+                    mailData = JSON.parse(mailText);
+                    console.log("Mail — parsed JSON:", mailData);
+                } catch (e) {
+                    console.error("Ошибка парсинга JSON для Mail:", e);
+                }
+
+                console.log("Telegram — статус:", vkRes.status, vkRes.statusText);
+                const vkText = await vkRes.text();
+                console.log("Telegram — raw response:", vkText);
+                let vkData = [];
+                try {
+                    vkData = JSON.parse(vkText);
+                    console.log("Telegram — parsed JSON:", vkData);
+                } catch (e) {
+                    console.error("Ошибка парсинга JSON для Telegram:", e);
+                }
+
+                console.log("Telegram — статус:", whatsappRes.status, whatsappRes.statusText);
+                const whatsappText = await whatsappRes.text();
+                console.log("Telegram — raw response:", whatsappText);
+                let whatsappData = [];
+                try {
+                    whatsappData = JSON.parse(whatsappText);
+                    console.log("Telegram — parsed JSON:", whatsappData);
+                } catch (e) {
+                    console.error("Ошибка парсинга JSON для Telegram:", e);
+                }
+                console.groupEnd();
 
                 setIntegrations((prev) =>
                     prev.map((item) => {
                         if (item.name === "Telegram") {
-                            return { ...item, connected: tgData.length > 0 };
+                            return {...item, connected: Array.isArray(tgData) && tgData.length > 0};
                         } else if (item.name === "Почту") {
-                            return { ...item, connected: mailData.length > 0 };
+                            return {...item, connected: Array.isArray(mailData) && mailData.length > 0};
+                        } else if (item.name === "VK") {
+                            return {...item, connected: Array.isArray(vkData) && vkData.length > 0};
+                        } else if (item.name === "WhatsApp") {
+                            return {...item, connected: Array.isArray(whatsappData) && whatsappData.length > 0};
                         }
                         return item;
                     })
@@ -288,7 +364,7 @@ export default function IntegrationsPage() {
             {modalOpen && (
                 <div
                     className="fixed inset-0 z-50 flex justify-center items-center px-4"
-                    style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+                    style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}
                     onClick={() => setModalOpen(false)}
                 >
                     <div
@@ -301,7 +377,7 @@ export default function IntegrationsPage() {
                                 : `Введите токен для ${selectedIntegration?.name}`}
                         </h2>
 
-                        {selectedIntegration?.name === "Почту" ? (
+                        {selectedIntegration?.name === "Почту" && (
                             <>
                                 <input
                                     type="email"
@@ -325,7 +401,9 @@ export default function IntegrationsPage() {
                                     className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
                                 />
                             </>
-                        ) : (
+                        )}
+
+                        {selectedIntegration?.name === "Telegram" && (
                             <>
                                 <input
                                     type="text"
@@ -334,16 +412,49 @@ export default function IntegrationsPage() {
                                     placeholder="Токен"
                                     className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
                                 />
-
-                                {selectedIntegration?.name === "Telegram" && (
-                                    <input
-                                        type="text"
-                                        value={botUsername}
-                                        onChange={(e) => setBotUsername(e.target.value)}
-                                        placeholder="Имя пользователя бота (например, mybot)"
-                                        className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
-                                    />
-                                )}
+                                <input
+                                    type="text"
+                                    value={botUsername}
+                                    onChange={(e) => setBotUsername(e.target.value)}
+                                    placeholder="Имя пользователя бота (например, mybot)"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
+                                />
+                            </>
+                        )}
+                        {selectedIntegration?.name === "VK" && (
+                            <>
+                                <input
+                                    type="text"
+                                    value={communityName}
+                                    onChange={(e) => setCommunityName(e.target.value)}
+                                    placeholder="Введите название сообщества"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
+                                />
+                                <input
+                                    type="text"
+                                    value={accessTokenVK}
+                                    onChange={(e) => setAccessTokenVK(e.target.value)}
+                                    placeholder="Введите токен доступа"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
+                                />
+                            </>
+                        )}
+                        {selectedIntegration?.name === "WhatsApp" && (
+                            <>
+                                <input
+                                    type="text"
+                                    value={accessTokenWA}
+                                    onChange={(e) => setAccessTokenWA(e.target.value)}
+                                    placeholder="Токен"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
+                                />
+                                <input
+                                    type="text"
+                                    value={verifyToken}
+                                    onChange={(e) => setVerifyToken(e.target.value)}
+                                    placeholder="Введите verifyToken"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
+                                />
                             </>
                         )}
 
@@ -358,6 +469,10 @@ export default function IntegrationsPage() {
                                     setImapHost("");
                                     setSelectedIntegration(null);
                                     setError("");
+                                    setCommunityName("");
+                                    setAccessTokenVK("");
+                                    setAccessTokenWA("");
+                                    setVerifyToken("");
                                 }}
                                 className="bg-[#dadee7] px-4 py-2 rounded transition-all duration-150 ease-in-out transform active:scale-95"
                             >
@@ -368,9 +483,10 @@ export default function IntegrationsPage() {
                                 onClick={handleSubmit}
                                 disabled={
                                     loading ||
-                                    (selectedIntegration?.name === "Почту"
-                                        ? !(botToken && botUsername && imapHost)
-                                        : !botToken)
+                                    (selectedIntegration?.name === "Почту" && !(botToken && botUsername && imapHost)) ||
+                                    (selectedIntegration?.name === "Telegram" && !(botToken && botUsername)) ||
+                                    (selectedIntegration?.name === "VK" && !(accessTokenVK && communityName)) ||
+                                    (selectedIntegration?.name === "WhatsApp" && !(accessTokenWA && verifyToken))
                                 }
                                 className={`${
                                     loading
@@ -385,5 +501,6 @@ export default function IntegrationsPage() {
                 </div>
             )}
         </div>
-    );
+    )
+        ;
 }

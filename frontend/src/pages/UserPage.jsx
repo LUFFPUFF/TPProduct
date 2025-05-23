@@ -17,19 +17,30 @@ const UserPage = () => {
         const fetchUserData = async () => {
             try {
                 const response = await fetch(API.settings.get);
+                console.log("Raw response (GET):", response);
                 if (!response.ok) throw new Error("Ошибка при загрузке данных");
 
                 const data = await response.json();
+                console.log("Ответ сервера (GET):", data);
+
+                if (data.name === null || data.birthdate === null || data.gender === null) {
+                    throw new Error("Некоторые поля данных пользователя отсутствуют.");
+                }
+
+                console.log("Ответ сервера (GET):", data);
+
                 setName(data.name || "");
                 setBirthdate(data.birthdate || "");
                 setGender(data.gender || "");
             } catch (error) {
                 console.error("Ошибка при получении данных пользователя:", error);
+                setError("Ошибка при загрузке данных пользователя. Проверьте заполненность профиля.");
             }
         };
 
         fetchUserData();
     }, []);
+
 
     const handleLogout = () => {
         setUser(null);
@@ -59,6 +70,8 @@ const UserPage = () => {
                 body: JSON.stringify(payload),
             });
 
+            console.log("Raw response (POST):", response);
+
             const responseData = await response.json();
             console.log("Ответ сервера:", responseData);
 
@@ -73,15 +86,13 @@ const UserPage = () => {
         }
     };
     const convertToISOString = (dateString) => {
-        // Предполагается формат ввода: "дд.мм.гггг"
-        const [day, month, year] = dateString.split(".");
-        const date = new Date(`${year}-${month}-${day}T00:00:00.000Z`);
+        const date = new Date(dateString);
         return date.toISOString();
     };
 
     return (
-        <div className="flex flex-col lg:flex-row">
-            {/* Sidebar */}
+        <div className="flex">
+            {/* Кнопка бургер-меню для мобильных устройств */}
             <div className="md:hidden absolute top-4 left-4 z-50">
                 <button
                     onClick={() => setIsSidebarOpen(true)}
@@ -89,15 +100,17 @@ const UserPage = () => {
                     aria-label="Открыть меню"
                 >
                     <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
             </div>
 
-            <div className="hidden md:block">
-                <Sidebar/>
+            {/* Фиксированный сайдбар на десктопе */}
+            <div className="hidden md:block fixed top-0 left-0 h-screen w-64 z-40 bg-white shadow">
+                <Sidebar />
             </div>
 
+            {/* Мобильный сайдбар */}
             {isSidebarOpen && (
                 <>
                     <div
@@ -121,7 +134,8 @@ const UserPage = () => {
                 </>
             )}
 
-            <main className="flex-1 px-4 sm:px-6 md:px-12 py-8 bg-[#e6e5ea] min-h-screen">
+            {/* Основной контент */}
+            <main className="flex-1 px-4 sm:px-6 md:pl-72 py-8 bg-[#e6e5ea] min-h-screen">
                 <h1 className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-10">Пользователь</h1>
 
                 <form className="space-y-6 max-w-full sm:max-w-xl" onSubmit={handleSubmit}>
