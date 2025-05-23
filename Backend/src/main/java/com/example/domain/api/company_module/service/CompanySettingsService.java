@@ -1,7 +1,7 @@
 package com.example.domain.api.company_module.service;
 
+import com.example.domain.api.company_module.dto.ChangeCompanyDataDto;
+
 public interface CompanySettingsService {
-    String changeName(String name);
-    String changeDescription(String description);
-    String changeOwner(String email);
+    void changeCompanyData(ChangeCompanyDataDto changeCompanyDataDto);
 }
