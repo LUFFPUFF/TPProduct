@@ -8,7 +8,6 @@ const CompanyPage = () => {
     const [employees, setEmployees] = useState([]);
     const [editRoleIndex, setEditRoleIndex] = useState(null);
     const [newRole, setNewRole] = useState("");
-    const [newEmployeeRole, setNewEmployeeRole] = useState("Оператор");
     const [showInput, setShowInput] = useState(false);
     const [newEmployeeEmail, setNewEmployeeEmail] = useState("");
     const [companyName, setCompanyName] = useState("ООО Солнышко");
@@ -48,19 +47,31 @@ const CompanyPage = () => {
 
         fetchCompanyData();
     }, []);
-    const handleAddEmployee = () => {
-        if (newEmployeeEmail.trim()) {
-            setEmployees([
-                ...employees,
-                {
-                    name: "Новый сотрудник",
-                    email: newEmployeeEmail.trim(),
-                    role: newEmployeeRole
-                }
-            ]);
+    const handleAddEmployee = async () => {
+        if (!newEmployeeEmail.trim()) return;
+
+        try {
+            const response = await fetch(API.company.addMember, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: newEmployeeEmail.trim()
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Ошибка при добавлении сотрудника");
+            }
+
+            const data = await response.json();
+
             setNewEmployeeEmail("");
-            setNewEmployeeRole("Оператор");
             setShowInput(false);
+        } catch (error) {
+            console.error("Ошибка при добавлении сотрудника:", error);
+            alert("Не удалось добавить сотрудника. Попробуйте снова.");
         }
     };
 
@@ -265,43 +276,43 @@ const CompanyPage = () => {
                         ))}
                     </div>
 
-                    {showInput && (
-                        <div className="flex flex-col gap-3 pt-4">
-                            <input
-                                type="email"
-                                value={newEmployeeEmail}
-                                onChange={(e) => setNewEmployeeEmail(e.target.value)}
-                                placeholder="Введите email сотрудника"
-                                className="border border-gray-400 rounded-xl px-4 py-2 shadow-inner w-full"
-                            />
-                            <select
-                                value={newEmployeeRole}
-                                onChange={(e) => setNewEmployeeRole(e.target.value)}
-                                className="border border-gray-400 rounded-xl px-4 py-2 shadow-inner w-full"
-                            >
-                                <option value="Оператор">Оператор</option>
-                                <option value="Администратор">Администратор</option>
-                            </select>
-                            <button
-                                onClick={handleAddEmployee}
-                                className="bg-[#0d1b4c] text-white px-5 py-2 rounded-xl shadow hover:opacity-90 transition w-full sm:w-auto"
-                            >
-                                Добавить
-                            </button>
-                        </div>
-                    )}
-
-                    {!showInput && (
-                        <div className="pt-4">
+                    <div className="flex items-center gap-2">
+                        {showInput ? (
+                            <>
+                                <input
+                                    type="email"
+                                    placeholder="Введите email"
+                                    value={newEmployeeEmail}
+                                    onChange={(e) => setNewEmployeeEmail(e.target.value)}
+                                    className="border border-black rounded-xl px-4 py-2 w-full sm:w-auto"
+                                />
+                                <button
+                                    onClick={handleAddEmployee}
+                                    className="bg-[#0d1b4c] text-white px-4 py-2 rounded-xl hover:opacity-90 shadow"
+                                >
+                                    Добавить
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        setShowInput(false);
+                                        setNewEmployeeEmail("");
+                                    }}
+                                    className="bg-gray-300 text-black px-4 py-2 rounded-xl hover:bg-gray-400 shadow"
+                                >
+                                    Скрыть
+                                </button>
+                            </>
+                        ) : (
                             <button
                                 onClick={handleAddClick}
-                                className="bg-[#f3f4f6] border border-black px-6 py-2 rounded-xl font-semibold shadow-md flex items-center gap-2"
+                                className="flex items-center gap-2 bg-white border border-black px-4 py-2 rounded-xl shadow hover:bg-gray-100"
                             >
-                                <img src={plus} alt="plus" className="w-5 h-5" />
+                                <img src={plus} alt="Добавить" className="w-5 h-5" />
                                 Добавить сотрудника
                             </button>
-                        </div>
-                    )}
+                        )}
+                    </div>
+
                 </div>
             </main>
         </div>
