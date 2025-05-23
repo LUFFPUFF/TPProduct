@@ -157,7 +157,7 @@ const TemplatesPage = () => {
             }
 
             const data = await res.json();
-            conosle.log('Полученный джейсон' + data)
+            console.log('Полученный джейсон' + data)
             let message = `Обработано: ${data.processedCount}\nДубликатов: ${data.duplicatesCount}`;
             if (data.globalErrors?.length) {
                 message += `\nГлобальные ошибки:\n${data.globalErrors.join("\n")}`;
