@@ -5,11 +5,7 @@ import API from "../config/api.js";
 
 const CompanyPage = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [employees, setEmployees] = useState([
-        { name: "Тестовый Тест Тест", email: "test1@example.com", role: "Администратор" },
-        { name: "Иванов Иван Иванович", email: "ivanov@example.com", role: "Оператор" },
-        { name: "Петров Петр Петрович", email: "petrov@example.com", role: "Оператор" }
-    ]);
+    const [employees, setEmployees] = useState([]);
     const [editRoleIndex, setEditRoleIndex] = useState(null);
     const [newRole, setNewRole] = useState("");
     const [newEmployeeRole, setNewEmployeeRole] = useState("Оператор");
@@ -38,13 +34,15 @@ const CompanyPage = () => {
                 const response = await fetch(API.company.get);
                 const data = await response.json();
 
+                console.log("Полученные данные компании:", data);
+
                 setCompanyName(data.company.name);
                 setCompanyDescription(data.company.companyDescription);
                 setEmployees(
                     data.members.map((member) => ({
                         name: member.fullName,
                         email: member.email,
-                        role: mapRole(member.roles[0])
+                        role: mapRole(member.roles?.[0] ?? "")
                     }))
                 );
             } catch (error) {
