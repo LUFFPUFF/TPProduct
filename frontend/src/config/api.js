@@ -49,6 +49,8 @@ const API = {
         get: `${API_BASE_URL}/company/get`,
         editCompany: `${API_BASE_URL}/company/settings/data`,
         addMember: `${API_BASE_URL}/company/admin/add-member`,
+        giveRole: `${API_BASE_URL}//company/admin/member/give-role`,
+        removeRole: `${API_BASE_URL}/company/admin/member/remove-role`,
     }
 };
 
