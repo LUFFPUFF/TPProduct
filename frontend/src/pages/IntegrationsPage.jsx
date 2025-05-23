@@ -483,9 +483,10 @@ export default function IntegrationsPage() {
                                 onClick={handleSubmit}
                                 disabled={
                                     loading ||
-                                    (selectedIntegration?.name === "Почту"
-                                        ? !(botToken && botUsername && imapHost)
-                                        : !botToken)
+                                    (selectedIntegration?.name === "Почту" && !(botToken && botUsername && imapHost)) ||
+                                    (selectedIntegration?.name === "Telegram" && !(botToken && botUsername)) ||
+                                    (selectedIntegration?.name === "VK" && !(accessTokenVK && communityName)) ||
+                                    (selectedIntegration?.name === "WhatsApp" && !(accessTokenWA && verifyToken))
                                 }
                                 className={`${
                                     loading
