@@ -51,7 +51,7 @@ const UserPage = () => {
 
         try {
             const isoDate = convertToISOString(birthdate);
-
+            console.log("Name перед отправкой:", name);
             const payload = {
                 fullName: name,
                 birthday: isoDate,
@@ -67,7 +67,7 @@ const UserPage = () => {
                 },
                 body: JSON.stringify(payload),
             });
-
+            console.log("Name перед отправкой:", name);
             console.log("Raw response (POST):", response);
 
             const responseData = await response.json();
