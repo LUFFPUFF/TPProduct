@@ -5,13 +5,14 @@ import plus from "../assets/plus.png";
 const CompanyPage = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [employees, setEmployees] = useState([
-        { name: "Тестовый Тест Тест", email: "test1@example.com" },
-        { name: "Иванов Иван Иванович", email: "ivanov@example.com" },
-        { name: "Петров Петр Петрович", email: "petrov@example.com" }
+        { name: "Тестовый Тест Тест", email: "test1@example.com", role: "Администратор" },
+        { name: "Иванов Иван Иванович", email: "ivanov@example.com", role: "Оператор" },
+        { name: "Петров Петр Петрович", email: "petrov@example.com", role: "Оператор" }
     ]);
-
+    const [editRoleIndex, setEditRoleIndex] = useState(null);
+    const [newRole, setNewRole] = useState("");
+    const [newEmployeeRole, setNewEmployeeRole] = useState("Оператор");
     const [showInput, setShowInput] = useState(false);
-    const [newEmployeeName, setNewEmployeeName] = useState("");
     const [newEmployeeEmail, setNewEmployeeEmail] = useState("");
     const [companyName, setCompanyName] = useState("ООО Солнышко");
     const [companyDescription, setCompanyDescription] = useState("Компания занимается солнечными батареями.");
@@ -22,13 +23,17 @@ const CompanyPage = () => {
     const handleAddClick = () => setShowInput(true);
 
     const handleAddEmployee = () => {
-        if (newEmployeeName.trim() && newEmployeeEmail.trim()) {
+        if (newEmployeeEmail.trim()) {
             setEmployees([
                 ...employees,
-                { name: newEmployeeName.trim(), email: newEmployeeEmail.trim() }
+                {
+                    name: "Новый сотрудник",
+                    email: newEmployeeEmail.trim(),
+                    role: newEmployeeRole
+                }
             ]);
-            setNewEmployeeName("");
             setNewEmployeeEmail("");
+            setNewEmployeeRole("Оператор");
             setShowInput(false);
         }
     };
@@ -51,13 +56,24 @@ const CompanyPage = () => {
         setTempDescription(companyDescription);
     };
 
+    const handleRoleChange = (index) => {
+        setEditRoleIndex(index);
+        setNewRole(employees[index].role);
+    };
+
+    const handleSaveRole = (index) => {
+        const updatedEmployees = [...employees];
+        updatedEmployees[index].role = newRole;
+        setEmployees(updatedEmployees);
+        setEditRoleIndex(null);
+    };
+
     return (
         <div className="flex flex-col md:flex-row min-h-screen bg-[#e6e5ea]">
-
             <div className="md:hidden fixed top-4 left-4 z-50">
                 <button
                     onClick={() => setIsSidebarOpen(true)}
-                    className="text-[#2a4992] focus:outline-none"
+                    className="text-[#2a4992]"
                     aria-label="Открыть меню"
                 >
                     <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -72,11 +88,7 @@ const CompanyPage = () => {
 
             {isSidebarOpen && (
                 <>
-                    <div
-                        className="fixed inset-0 z-40"
-                        style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-                        onClick={() => setIsSidebarOpen(false)}
-                    />
+                    <div className="fixed inset-0 z-40 bg-black bg-opacity-50" onClick={() => setIsSidebarOpen(false)} />
                     <div className="fixed top-0 left-0 w-64 h-full z-50 bg-white shadow-lg overflow-y-auto">
                         <Sidebar />
                         <div className="absolute top-4 right-4">
@@ -94,10 +106,9 @@ const CompanyPage = () => {
                 </>
             )}
 
-            <main className="flex-1 md:ml-64 p-4 sm:p-6 md:p-10 !pt-8 sm:pt-6 overflow-y-auto">
+            <main className="flex-1 md:ml-64 p-4 sm:p-6 md:p-10 pt-8 sm:pt-6 overflow-y-auto">
                 <h1 className="text-2xl sm:text-3xl font-bold mb-4">Страница компании</h1>
-                <div className="bg-white rounded-2xl shadow-[14px_14px_15px_rgba(0,0,0,0.32)] p-6 space-y-6 max-w-9xl mx-auto border border-gray-300">
-
+                <div className="bg-white rounded-2xl shadow p-6 space-y-6 border border-gray-300">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                         <div className="flex-1 space-y-4">
                             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -114,21 +125,21 @@ const CompanyPage = () => {
                                         type="text"
                                         value={companyName}
                                         readOnly
-                                        className="border border-gray-400 rounded-xl px-4 py-2 bg-[#f9f9f9] shadow w-full sm:w-auto shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"
+                                        className="border border-gray-400 rounded-xl px-4 py-2 bg-[#f9f9f9] shadow w-full sm:w-auto"
                                     />
                                 )}
                             </div>
                             <div>
-                                <div className="text-xl font-semibold mb-2 ">Описание:</div>
+                                <div className="text-xl font-semibold mb-2">Описание:</div>
                                 {isEditingCompany ? (
                                     <textarea
                                         value={tempDescription}
                                         onChange={(e) => setTempDescription(e.target.value)}
-                                        className="border border-gray-400 rounded-xl px-4 py-2 w-full "
+                                        className="border border-gray-400 rounded-xl px-4 py-2 w-full"
                                         rows={3}
                                     />
                                 ) : (
-                                    <div className="bg-[#f9f9f9] border border-gray-400 rounded-xl px-4 py-2 shadow-[0px_4px_4px_rgba(0,0,0,0.25)]">
+                                    <div className="bg-[#f9f9f9] border border-gray-400 rounded-xl px-4 py-2">
                                         {companyDescription}
                                     </div>
                                 )}
@@ -137,59 +148,75 @@ const CompanyPage = () => {
                         <div className="flex flex-col sm:items-end gap-2">
                             {isEditingCompany ? (
                                 <>
-                                    <button
-                                        onClick={handleSaveCompany}
-                                        className="bg-[#0d1b4c] text-white px-4 py-2 rounded-full shadow hover:opacity-90 transition"
-                                    >
+                                    <button onClick={handleSaveCompany} className="bg-[#0d1b4c] text-white px-4 py-2 rounded-full shadow hover:opacity-90">
                                         Сохранить
                                     </button>
-                                    <button
-                                        onClick={handleCancelEdit}
-                                        className="bg-gray-300 text-black px-4 py-2 rounded-full shadow hover:bg-gray-400 transition"
-                                    >
+                                    <button onClick={handleCancelEdit} className="bg-gray-300 text-black px-4 py-2 rounded-full shadow hover:bg-gray-400">
                                         Отмена
                                     </button>
                                 </>
                             ) : (
-                                <button
-                                    onClick={handleEditCompany}
-                                    className="bg-white border border-black px-4 py-2 rounded-full text-base shadow-[0px_4px_4px_rgba(0,0,0,0.25)] hover:bg-gray-100 transition"
-                                >
+                                <button onClick={handleEditCompany} className="bg-white border border-black px-4 py-2 rounded-full shadow hover:bg-gray-100">
                                     Редактировать
                                 </button>
                             )}
                         </div>
                     </div>
 
-
                     <div className="flex flex-col sm:flex-row justify-between gap-3">
                         <div className="text-lg">Сотрудников: {employees.length}</div>
                         <div className="flex gap-2">
-                            <button className="border border-black px-4 py-2 rounded-full text-sm shadow-[0px_4px_4px_rgba(0,0,0,0.25)] hover:bg-gray-100 transition">
+                            <button className="border border-black px-4 py-2 rounded-full text-sm shadow hover:bg-gray-100">
                                 Фильтрация
                             </button>
                             <input
                                 type="text"
                                 placeholder="Поиск"
-                                className="border border-black rounded-full px-4 py-2 text-sm shadow-[0px_4px_4px_rgba(0,0,0,0.25)] w-full sm:w-auto"
+                                className="border border-black rounded-full px-4 py-2 text-sm shadow w-full sm:w-auto"
                             />
                         </div>
                     </div>
 
                     <div className="space-y-4">
-                        {employees.map((employee, idx) => (
+                        {employees.map((employee, index) => (
                             <div
-                                key={idx}
-                                className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 bg-[#f9fafb] rounded-xl border border-gray-300 px-4 py-4 shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"
+                                key={index}
+                                className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 bg-[#f9fafb] rounded-xl border border-gray-300 px-4 py-4 shadow"
                             >
                                 <div>
                                     <div className="text-lg font-semibold">{employee.name}</div>
                                     <div className="text-sm text-gray-600">{employee.email}</div>
+                                    <div className="text-sm text-gray-600">
+                                        {editRoleIndex === index ? (
+                                            <select
+                                                value={newRole}
+                                                onChange={(e) => setNewRole(e.target.value)}
+                                                className="border rounded px-2 py-1"
+                                            >
+                                                <option value="Оператор">Оператор</option>
+                                                <option value="Администратор">Администратор</option>
+                                            </select>
+                                        ) : (
+                                            employee.role
+                                        )}
+                                    </div>
                                 </div>
                                 <div className="flex gap-2 flex-wrap">
-                                    <button className="bg-[#0d1b4c] text-white px-4 py-2 rounded-md shadow hover:opacity-90 transition text-sm">
-                                        Изменить
-                                    </button>
+                                    {editRoleIndex === index ? (
+                                        <button
+                                            className="bg-[#0d1b4c] text-white px-4 py-2 rounded-md shadow hover:opacity-90 text-sm"
+                                            onClick={() => handleSaveRole(index)}
+                                        >
+                                            Сохранить
+                                        </button>
+                                    ) : (
+                                        <button
+                                            className="bg-[#0d1b4c] text-white px-4 py-2 rounded-md shadow hover:opacity-90 text-sm"
+                                            onClick={() => handleRoleChange(index)}
+                                        >
+                                            Изменить
+                                        </button>
+                                    )}
                                     <button className="bg-[#b0b4be] text-white px-4 py-2 rounded-md shadow text-sm">
                                         Удалить
                                     </button>
@@ -201,19 +228,20 @@ const CompanyPage = () => {
                     {showInput && (
                         <div className="flex flex-col gap-3 pt-4">
                             <input
-                                type="text"
-                                value={newEmployeeName}
-                                onChange={(e) => setNewEmployeeName(e.target.value)}
-                                placeholder="Введите ФИО сотрудника"
-                                className="border border-gray-400 rounded-xl px-4 py-2 shadow-inner w-full"
-                            />
-                            <input
                                 type="email"
                                 value={newEmployeeEmail}
                                 onChange={(e) => setNewEmployeeEmail(e.target.value)}
                                 placeholder="Введите email сотрудника"
                                 className="border border-gray-400 rounded-xl px-4 py-2 shadow-inner w-full"
                             />
+                            <select
+                                value={newEmployeeRole}
+                                onChange={(e) => setNewEmployeeRole(e.target.value)}
+                                className="border border-gray-400 rounded-xl px-4 py-2 shadow-inner w-full"
+                            >
+                                <option value="Оператор">Оператор</option>
+                                <option value="Администратор">Администратор</option>
+                            </select>
                             <button
                                 onClick={handleAddEmployee}
                                 className="bg-[#0d1b4c] text-white px-5 py-2 rounded-xl shadow hover:opacity-90 transition w-full sm:w-auto"
@@ -227,10 +255,10 @@ const CompanyPage = () => {
                         <div className="pt-4">
                             <button
                                 onClick={handleAddClick}
-                                className="border border-black px-6 py-2 rounded-xl font-semibold shadow-md flex items-center gap-2 hover:bg-gray-100 transition w-full sm:w-auto justify-center"
+                                className="border border-black px-6 py-2 rounded-xl font-semibold shadow-md flex items-center gap-2"
                             >
+                                <img src={plus} alt="plus" className="w-5 h-5" />
                                 Добавить сотрудника
-                                <img src={plus} alt="plus" className="w-6 h-6 ml-4" />
                             </button>
                         </div>
                     )}
@@ -239,4 +267,5 @@ const CompanyPage = () => {
         </div>
     );
 };
+
 export default CompanyPage;
