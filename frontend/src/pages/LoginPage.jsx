@@ -8,7 +8,7 @@ export const LoginPage = () => {
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
-    const { setUser } = useAuth(); // используем AuthContext
+    const { checkAuth } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -31,7 +31,7 @@ export const LoginPage = () => {
         };
 
         if (email === testUser.email && password === testUser.password) {
-            setUser({ email: testUser.email });
+            await checkAuth();
             navigate("/dialogs");
             return;
         }
@@ -46,7 +46,7 @@ export const LoginPage = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                setUser({ email: data.email });
+                await checkAuth();
                 navigate("/dialogs");
             } else {
                 setMessage("Неверный email или пароль.");
