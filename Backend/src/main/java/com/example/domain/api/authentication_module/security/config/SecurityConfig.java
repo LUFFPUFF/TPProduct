@@ -44,6 +44,7 @@ public class SecurityConfig  {
                         .requestMatchers("/api/auth/**","/api/registration/**").permitAll()
                         .requestMatchers("/api/ui/integration/**").permitAll()
                         .requestMatchers("/api/answers/**").permitAll()
+                        .requestMatchers("/api/statistics/**").permitAll()
                         .requestMatchers("/api/subscription/extend","/api/company/add").authenticated()
                         .requestMatchers("/test/operator-only").hasAuthority(Role.OPERATOR.getAuthority())
                         .requestMatchers("/api/ui/**","/api/company/get").authenticated()
