@@ -30,6 +30,8 @@ export default function IntegrationsPage() {
     const [accessTokenVK, setAccessTokenVK] = useState("");
     const [accessTokenWA, setAccessTokenWA] = useState("");
     const [verifyToken, setVerifyToken] = useState("");
+    const [communityId, setCommunityId] = useState("");
+    const [phoneNumberId, setPhoneNumberId] = useState("");
 
     useEffect(() => {
         document.body.style.overflow = modalOpen ? "hidden" : "auto";
@@ -51,6 +53,8 @@ export default function IntegrationsPage() {
         setAccessTokenVK("");
         setAccessTokenWA("");
         setVerifyToken("");
+        setCommunityId("");
+        setPhoneNumberId("");
     };
 
     const handleSubmit = async () => {
@@ -93,6 +97,7 @@ export default function IntegrationsPage() {
                     return;
                 }
                 payload = {
+                    communityId: communityId,
                     accessToken: accessTokenVK,
                     communityName: communityName,
                 };
@@ -104,7 +109,8 @@ export default function IntegrationsPage() {
                     return;
                 }
                 payload = {
-                    accessToken: accessTokenVK,
+                    phoneNumberId: phoneNumberId,
+                    accessToken: accessTokenWA,
                     verifyToken: verifyToken,
                 };
             }
@@ -153,6 +159,8 @@ export default function IntegrationsPage() {
             setAccessTokenVK("");
             setAccessTokenWA("");
             setVerifyToken("");
+            setCommunityId("");
+            setPhoneNumberId("");
             setSelectedIntegration(null);
         } catch (err) {
             console.error("Ошибка подключения интеграции:", err);
@@ -425,6 +433,13 @@ export default function IntegrationsPage() {
                             <>
                                 <input
                                     type="text"
+                                    value={communityId}
+                                    onChange={(e) => setCommunityId(e.target.value)}
+                                    placeholder="Введите id сообщества"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
+                                />
+                                <input
+                                    type="text"
                                     value={communityName}
                                     onChange={(e) => setCommunityName(e.target.value)}
                                     placeholder="Введите название сообщества"
@@ -441,6 +456,13 @@ export default function IntegrationsPage() {
                         )}
                         {selectedIntegration?.name === "WhatsApp" && (
                             <>
+                                <input
+                                    type="text"
+                                    value={phoneNumberId}
+                                    onChange={(e) => setPhoneNumberId(e.target.value)}
+                                    placeholder="Введите номер телефона"
+                                    className="w-full px-4 py-2 border border-gray-300 rounded mb-4"
+                                />
                                 <input
                                     type="text"
                                     value={accessTokenWA}
@@ -473,6 +495,8 @@ export default function IntegrationsPage() {
                                     setAccessTokenVK("");
                                     setAccessTokenWA("");
                                     setVerifyToken("");
+                                    setCommunityId("");
+                                    setPhoneNumberId("");
                                 }}
                                 className="bg-[#dadee7] px-4 py-2 rounded transition-all duration-150 ease-in-out transform active:scale-95"
                             >
@@ -485,8 +509,8 @@ export default function IntegrationsPage() {
                                     loading ||
                                     (selectedIntegration?.name === "Почта" && !(email && emailPassword && imapHost)) ||
                                     (selectedIntegration?.name === "Telegram" && !(botToken && botUsername)) ||
-                                    (selectedIntegration?.name === "VK" && !(accessTokenVK && communityName)) ||
-                                    (selectedIntegration?.name === "WhatsApp" && !(accessTokenWA && verifyToken))
+                                    (selectedIntegration?.name === "VK" && !(communityId && accessTokenVK && communityName)) ||
+                                    (selectedIntegration?.name === "WhatsApp" && !(phoneNumberId && accessTokenWA && verifyToken))
                                 }
                                 className={`${
                                     loading
