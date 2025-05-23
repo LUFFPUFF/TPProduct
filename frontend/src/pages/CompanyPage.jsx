@@ -70,10 +70,33 @@ const CompanyPage = () => {
         setTempDescription(companyDescription);
     };
 
-    const handleSaveCompany = () => {
-        setCompanyName(tempName.trim() || companyName);
-        setCompanyDescription(tempDescription.trim() || companyDescription);
-        setIsEditingCompany(false);
+    const handleSaveCompany = async () => {
+        const updatedName = tempName.trim() || companyName;
+        const updatedDescription = tempDescription.trim() || companyDescription;
+
+        try {
+            const response = await fetch(API.company.editCompany, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: updatedName,
+                    description: updatedDescription
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error("Не удалось обновить данные компании");
+            }
+
+            setCompanyName(updatedName);
+            setCompanyDescription(updatedDescription);
+            setIsEditingCompany(false);
+        } catch (error) {
+            console.error("Ошибка при сохранении данных компании:", error);
+            alert("Ошибка при сохранении. Попробуйте снова.");
+        }
     };
 
     const handleCancelEdit = () => {

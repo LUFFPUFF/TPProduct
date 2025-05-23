@@ -47,6 +47,7 @@ const API = {
     },
     company: {
         get: `${API_BASE_URL}/company/get`,
+        editCompany: `${API_BASE_URL}/data`,
     }
 };
 
