@@ -42,7 +42,7 @@ public class UserSettingsServiceImpl implements UserSettingsService {
         User user = currentUserDataService.getUser();
         user.setDateOfBirth(userDataDto.getBirthday());
         user.setGender(userDataDto.getGender());
-        user.setFullName(userDataDto.getFullName());
+        user.setFullName(userDataDto.getName());
         userRepository.save(user);
         return userDataDto;
     }
