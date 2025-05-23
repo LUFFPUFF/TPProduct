@@ -226,6 +226,12 @@ export default function IntegrationsPage() {
                 } catch (e) {
                     console.error("Ошибка парсинга JSON для Mail:", e);
                 }
+                const [tgRes, mailRes] = await Promise.all([
+                    fetch(API.integrations.TGIntegration),
+                    fetch(API.integrations.VKIntegration),
+                    fetch(API.integrations.WhatsAppIntegration),
+                    fetch(API.integrations.MailIntegration),
+                ]);
 
                 console.log("Telegram — статус:", vkRes.status, vkRes.statusText);
                 const vkText = await vkRes.text();
