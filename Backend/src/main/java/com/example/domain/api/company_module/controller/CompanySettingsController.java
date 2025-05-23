@@ -16,7 +16,7 @@ public class CompanySettingsController {
     public ResponseEntity<ChangeCompanyDataDto> changeCompanyName(@RequestBody ChangeCompanyDataDto changeCompanyDataDto){
          return ResponseEntity.ok(ChangeCompanyDataDto.builder().data(companySettingsService.changeName(changeCompanyDataDto.getData())).build());
     }
-    @PostMapping
+    @PostMapping("/description")
     public ResponseEntity<ChangeCompanyDataDto>  changeCompanyDescription(@RequestBody ChangeCompanyDataDto changeCompanyDataDto){
         return ResponseEntity.ok(ChangeCompanyDataDto.builder().data(companySettingsService.changeDescription(changeCompanyDataDto.getData())).build());
     }
