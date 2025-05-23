@@ -28,6 +28,7 @@ public class CompanyDto {
     @Size(max = 50, message = "Контакты компании не должны превышать 50 символов")
     private String contactEmail;
 
+    private String companyDescription;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
