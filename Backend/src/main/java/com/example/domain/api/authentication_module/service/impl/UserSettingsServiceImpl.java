@@ -38,12 +38,7 @@ public class UserSettingsServiceImpl implements UserSettingsService {
     @Override
     @Transactional
     public UserDataDto setUserData(UserDataDto userDataDto) {
-        System.out.println("----------------------------------" +
-                "" + currentUserDataService.getUserEmail() +
-                "" + userDataDto.getFullName() +
-                "" + userDataDto.getBirthday() +
-                "" + userDataDto.getGender() +
-                "-------------------------");
+
         User user = currentUserDataService.getUser();
         user.setDateOfBirth(userDataDto.getBirthday());
         user.setGender(userDataDto.getGender());
