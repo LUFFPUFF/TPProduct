@@ -50,6 +50,7 @@ const API = {
     company: {
         get: `${API_BASE_URL}/company/get`,
         editCompany: `${API_BASE_URL}/company/settings/data`,
+        addMember: `${API_BASE_URL}/company/admin/add-member`,
     }
 };
 
