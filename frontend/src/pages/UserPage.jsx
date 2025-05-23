@@ -28,7 +28,7 @@ const UserPage = () => {
                 }
 
                 setName(data.name || "");
-                setBirthdate(data.birthdate || "");
+                setBirthdate(data.birthdate ? formatDateForInput(data.birthdate) : "");
                 setGender(data.gender || "");
             } catch (error) {
                 console.error("Ошибка при получении данных пользователя:", error);
@@ -83,9 +83,9 @@ const UserPage = () => {
             setLoading(false);
         }
     };
-    const convertToISOString = (dateString) => {
-        const date = new Date(dateString);
-        return date.toISOString();
+    const formatDateForInput = (isoString) => {
+        const date = new Date(isoString);
+        return date.toISOString().split("T")[0];
     };
 
     return (
