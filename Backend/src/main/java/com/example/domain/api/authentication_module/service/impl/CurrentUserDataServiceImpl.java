@@ -41,7 +41,7 @@ public class CurrentUserDataServiceImpl implements CurrentUserDataService {
     @Override
     @Transactional
     public Company getUserCompany() {
-        return companyRepository.findById(getUser().getId()).orElseThrow(NotFoundCompanyException::new);
+        return getUser().getCompany();
     }
 
     @Override
