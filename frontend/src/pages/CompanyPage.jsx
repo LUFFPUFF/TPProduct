@@ -10,8 +10,6 @@ const CompanyPage = () => {
     const [newRole, setNewRole] = useState("");
     const [showInput, setShowInput] = useState(false);
     const [newEmployeeEmail, setNewEmployeeEmail] = useState("");
-    const [companyName, setCompanyName] = useState("ООО Солнышко");
-    const [companyDescription, setCompanyDescription] = useState("Компания занимается солнечными батареями.");
     const [isEditingCompany, setIsEditingCompany] = useState(false);
     const [tempName, setTempName] = useState(companyName);
     const [tempDescription, setTempDescription] = useState(companyDescription);
@@ -66,7 +64,14 @@ const CompanyPage = () => {
             }
 
             const data = await response.json();
-
+            setEmployees([
+                ...employees,
+                {
+                    name: data.full_name || "",
+                    email: newEmployeeEmail.trim(),
+                    role: mapRole(data.roles || [])
+                }
+            ]);
             setNewEmployeeEmail("");
             setShowInput(false);
         } catch (error) {
@@ -121,11 +126,47 @@ const CompanyPage = () => {
         setNewRole(employees[index].role);
     };
 
-    const handleSaveRole = (index) => {
-        const updatedEmployees = [...employees];
-        updatedEmployees[index].role = newRole;
-        setEmployees(updatedEmployees);
-        setEditRoleIndex(null);
+    const handleSaveRole = async (index) => {
+        const employee = employees[index];
+        const currentRole = employee.role;
+        const email = employee.email;
+
+        // Определяем направление изменения
+        const isPromoting = currentRole === "Оператор" && newRole === "Администратор";
+        const isDemoting = currentRole === "Администратор" && newRole === "Оператор";
+
+        let endpoint = null;
+
+        if (isPromoting) {
+            endpoint = API.company.giveRole
+        } else if (isDemoting) {
+            endpoint = API.company.removeRole;
+        } else {
+            setEditRoleIndex(null);
+            return;
+        }
+
+        try {
+            const response = await fetch(endpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email })
+            });
+
+            if (!response.ok) {
+                throw new Error("Ошибка при изменении роли");
+            }
+
+            const updatedEmployees = [...employees];
+            updatedEmployees[index].role = newRole;
+            setEmployees(updatedEmployees);
+            setEditRoleIndex(null);
+        } catch (error) {
+            console.error("Ошибка при изменении роли:", error);
+            alert("Не удалось изменить роль. Попробуйте снова.");
+        }
     };
 
     return (
