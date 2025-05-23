@@ -33,7 +33,7 @@ const CompanyPage = () => {
                 console.log("Полученные данные компании:", data);
 
                 setCompanyName(data.company.name);
-                setCompanyDescription(data.company.companyDescription);
+                setCompanyDescription(data.company.company_description);
                 setEmployees(
                     data.members.map((member) => ({
                         name: member.full_name,
