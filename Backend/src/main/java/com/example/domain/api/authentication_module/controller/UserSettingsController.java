@@ -31,7 +31,7 @@ public class UserSettingsController {
     public ResponseEntity<UserDataDto> setUserData(@RequestBody UserDataDto userDataDto){
         System.out.println("----------------------------------" +
                 "" + currentUserDataService.getUserEmail() +
-                "" + userDataDto.getFullName() +
+                "" + userDataDto.getName() +
                 "" + userDataDto.getBirthday() +
                 "" + userDataDto.getGender() +
                 "-------------------------");

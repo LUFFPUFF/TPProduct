@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class UserDataDto {
-    private String fullName;
+    private String name;
     private LocalDateTime birthday;
     private Gender gender;
 }
