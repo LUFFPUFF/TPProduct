@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import plus from "../assets/plus.png";
+import API from "../config/api.js";
 
 const CompanyPage = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -21,7 +22,38 @@ const CompanyPage = () => {
     const [tempDescription, setTempDescription] = useState(companyDescription);
 
     const handleAddClick = () => setShowInput(true);
+    const mapRole = (apiRole) => {
+        switch (apiRole) {
+            case "MANAGER":
+                return "Администратор";
+            case "OPERATOR":
+                return "Оператор";
+            default:
+                return "Неизвестно";
+        }
+    };
+    useEffect(() => {
+        const fetchCompanyData = async () => {
+            try {
+                const response = await fetch(API.company.get);
+                const data = await response.json();
 
+                setCompanyName(data.company.name);
+                setCompanyDescription(data.company.companyDescription);
+                setEmployees(
+                    data.members.map((member) => ({
+                        name: member.fullName,
+                        email: member.email,
+                        role: mapRole(member.roles[0])
+                    }))
+                );
+            } catch (error) {
+                console.error("Ошибка при загрузке данных компании:", error);
+            }
+        };
+
+        fetchCompanyData();
+    }, []);
     const handleAddEmployee = () => {
         if (newEmployeeEmail.trim()) {
             setEmployees([
@@ -108,7 +140,7 @@ const CompanyPage = () => {
 
             <main className="flex-1 md:ml-64 p-4 sm:p-6 md:p-10 pt-8 sm:pt-6 overflow-y-auto">
                 <h1 className="text-2xl sm:text-3xl font-bold mb-4">Страница компании</h1>
-                <div className="bg-white rounded-2xl shadow p-6 space-y-6 border border-gray-300">
+                <div className="bg-white rounded-2xl shadow-[14px_14px_15px_rgba(0,0,0,0.32)] p-6 space-y-6 ">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                         <div className="flex-1 space-y-4">
                             <div className="flex flex-col sm:flex-row sm:items-center gap-4">
@@ -118,14 +150,14 @@ const CompanyPage = () => {
                                         type="text"
                                         value={tempName}
                                         onChange={(e) => setTempName(e.target.value)}
-                                        className="border border-gray-400 rounded-xl px-4 py-2 w-full sm:w-auto"
+                                        className="border border-black rounded-xl shadow-[0px_4px_4px_rgba(0,0,0,0.25)] px-4 py-2 w-full sm:w-auto"
                                     />
                                 ) : (
                                     <input
                                         type="text"
                                         value={companyName}
                                         readOnly
-                                        className="border border-gray-400 rounded-xl px-4 py-2 bg-[#f9f9f9] shadow w-full sm:w-auto"
+                                        className="border border-black rounded-xl px-4 py-2 bg-[#f9f9f9] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] w-full sm:w-auto"
                                     />
                                 )}
                             </div>
@@ -135,11 +167,11 @@ const CompanyPage = () => {
                                     <textarea
                                         value={tempDescription}
                                         onChange={(e) => setTempDescription(e.target.value)}
-                                        className="border border-gray-400 rounded-xl px-4 py-2 w-full"
+                                        className="border border-black shadow-[0px_4px_4px_rgba(0,0,0,0.25)] rounded-xl px-4 py-2 w-full"
                                         rows={3}
                                     />
                                 ) : (
-                                    <div className="bg-[#f9f9f9] border border-gray-400 rounded-xl px-4 py-2">
+                                    <div className="bg-[#f9f9f9] border shadow-[0px_4px_4px_rgba(0,0,0,0.25)] border-black rounded-xl px-4 py-2">
                                         {companyDescription}
                                     </div>
                                 )}
@@ -148,15 +180,15 @@ const CompanyPage = () => {
                         <div className="flex flex-col sm:items-end gap-2">
                             {isEditingCompany ? (
                                 <>
-                                    <button onClick={handleSaveCompany} className="bg-[#0d1b4c] text-white px-4 py-2 rounded-full shadow hover:opacity-90">
+                                    <button onClick={handleSaveCompany} className="bg-[#0d1b4c] text-white px-4 py-2 rounded-full shadow-[0px_4px_4px_rgba(0,0,0,0.25)] hover:opacity-90">
                                         Сохранить
                                     </button>
-                                    <button onClick={handleCancelEdit} className="bg-gray-300 text-black px-4 py-2 rounded-full shadow hover:bg-gray-400">
+                                    <button onClick={handleCancelEdit} className="bg-gray-300 text-black px-4 py-2 rounded-full shadow-[0px_4px_4px_rgba(0,0,0,0.25)] hover:bg-gray-400">
                                         Отмена
                                     </button>
                                 </>
                             ) : (
-                                <button onClick={handleEditCompany} className="bg-white border border-black px-4 py-2 rounded-full shadow hover:bg-gray-100">
+                                <button onClick={handleEditCompany} className="bg-white border border-black px-4 py-2 rounded-full shadow-[0px_4px_4px_rgba(0,0,0,0.25)] hover:bg-gray-100">
                                     Редактировать
                                 </button>
                             )}
@@ -165,23 +197,14 @@ const CompanyPage = () => {
 
                     <div className="flex flex-col sm:flex-row justify-between gap-3">
                         <div className="text-lg">Сотрудников: {employees.length}</div>
-                        <div className="flex gap-2">
-                            <button className="border border-black px-4 py-2 rounded-full text-sm shadow hover:bg-gray-100">
-                                Фильтрация
-                            </button>
-                            <input
-                                type="text"
-                                placeholder="Поиск"
-                                className="border border-black rounded-full px-4 py-2 text-sm shadow w-full sm:w-auto"
-                            />
-                        </div>
+
                     </div>
 
                     <div className="space-y-4">
                         {employees.map((employee, index) => (
                             <div
                                 key={index}
-                                className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 bg-[#f9fafb] rounded-xl border border-gray-300 px-4 py-4 shadow"
+                                className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 bg-[#f9fafb] rounded-xl border border-black px-4 py-4 shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"
                             >
                                 <div>
                                     <div className="text-lg font-semibold">{employee.name}</div>
@@ -255,7 +278,7 @@ const CompanyPage = () => {
                         <div className="pt-4">
                             <button
                                 onClick={handleAddClick}
-                                className="border border-black px-6 py-2 rounded-xl font-semibold shadow-md flex items-center gap-2"
+                                className="bg-[#f3f4f6] border border-black px-6 py-2 rounded-xl font-semibold shadow-md flex items-center gap-2"
                             >
                                 <img src={plus} alt="plus" className="w-5 h-5" />
                                 Добавить сотрудника
