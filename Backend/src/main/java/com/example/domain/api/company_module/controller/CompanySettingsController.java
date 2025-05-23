@@ -12,13 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CompanySettingsController {
     private final CompanySettingsService companySettingsService;
-    @PostMapping("/name")
-    public ResponseEntity<ChangeCompanyDataDto> changeCompanyName(@RequestBody ChangeCompanyDataDto changeCompanyDataDto){
-         return ResponseEntity.ok(ChangeCompanyDataDto.builder().data(companySettingsService.changeName(changeCompanyDataDto.getData())).build());
+    @PostMapping("/data")
+    public ResponseEntity<Void> changeCompanyData(@RequestBody ChangeCompanyDataDto changeCompanyDataDto) {
+        companySettingsService.changeCompanyData(changeCompanyDataDto);
+        return ResponseEntity.noContent().build();
     }
-    @PostMapping("/description")
-    public ResponseEntity<ChangeCompanyDataDto>  changeCompanyDescription(@RequestBody ChangeCompanyDataDto changeCompanyDataDto){
-        return ResponseEntity.ok(ChangeCompanyDataDto.builder().data(companySettingsService.changeDescription(changeCompanyDataDto.getData())).build());
-    }
-
 }
