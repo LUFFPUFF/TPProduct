@@ -79,6 +79,7 @@ public class JWTUtilsServiceImpl implements JWTUtilsService {
                 .refresh_token(ref_token)
                 .build();
     }
+
     @Override
     public Claims parseToken(String token){
         try {
