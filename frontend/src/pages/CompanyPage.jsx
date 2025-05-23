@@ -18,15 +18,11 @@ const CompanyPage = () => {
     const [tempDescription, setTempDescription] = useState(companyDescription);
 
     const handleAddClick = () => setShowInput(true);
-    const mapRole = (apiRole) => {
-        switch (apiRole) {
-            case "MANAGER":
-                return "Администратор";
-            case "OPERATOR":
-                return "Оператор";
-            default:
-                return "Неизвестно";
-        }
+    const mapRole = (roles) => {
+        if (!roles || roles.length === 0) return "Неизвестно";
+        if (roles.includes("MANAGER")) return "Администратор";
+        if (roles.includes("OPERATOR")) return "Оператор";
+        return "Неизвестно";
     };
     useEffect(() => {
         const fetchCompanyData = async () => {
@@ -42,7 +38,7 @@ const CompanyPage = () => {
                     data.members.map((member) => ({
                         name: member.full_name,
                         email: member.email,
-                        role: mapRole(member.roles?.[0] ?? "")
+                        role: mapRole(member.roles)
                     }))
                 );
             } catch (error) {
