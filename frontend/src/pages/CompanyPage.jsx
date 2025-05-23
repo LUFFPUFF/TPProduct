@@ -10,6 +10,8 @@ const CompanyPage = () => {
     const [newRole, setNewRole] = useState("");
     const [showInput, setShowInput] = useState(false);
     const [newEmployeeEmail, setNewEmployeeEmail] = useState("");
+    const [companyName, setCompanyName] = useState("");
+    const [companyDescription, setCompanyDescription] = useState("");
     const [isEditingCompany, setIsEditingCompany] = useState(false);
     const [tempName, setTempName] = useState(companyName);
     const [tempDescription, setTempDescription] = useState(companyDescription);
