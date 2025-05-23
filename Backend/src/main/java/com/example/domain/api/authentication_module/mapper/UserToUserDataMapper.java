@@ -10,7 +10,7 @@ public class UserToUserDataMapper {
         return UserDataDto.builder()
                 .birthday(user.getDateOfBirth())
                 .gender(user.getGender())
-                .fullName(user.getFullName())
+                .name(user.getFullName())
                 .build();
     }
 }
