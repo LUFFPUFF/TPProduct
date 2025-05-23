@@ -35,11 +35,12 @@ public class CompanyDto {
     public CompanyDto() {
     }
 
-    public CompanyDto(Integer id, String name, String contactEmail, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public CompanyDto(Integer id, String name, String contactEmail, String companyDescription,
+                      LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
-        this.companyDescription = null;
         this.contactEmail = contactEmail;
+        this.companyDescription = companyDescription;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
