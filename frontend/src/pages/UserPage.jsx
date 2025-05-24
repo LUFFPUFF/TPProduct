@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Sidebar from "../components/Sidebar";
 import API from "../config/api.js";
-import {useAuth} from "../utils/AuthContext.jsx";
+
 
 const UserPage = () => {
     const [name, setName] = useState("");
@@ -11,7 +11,12 @@ const UserPage = () => {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState("");
-    const { setUser } = useAuth();
+
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+    const [passwordSuccess, setPasswordSuccess] = useState(false);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -23,14 +28,14 @@ const UserPage = () => {
                 const data = await response.json();
                 console.log("Ответ сервера (GET):", data);
 
-                if (data.name === null || data.birthdate === null || data.gender === null) {
+                if (data.name === null || data.birthday === null || data.gender === null) {
                     throw new Error("Некоторые поля данных пользователя отсутствуют.");
                 }
 
                 console.log("Ответ сервера (GET):", data);
 
                 setName(data.name || "");
-                setBirthdate(data.birthdate ? formatDateForInput(data.birthdate) : "");
+                setBirthdate(data.birthday ? formatDateForInput(data.birthday) : "");
                 setGender(data.gender || "");
             } catch (error) {
                 console.error("Ошибка при получении данных пользователя:", error);
@@ -43,7 +48,44 @@ const UserPage = () => {
 
 
     const handleLogout = () => {
-        setUser(null);
+
+    };
+    const handleChangePassword = async () => {
+        setPasswordError("");
+        setPasswordSuccess(false);
+
+        if (!oldPassword || !newPassword || !confirmPassword) {
+            setPasswordError("Заполните все поля для смены пароля.");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            setPasswordError("Новый пароль и его подтверждение не совпадают.");
+            return;
+        }
+
+        try {
+            const response = await fetch(API.settings.changePassword, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    oldPassword,
+                    newPassword,
+                }),
+            });
+
+            if (!response.ok) throw new Error("Ошибка при смене пароля.");
+
+            setPasswordSuccess(true);
+            setOldPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
+        } catch (err) {
+            setPasswordError("Не удалось сменить пароль.");
+            console.error(err);
+        }
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -174,20 +216,48 @@ const UserPage = () => {
                         </select>
                     </div>
 
-                    <div>
-                        <label className="block text-base sm:text-lg font-bold mb-">Сменить пароль</label>
+                    <div className="space-y-4">
+                        <label className="block text-base sm:text-lg font-bold mb-1">Смена пароля</label>
+
+                        <input
+                            type="password"
+                            placeholder="Старый пароль"
+                            className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300"
+                            value={oldPassword}
+                            onChange={(e) => setOldPassword(e.target.value)}
+                        />
+
+                        <input
+                            type="password"
+                            placeholder="Новый пароль"
+                            className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                        />
+
+                        <input
+                            type="password"
+                            placeholder="Повторите новый пароль"
+                            className="w-full px-4 py-3 rounded-lg bg-white border border-gray-300"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+
                         <button
                             type="button"
-                            className="bg-[#092155] hover:bg-[#2a4992] active:bg-[#dadee7] text-white px-4 py-3 rounded-md active:text-black transition-all duration-150 ease-in-out transform active:scale-95"
+                            onClick={handleChangePassword}
+                            className="bg-[#092155] hover:bg-[#2a4992] text-white px-6 py-3 rounded-md w-full sm:w-auto"
                         >
-                            Отправить ссылку на почту
+                            Сменить пароль
                         </button>
-                    </div>
 
+                        {passwordSuccess && <p className="text-green-600 font-medium">Пароль успешно изменён!</p>}
+                        {passwordError && <p className="text-red-600 font-medium">{passwordError}</p>}
+                    </div>
                     {success && <p className="text-green-600 font-medium">Данные успешно сохранены!</p>}
                     {error && <p className="text-red-600 font-medium">{error}</p>}
 
-                    <div className="flex flex-col sm:flex-row gap-4 !pt-70 sm:pt-35">
+                    <div className="flex flex-col sm:flex-row gap-4 !pt-6 sm:pt-35">
                         <button
                             type="submit"
                             className="bg-[#092155] hover:bg-[#2a4992] active:bg-[#dadee7] text-white px-6 py-3 rounded-md active:text-black transition-all duration-150 ease-in-out transform active:scale-95 w-full sm:w-auto"
