@@ -44,6 +44,7 @@ const API = {
     settings: {
         get: `${API_BASE_URL}/settings/get`,
         set: `${API_BASE_URL}/settings/set`,
+        changePassword: `${API_BASE_URL}/settings/change-password/password`,
     },
     company: {
         get: `${API_BASE_URL}/company/`,
