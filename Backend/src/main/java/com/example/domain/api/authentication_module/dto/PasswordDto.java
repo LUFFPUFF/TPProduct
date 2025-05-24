@@ -10,5 +10,8 @@ import lombok.Data;
 public class PasswordDto {
     @NotNull
     @Size(min = 6)
+    String old;
+    @NotNull
+    @Size(min = 6)
     String password;
 }

@@ -29,12 +29,7 @@ public class UserSettingsController {
 
     @PostMapping("/set")
     public ResponseEntity<UserDataDto> setUserData(@RequestBody UserDataDto userDataDto){
-        System.out.println("----------------------------------" +
-                "" + currentUserDataService.getUserEmail() +
-                "" + userDataDto.getName() +
-                "" + userDataDto.getBirthday() +
-                "" + userDataDto.getGender() +
-                "-------------------------");
+
         return ResponseEntity.status(HttpStatus.CREATED).body(userSettingsService.setUserData(userDataDto));
     }
     @PostMapping("/change-password/password")

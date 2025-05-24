@@ -51,7 +51,7 @@ public class UserSettingsServiceImpl implements UserSettingsService {
     @Transactional
     public AnswerSettingsDto changePassword(PasswordDto passwordDto) {
         User user = currentUserDataService.getUser();
-        if (!passwordEncoder.matches(passwordDto.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(passwordDto.getOld(), user.getPassword())) {
             throw new WrongPasswordException();
         }
         user.setPassword(passwordEncoder.encode(passwordDto.getPassword()));
