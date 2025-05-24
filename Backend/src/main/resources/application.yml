@@ -162,7 +162,7 @@ ml:
     max-retries: 3
 
 websocket:
-  endpoint: api/ws
+  endpoint: ws
   allowed-origins:
     #    - "http://localhost:3000"
     #    - "http://localhost:4200"
