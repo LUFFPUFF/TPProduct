@@ -71,8 +71,8 @@ const UserPage = () => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    oldPassword,
-                    newPassword,
+                    old: oldPassword,
+                    password: newPassword,
                 }),
             });
 
