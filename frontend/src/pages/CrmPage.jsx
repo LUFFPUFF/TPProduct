@@ -144,7 +144,7 @@ const CrmPage = () => {
                 };
 
                 data.forEach((deal) => {
-                    const stageKey = stageIdToKey(deal.stageId);
+                    const stageKey = stageIdToKey(deal.stage_id);
                     stagesObj[stageKey].push({
                         id: String(deal.id),
                         price: deal.amount,
