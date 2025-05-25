@@ -20,12 +20,15 @@ import { CSS } from "@dnd-kit/utilities";
 import { useNavigate } from "react-router-dom";
 import API from "../config/api.js";
 
-const stageIdToKey = {
-    0: "new",
-    1: "pause",
-    2: "in-progress",
-    3: "done",
-    4: "fail",
+const stageKeyToId = (key) => {
+    const map = {
+        "new": 0,
+        "pause": 1,
+        "in-progress": 2,
+        "done": 3,
+        "fail": 4,
+    };
+    return map[key] ?? 0;
 };
 
 const stageKeyToTitle = {
@@ -222,6 +225,27 @@ const CrmPage = () => {
 
         setStages(updatedStages);
         localStorage.setItem("crm-stages-objects", JSON.stringify(updatedStages));
+
+
+        fetch(API.crm.updateStage, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                dealId: draggedDeal.id,
+                newStage: targetStage.id,
+            }),
+        })
+            .then(async (response) => {
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("Ошибка обновления стадии сделки:", errorData);
+                }
+            })
+            .catch((error) => {
+                console.error("Ошибка сети при обновлении стадии сделки:", error);
+            });
     };
 
     const handleArchiveDeal = (dealToArchive) => {
