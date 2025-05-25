@@ -149,7 +149,7 @@ class SubscriptionServiceImplTest {
         when(companyService.createCompany(any(CompanyDto.class))).thenReturn(testCompany);
         // Мок findByEmail нужен, чтобы получить компанию, если сервис ее не сохранил бы локально
         when(userRepository.findByEmail(TEST_EMAIL)).thenReturn(Optional.of(testUser));
-        when(subscribeDataMapper.toSubscription(any(SubscribeDataDto.class))).thenReturn(mappedSubscription);
+        when(subscribeDataMapper.toSubscription(any(SubscribeDataDto.class),0)).thenReturn(mappedSubscription);
         when(subscriptionRepository.save(any(Subscription.class))).thenReturn(mappedSubscription);
         when(mapperDto.toSubscriptionDto(any(Subscription.class))).thenReturn(testSubscriptionDto);
         when(roleService.addRole(anyString(), any(Role.class))).thenReturn(true);
@@ -175,7 +175,7 @@ class SubscriptionServiceImplTest {
         verify(roleService).addRole(eq(TEST_EMAIL), eq(Role.OPERATOR));
 
         // Проверяем вызов subscribeDataMapper (с установленной компанией)
-        verify(subscribeDataMapper).toSubscription(subscribeDataDtoCaptor.capture());
+        verify(subscribeDataMapper).toSubscription(subscribeDataDtoCaptor.capture(),1);
         assertEquals(testCompany, subscribeDataDtoCaptor.getValue().getCompany());
 
         // Проверяем сохранение подписки
