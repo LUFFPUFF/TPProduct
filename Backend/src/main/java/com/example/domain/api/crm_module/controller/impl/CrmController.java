@@ -33,7 +33,7 @@ public class CrmController implements DealController {
 
     @Override
     @PostMapping("/change-stage")
-    public ResponseEntity<DealDto> changeDealStage(ChangeDealStageReq changeDealStageReq) {
+    public ResponseEntity<DealDto> changeDealStage(@Validated @RequestBody ChangeDealStageReq changeDealStageReq) {
         return ResponseEntity.ok(dealService.changeDealStage(changeDealStageReq));
     }
 
