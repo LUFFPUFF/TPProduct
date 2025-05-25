@@ -1,39 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
+import API from "../config/api.js";
 
-const mockDeals = [
-    {
-        id: 1,
-        title: "Сделка A",
-        amount: "120 000 ₽",
-        date: "2025-05-15",
-        client: "ООО Ромашка",
-        comment: "Клиент вернётся через месяц",
-        status: "Закрыта",
-    },
-    {
-        id: 2,
-        title: "Сделка B",
-        amount: "80 000 ₽",
-        date: "2025-04-27",
-        client: "ИП Иванов",
-        comment: "Не заинтересован",
-        status: "Отклонена",
-    },
-    {
-        id: 3,
-        title: "Сделка C",
-        amount: "300 000 ₽",
-        date: "2025-05-01",
-        client: "ЗАО Прогресс",
-        comment: "Успешная сделка",
-        status: "Завершена",
-    },
-];
+const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    return date.toLocaleDateString("ru-RU");
+};
+
+const mapStatus = (status) => {
+    switch (status) {
+        case "OPENED":
+            return "Открыта";
+        case "CLOSED":
+            return "Закрыта";
+    }
+};
 
 const ArchivePage = () => {
     const navigate = useNavigate();
+    const [deals, setDeals] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchDeals = async () => {
+            try {
+                const response = await fetch(API.crm.getArchieve);
+                if (!response.ok) {
+                    throw new Error(`Ошибка: ${response.status}`);
+                }
+                const data = await response.json();
+                setDeals(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDeals();
+    }, []);
 
     return (
         <div className="flex h-screen overflow-hidden">
@@ -48,22 +55,26 @@ const ArchivePage = () => {
                 >
                     ← Назад
                 </button>
+
+                {loading && <p>Загрузка...</p>}
+                {error && <p className="text-red-600">Ошибка: {error}</p>}
+
                 <div className="grid gap-6">
-                    {mockDeals.map((deal) => (
+                    {deals.map((deal) => (
                         <div key={deal.id} className="bg-white rounded-2xl shadow-md p-6">
                             <h2 className="text-xl font-semibold text-black mb-2">{deal.title}</h2>
-                            <p><span className="font-semibold">Сумма:</span> {deal.amount}</p>
-                            <p><span className="font-semibold">Дата изменения:</span> {deal.date}</p>
-                            <p><span className="font-semibold">Клиент:</span> {deal.client}</p>
-                            <p><span className="font-semibold">Комментарий:</span> {deal.comment}</p>
+                            <p><span className="font-semibold">Сумма:</span> {deal.amount.toLocaleString("ru-RU", { style: "currency", currency: "RUB" })}</p>
+                            <p><span className="font-semibold">Срок:</span> {formatDate(deal.dueDate)}</p>
+                            <p><span className="font-semibold">Клиент:</span> {deal.fio}</p>
+                            <p><span className="font-semibold">Комментарий:</span> {deal.content}</p>
                             <p>
                                 <span className="font-semibold">Статус:</span>{" "}
                                 <span className={
-                                    deal.status === "Закрыта" || deal.status === "Завершена"
+                                    ["CLOSED", "COMPLETED"].includes(deal.status)
                                         ? "text-green-600"
                                         : "text-red-600"
                                 }>
-                                    {deal.status}
+                                    {mapStatus(deal.status)}
                                 </span>
                             </p>
                         </div>
