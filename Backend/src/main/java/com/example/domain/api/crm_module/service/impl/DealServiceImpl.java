@@ -119,7 +119,7 @@ public class DealServiceImpl implements DealService {
         List<DealArchiveDto> deals;
         if(archiveDto.getEmail() == null && !isManager) {
             archiveDto.setEmail(currentUserDataService.getUserEmail());
-            deals = dealRepository.findArchiveDataByCompany(archiveDto.getEmail());
+            deals = dealRepository.findArchiveDataByUserEmail(archiveDto.getEmail());
 
         }else if(archiveDto.getEmail() != null && !isManager) {
             throw new AccessDeniedFilterDeals();
