@@ -19,8 +19,8 @@ const ClientInfo = ({ selectedDialog }) => {
 
         const dealData = {
             title: dealTitle,
-            price: dealPrice,
-            comment: dealComment,
+            amount: dealPrice,
+            content: dealComment,
             priority: dealPriority,
             clientId,
         };
