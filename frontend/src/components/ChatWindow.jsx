@@ -1,34 +1,116 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import sendMsg from "../assets/sendMsg.png";
 import OpAvatar from "../assets/OperatorAvatar.png";
 import Avatar from "../assets/ClientAvatar.png";
 import API from "../config/api";
 
-const ChatWindow = ({ selectedDialog }) => {
+const ChatWindow = ({selectedDialog}) => {
     const messagesEndRef = useRef(null);
     const [messageText, setMessageText] = useState("");
-    const [messages, setMessages] = useState(selectedDialog.messages || []);
-    const [isSending, setIsSending] = useState(false);
-
-    const formatMessages = (rawMessages) =>
-        (rawMessages || []).map((msg) => ({
+    const [messages, setMessages] = useState(
+        (selectedDialog?.messages || []).map((msg) => ({
             sender: msg.senderType === "OPERATOR" ? "Оператор" : "Клиент",
             text: msg.content,
             time: msg.sentAt
-                ? new Date(msg.sentAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                ? new Date(msg.sentAt).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
                 : "",
-        }));
+        }))
+    );
+    const [isSending, setIsSending] = useState(false);
+
+    const websocketRef = useRef(null);
 
     useEffect(() => {
-        setMessages(formatMessages(selectedDialog.messages));
-    }, [selectedDialog]);
+        setMessages(
+            (selectedDialog?.messages || []).map((msg) => ({
+                sender: msg.senderType === "OPERATOR" ? "Оператор" : "Клиент",
+                text: msg.content,
+                time: msg.sentAt
+                    ? new Date(msg.sentAt).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
+                    : "",
+            }))
+        );
+    }, [selectedDialog]); // Зависимость от selectedDialog
 
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages]);
+        if (!selectedDialog?.id) {
+            if (websocketRef.current) {
+                console.log("Closing WebSocket due to no selected dialog.");
+                websocketRef.current.close();
+                websocketRef.current = null;
+            }
+            setMessages([]);
+            return;
+        }
+
+        const websocketUrl = `wws://dialogx.ru/ws`;
+
+        try {
+            const ws = new WebSocket(websocketUrl);
+            websocketRef.current = ws;
+
+            ws.onopen = () => {
+                console.log(`WebSocket connected for dialog ${selectedDialog.id}`);
+            };
+
+            ws.onmessage = (event) => {
+                console.log("Received message:", event.data);
+                try {
+                    const messageData = JSON.parse(event.data);
+
+                    if (messageData.chatId && messageData.chatId !== selectedDialog.id) {
+                        console.log("Received message for different dialog, ignoring.");
+                        return;
+                    }
+
+                    const formattedNewMessage = {
+                        sender: messageData.senderType === "OPERATOR" ? "Оператор" : "Клиент",
+                        text: messageData.content,
+                        time: messageData.sentAt
+                            ? new Date(messageData.sentAt).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
+                            : "",
+                    };
+
+                    setMessages(prevMessages => [...prevMessages, formattedNewMessage]);
+
+                } catch (e) {
+                    console.error("Failed to process incoming message:", e);
+                }
+            };
+
+            ws.onerror = (error) => {
+                console.error("WebSocket error:", error);
+            };
+
+            ws.onclose = (event) => {
+                console.log("WebSocket closed:", event.code, event.reason);
+                websocketRef.current = null;
+            };
+
+            return () => {
+                console.log(`Cleaning up WebSocket for dialog ${selectedDialog.id}`);
+                if (websocketRef.current) {
+                    websocketRef.current.close(1000, "Component cleanup");
+                    websocketRef.current = null;
+                }
+            };
+
+        } catch (error) {
+            console.error("Failed to establish WebSocket connection:", error);
+            websocketRef.current = null;
+        }
+
+
+    }, [selectedDialog?.id]);
+
+
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
+    }, [messages]); // Зависимость от messages
 
     const handleSendMessage = async () => {
-        if (!messageText.trim() || isSending) return;
+        if (!messageText.trim() || isSending || !selectedDialog?.id) return;
+
         setIsSending(true);
 
         const newMessage = {
@@ -50,10 +132,11 @@ const ChatWindow = ({ selectedDialog }) => {
             const displayedMessage = {
                 sender: "Оператор",
                 text: messageText,
-                time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+                time: new Date().toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"}),
             };
-
             setMessages((prev) => [...prev, displayedMessage]);
+
+
             setMessageText("");
 
             await fetch(API.dialogs.updateStatus(selectedDialog.id), {
@@ -61,8 +144,9 @@ const ChatWindow = ({ selectedDialog }) => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ status: "active" }),
+                body: JSON.stringify({status: "active"}),
             });
+
         } catch (error) {
             console.error("Ошибка отправки сообщения:", error);
         } finally {
@@ -72,20 +156,31 @@ const ChatWindow = ({ selectedDialog }) => {
 
 
     const handleKeyDown = (e) => {
-        if (e.key === "Enter") {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
             handleSendMessage();
         }
     };
 
+    if (!selectedDialog) {
+        return (
+            <div
+                className="w-full md:flex-1 bg-white rounded-lg shadow-[14px_14px_15px_rgba(0,0,0,0.32)] h-[calc(100vh-110px)] flex items-center justify-center text-gray-500">
+                Выберите диалог, чтобы начать общение
+            </div>
+        );
+    }
+
+
     return (
-        <div className="w-full md:flex-1 bg-white rounded-lg shadow-[14px_14px_15px_rgba(0,0,0,0.32)] h-[calc(100vh-110px)] flex flex-col !relative z-10">
+        <div
+            className="w-full md:flex-1 bg-white rounded-lg shadow-[14px_14px_15px_rgba(0,0,0,0.32)] h-[calc(100vh-110px)] flex flex-col !relative z-10">
             <div className="p-4 border-b flex justify-between items-center">
                 <h2 className="font-bold text-lg">{selectedDialog.client?.name}</h2>
                 <span className="text-gray-500 text-sm">Сообщение из {selectedDialog.channel}</span>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 flex flex-col-reverse">
-                <div ref={messagesEndRef}></div>
                 {[...messages].reverse().map((msg, index) => (
                     <div
                         key={index}
@@ -101,23 +196,29 @@ const ChatWindow = ({ selectedDialog }) => {
                                 {msg.sender}{" "}
                                 <span className="text-gray-500 text-xs">{msg.time}</span>
                             </p>
-                            <p className="p-2 bg-gray-100 rounded-lg">{msg.text}</p>
-                        </div>
+                            <p className="p-2 bg-gray-100 rounded-lg whitespace-pre-wrap">{msg.text}</p></div>
                     </div>
                 ))}
+                <div ref={messagesEndRef}></div>
             </div>
 
             <div className="p-4 border-t flex items-center gap-2">
-                <input
-                    type="text"
-                    className="flex-1 border rounded-lg p-2 outline-none"
-                    placeholder="Введите сообщение..."
+                <textarea
+                    className="flex-1 border rounded-lg p-2 outline-none resize-none" placeholder="Введите сообщение..."
+                    rows={1} // Начальная высота
                     value={messageText}
-                    onChange={(e) => setMessageText(e.target.value)}
+                    onChange={(e) => {
+                        setMessageText(e.target.value);
+
+                        e.target.style.height = 'auto';
+                        e.target.style.height = (e.target.scrollHeight) + 'px';
+                    }}
                     onKeyDown={handleKeyDown}
+                    style={{maxHeight: '150px'}}
                 />
-                <button onClick={handleSendMessage} className="p-2" disabled={isSending}>
-                    <img src={sendMsg} alt="send" className="w-6 h-6" />
+                <button onClick={handleSendMessage} className="p-2"
+                        disabled={isSending || !selectedDialog?.id || !messageText.trim()}> {/* Добавлены условия disabled */}
+                    <img src={sendMsg} alt="send" className="w-6 h-6"/>
                 </button>
             </div>
         </div>
