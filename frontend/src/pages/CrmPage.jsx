@@ -332,7 +332,7 @@ const CrmPage = () => {
                             Архив
                         </button>
                         <button
-                            className="px-4 py-1.5 text-sm font-medium border border-black text-white bg-black rounded-xl"
+                            className="px-4 py-1.5 text-sm font-medium border border-black text-black bg-white rounded-xl"
                             onClick={() => {
                                 fetch(API.crm.archieve, { method: "POST" })
                                     .then(async (res) => {
