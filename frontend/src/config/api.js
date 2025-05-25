@@ -57,6 +57,9 @@ const API = {
         giveRole: `${API_BASE_URL}/company/admin/member/give-role`,
         removeRole: `${API_BASE_URL}/company/admin/member/remove-role`,
     },
+    crm: {
+        create: `${API_BASE_URL}/crm/create`,
+    },
     websocket: {
         updateStatus: (id) => `${API_BASE_URL}//topic/chat/${id}/status`,
         updateMessage: (id) => `${API_BASE_URL}/topic/chat/${id}/messages`,
