@@ -1,5 +1,5 @@
-import { Client } from '@stomp/stompjs';
 import React, { useEffect, useRef, useState } from "react";
+import { connectWebSocket, disconnectWebSocket } from '../config/websocketService';
 import sendMsg from "../assets/sendMsg.png";
 import OpAvatar from "../assets/OperatorAvatar.png";
 import Avatar from "../assets/ClientAvatar.png";
@@ -19,8 +19,9 @@ const ChatWindow = ({ selectedDialog }) => {
     );
     const [isSending, setIsSending] = useState(false);
 
-    const websocketRef = useRef(null);
+    const websocketRef = useRef(null); // Ссылка на WebSocket соединение
 
+    // Обновление сообщений при изменении выбранного диалога
     useEffect(() => {
         setMessages(
             (selectedDialog?.messages || []).map((msg) => ({
@@ -33,74 +34,35 @@ const ChatWindow = ({ selectedDialog }) => {
         );
     }, [selectedDialog]);
 
+    // Подключение WebSocket при изменении выбранного диалога
     useEffect(() => {
         if (!selectedDialog?.id) {
             if (websocketRef.current) {
                 console.log("Closing WebSocket due to no selected dialog.");
-                websocketRef.current.deactivate();
+                disconnectWebSocket(websocketRef.current);  // Закрытие WebSocket
                 websocketRef.current = null;
             }
-            setMessages([]);
+            setMessages([]);  // Очистка сообщений, если диалог не выбран
             return;
         }
 
-        const token = localStorage.getItem("authToken");
-        const client = new Client({
-            brokerURL: `wss://dialogx.ru/ws`,
-            connectHeaders: {
-                Authorization: `Bearer ${token}`,
-            },
-            debug: (str) => {
-                console.log('STOMP: ' + str);
-            },
-            reconnectDelay: 5000,
-            heartbeatIncoming: 4000,
-            heartbeatOutgoing: 4000,
-        });
+        const token = localStorage.getItem("authToken");  // Токен для аутентификации
 
-        websocketRef.current = client;
-
-        client.onConnect = (frame) => {
-            console.log('Успешно подключено: ' + frame);
-            client.subscribe(API.websocket.updateMessage(selectedDialog.id), (message) => {
-                const messageData = JSON.parse(message.body);
-                if (messageData.chatId && messageData.chatId !== selectedDialog.id) {
-                    console.log("Получено сообщение для другого чата, игнорируем.");
-                    return;
-                }
-
-                const formattedNewMessage = {
-                    sender: messageData.senderType === "OPERATOR" ? "Оператор" : "Клиент",
-                    text: messageData.content,
-                    time: messageData.sentAt
-                        ? new Date(messageData.sentAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-                        : "",
-                };
-
-                setMessages(prevMessages => [...prevMessages, formattedNewMessage]);
-            });
-        };
-
-        client.onStompError = (frame) => {
-            console.error('Ошибка STOMP брокера: ' + frame.headers['message']);
-            console.error('Дополнительные детали: ' + frame.body);
-        };
-
-        client.activate();
+        // Подключение WebSocket с нужным токеном и диалогом
+        websocketRef.current = connectWebSocket(token, selectedDialog, setMessages);
 
         return () => {
-            if (websocketRef.current) {
-                console.log(`Закрываем WebSocket для чата ${selectedDialog.id}`);
-                websocketRef.current.deactivate();
-            }
+            // Закрытие WebSocket при размонтировании компонента
+            disconnectWebSocket(websocketRef.current);
         };
-
     }, [selectedDialog?.id]);
 
+    // Прокрутка сообщений вниз при обновлении
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages]); // Зависимость от messages
+    }, [messages]);
 
+    // Отправка сообщения
     const handleSendMessage = async () => {
         if (!messageText.trim() || isSending || !selectedDialog?.id) return;
 
@@ -122,6 +84,7 @@ const ChatWindow = ({ selectedDialog }) => {
 
             if (!res.ok) throw new Error("Ошибка при отправке сообщения");
 
+            // Добавляем отправленное сообщение в чат
             const displayedMessage = {
                 sender: "Оператор",
                 text: messageText,
@@ -129,15 +92,8 @@ const ChatWindow = ({ selectedDialog }) => {
             };
             setMessages((prev) => [...prev, displayedMessage]);
 
-            setMessageText("");
+            setMessageText(""); // Очистка поля ввода
 
-            await fetch(API.dialogs.updateStatus(selectedDialog.id), {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ status: "active" }),
-            });
 
         } catch (error) {
             console.error("Ошибка отправки сообщения:", error);
@@ -146,6 +102,7 @@ const ChatWindow = ({ selectedDialog }) => {
         }
     };
 
+    // Обработчик нажатия клавиши "Enter"
     const handleKeyDown = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -193,19 +150,19 @@ const ChatWindow = ({ selectedDialog }) => {
             </div>
 
             <div className="p-4 border-t flex items-center gap-2">
-        <textarea
-            className="flex-1 border rounded-lg p-2 outline-none resize-none"
-            placeholder="Введите сообщение..."
-            rows={1} // Начальная высота
-            value={messageText}
-            onChange={(e) => {
-                setMessageText(e.target.value);
-                e.target.style.height = 'auto';
-                e.target.style.height = (e.target.scrollHeight) + 'px';
-            }}
-            onKeyDown={handleKeyDown}
-            style={{ maxHeight: '150px' }}
-        />
+                <textarea
+                    className="flex-1 border rounded-lg p-2 outline-none resize-none"
+                    placeholder="Введите сообщение..."
+                    rows={1} // Начальная высота
+                    value={messageText}
+                    onChange={(e) => {
+                        setMessageText(e.target.value);
+                        e.target.style.height = 'auto';
+                        e.target.style.height = (e.target.scrollHeight) + 'px';
+                    }}
+                    onKeyDown={handleKeyDown}
+                    style={{ maxHeight: '150px' }}
+                />
                 <button
                     onClick={handleSendMessage}
                     className="p-2"
