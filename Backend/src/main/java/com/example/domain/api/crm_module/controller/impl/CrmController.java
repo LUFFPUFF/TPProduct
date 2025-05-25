@@ -54,6 +54,8 @@ public class CrmController implements DealController {
         return ResponseEntity.ok(dealService.getDealsArchive(archiveDto));
     }
 
+
+
     @Override
     @GetMapping("/get-by-chat/{chatId}")
     public ResponseEntity<DealDto> getDealByChat(@PathVariable("chatId") Integer chatId) {
