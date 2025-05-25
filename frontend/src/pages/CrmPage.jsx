@@ -140,7 +140,7 @@ const CrmPage = () => {
 
                 const stagesArray = Object.entries(stagesObj).map(([key, deals]) => ({
                     id: key,
-                    title: stageKeyToTitle[key],
+                    title: stageKeyToId[key],
                     deals,
                 }));
 
