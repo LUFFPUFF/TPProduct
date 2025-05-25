@@ -46,7 +46,7 @@ public class CurrentUserDataServiceImpl implements CurrentUserDataService {
 
     @Override
     public boolean hasRole(Role role) {
-        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(role);
+        return getRoleList().contains(role);
     }
 
     @Override

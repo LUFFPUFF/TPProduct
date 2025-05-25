@@ -46,9 +46,7 @@ public interface DealRepository extends JpaRepository<Deal, Integer> {
             "AND d.status = com.example.database.model.crm_module.deal.DealStatus.CLOSED")
     List<DealArchiveDto> findArchiveDataByCompany(@Param("companyId") Integer companyId);
 
-    @Modifying
-    @Query("UPDATE Deal d SET d.stage.id = :stageId WHERE d.id = :dealId")
-    void updateDealStageById(@Param("dealId") Integer dealId, @Param("stageId") Integer stage);
+
     @Modifying
     @Query("UPDATE Deal d Set d.status = com.example.database.model.crm_module.deal.DealStatus.CLOSED WHERE d.user.email = :email " +
             "AND (d.stage.id = 4 OR d.stage.id = 3)")
