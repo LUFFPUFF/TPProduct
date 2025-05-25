@@ -69,9 +69,10 @@ const ChatWindow = ({ selectedDialog }) => {
         setIsSending(true);
 
         const newMessage = {
-            chatId: Number(selectedDialog.id),
+            chat_id: Number(selectedDialog.id),
             content: messageText,
         };
+        console.log("newMessage:", newMessage);
 
         try {
             const res = await fetch(API.dialogs.sendMessage, {
