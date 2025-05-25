@@ -129,7 +129,6 @@ public class DealServiceImpl implements DealService {
         }
 
         return deals.stream()
-                .filter(dealArchiveDto -> dealArchiveDto.getEmail().equals(archiveDto.getEmail()))
                 .filter(dealArchiveDto -> archiveDto.getFromEndDateTime() == null || dealArchiveDto.getDueDate().isAfter(archiveDto.getFromEndDateTime()))
                 .filter(dealArchiveDto -> archiveDto.getToEndDateTime() == null || dealArchiveDto.getDueDate().isBefore(archiveDto.getToEndDateTime()))
                 .toList();
