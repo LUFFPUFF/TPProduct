@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 public class Deal {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne
