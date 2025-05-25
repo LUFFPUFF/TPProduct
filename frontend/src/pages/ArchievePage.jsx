@@ -31,6 +31,7 @@ const ArchivePage = () => {
                     throw new Error(`Ошибка: ${response.status}`);
                 }
                 const data = await response.json();
+                console.log("Полученные данные архива сделок:", data); // ← логируем JSON
                 setDeals(data);
             } catch (err) {
                 setError(err.message);

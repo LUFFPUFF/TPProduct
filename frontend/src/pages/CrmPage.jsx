@@ -82,7 +82,7 @@ const SortableDeal = ({ deal }) => {
             <div className="font-bold mb-1">{deal.title || deal.id}</div>
             <div className="text-gray-700 mb-1">Сумма: {deal.price} руб.</div>
             <div className="text-gray-700 mb-1">Исполнитель {deal.fio}</div>
-            <div className="text-gray-700 mb-1">Дата создания: {new Date(deal.createdAt).toLocaleDateString()}</div>
+            <div className="text-gray-700 mb-1">Дата создания: {new Date(deal.created_at).toLocaleDateString()}</div>
             <div className="text-gray-700 mb-1">Комментарий: {deal.content}</div>
             <div className="text-gray-700 mb-1">Приоритет: {deal.priority}</div>
             <div className="flex justify-between items-center mt-2">
