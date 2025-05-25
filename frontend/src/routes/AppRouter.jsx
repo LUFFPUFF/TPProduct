@@ -12,7 +12,8 @@ import StatsPage from "../pages/StatsPage";
 import CompanyPage from "../pages/CompanyPage";
 import ForbiddenPage from "../pages/ForbiddenPage";
 import PrivateRoute from "../routes/PrivateRoute";
-import CrmPage from "../pages/Crmpage.jsx";
+import CrmPage from "../pages/CrmPage.jsx";
+import ArchivePage from "../pages/ArchievePage.jsx";
 
 const AppRouter = () => {
     return (
@@ -29,6 +30,7 @@ const AppRouter = () => {
                     allowedRoles={["MANAGER", "USER", "OPERATOR"]}
                 />
             }>
+                <Route path="/archieve" element={<ArchivePage />} />
                 <Route path="/crm" element={<CrmPage />} />
                 <Route path="/dialogs" element={<DialogPage />} />
                 <Route path="/settings" element={<UserPage />} />
