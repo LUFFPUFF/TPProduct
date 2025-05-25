@@ -87,7 +87,8 @@ public class DealServiceImpl implements DealService {
     public DealDto changeDealStage(ChangeDealStageReq dealDto) {
         Deal deal = dealRepository.findById(dealDto.getDealId()).orElseThrow(NotFoundDealDataException::new);
         checkDealChangeAccess(deal);
-        dealRepository.updateDealStageById(dealDto.getDealId(), dealDto.getStageId());
+        deal.setStage(dealStageRepository.findById(dealDto.getStageId()).orElseThrow(NotFoundDealStageException::new));
+        dealRepository.save(deal);
         return getDeal(dealDto.getDealId());
     }
 
