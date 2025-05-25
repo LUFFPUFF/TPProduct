@@ -12,6 +12,7 @@ public interface DealService {
     DealDto createDeal(CreateDealDtoReq dealDto);
     DealDto getDeal(Integer id);
     List<DealDto> getDeals(FilterDealsDto filterDealsDto);
+
     DealDto changeDealStage(ChangeDealStageReq dealDto);
     List<DealDto> setDealsToArchive();
     List<DealDto> setAdminDealsToArchive(String email);
