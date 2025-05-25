@@ -64,7 +64,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new MaxOperatorsCountException();
         }
         //оплата
-        subscription = subscribeDataMapper.toSubscription(subscribeDataDto);
+        subscription = subscribeDataMapper.toSubscription(subscribeDataDto,subscription.getCountOperators());
         return mapperDto.toSubscriptionDto(subscriptionRepository.save(subscription));
     }
 
@@ -82,7 +82,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         Subscription subscription = subscriptionRepository.findByCompany(currentUserDataService.getUser().getCompany()).orElseThrow(NotFoundSubscriptionException::new);
         subscription.setCost(getExtendPrice(subscribeDataDto.getPrice()).getPrice());
         subscription.setEndSubscription(subscription.getEndSubscription().plusMonths(subscribeDataDto.getPrice().getMonths_count()));
-        subscription.setCountOperators(subscription.getCountOperators()+subscribeDataDto.getPrice().getOperators_count());
+        subscription.setMaxOperators(subscription.getMaxOperators()+subscribeDataDto.getPrice().getOperators_count());
+        //оплата
         return mapperDto.toSubscriptionDto(subscriptionRepository.save(subscription));
     }
 
@@ -98,7 +99,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         userRepository.updateByCompanyIdAndEmail(company.getId(), email);
         roleService.addRole(email, Role.MANAGER);
         roleService.addRole(email, Role.OPERATOR);
-        Subscription subscription = subscribeDataMapper.toSubscription(subscribeDataDto);
+        Subscription subscription = subscribeDataMapper.toSubscription(subscribeDataDto,0);
 
         return mapperDto.toSubscriptionDto(subscriptionRepository.save(subscription));
     }
