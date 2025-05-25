@@ -298,7 +298,7 @@ export default function SubscriptionsPage() {
                         <div className="bg-white rounded-lg shadow-[14px_14px_15px_rgba(0,0,0,0.32)] p-4 sm:p-8 w-full overflow-hidden">
                             <h2 className="text-xl sm:text-2xl font-bold mb-4">Данные о подписке</h2>
                             <div className="mb-6">
-                                <p className="text-base sm:text-lg mb-2">Количество пользователей в подписке: {subscriptionInfo?.operators_count || 'Загрузка...'}</p>
+                                <p className="text-base sm:text-lg mb-2">Количество пользователей в подписке: {subscriptionInfo?.max_operators || 'Загрузка...'}</p>
                                 <p className="text-base sm:text-lg mb-6">Подписка действует до: {subscriptionInfo?.end_subscription ? new Date(subscriptionInfo.end_subscription).toLocaleDateString() : 'Загрузка...'}</p>
                             </div>
                             <div className="border-2 border-black rounded-lg p-4 sm:p-6 bg-gray-100">
