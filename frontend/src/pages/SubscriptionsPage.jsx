@@ -97,12 +97,11 @@ export default function SubscriptionsPage() {
             });
 
             if (!response.ok) {
-                const errorText = await response.text();
                 const data = await response.json();
-                console.log("Ответ от сервера при активации подписки:", data);
-                console.error("Ошибка активации подписки (status:", response.status, "):", errorText);
+                console.error("Ошибка активации подписки (status:", response.status, "):", data);
                 throw new Error("Ошибка активации подписки");
             }
+
 
             const data = await response.json();
             console.log("Ответ от сервера при активации подписки:", data);
