@@ -62,6 +62,8 @@ const CompanyPage = () => {
             });
 
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error("Ошибка при добавлении сотрудника:", response.status, errorText);
                 throw new Error("Ошибка при добавлении сотрудника");
             }
 
