@@ -126,7 +126,7 @@ export default function SubscriptionsPage() {
             price: "0 Р / 7 дней",
             features: ["1 оператор", "Все интеграции", "Доступ ко всем функциям"],
             button: "Попробовать",
-            onClick: () => activateSubscription("TRIAL", 0, 1),
+            onClick: () => activateSubscription("TEST", 0, 1),
         },
         {
             title: "Соло",
