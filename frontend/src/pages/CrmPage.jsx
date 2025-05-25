@@ -52,7 +52,7 @@ const stageKeyToTitle = {
 
 const calculateSum = (deals) => deals.reduce((sum, deal) => sum + Number(deal.price || 0), 0);
 
-const SortableDeal = ({ deal, stageId, onArchiveClick }) => {
+const SortableDeal = ({ deal }) => {
     const {
         attributes,
         listeners,
@@ -61,6 +61,8 @@ const SortableDeal = ({ deal, stageId, onArchiveClick }) => {
         transition,
         isDragging,
     } = useSortable({ id: deal.id });
+
+    const navigate = useNavigate();
 
     const style = {
         transform: CSS.Transform.toString(transform),
@@ -79,15 +81,22 @@ const SortableDeal = ({ deal, stageId, onArchiveClick }) => {
         >
             <div className="font-bold mb-1">{deal.title || deal.id}</div>
             <div className="text-gray-700 mb-1">Сумма: {deal.price} руб.</div>
-            <div className="text-gray-700 mb-1">Дата изменения: 27.03.2025</div>
-            <div className="text-gray-700 mb-1">Клиент: ИП Тестовый</div>
-            <div className="text-gray-700 mb-1">Комментарии: сделать</div>
+            <div className="text-gray-700 mb-1">Исполнитель {deal.fio}</div>
+            <div className="text-gray-700 mb-1">Дата создания: {new Date(deal.createdAt).toLocaleDateString()}</div>
+            <div className="text-gray-700 mb-1">Комментарий: {deal.content}</div>
+            <div className="text-gray-700 mb-1">Приоритет: {deal.priority}</div>
             <div className="flex justify-between items-center mt-2">
-                <button className="text-sm text-[#111827] underline">Написать</button>
+                <button
+                    className="text-sm text-[#111827] underline"
+                    onClick={() => navigate(`/dialog/${deal.clientId}`)}
+                >
+                    Написать
+                </button>
             </div>
         </div>
     );
 };
+
 
 const DroppableColumn = ({ stage, children }) => {
     const { setNodeRef } = useDroppable({ id: stage.id });
@@ -136,6 +145,11 @@ const CrmPage = () => {
                         id: String(deal.id),
                         price: deal.amount,
                         title: deal.title,
+                        createdAt: deal.createdAt,
+                        content: deal.content,
+                        priority: deal.priority,
+                        clientId: deal.client_id,
+                        fio: deal.fio,
                     });
                 });
 

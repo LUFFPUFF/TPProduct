@@ -64,8 +64,9 @@ const ArchivePage = () => {
                         <div key={deal.id} className="bg-white rounded-2xl shadow-md p-6">
                             <h2 className="text-xl font-semibold text-black mb-2">{deal.title}</h2>
                             <p><span className="font-semibold">Сумма:</span> {deal.amount.toLocaleString("ru-RU", { style: "currency", currency: "RUB" })}</p>
-                            <p><span className="font-semibold">Срок:</span> {formatDate(deal.dueDate)}</p>
-                            <p><span className="font-semibold">Клиент:</span> {deal.fio}</p>
+                            <p><span className="font-semibold">Дата открытия:</span> {formatDate(deal.created_at)}</p>
+                            <p><span className="font-semibold">Дата закрытия:</span> {formatDate(deal.due_date)}</p>
+                            <p><span className="font-semibold">Исполнитель:</span> {deal.fio}</p>
                             <p><span className="font-semibold">Комментарий:</span> {deal.content}</p>
                             <p>
                                 <span className="font-semibold">Статус:</span>{" "}
