@@ -245,7 +245,7 @@ const CrmPage = () => {
             },
             body: JSON.stringify({
                 dealId: draggedDeal.id,
-                newStage: targetStage.id,
+                stageId: targetStage.id,
             }),
         })
             .then(async (response) => {
