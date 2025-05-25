@@ -69,9 +69,10 @@ const ChatWindow = ({ selectedDialog }) => {
         setIsSending(true);
 
         const newMessage = {
-            chatId: Number(selectedDialog.id),
+            chat_id: Number(selectedDialog.id),
             content: messageText,
         };
+        console.log("newMessage:", newMessage);
 
         try {
             const res = await fetch(API.dialogs.sendMessage, {
@@ -83,8 +84,8 @@ const ChatWindow = ({ selectedDialog }) => {
             });
 
             if (!res.ok) {
-                const data = await response.json();
-                console.error("Ошибка ошибка при отвравке сообщения (status:", response.status, "):", data);
+                const data = await res.json();
+                console.error("Ошибка ошибка при отвравке сообщения (status:", res.status, "):", data);
                 throw new Error("Ошибка при отправке сообщения");
             }
 
