@@ -22,7 +22,7 @@ const ClientInfo = ({ selectedDialog }) => {
             amount: dealPrice,
             content: dealComment,
             priority: dealPriority,
-            client_id,
+            client_id: clientId
         };
 
         try {
