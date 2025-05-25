@@ -82,9 +82,12 @@ const ChatWindow = ({ selectedDialog }) => {
                 body: JSON.stringify(newMessage),
             });
 
-            if (!res.ok) throw new Error("Ошибка при отправке сообщения");
+            if (!res.ok) {
+                const data = await response.json();
+                console.error("Ошибка ошибка при отвравке сообщения (status:", response.status, "):", data);
+                throw new Error("Ошибка при отправке сообщения");
+            }
 
-            // Добавляем отправленное сообщение в чат
             const displayedMessage = {
                 sender: "Оператор",
                 text: messageText,
@@ -92,7 +95,7 @@ const ChatWindow = ({ selectedDialog }) => {
             };
             setMessages((prev) => [...prev, displayedMessage]);
 
-            setMessageText(""); // Очистка поля ввода
+            setMessageText("");
 
 
         } catch (error) {
