@@ -10,7 +10,32 @@ export default function SubscriptionsPage() {
     const [soloPrice, setSoloPrice] = useState(null);
     const [teamPrice, setTeamPrice] = useState(null);
     const [subscriptionInfo, setSubscriptionInfo] = useState(null);
+    const [extendMonths, setExtendMonths] = useState(1);
+    const [addUsers, setAddUsers] = useState(1);
+    const [extendPrice, setExtendPrice] = useState(null);
 
+    const fetchExtendPrice = async (months, users) => {
+        try {
+            const url = `${API.subscriptions.extend}?months_count=${months}&operators_count=${users}`;
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) throw new Error("Ошибка сети");
+
+            const data = await response.json();
+            setExtendPrice(data.price);
+        } catch (error) {
+            console.error("Ошибка при получении цены продления:", error);
+            setExtendPrice("Ошибка");
+        }
+    };
+    useEffect(() => {
+        fetchExtendPrice(extendMonths, addUsers);
+    }, [extendMonths, addUsers]);
     const fetchSubscription = async () => {
         try {
             const response = await fetch(API.subscriptions.get, {
@@ -29,6 +54,44 @@ export default function SubscriptionsPage() {
         }
     };
 
+    const handleExtendSubscription = async () => {
+        console.log("Отправка запроса на продление подписки...");
+        console.log("Параметры:", {
+            months_count: extendMonths,
+            operators_count: addUsers,
+        });
+
+        try {
+            const response = await fetch(API.subscriptions.extend, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    price: {
+                        months_count: extendMonths,
+                        operators_count: addUsers,
+                    },
+                }),
+            });
+
+            const responseBody = await response.json();
+
+            if (!response.ok) {
+                console.error("Ошибка продления подписки. Статус:", response.status);
+                console.error("Ответ сервера:", responseBody);
+                alert(`Ошибка: ${responseBody.detail || "Не удалось продлить подписку"}`);
+                return;
+            }
+
+            console.log("Успешный ответ при продлении подписки:", responseBody);
+            alert(`Подписка продлена до ${new Date(responseBody.end_subscription).toLocaleDateString()}`);
+            fetchSubscription(); // обновляем данные о подписке
+        } catch (error) {
+            console.error("Ошибка при выполнении запроса:", error);
+            alert("Ошибка соединения с сервером");
+        }
+    };
     useEffect(() => {
         if (subscriptionInfo) {
             console.log("endSubscription value:", subscriptionInfo?.end_subscription);
@@ -315,6 +378,8 @@ export default function SubscriptionsPage() {
                                     <input
                                         type="number"
                                         min="1"
+                                        value={extendMonths}
+                                        onChange={(e) => setExtendMonths(Math.max(1, parseInt(e.target.value) || 1))}
                                         placeholder="Введите срок в месяцах"
                                         className="mt-1 p-2 bg-white border border-black rounded w-full md:col-span-2"
                                     />
@@ -326,14 +391,18 @@ export default function SubscriptionsPage() {
                                     <input
                                         type="number"
                                         min="1"
+                                        value={addUsers}
+                                        onChange={(e) => setAddUsers(Math.max(1, parseInt(e.target.value) || 1))}
                                         placeholder="Количество пользователей"
                                         className="mt-1 p-2 bg-white border border-black rounded w-full md:col-span-2"
                                     />
                                 </div>
                                 <div className="flex flex-wrap justify-between items-center gap-4 mt-6">
-                                    <p className="text-lg sm:text-xl font-bold">Сумма: ??? Р</p>
+                                    <p className="text-lg sm:text-xl font-bold">
+                                        Сумма: {extendPrice !== null ? `${extendPrice} Р` : "Загрузка..."}
+                                    </p>
                                     <button
-                                        // onClick={...}
+                                        onClick={handleExtendSubscription}
                                         className="bg-[#092155] text-white py-2 px-4 rounded hover:bg-[#2a4992] active:bg-[#dadee7] font-semibold active:text-black transition-all duration-150 ease-in-out transform active:scale-95 w-full sm:w-auto">
                                         Оплатить
                                     </button>
