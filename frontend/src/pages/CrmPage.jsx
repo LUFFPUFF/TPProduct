@@ -238,15 +238,19 @@ const CrmPage = () => {
         localStorage.setItem("crm-stages-objects", JSON.stringify(updatedStages));
 
 
+        const payload = {
+            deal_id: Number(draggedDeal.id),
+            stage_id: stageKeyToId(targetStage.id),
+        };
+
+        console.log("Отправка обновления стадии сделки с данными:", payload);
+
         fetch(API.crm.updateStage, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                dealId: draggedDeal.id,
-                newStage: targetStage.id,
-            }),
+            body: JSON.stringify(payload),
         })
             .then(async (response) => {
                 if (!response.ok) {
