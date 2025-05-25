@@ -17,48 +17,24 @@ import {
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import API from "../config/api.js";
 
-const defaultStages = [
-    {
-        id: "new",
-        title: "Новая",
-        deals: [
-            { id: "Тестовая продажа", price: 5000 },
-            { id: "Тестовая", price: 4700 },
-            { id: "Тестовая сделка", price: 5000 },
-        ],
-    },
-    {
-        id: "pause",
-        title: "Пауза",
-        deals: [],
-    },
-    {
-        id: "in-progress",
-        title: "В работе",
-        deals: [
-            { id: "Тестовый Успех", price: 25000 },
-            { id: "Тестовая интеграция в вотцап", price: 12000 },
-            { id: "Подключение поддержки", price: 20000 },
-        ],
-    },
-    {
-        id: "done",
-        title: "Завершена",
-        deals: [
-            { id: "Подключение всех услуг + поддержка", price: 120000 },
-            { id: "Подключение Telegram", price: 13500 },
-        ],
-    },
-    {
-        id: "fail",
-        title: "Провалена",
-        deals: [
-            { id: "Попытка интеграции", price: 29000 },
-        ],
-    },
-];
+const stageIdToKey = {
+    0: "new",
+    1: "pause",
+    2: "in-progress",
+    3: "done",
+    4: "fail",
+};
+
+const stageKeyToTitle = {
+    "new": "Новая",
+    "pause": "Пауза",
+    "in-progress": "В работе",
+    "done": "Завершена",
+    "fail": "Провалена",
+};
 
 const calculateSum = (deals) => deals.reduce((sum, deal) => sum + Number(deal.price || 0), 0);
 
@@ -89,7 +65,7 @@ const SortableDeal = ({ deal, stageId, onArchiveClick }) => {
             style={style}
             className="bg-[#f9fafb] border border-black rounded-lg p-4 text-sm shadow-sm mt-2 cursor-move"
         >
-            <div className="font-bold mb-1">{deal.id}</div>
+            <div className="font-bold mb-1">{deal.title || deal.id}</div>
             <div className="text-gray-700 mb-1">Сумма: {deal.price} руб.</div>
             <div className="text-gray-700 mb-1">Дата изменения: 27.03.2025</div>
             <div className="text-gray-700 mb-1">Клиент: ИП Тестовый</div>
@@ -125,17 +101,58 @@ const DroppableColumn = ({ stage, children }) => {
 };
 
 const CrmPage = () => {
-    const [newDealPrice, setNewDealPrice] = useState("");
-    const [showForm, setShowForm] = useState(false);
-    const [newDealTitle, setNewDealTitle] = useState("");
     const [stages, setStages] = useState([]);
     const [activeDeal, setActiveDeal] = useState(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
     const navigate = useNavigate();
 
     useEffect(() => {
-        const saved = localStorage.getItem("crm-stages-objects");
-        if (saved) setStages(JSON.parse(saved));
-        else setStages(defaultStages);
+        fetch(API.crm.get)
+            .then(async res => {
+                if (!res.ok) {
+                    const data = await response.json();
+                    console.error("Ошибка создания сделки (status:", response.status, "):", data);
+                    throw new Error("Ошибка создания сделки");
+                }
+                return res.json();
+            })
+            .then(data => {
+                const stagesObj = {
+                    new: [],
+                    pause: [],
+                    "in-progress": [],
+                    done: [],
+                    fail: [],
+                };
+
+                data.forEach((deal) => {
+                    const stageKey = stageIdToKey[deal.stageId] || "new";
+                    stagesObj[stageKey].push({
+                        id: String(deal.id),
+                        price: deal.amount,
+                        title: deal.title,
+                    });
+                });
+
+                const stagesArray = Object.entries(stagesObj).map(([key, deals]) => ({
+                    id: key,
+                    title: stageKeyToTitle[key],
+                    deals,
+                }));
+
+                setStages(stagesArray);
+            })
+            .catch((err) => {
+                console.error(err);
+                setStages([
+                    { id: "new", title: "Новая", deals: [] },
+                    { id: "pause", title: "Пауза", deals: [] },
+                    { id: "in-progress", title: "В работе", deals: [] },
+                    { id: "done", title: "Завершена", deals: [] },
+                    { id: "fail", title: "Провалена", deals: [] },
+                ]);
+            });
     }, []);
 
     const sensors = useSensors(
@@ -152,7 +169,6 @@ const CrmPage = () => {
             .find((deal) => deal.id === active.id);
         setActiveDeal(draggedDeal);
     };
-
 
     const handleDragEnd = ({ active, over }) => {
         setActiveDeal(null);
@@ -188,7 +204,6 @@ const CrmPage = () => {
 
         let insertIndex = overIndex >= 0 ? overIndex : updatedTargetDeals.length;
 
-        // Если перетаскиваем над последним элементом — вставить после него
         if (over?.id && targetStage.deals[overIndex]?.id === over.id && overIndex === updatedTargetDeals.length - 1) {
             insertIndex += 1;
         }
@@ -208,6 +223,7 @@ const CrmPage = () => {
         setStages(updatedStages);
         localStorage.setItem("crm-stages-objects", JSON.stringify(updatedStages));
     };
+
     const handleArchiveDeal = (dealToArchive) => {
         const sourceStage = findStageByDealId(dealToArchive.id);
         if (!sourceStage) return;
@@ -224,7 +240,7 @@ const CrmPage = () => {
         setStages(updatedStages);
         localStorage.setItem("crm-stages-objects", JSON.stringify(updatedStages));
     };
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
     return (
         <div className="flex flex-col md:flex-row h-screen bg-[#E6E6EB] overflow-hidden">
             <div className="md:hidden p-4">
@@ -250,10 +266,8 @@ const CrmPage = () => {
                         style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
                         onClick={() => setIsSidebarOpen(false)}
                     />
-                    {/* Сайдбар */}
                     <div className="fixed top-0 left-0 w-64 h-full z-50 bg-white shadow-lg overflow-y-auto">
                         <Sidebar />
-                        {/* Кнопка закрытия меню */}
                         <div className="absolute top-4 right-4">
                             <button
                                 onClick={() => setIsSidebarOpen(false)}
@@ -288,7 +302,6 @@ const CrmPage = () => {
                     sensors={sensors}
                     collisionDetection={closestCorners}
                     onDragStart={handleDragStart}
-
                     onDragEnd={handleDragEnd}
                 >
                     <div className="w-full max-w-[100vw] overflow-x-auto flex flex-wrap gap-4 pb-6">
@@ -314,7 +327,6 @@ const CrmPage = () => {
                                                 onArchiveClick={handleArchiveDeal}
                                             />
                                         ))}
-
                                     </DroppableColumn>
                                 </div>
                             </SortableContext>
