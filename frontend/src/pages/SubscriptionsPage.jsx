@@ -16,7 +16,7 @@ export default function SubscriptionsPage() {
 
     const fetchExtendPrice = async (months, users) => {
         try {
-            const url = `${API.subscriptions.extend}?months_count=${months}&operators_count=${users}`;
+            const url = `${API.subscriptions.extendPrice}?months_count=${months}&operators_count=${users}`;
             const response = await fetch(url, {
                 method: "GET",
                 headers: {
@@ -62,7 +62,7 @@ export default function SubscriptionsPage() {
         });
 
         try {
-            const response = await fetch(API.subscriptions.extend, {
+            const response = await fetch(API.subscriptions.extendOplata, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
