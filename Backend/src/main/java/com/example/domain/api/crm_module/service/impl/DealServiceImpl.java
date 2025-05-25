@@ -68,7 +68,12 @@ public class DealServiceImpl implements DealService {
         }else if(filterDealsDto.getEmail() != null && !isManager) {
             throw new AccessDeniedFilterDeals();
         }else if(filterDealsDto.getEmail() == null){
-            deals = dealRepository.findByCompany(currentUserDataService.getUser().getCompany().getId().toString());
+            deals = dealRepository.findByCompany(currentUserDataService.getUser().getCompany().getId());
+            System.out.println("----------------------------------------" +
+                    "" +currentUserDataService.getUser().getCompany().getId()+
+                    "||||" +
+                    "" +deals.size()+
+                    "--------------------------");
         } else {
             deals = dealRepository.findDealDataByUserEmail(filterDealsDto.getEmail());
         }
