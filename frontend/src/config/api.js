@@ -59,7 +59,7 @@ const API = {
     },
     websocket: {
         updateStatus: (id) => `${API_BASE_URL}//topic/chat/${id}/status`,
-        updateMessage: (id) => `${API_BASE_URL}/topic/chat/${id}/status`,
+        updateMessage: (id) => `${API_BASE_URL}/topic/chat/${id}/messages`,
         typing: (id) => `${API_BASE_URL}//topic/chat/${id}/typing`,
         newChatInQueue: (companyId) => `${API_BASE_URL}/topic/company/${companyId}/chats/pending`,
         newChatForCompany: (companyId) => `${API_BASE_URL}/topic/company/${companyId}/chats/assigne`,
