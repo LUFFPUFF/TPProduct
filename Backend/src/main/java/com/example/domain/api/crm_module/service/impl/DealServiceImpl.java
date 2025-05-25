@@ -41,11 +41,11 @@ public class DealServiceImpl implements DealService {
 
     @Override
     @Transactional
-
     public DealDto createDeal(CreateDealDtoReq dealDto) {
         dealDto.setDealStatus(DealStatus.OPENED);
         dealDto.setDealStage(dealStageRepository.findById(0).orElseThrow(NotFoundDealStageException::new));
         dealDto.setClient(clientRepository.findById(dealDto.getClient_id()).orElseThrow(NotFoundClientForDealException::new));
+        dealDto.setUser(currentUserDataService.getUser());
         Deal deal = dealRepository.save(dealReqDtoToDealMapper.map(dealDto));
         Task task = taskRepository.save(dealReqDtoToTaskMapper.map(dealDto, deal));
 
