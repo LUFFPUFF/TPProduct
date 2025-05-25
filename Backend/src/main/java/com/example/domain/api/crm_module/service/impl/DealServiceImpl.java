@@ -85,11 +85,6 @@ public class DealServiceImpl implements DealService {
     @Override
     @Transactional
     public DealDto changeDealStage(ChangeDealStageReq dealDto) {
-        System.out.println("------------------------------------" +
-                "" +
-                "" +dealDto.getDealId().toString()+
-                "" +dealDto.getStageId().toString()+
-                "--------------------------------");
         Deal deal = dealRepository.findById(dealDto.getDealId()).orElseThrow(NotFoundDealDataException::new);
         checkDealChangeAccess(deal);
         dealRepository.updateDealStageById(dealDto.getDealId(), dealDto.getStageId());
