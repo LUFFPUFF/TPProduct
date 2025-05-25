@@ -18,9 +18,14 @@ public class SubscribeDataMapper {
 
     private final SubscriptionPriceCalculateService subscriptionPriceCalculateService;
 
-    public Subscription toSubscription(SubscribeDataDto dataDto) {
+    public Subscription toSubscription(SubscribeDataDto dataDto,int renew) {
         Subscription subscription = new Subscription();
-        subscription.setCountOperators(1);
+        if (renew != 0) {
+            subscription.setCountOperators(renew);
+        }else {
+            subscription.setCountOperators(1);
+        }
+        subscription.setMaxOperators(dataDto.getPrice().getOperators_count());
         subscription.setCompany(dataDto.getCompany());
         subscription.setStartSubscription(LocalDateTime.now());
         subscription.setCreatedAt(LocalDateTime.now());
