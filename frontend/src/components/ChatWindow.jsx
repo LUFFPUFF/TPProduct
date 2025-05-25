@@ -83,8 +83,8 @@ const ChatWindow = ({ selectedDialog }) => {
             });
 
             if (!res.ok) {
-                const data = await response.json();
-                console.error("Ошибка ошибка при отвравке сообщения (status:", response.status, "):", data);
+                const data = await res.json();
+                console.error("Ошибка ошибка при отвравке сообщения (status:", res.status, "):", data);
                 throw new Error("Ошибка при отправке сообщения");
             }
 
