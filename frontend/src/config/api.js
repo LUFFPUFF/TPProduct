@@ -1,4 +1,5 @@
 const API_BASE_URL = "/api";
+const WEBSOCKET_URL = "ws://dialogx.ru/ws";
 
 const API = {
     integrations: {
@@ -51,6 +52,13 @@ const API = {
         addMember: `${API_BASE_URL}/company/admin/add-member`,
         giveRole: `${API_BASE_URL}/company/admin/member/give-role`,
         removeRole: `${API_BASE_URL}/company/admin/member/remove-role`,
+    },
+    websocket: {
+        updateStatus: (id) => `${API_BASE_URL}//topic/chat/${id}/status`,
+        updateMessage: (id) => `${API_BASE_URL}/topic/chat/${id}/status`,
+        typing: (id) => `${API_BASE_URL}//topic/chat/${id}/typing`,
+        newChatInQueue: (companyId) => `${API_BASE_URL}/topic/company/${companyId}/chats/pending`,
+        newChatForCompany: (companyId) => `${API_BASE_URL}/topic/company/${companyId}/chats/assigne`,
     }
 };
 
