@@ -96,6 +96,7 @@ export default function SubscriptionsPage() {
                 }),
             });
 
+            console.log("Ответ от сервера при активации подписки:", data);
             if (!response.ok) throw new Error("Ошибка активации подписки");
 
             const data = await response.json();
