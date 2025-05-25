@@ -20,15 +20,12 @@ import { CSS } from "@dnd-kit/utilities";
 import { useNavigate } from "react-router-dom";
 import API from "../config/api.js";
 
-const stageKeyToId = (key) => {
-    const map = {
-        "new": 0,
-        "pause": 1,
-        "in-progress": 2,
-        "done": 3,
-        "fail": 4,
-    };
-    return map[key] ?? 0;
+const stageIdToKey = {
+    0: "new",
+    1: "pause",
+    2: "in-progress",
+    3: "done",
+    4: "fail",
 };
 
 const stageKeyToTitle = {
@@ -202,52 +199,29 @@ const CrmPage = () => {
             return;
         }
 
-        fetch(API.crm.updateStage, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                stageId: Number(stageKeyToId(targetStage.id)),
-                dealId: Number(active.id),
-            }),
-        })
-            .then(async (res) => {
-                if (!res.ok) {
-                    const data = await response.json();
-                    console.error("Ошибка создания сделки (status:", response.status, "):", data);
-                    throw new Error("Ошибка создания сделки");
-                }
-                return res.json();
-            })
-            .then(() => {
-                const updatedSourceDeals = [...sourceStage.deals].filter((deal) => deal.id !== active.id);
-                const updatedTargetDeals = [...targetStage.deals];
+        const updatedSourceDeals = [...sourceStage.deals].filter((deal) => deal.id !== active.id);
+        const updatedTargetDeals = [...targetStage.deals];
 
-                let insertIndex = overIndex >= 0 ? overIndex : updatedTargetDeals.length;
+        let insertIndex = overIndex >= 0 ? overIndex : updatedTargetDeals.length;
 
-                if (over?.id && targetStage.deals[overIndex]?.id === over.id && overIndex === updatedTargetDeals.length - 1) {
-                    insertIndex += 1;
-                }
+        if (over?.id && targetStage.deals[overIndex]?.id === over.id && overIndex === updatedTargetDeals.length - 1) {
+            insertIndex += 1;
+        }
 
-                updatedTargetDeals.splice(insertIndex, 0, draggedDeal);
+        updatedTargetDeals.splice(insertIndex, 0, draggedDeal);
 
-                const updatedStages = stages.map((stage) => {
-                    if (stage.id === sourceStage.id) {
-                        return { ...stage, deals: updatedSourceDeals };
-                    }
-                    if (stage.id === targetStage.id) {
-                        return { ...stage, deals: updatedTargetDeals };
-                    }
-                    return stage;
-                });
+        const updatedStages = stages.map((stage) => {
+            if (stage.id === sourceStage.id) {
+                return { ...stage, deals: updatedSourceDeals };
+            }
+            if (stage.id === targetStage.id) {
+                return { ...stage, deals: updatedTargetDeals };
+            }
+            return stage;
+        });
 
-                setStages(updatedStages);
-                localStorage.setItem("crm-stages-objects", JSON.stringify(updatedStages));
-            })
-            .catch((err) => {
-                console.error(err);
-            });
+        setStages(updatedStages);
+        localStorage.setItem("crm-stages-objects", JSON.stringify(updatedStages));
     };
 
     const handleArchiveDeal = (dealToArchive) => {
