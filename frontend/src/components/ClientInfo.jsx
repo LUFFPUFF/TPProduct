@@ -67,7 +67,7 @@ const ClientInfo = ({ selectedDialog }) => {
             <input
                 type="number"
                 min="0"
-                className="border w-full rounded-lg p-2 bg-white shadow-[14px_14px_15px_rgba(0,0,0,0.32)]"
+                className="border w-full rounded-lg p-2 bg-white shadow-[14px_14px_15px_rgba(0,0,0,0.32)] mb-2"
                 placeholder="Добавить цену сделки..."
                 value={dealPrice}
                 onChange={(e) => {

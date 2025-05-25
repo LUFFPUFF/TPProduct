@@ -69,8 +69,6 @@ const SortableDeal = ({ deal, stageId, onArchiveClick }) => {
         touchAction: "none",
     };
 
-    const showArchiveButton = stageId === "done" || stageId === "fail";
-
     return (
         <div
             ref={setNodeRef}
@@ -86,17 +84,6 @@ const SortableDeal = ({ deal, stageId, onArchiveClick }) => {
             <div className="text-gray-700 mb-1">Комментарии: сделать</div>
             <div className="flex justify-between items-center mt-2">
                 <button className="text-sm text-[#111827] underline">Написать</button>
-                {showArchiveButton && (
-                    <button
-                        className="bg-white border border-black px-1 rounded-full text-sm shadow-[0px_4px_4px_rgba(0,0,0,0.25)] hover:bg-gray-100 transition"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onArchiveClick(deal);
-                        }}
-                    >
-                        В архив
-                    </button>
-                )}
             </div>
         </div>
     );
@@ -337,12 +324,67 @@ const CrmPage = () => {
                             <span className="border-b-2 border-[#111827] pb-1">Сделки</span>
                         </nav>
                     </div>
-                    <button
-                        className="mt-4 sm:mt-0 px-4 py-1.5 text-sm font-medium border-1 !border-black text-black bg-white rounded-xl"
-                        onClick={() => navigate("/archive")}
-                    >
-                        Архив
-                    </button>
+                    <div className="flex gap-4 mt-4 sm:mt-0">
+                        <button
+                            className="px-4 py-1.5 text-sm font-medium border border-black text-black bg-white rounded-xl"
+                            onClick={() => navigate("/archieve")}
+                        >
+                            Архив
+                        </button>
+                        <button
+                            className="px-4 py-1.5 text-sm font-medium border border-black text-white bg-black rounded-xl"
+                            onClick={() => {
+                                fetch(API.crm.archieve, { method: "POST" })
+                                    .then(async (res) => {
+                                        if (!res.ok) {
+                                            const data = await res.json();
+                                            console.error("Ошибка при архивировании сделок:", data);
+                                            return;
+                                        }
+
+                                        fetch(API.crm.get)
+                                            .then(async (res) => {
+                                                if (!res.ok) {
+                                                    const err = await res.json();
+                                                    console.error("Ошибка получения сделок после архивации:", err);
+                                                    return;
+                                                }
+                                                const data = await res.json();
+                                                const stagesObj = {
+                                                    new: [],
+                                                    pause: [],
+                                                    "in-progress": [],
+                                                    done: [],
+                                                    fail: [],
+                                                };
+
+                                                data.forEach((deal) => {
+                                                    const stageKey = stageIdToKey(deal.stage_id);
+                                                    stagesObj[stageKey].push({
+                                                        id: String(deal.id),
+                                                        price: deal.amount,
+                                                        title: deal.title,
+                                                    });
+                                                });
+
+                                                const updatedStages = Object.entries(stagesObj).map(([key, deals]) => ({
+                                                    id: key,
+                                                    title: stageKeyToTitle[key],
+                                                    deals,
+                                                }));
+
+                                                setStages(updatedStages);
+                                                console.log("Сделки обновлены после архивации:", updatedStages);
+                                            });
+                                    })
+                                    .catch((err) => {
+                                        console.error("Сетевая ошибка при архивировании сделок:", err);
+                                    });
+                            }}
+                        >
+                            Добавить в архив
+                        </button>
+                    </div>
                 </header>
 
                 <DndContext
