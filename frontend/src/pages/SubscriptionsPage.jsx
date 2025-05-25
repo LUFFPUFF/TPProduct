@@ -96,10 +96,10 @@ export default function SubscriptionsPage() {
                 }),
             });
 
-            console.log("Ответ от сервера при активации подписки:", data);
             if (!response.ok) throw new Error("Ошибка активации подписки");
 
             const data = await response.json();
+            console.log("Ответ от сервера при активации подписки:", data);
             alert(`Подписка активирована до ${new Date(data.endSubscription).toLocaleDateString()}`);
         } catch (error) {
             console.error("Ошибка при активации подписки:", error);
