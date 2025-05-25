@@ -33,7 +33,7 @@ public interface DealRepository extends JpaRepository<Deal, Integer> {
             "d.content,d.amount,d.status,d.createdAt,d.client.id,t.title,t.priority) " +
             "FROM Deal d JOIN Task t ON t.deal = d WHERE d.user.company.id = :companyId " +
             "AND d.status = com.example.database.model.crm_module.deal.DealStatus.OPENED")
-    List<DealDto> findByCompany(@Param("companyId") String companyId);
+    List<DealDto> findByCompany(@Param("companyId") Integer companyId);
     @Query("SELECT new com.example.domain.api.crm_module.dto.DealArchiveDto(d.id,d.user.fullName,d.user.email," +
             "d.content,d.amount,d.status,d.createdAt,d.client.id,t.title,t.priority,t.dueDate) " +
             "FROM Deal d JOIN Task t ON t.deal = d WHERE d.user.email = :email " +
