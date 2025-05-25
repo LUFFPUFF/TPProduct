@@ -258,9 +258,10 @@ const CrmPage = () => {
             body: JSON.stringify(payload),
         })
             .then(async (response) => {
+                const responseData = await response.json();
+                console.log("Ответ сервера на обновление стадии сделки:", responseData);
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error("Ошибка обновления стадии сделки:", errorData);
+                    console.error("Ошибка обновления стадии сделки:", responseData);
                 } else {
                     console.log("Обновление стадии сделки успешно");
                 }
