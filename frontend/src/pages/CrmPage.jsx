@@ -123,15 +123,18 @@ const CrmPage = () => {
 
     useEffect(() => {
         fetch(API.crm.get)
-            .then(async res => {
+            .then(async (res) => {
+                console.log("Получен ответ от API crm.get, статус:", res.status);
                 if (!res.ok) {
-                    const data = await response.json();
-                    console.error("Ошибка создания сделки (status:", response.status, "):", data);
-                    throw new Error("Ошибка создания сделки");
+                    const data = await res.json();
+                    console.error("Ошибка получения сделок (status:", res.status, "):", data);
+                    throw new Error("Ошибка получения сделок");
                 }
-                return res.json();
+                const data = await res.json();
+                console.log("Получены данные сделок:", data);
+                return data;
             })
-            .then(data => {
+            .then((data) => {
                 const stagesObj = {
                     new: [],
                     pause: [],
@@ -141,7 +144,7 @@ const CrmPage = () => {
                 };
 
                 data.forEach((deal) => {
-                    const stageKey = stageIdToKey(deal.stageId);
+                    const stageKey = stageIdToKey(deal.stage_id);
                     stagesObj[stageKey].push({
                         id: String(deal.id),
                         price: deal.amount,
@@ -156,9 +159,10 @@ const CrmPage = () => {
                 }));
 
                 setStages(stagesArray);
+                console.log("Стейты стадий обновлены:", stagesArray);
             })
             .catch((err) => {
-                console.error(err);
+                console.error("Ошибка при загрузке сделок:", err);
                 setStages([
                     { id: "new", title: "Новая", deals: [] },
                     { id: "pause", title: "Пауза", deals: [] },
@@ -210,6 +214,7 @@ const CrmPage = () => {
 
             setStages(updatedStages);
             localStorage.setItem("crm-stages-objects", JSON.stringify(updatedStages));
+            console.log("Перемещение сделки внутри стадии, обновлённые сделки:", updatedDeals);
             return;
         }
 
@@ -236,7 +241,7 @@ const CrmPage = () => {
 
         setStages(updatedStages);
         localStorage.setItem("crm-stages-objects", JSON.stringify(updatedStages));
-
+        console.log("Перемещение сделки между стадиями, обновлённые стадии:", updatedStages);
 
         const payload = {
             deal_id: Number(draggedDeal.id),
@@ -253,9 +258,12 @@ const CrmPage = () => {
             body: JSON.stringify(payload),
         })
             .then(async (response) => {
+                const responseData = await response.json();
+                console.log("Ответ сервера на обновление стадии сделки:", responseData);
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error("Ошибка обновления стадии сделки:", errorData);
+                    console.error("Ошибка обновления стадии сделки:", responseData);
+                } else {
+                    console.log("Обновление стадии сделки успешно");
                 }
             })
             .catch((error) => {
