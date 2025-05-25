@@ -202,51 +202,49 @@ const CrmPage = () => {
             return;
         }
 
+        const updatedSourceDeals = [...sourceStage.deals].filter((deal) => deal.id !== active.id);
+        const updatedTargetDeals = [...targetStage.deals];
+
+        let insertIndex = overIndex >= 0 ? overIndex : updatedTargetDeals.length;
+
+        if (over?.id && targetStage.deals[overIndex]?.id === over.id && overIndex === updatedTargetDeals.length - 1) {
+            insertIndex += 1;
+        }
+
+        updatedTargetDeals.splice(insertIndex, 0, draggedDeal);
+
+        const updatedStages = stages.map((stage) => {
+            if (stage.id === sourceStage.id) {
+                return { ...stage, deals: updatedSourceDeals };
+            }
+            if (stage.id === targetStage.id) {
+                return { ...stage, deals: updatedTargetDeals };
+            }
+            return stage;
+        });
+
+        setStages(updatedStages);
+        localStorage.setItem("crm-stages-objects", JSON.stringify(updatedStages));
+
+
         fetch(API.crm.updateStage, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                stageId: Number(stageKeyToId(targetStage.id)),
-                dealId: Number(active.id),
+                dealId: draggedDeal.id,
+                newStage: targetStage.id,
             }),
         })
-            .then(async (res) => {
-                if (!res.ok) {
-                    const data = await response.json();
-                    console.error("Ошибка создания сделки (status:", response.status, "):", data);
-                    throw new Error("Ошибка создания сделки");
+            .then(async (response) => {
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("Ошибка обновления стадии сделки:", errorData);
                 }
-                return res.json();
             })
-            .then(() => {
-                const updatedSourceDeals = [...sourceStage.deals].filter((deal) => deal.id !== active.id);
-                const updatedTargetDeals = [...targetStage.deals];
-
-                let insertIndex = overIndex >= 0 ? overIndex : updatedTargetDeals.length;
-
-                if (over?.id && targetStage.deals[overIndex]?.id === over.id && overIndex === updatedTargetDeals.length - 1) {
-                    insertIndex += 1;
-                }
-
-                updatedTargetDeals.splice(insertIndex, 0, draggedDeal);
-
-                const updatedStages = stages.map((stage) => {
-                    if (stage.id === sourceStage.id) {
-                        return { ...stage, deals: updatedSourceDeals };
-                    }
-                    if (stage.id === targetStage.id) {
-                        return { ...stage, deals: updatedTargetDeals };
-                    }
-                    return stage;
-                });
-
-                setStages(updatedStages);
-                localStorage.setItem("crm-stages-objects", JSON.stringify(updatedStages));
-            })
-            .catch((err) => {
-                console.error(err);
+            .catch((error) => {
+                console.error("Ошибка сети при обновлении стадии сделки:", error);
             });
     };
 
