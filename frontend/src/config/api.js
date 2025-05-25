@@ -12,6 +12,7 @@ const API = {
         register: `${API_BASE_URL}/registration/register`,
         confirmCode: `${API_BASE_URL}/registration/check-code`,
         refreshToken: `${API_BASE_URL}/auth/refresh`,
+        logout: `${API_BASE_URL}/auth/logout`,
     },
     users: {
         profile: `${API_BASE_URL}/users/profile`,

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Sidebar from "../components/Sidebar";
 import API from "../config/api.js";
-
+import { useNavigate } from "react-router-dom";
 
 const UserPage = () => {
     const [name, setName] = useState("");
@@ -11,7 +11,7 @@ const UserPage = () => {
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState("");
-
+    const navigate = useNavigate();
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -45,8 +45,22 @@ const UserPage = () => {
     }, []);
 
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        try {
+            const response = await fetch(API.auth.logout, {
+                method: "POST",
+                credentials: "include",
+            });
 
+            if (!response.ok) {
+                throw new Error("Ошибка при выходе из аккаунта");
+            }
+
+
+            navigate("/login");
+        } catch (err) {
+            console.error("Ошибка при выходе:", err);
+        }
     };
     const handleChangePassword = async () => {
         setPasswordError("");
