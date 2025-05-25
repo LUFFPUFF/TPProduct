@@ -96,11 +96,17 @@ export default function SubscriptionsPage() {
                 }),
             });
 
-            if (!response.ok) throw new Error("Ошибка активации подписки");
+            if (!response.ok) {
+                const errorText = await response.text();
+                const data = await response.json();
+                console.log("Ответ от сервера при активации подписки:", data);
+                console.error("Ошибка активации подписки (status:", response.status, "):", errorText);
+                throw new Error("Ошибка активации подписки");
+            }
 
             const data = await response.json();
             console.log("Ответ от сервера при активации подписки:", data);
-            alert(`Подписка активирована до ${new Date(data.endSubscription).toLocaleDateString()}`);
+            alert(`Подписка активирована до ${new Date(data.end_subscription).toLocaleDateString()}`);
         } catch (error) {
             console.error("Ошибка при активации подписки:", error);
             alert("Не удалось подключить подписку");
