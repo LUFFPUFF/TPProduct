@@ -31,6 +31,17 @@ const stageKeyToId = (key) => {
     return map[key] ?? 0;
 };
 
+const stageIdToKey = (id) => {
+    const map = {
+        0: "new",
+        1: "pause",
+        2: "in-progress",
+        3: "done",
+        4: "fail",
+    };
+    return map[id] ?? "new";
+};
+
 const stageKeyToTitle = {
     "new": "Новая",
     "pause": "Пауза",
@@ -130,7 +141,7 @@ const CrmPage = () => {
                 };
 
                 data.forEach((deal) => {
-                    const stageKey = stageIdToKey[deal.stageId] || "new";
+                    const stageKey = stageIdToKey(deal.stageId);
                     stagesObj[stageKey].push({
                         id: String(deal.id),
                         price: deal.amount,
