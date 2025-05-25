@@ -61,6 +61,8 @@ const API = {
         create: `${API_BASE_URL}/crm/create`,
         get: `${API_BASE_URL}/crm/get`,
         updateStage: `${API_BASE_URL}/crm/change-stage`,
+        archieve: `${API_BASE_URL}/crm/put-in-archive`,
+        getArchieve: `${API_BASE_URL}/crm/get-archive`,
     },
     websocket: {
         updateStatus: (id) => `${API_BASE_URL}//topic/chat/${id}/status`,
