@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -59,12 +60,19 @@ public class DealServiceImpl implements DealService {
     @Override
     @Transactional
     public List<DealDto> getDeals(FilterDealsDto filterDealsDto) {
-        if(filterDealsDto.getEmail() == null) {
+        boolean isManager = currentUserDataService.hasRole(Role.MANAGER);
+        List<DealDto> deals;
+        if(filterDealsDto.getEmail() == null && !isManager) {
             filterDealsDto.setEmail(currentUserDataService.getUserEmail());
-        }else if(!currentUserDataService.hasRole(Role.MANAGER)) {
+            deals = dealRepository.findDealDataByUserEmail(filterDealsDto.getEmail());
+
+        }else if(filterDealsDto.getEmail() != null && !isManager) {
             throw new AccessDeniedFilterDeals();
+        }else if(filterDealsDto.getEmail() == null){
+            deals = dealRepository.findByCompany(currentUserDataService.getUser().getCompany().getId());
+        } else {
+            deals = dealRepository.findDealDataByUserEmail(filterDealsDto.getEmail());
         }
-        List<DealDto> deals = dealRepository.findDealDataByUserEmail(filterDealsDto.getEmail());
         return deals.stream()
                 .filter(dealDto -> dealDto.getEmail().equals(filterDealsDto.getEmail()))
                 .filter(dealDto -> filterDealsDto.getMinAmount() == null||dealDto.getAmount() >= filterDealsDto.getMinAmount())
@@ -107,12 +115,20 @@ public class DealServiceImpl implements DealService {
 
     @Override
     public List<DealArchiveDto> getDealsArchive(FilterArchiveDto archiveDto) {
-        if(archiveDto.getEmail() == null) {
+        boolean isManager = currentUserDataService.hasRole(Role.MANAGER);
+        List<DealArchiveDto> deals;
+        if(archiveDto.getEmail() == null && !isManager) {
             archiveDto.setEmail(currentUserDataService.getUserEmail());
-        }else if(!currentUserDataService.hasRole(Role.MANAGER)) {
+            deals = dealRepository.findArchiveDataByCompany(archiveDto.getEmail());
+
+        }else if(archiveDto.getEmail() != null && !isManager) {
             throw new AccessDeniedFilterDeals();
+        }else if(archiveDto.getEmail() == null){
+            deals = dealRepository.findArchiveDataByCompany(currentUserDataService.getUser().getCompany().getId());
+        } else {
+            deals = dealRepository.findArchiveDataByUserEmail(archiveDto.getEmail());
         }
-        List<DealArchiveDto> deals = dealRepository.findArchiveDataByUserEmail(archiveDto.getEmail());
+
         return deals.stream()
                 .filter(dealArchiveDto -> dealArchiveDto.getEmail().equals(archiveDto.getEmail()))
                 .filter(dealArchiveDto -> archiveDto.getFromEndDateTime() == null || dealArchiveDto.getDueDate().isAfter(archiveDto.getFromEndDateTime()))
