@@ -23,7 +23,8 @@ const API = {
         price: `${API_BASE_URL}/subscription/price`,
         activate: `${API_BASE_URL}/subscription/subscribe`,
         get: `${API_BASE_URL}/subscription/get`,
-        extend: `${API_BASE_URL}/subscription/price/extend`,
+        extendPrice: `${API_BASE_URL}/subscription/price/extend`,
+        extendOplata: `${API_BASE_URL}/subscription/price/extend`,
     },
     templates: {
         getAll: `${API_BASE_URL}/ui/predefined-answers`,
