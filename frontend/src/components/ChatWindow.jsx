@@ -43,7 +43,7 @@ const ChatWindow = ({selectedDialog}) => {
             return;
         }
 
-        const websocketUrl = `wss://dialogx.ru/ws`;
+        const websocketUrl = `ws://dialogx.ru/ws`;
 
         try {
             const ws = new WebSocket(websocketUrl);
