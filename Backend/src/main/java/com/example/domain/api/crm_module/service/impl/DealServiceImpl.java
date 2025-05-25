@@ -69,16 +69,10 @@ public class DealServiceImpl implements DealService {
             throw new AccessDeniedFilterDeals();
         }else if(filterDealsDto.getEmail() == null){
             deals = dealRepository.findByCompany(currentUserDataService.getUser().getCompany().getId());
-            System.out.println("----------------------------------------" +
-                    "" +currentUserDataService.getUser().getCompany().getId()+
-                    "||||" +
-                    "" +deals.size()+
-                    "--------------------------");
         } else {
             deals = dealRepository.findDealDataByUserEmail(filterDealsDto.getEmail());
         }
         return deals.stream()
-                .filter(dealDto -> dealDto.getEmail().equals(filterDealsDto.getEmail()))
                 .filter(dealDto -> filterDealsDto.getMinAmount() == null||dealDto.getAmount() >= filterDealsDto.getMinAmount())
                 .filter(dealDto -> filterDealsDto.getMaxAmount() == null||dealDto.getAmount() <= filterDealsDto.getMaxAmount())
                 .filter(dealDto -> filterDealsDto.getStage() == null || dealDto.getStageId().equals(filterDealsDto.getStage()))
