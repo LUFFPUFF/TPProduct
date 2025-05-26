@@ -23,18 +23,19 @@ const ChatWindow = ({ selectedDialog }) => {
 
     // Обновление сообщений при изменении выбранного диалога
     useEffect(() => {
-        setMessages(
-            (selectedDialog?.messages || []).map((msg) => {
+        setMessages(prevMessages => {
+            if (formattedNewMessage.id && prevMessages.some(m => m.id === formattedNewMessage.id)) {
+                console.log("СООБЩЕНИЕ УЖЕ ЕСТЬ, ПОПЫТКА ОБНОВЛЕНИЯ/ДЕДУПЛИКАЦИИ:");
+                console.log("Сообщение с ID", formattedNewMessage.id, "уже существует (вероятно, от оптимистичного обновления). Обновляем его или игнорируем добавление.");
+                console.log("Содержимое сообщения, которое уже есть:", prevMessages.find(m => m.id === formattedNewMessage.id));
 
-                return {
-                    sender: msg.sender_type === "OPERATOR" ? "Оператор" : "Клиент",
-                    text: msg.content,
-                    time: msg.sentAt
-                        ? new Date(msg.sentAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-                        : "",
-                };
-            })
-        );
+                return prevMessages.map(m => m.id === formattedNewMessage.id ? formattedNewMessage : m);
+            }
+
+            console.log("Сообщение НОВОЕ, добавляем в UI:", formattedNewMessage);
+
+            return [...prevMessages, formattedNewMessage];
+        });
     }, [selectedDialog]);
 
     // Подключение WebSocket при изменении выбранного диалога
