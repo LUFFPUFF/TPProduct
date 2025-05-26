@@ -71,7 +71,6 @@ const ChatWindow = ({ selectedDialog }) => {
         const newMessage = {
             chat_id: Number(selectedDialog.id),
             content: messageText,
-            senderType: messageText
         };
         console.log("newMessage:", newMessage);
 
