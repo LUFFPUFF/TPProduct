@@ -7,10 +7,11 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="hotfix ClientCompanyProcessService and ChatWindow">
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="hotfix api.js">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/config/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/process_service/ClientCompanyProcessService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/integration/process_service/ClientCompanyProcessService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapperImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/answer/UIPredefinedAnswerMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/answer/UIPredefinedAnswerMapperImpl.java" afterDir="false" />
@@ -358,7 +359,7 @@
       <workItem from="1747992637897" duration="4170000" />
       <workItem from="1748097079692" duration="2556000" />
       <workItem from="1748209575032" duration="2426000" />
-      <workItem from="1748217233292" duration="10985000" />
+      <workItem from="1748217233292" duration="11740000" />
     </task>
     <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
       <option name="closed" value="true" />
@@ -640,7 +641,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748227194053</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="hotfix api.js">
+      <option name="closed" value="true" />
+      <created>1748228488987</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1748228488987</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -658,7 +667,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Исправлены диаграммы" />
     <MESSAGE value="Доработан README.md" />
     <MESSAGE value="DX-125, 129, 152 Доработана система автоответчика, разработан начальный уровень SecurityContextHolder, улучшен поиск шаблонных ответов на основе trustScore" />
     <MESSAGE value="DX-155 Исправлена ошибка при регистрации нового пользователя" />
@@ -683,6 +691,7 @@
     <MESSAGE value="hotfix UiSendUiMessageRequest" />
     <MESSAGE value="hotfix ClientCompanyProcessService" />
     <MESSAGE value="hotfix ClientCompanyProcessService and ChatWindow" />
-    <option name="LAST_COMMIT_MESSAGE" value="hotfix ClientCompanyProcessService and ChatWindow" />
+    <MESSAGE value="hotfix api.js" />
+    <option name="LAST_COMMIT_MESSAGE" value="hotfix api.js" />
   </component>
 </project>

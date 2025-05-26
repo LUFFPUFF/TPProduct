@@ -96,8 +96,6 @@ public class ClientCompanyProcessService {
                     messageRequest.getSenderType()
             );
 
-            eventPublisher.publishEvent(new ChatMessageSentEvent(this, messageDto));
-
             if (containsOperatorRequest(telegramResponse.getText())) {
                 log.info("Operator request detected in Telegram chat {}", chat.getId());
                 assignOperatorToChat(chat);
@@ -174,8 +172,6 @@ public class ClientCompanyProcessService {
             MessageDto messageDto = chatMessageService.processAndSaveMessage(messageRequest,
                     messageRequest.getSenderId(),
                     messageRequest.getSenderType());
-
-            eventPublisher.publishEvent(new ChatMessageSentEvent(this, messageDto));
 
             if (containsOperatorRequest(emailResponse.getContent())) {
                 log.info("Operator request detected in Email chat {}", chat.getId());
@@ -260,8 +256,6 @@ public class ClientCompanyProcessService {
                     messageRequest.getSenderType()
             );
 
-            eventPublisher.publishEvent(new ChatMessageSentEvent(this, messageDto));
-
             if (containsOperatorRequest(vkResponse.getText())) {
                 log.info("Operator request detected in VK chat {}", chat.getId());
                 assignOperatorToChat(chat);
@@ -343,8 +337,6 @@ public class ClientCompanyProcessService {
                     messageRequest.getSenderId(),
                     messageRequest.getSenderType()
             );
-
-            eventPublisher.publishEvent(new ChatMessageSentEvent(this, messageDto));
 
             if (containsOperatorRequest(whatsappResponse.getText())) {
                 log.info("Operator request detected in WhatsApp chat {}", chat.getId());
