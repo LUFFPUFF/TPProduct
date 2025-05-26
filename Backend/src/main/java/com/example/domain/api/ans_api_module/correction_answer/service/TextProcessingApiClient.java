@@ -27,7 +27,7 @@ public class TextProcessingApiClient {
     //TODO увеличено до 5 минут потому что не тянет система
     private static final Duration TIMEOUT = Duration.ofMinutes(5);
     private static final String ENDPOINT = "/generate";
-    private static final String AI_SERVICE_URL = "http://127.0.0.1:8000";
+    private static final String AI_SERVICE_URL = "https://dialogx.ru/ai-api/";
 
     public TextProcessingApiClient(MLServiceConfig config, ObjectMapper objectMapper) {
         this.httpClient = HttpClient.newBuilder()
