@@ -12,6 +12,7 @@ export const RegistrationPage = () => {
     const [confirmationCode, setConfirmationCode] = useState("");
     const [confirmMessage, setConfirmMessage] = useState("");
     const { setUser } = useAuth();
+    const { checkAuth } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -94,7 +95,14 @@ export const RegistrationPage = () => {
                 body: JSON.stringify({ email, password }),
             });
 
-            console.log("Login response:", loginResponse);
+            if (loginResponse.ok) {
+                const data = await loginResponse.json();
+                await checkAuth();
+                navigate("/subscription");
+                console.log("Login response data:", data);
+
+            }
+            console.log("Login response data:", data);
 
             const loginData = await loginResponse.json();
             console.log("Login response data:", loginData);
