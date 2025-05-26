@@ -106,21 +106,22 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
             return;
         }
 
-        String correctedQuery;
+        String correctedQuery = "";
         List<AnswerSearchResultItem> relevantAnswers = Collections.emptyList();
 
-        try {
-            correctedQuery = textProcessingService.processQuery(clientQuery, GenerationType.CORRECTION);
-            log.debug("AutoResponder: Corrected client query for message ID {}: {}", messageDTO.getId(), correctedQuery);
-        } catch (MLException e) {
-            log.warn("AutoResponder: Failed to correct client query for message ID {} due to TextProcessingService error. Using original query. Error: {}",
-                    messageDTO.getId(), e.getMessage(), e);
-            correctedQuery = clientQuery;
-        } catch (Exception e) {
-            log.error("AutoResponder: Unexpected error correcting client query for message ID {}. Using original query. Error: {}",
-                    messageDTO.getId(), e.getMessage(), e);
-            correctedQuery = clientQuery;
-        }
+        //TODO временное решение по отключению коррекции
+//        try {
+//            correctedQuery = textProcessingService.processQuery(clientQuery, GenerationType.CORRECTION);
+//            log.debug("AutoResponder: Corrected client query for message ID {}: {}", messageDTO.getId(), correctedQuery);
+//        } catch (MLException e) {
+//            log.warn("AutoResponder: Failed to correct client query for message ID {} due to TextProcessingService error. Using original query. Error: {}",
+//                    messageDTO.getId(), e.getMessage(), e);
+//            correctedQuery = clientQuery;
+//        } catch (Exception e) {
+//            log.error("AutoResponder: Unexpected error correcting client query for message ID {}. Using original query. Error: {}",
+//                    messageDTO.getId(), e.getMessage(), e);
+//            correctedQuery = clientQuery;
+//        }
 
         boolean answerFound = false;
         String autoResponderResponse = null;
