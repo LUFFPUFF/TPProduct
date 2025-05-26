@@ -14,6 +14,7 @@ import com.example.database.repository.company_subscription_module.CompanyVkConf
 import com.example.database.repository.company_subscription_module.CompanyWhatsappConfigurationRepository;
 import com.example.domain.api.ans_api_module.exception.AutoResponderException;
 import com.example.domain.api.ans_api_module.service.IAutoResponderService;
+import com.example.domain.api.chat_service_api.event.message.ChatMessageSentEvent;
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
 import com.example.domain.api.chat_service_api.integration.mail.response.EmailResponse;
 import com.example.domain.api.chat_service_api.integration.telegram.TelegramResponse;
@@ -27,6 +28,7 @@ import com.example.domain.api.chat_service_api.model.dto.MessageDto;
 import com.example.domain.api.statistics_module.metrics.service.IChatMetricsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +52,7 @@ public class ClientCompanyProcessService {
     private final IAssignmentService assignmentService;
     private final ChatRepository chatRepository;
     private final IChatMetricsService chatMetricsService;
+    private final ApplicationEventPublisher eventPublisher;
 
     private static final int MAX_CONTENT_LENGTH = 255;
     private static final String TRUNCATE_INDICATOR = "...";
@@ -92,6 +95,8 @@ public class ClientCompanyProcessService {
                     messageRequest.getSenderId(),
                     messageRequest.getSenderType()
             );
+
+            eventPublisher.publishEvent(new ChatMessageSentEvent(this, messageDto));
 
             if (containsOperatorRequest(telegramResponse.getText())) {
                 log.info("Operator request detected in Telegram chat {}", chat.getId());
@@ -169,6 +174,8 @@ public class ClientCompanyProcessService {
             MessageDto messageDto = chatMessageService.processAndSaveMessage(messageRequest,
                     messageRequest.getSenderId(),
                     messageRequest.getSenderType());
+
+            eventPublisher.publishEvent(new ChatMessageSentEvent(this, messageDto));
 
             if (containsOperatorRequest(emailResponse.getContent())) {
                 log.info("Operator request detected in Email chat {}", chat.getId());
@@ -253,6 +260,8 @@ public class ClientCompanyProcessService {
                     messageRequest.getSenderType()
             );
 
+            eventPublisher.publishEvent(new ChatMessageSentEvent(this, messageDto));
+
             if (containsOperatorRequest(vkResponse.getText())) {
                 log.info("Operator request detected in VK chat {}", chat.getId());
                 assignOperatorToChat(chat);
@@ -334,6 +343,8 @@ public class ClientCompanyProcessService {
                     messageRequest.getSenderId(),
                     messageRequest.getSenderType()
             );
+
+            eventPublisher.publishEvent(new ChatMessageSentEvent(this, messageDto));
 
             if (containsOperatorRequest(whatsappResponse.getText())) {
                 log.info("Operator request detected in WhatsApp chat {}", chat.getId());

@@ -7,7 +7,7 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="hotfix UiSendUiMessageRequest">
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="hotfix ClientCompanyProcessService">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/config/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.java" afterDir="false" />
@@ -359,7 +359,7 @@
       <workItem from="1747992637897" duration="4170000" />
       <workItem from="1748097079692" duration="2556000" />
       <workItem from="1748209575032" duration="2426000" />
-      <workItem from="1748217233292" duration="7615000" />
+      <workItem from="1748217233292" duration="9802000" />
     </task>
     <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
       <option name="closed" value="true" />
@@ -625,7 +625,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748222537150</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="hotfix ClientCompanyProcessService">
+      <option name="closed" value="true" />
+      <created>1748224891834</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1748224891834</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -643,7 +651,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="DX-66 Разработаны контроллеры для маршрутизации данных между бекендом и фронтендом. Созданы md описания для Chat Module и загрузки шаблонных ответов" />
     <MESSAGE value="Удалена директория stats" />
     <MESSAGE value="Исправлены диаграммы" />
     <MESSAGE value="Доработан README.md" />
@@ -668,6 +675,7 @@
     <MESSAGE value="hotfix WebSocket and sendMessage" />
     <MESSAGE value="hotfix nginx.conf" />
     <MESSAGE value="hotfix UiSendUiMessageRequest" />
-    <option name="LAST_COMMIT_MESSAGE" value="hotfix UiSendUiMessageRequest" />
+    <MESSAGE value="hotfix ClientCompanyProcessService" />
+    <option name="LAST_COMMIT_MESSAGE" value="hotfix ClientCompanyProcessService" />
   </component>
 </project>

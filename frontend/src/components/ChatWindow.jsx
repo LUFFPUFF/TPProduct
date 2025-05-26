@@ -12,7 +12,7 @@ const ChatWindow = ({ selectedDialog }) => {
         (selectedDialog?.messages || []).map((msg) => ({
             sender: msg.senderType === "OPERATOR" ? "Оператор" : "Клиент",
             text: msg.content,
-            time: msg.sentAt
+            time: Date.now()
                 ? new Date(msg.sentAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
                 : "",
         }))
@@ -71,6 +71,7 @@ const ChatWindow = ({ selectedDialog }) => {
         const newMessage = {
             chat_id: Number(selectedDialog.id),
             content: messageText,
+            senderType: messageText
         };
         console.log("newMessage:", newMessage);
 
