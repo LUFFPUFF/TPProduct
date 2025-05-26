@@ -14,6 +14,7 @@ public interface UIMessageMapper {
     @Mapping(target = "senderName", expression = "java(getSenderName(messageDto))")
     @Mapping(source = "senderType", target = "senderType")
     @Mapping(source = "status", target = "status")
+    @Mapping(source = "chatDto.id", target = "chatId")
     UiMessageDto toUiDto(MessageDto messageDto);
 
     List<UiMessageDto> toUiDtoList(List<MessageDto> messageDtoList);

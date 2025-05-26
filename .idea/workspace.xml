@@ -7,10 +7,12 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Исправлена ошибка делоя">
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Доработан SecurityConfig под работу WebSocket">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/config/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/config/WebSocketConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/config/WebSocketConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/ui/dto/chat/rest/UiSendUiMessageRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/ui/dto/chat/rest/UiSendUiMessageRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapperImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/answer/UIPredefinedAnswerMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/answer/UIPredefinedAnswerMapperImpl.java" afterDir="false" />
@@ -358,7 +360,7 @@
       <workItem from="1747992637897" duration="4170000" />
       <workItem from="1748097079692" duration="2556000" />
       <workItem from="1748209575032" duration="2426000" />
-      <workItem from="1748217233292" duration="2228000" />
+      <workItem from="1748217233292" duration="3776000" />
     </task>
     <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
       <option name="closed" value="true" />
@@ -592,7 +594,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747998260121</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Доработан SecurityConfig под работу WebSocket">
+      <option name="closed" value="true" />
+      <created>1748219791029</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1748219791029</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -610,7 +620,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="DX-43 Доработана система сокетов, а также улучшен модуль интеграций с внешними системами" />
     <MESSAGE value="merge DX-43 from main" />
     <MESSAGE value="DX-43 исправлены ошибки при клонировании чатов, а также добавлена возможность назначать оператора" />
     <MESSAGE value="DX-66 Разработаны контроллеры для маршрутизации данных между бекендом и фронтендом. Созданы md описания для Chat Module и загрузки шаблонных ответов" />
@@ -635,6 +644,7 @@
     <MESSAGE value="Исправлены ошибки с регистрацией, добавлен контейнер prometheus" />
     <MESSAGE value="Добавлены два эндпоинта проверки прав доступа" />
     <MESSAGE value="Исправлена ошибка делоя" />
-    <option name="LAST_COMMIT_MESSAGE" value="Исправлена ошибка делоя" />
+    <MESSAGE value="Доработан SecurityConfig под работу WebSocket" />
+    <option name="LAST_COMMIT_MESSAGE" value="Доработан SecurityConfig под работу WebSocket" />
   </component>
 </project>

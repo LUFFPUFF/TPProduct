@@ -1,5 +1,6 @@
 package com.example.ui.mapper.chat;
 
+import com.example.domain.api.chat_service_api.model.dto.ChatDTO;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
 import com.example.ui.dto.chat.message.UiMessageDto;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-22T20:09:58+0300",
+    date = "2025-05-26T03:58:29+0300",
     comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 21.0.7 (Microsoft)"
 )
 @Component
@@ -29,6 +30,7 @@ public class UIMessageMapperImpl implements UIMessageMapper {
         if ( messageDto.getStatus() != null ) {
             uiMessageDto.status( messageDto.getStatus().name() );
         }
+        uiMessageDto.chatId( messageDtoChatDtoId( messageDto ) );
         uiMessageDto.id( messageDto.getId() );
         uiMessageDto.content( messageDto.getContent() );
         uiMessageDto.sentAt( messageDto.getSentAt() );
@@ -50,5 +52,13 @@ public class UIMessageMapperImpl implements UIMessageMapper {
         }
 
         return list;
+    }
+
+    private Integer messageDtoChatDtoId(MessageDto messageDto) {
+        ChatDTO chatDto = messageDto.getChatDto();
+        if ( chatDto == null ) {
+            return null;
+        }
+        return chatDto.getId();
     }
 }
