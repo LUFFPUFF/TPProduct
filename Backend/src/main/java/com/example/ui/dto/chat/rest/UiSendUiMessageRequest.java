@@ -10,7 +10,7 @@ import lombok.Data;
 public class UiSendUiMessageRequest {
 
     @NotNull(message = "Chat ID must not be null")
-    @JsonProperty("chatId")
+    @JsonProperty("chat_id")
     private Integer chatId;
 
     @NotNull(message = "Content must not be null")

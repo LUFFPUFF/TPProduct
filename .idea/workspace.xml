@@ -7,15 +7,13 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="hotfix WebSocket and sendMessage">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="hotfix nginx.conf">
       <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/config/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapperImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/answer/UIPredefinedAnswerMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/answer/UIPredefinedAnswerMapperImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/target/test-classes/com/example/domain/api/subscription_module/service/impl/SubscriptionServiceImplTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/test-classes/com/example/domain/api/subscription_module/service/impl/SubscriptionServiceImplTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/config/websocketService.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/config/websocketService.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -359,7 +357,7 @@
       <workItem from="1747992637897" duration="4170000" />
       <workItem from="1748097079692" duration="2556000" />
       <workItem from="1748209575032" duration="2426000" />
-      <workItem from="1748217233292" duration="4764000" />
+      <workItem from="1748217233292" duration="5081000" />
     </task>
     <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
       <option name="closed" value="true" />
@@ -609,7 +607,15 @@
       <option name="project" value="LOCAL" />
       <updated>1748221272749</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="hotfix nginx.conf">
+      <option name="closed" value="true" />
+      <created>1748222133731</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1748222133731</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -627,7 +633,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="DX-43 исправлены ошибки при клонировании чатов, а также добавлена возможность назначать оператора" />
     <MESSAGE value="DX-66 Разработаны контроллеры для маршрутизации данных между бекендом и фронтендом. Созданы md описания для Chat Module и загрузки шаблонных ответов" />
     <MESSAGE value="DX-66 Разработаны контроллеры для маршрутизации данных между бекендом и фронтендом. Созданы md описания для Chat Module и загрузки шаблонных ответов" />
     <MESSAGE value="Удалена директория stats" />
@@ -652,6 +657,7 @@
     <MESSAGE value="Исправлена ошибка делоя" />
     <MESSAGE value="Доработан SecurityConfig под работу WebSocket" />
     <MESSAGE value="hotfix WebSocket and sendMessage" />
-    <option name="LAST_COMMIT_MESSAGE" value="hotfix WebSocket and sendMessage" />
+    <MESSAGE value="hotfix nginx.conf" />
+    <option name="LAST_COMMIT_MESSAGE" value="hotfix nginx.conf" />
   </component>
 </project>
