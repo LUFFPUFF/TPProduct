@@ -25,12 +25,9 @@ const ChatWindow = ({ selectedDialog }) => {
     useEffect(() => {
         setMessages(
             (selectedDialog?.messages || []).map((msg) => {
-                console.log("Сообщение из selectedDialog (после F5):", JSON.stringify(msg));
-                console.log("msg.senderType (camelCase):", msg.senderType);
-                console.log("msg.sender_type (snake_case):", msg.sender_type);
 
                 return {
-                    sender: msg.senderType === "OPERATOR" ? "Оператор" : "Клиент",
+                    sender: msg.sender_type === "OPERATOR" ? "Оператор" : "Клиент",
                     text: msg.content,
                     time: msg.sentAt
                         ? new Date(msg.sentAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
