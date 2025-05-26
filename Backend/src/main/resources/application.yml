@@ -6,9 +6,9 @@ spring:
       enabled: false
 
   datasource:
-    url: jdbc:postgresql://postgres:5432/ans_machine_db
+    url: jdbc:postgresql://localhost:5432/ans_machine_db
     username: postgres
-    password: p855060123d
+    password: nikita090504
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
@@ -78,7 +78,7 @@ jwt:
   secret: "sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3"
   access-expiration: 100000
   refresh-expiration: 86400000
-  isLocal: false
+  isLocal: true
 
 # Настройки чатов
 chat:
@@ -146,6 +146,18 @@ answersearch:
     similarity: 0.7
     trust: 0.3
 
+
+logging:
+  level:
+    org.springframework.web.socket: DEBUG
+    org.springframework.messaging: DEBUG
+    org.springframework.security: DEBUG
+    org.apache.tomcat.websocket: DEBUG
+    org.springframework.web.socket.sockjs: TRACE
+    org.springframework.web.socket.sockjs.transport: TRACE
+    org.springframework.web.socket.sockjs.support: TRACE
+    org.springframework.web.socket.server: TRACE
+
 ml:
   service:
     base-url: http://localhost:8000/generate
@@ -162,7 +174,7 @@ ml:
     max-retries: 3
 
 websocket:
-  endpoint: ws
+  endpoint: /ws
   allowed-origins:
     #    - "http://localhost:3000"
     #    - "http://localhost:4200"

@@ -7,7 +7,9 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="hotfix ChatWindow and DialogList">
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="hotfix AutoResponderServiceImpl">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/service/impl/AutoResponderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/service/impl/AutoResponderServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/config/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" afterDir="false" />
@@ -357,7 +359,7 @@
       <workItem from="1747992637897" duration="4170000" />
       <workItem from="1748097079692" duration="2556000" />
       <workItem from="1748209575032" duration="2426000" />
-      <workItem from="1748217233292" duration="13425000" />
+      <workItem from="1748217233292" duration="17450000" />
     </task>
     <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
       <option name="closed" value="true" />
@@ -671,7 +673,55 @@
       <option name="project" value="LOCAL" />
       <updated>1748230318651</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="hotfix ChatWindow">
+      <option name="closed" value="true" />
+      <created>1748230851477</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1748230851477</updated>
+    </task>
+    <task id="LOCAL-00041" summary="hotfix ChatWindow">
+      <option name="closed" value="true" />
+      <created>1748231137864</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1748231137864</updated>
+    </task>
+    <task id="LOCAL-00042" summary="hotfix ChatWindow">
+      <option name="closed" value="true" />
+      <created>1748231471077</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1748231471077</updated>
+    </task>
+    <task id="LOCAL-00043" summary="hotfix websocketService">
+      <option name="closed" value="true" />
+      <created>1748231809877</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1748231809877</updated>
+    </task>
+    <task id="LOCAL-00044" summary="hotfix TextProcessingApiClient">
+      <option name="closed" value="true" />
+      <created>1748233202527</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1748233202527</updated>
+    </task>
+    <task id="LOCAL-00045" summary="hotfix AutoResponderServiceImpl">
+      <option name="closed" value="true" />
+      <created>1748233943648</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1748233943648</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -689,9 +739,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="DX-155 Исправлена ошибка при регистрации нового пользователя" />
-    <MESSAGE value="Исправлена ошибка загрузки ролей пользователя" />
-    <MESSAGE value="Исправлена ошибка TelegramApiClient" />
     <MESSAGE value="Исправлены ошибки request для frontend части" />
     <MESSAGE value="Доработан README.md и добавлен чек лист" />
     <MESSAGE value="fix security config" />
@@ -712,8 +759,11 @@
     <MESSAGE value="hotfix ClientCompanyProcessService" />
     <MESSAGE value="hotfix ClientCompanyProcessService and ChatWindow" />
     <MESSAGE value="hotfix api.js" />
-    <MESSAGE value="hotfix ChatWindow" />
     <MESSAGE value="hotfix ChatWindow and DialogList" />
-    <option name="LAST_COMMIT_MESSAGE" value="hotfix ChatWindow and DialogList" />
+    <MESSAGE value="hotfix ChatWindow" />
+    <MESSAGE value="hotfix websocketService" />
+    <MESSAGE value="hotfix TextProcessingApiClient" />
+    <MESSAGE value="hotfix AutoResponderServiceImpl" />
+    <option name="LAST_COMMIT_MESSAGE" value="hotfix AutoResponderServiceImpl" />
   </component>
 </project>

@@ -106,7 +106,7 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
             return;
         }
 
-        String correctedQuery = "";
+        String correctedQuery = clientQuery;
         List<AnswerSearchResultItem> relevantAnswers = Collections.emptyList();
 
         //TODO временное решение по отключению коррекции

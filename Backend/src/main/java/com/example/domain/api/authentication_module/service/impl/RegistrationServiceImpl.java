@@ -8,6 +8,7 @@ import com.example.domain.api.authentication_module.exception_handler_auth.Email
 import com.example.domain.api.authentication_module.security.jwtUtils.JWTUtilsService;
 import com.example.domain.api.authentication_module.service.interfaces.RegistrationService;
 import com.example.domain.api.authentication_module.service.interfaces.RoleService;
+import com.example.domain.api.chat_service_api.integration.mail.manager.EmailDialogManager;
 import com.example.domain.api.statistics_module.aop.annotation.Counter;
 import com.example.domain.api.statistics_module.aop.annotation.MeteredOperation;
 import com.example.domain.api.statistics_module.aop.annotation.Timer;
@@ -82,17 +83,21 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     @Transactional
     public TokenDto checkRegistrationCode(String registrationCode) {
-        return authCacheService.getRegistrationCode(registrationCode)
-                .map( registrationDto -> {
-                    User newUser = mapperDto.toEntityUserFromRegistration(registrationDto);
+        RegistrationDto registrationDto = authCacheService.getRegistrationCode(registrationCode)
+                .orElseThrow(() -> new RuntimeException("Неверный или просроченный регистрационный код"));
 
-                    userRepository.save(newUser);
+        try {
+            User newUser = mapperDto.toEntityUserFromRegistration(registrationDto);
+            userRepository.save(newUser);
 
-                    roleService.addRole(registrationDto.getEmail(), Role.USER);
+            roleService.addRole(registrationDto.getEmail(), Role.USER);
 
-                    return jWTUtilsService.generateTokensByUser(userDetailsService.loadUserByUsername(registrationDto.getEmail()));
-                })
-                .orElseThrow(() -> new RuntimeException("User registration failed due to an unexpected error"));
+            return jWTUtilsService.generateTokensByUser(
+                    userDetailsService.loadUserByUsername(registrationDto.getEmail())
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка при завершении регистрации", e);
+        }
     }
 
     private String generateRegistrationCode() {
