@@ -7,12 +7,14 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Исправлены тесты">
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Исправлена ошибка делоя">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/jwtUtils/impl/JWTUtilsServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/jwtUtils/impl/JWTUtilsServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapperImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/answer/UIPredefinedAnswerMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/answer/UIPredefinedAnswerMapperImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/target/test-classes/com/example/domain/api/subscription_module/service/impl/SubscriptionServiceImplTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/test-classes/com/example/domain/api/subscription_module/service/impl/SubscriptionServiceImplTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,6 +61,16 @@
     &quot;assignee&quot;: &quot;Sdr3nko&quot;
   }
 }</component>
+  <component name="GitRewordedCommitMessages">
+    <option name="commitMessagesMapping">
+      <RewordedCommitMessageMapping>
+        <option name="originalMessage" value="Исправлены ошибки с регистрацией, добавлен контейнер prometheus" />
+        <option name="rewordedMessage" value="Добавлены два эндпоинта проверки прав доступа&#10;&#10;&#10;Исправлены ошибки с регистрацией, добавлен контейнер prometheus" />
+      </RewordedCommitMessageMapping>
+    </option>
+    <option name="currentCommit" value="1" />
+    <option name="onto" value="228e1579ab1c33325aff83418cf2792c1a6c884a" />
+  </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/LUFFPUFF/TPProduct.git&quot;,
@@ -96,6 +108,8 @@
     &quot;Docker.Docker/Dockerfile.executor&quot;: &quot;Run&quot;,
     &quot;Docker.Docker: Compose Deployment.executor&quot;: &quot;Run&quot;,
     &quot;Docker.docker-compose.yml.ai_service: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.docker-compose.yml.backend: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.docker-compose.yml.frontend: Compose Deployment.executor&quot;: &quot;Run&quot;,
     &quot;Docker.frontend/Dockerfile.executor&quot;: &quot;Run&quot;,
     &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
     &quot;HTTP Request.generated-requests | #1.executor&quot;: &quot;Run&quot;,
@@ -133,6 +147,7 @@
   },
   &quot;keyToStringList&quot;: {
     &quot;DatabaseDriversLRU&quot;: [
+      &quot;redis&quot;,
       &quot;postgresql&quot;
     ]
   }
@@ -160,10 +175,7 @@
       <command value="mvn clean install" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.java in Backend">
-    <configuration name="generated-requests | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" runType="Run single request">
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Spring Boot.SpringBootStartApplication">
     <configuration name="ExternalMessagingServiceImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Backend" />
       <extension name="coverage">
@@ -213,12 +225,25 @@
       </deployment>
       <method v="2" />
     </configuration>
-    <configuration name="docker-compose.yml.ai_service: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+    <configuration name="docker-compose.yml.backend: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
       <deployment type="docker-compose.yml">
         <settings>
           <option name="services">
             <list>
-              <option value="ai_service" />
+              <option value="backend" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="docker-compose.yml.frontend: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="frontend" />
             </list>
           </option>
           <option name="sourceFilePath" value="docker-compose.yml" />
@@ -228,11 +253,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.java in Backend" />
         <item itemvalue="Spring Boot.SpringBootStartApplication" />
+        <item itemvalue="Docker.docker-compose.yml.backend: Compose Deployment" />
+        <item itemvalue="Docker.docker-compose.yml.frontend: Compose Deployment" />
+        <item itemvalue="JUnit.java in Backend" />
         <item itemvalue="JUnit.ExternalMessagingServiceImplTest" />
-        <item itemvalue="HTTP Request.generated-requests | #1" />
-        <item itemvalue="Docker.docker-compose.yml.ai_service: Compose Deployment" />
       </list>
     </recent_temporary>
   </component>
@@ -331,6 +356,9 @@
       <workItem from="1747416644549" duration="3253000" />
       <workItem from="1747823516024" duration="7317000" />
       <workItem from="1747992637897" duration="4170000" />
+      <workItem from="1748097079692" duration="2556000" />
+      <workItem from="1748209575032" duration="2426000" />
+      <workItem from="1748217233292" duration="2228000" />
     </task>
     <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
       <option name="closed" value="true" />
@@ -548,7 +576,23 @@
       <option name="project" value="LOCAL" />
       <updated>1747933835665</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Добавлены два эндпоинта проверки прав доступа">
+      <option name="closed" value="true" />
+      <created>1747998015564</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1747998015564</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Исправлена ошибка делоя">
+      <option name="closed" value="true" />
+      <created>1747998260121</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1747998260121</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -566,9 +610,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="DX-91 DX-93 added company and subscription module" />
-    <MESSAGE value="merged auth,company,subscription modules and frontend into main" />
-    <MESSAGE value="DX-114 configuration nginx, fixed docker, fixed code after last merge" />
     <MESSAGE value="DX-43 Доработана система сокетов, а также улучшен модуль интеграций с внешними системами" />
     <MESSAGE value="merge DX-43 from main" />
     <MESSAGE value="DX-43 исправлены ошибки при клонировании чатов, а также добавлена возможность назначать оператора" />
@@ -591,6 +632,9 @@
     <MESSAGE value="DX-174 Доработаны метрики при мердже" />
     <MESSAGE value="Исправлен application.yml" />
     <MESSAGE value="Исправлены тесты" />
-    <option name="LAST_COMMIT_MESSAGE" value="Исправлены тесты" />
+    <MESSAGE value="Исправлены ошибки с регистрацией, добавлен контейнер prometheus" />
+    <MESSAGE value="Добавлены два эндпоинта проверки прав доступа" />
+    <MESSAGE value="Исправлена ошибка делоя" />
+    <option name="LAST_COMMIT_MESSAGE" value="Исправлена ошибка делоя" />
   </component>
 </project>
