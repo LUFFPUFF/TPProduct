@@ -19,16 +19,16 @@ export const connectWebSocket = (token, selectedDialog, setMessages) => {
         console.log('Успешно подключено: ' + frame);
         client.subscribe(API.websocket.updateMessage(selectedDialog.id), (message) => {
             const messageData = JSON.parse(message.body);
-            if (messageData.chatId && messageData.chatId !== selectedDialog.id) {
+            if (messageData.chat_id && messageData.chat_id !== selectedDialog.id) {
                 console.log("Получено сообщение для другого чата, игнорируем.");
                 return;
             }
 
             const formattedNewMessage = {
-                sender: messageData.senderType === "OPERATOR" ? "Оператор" : "Клиент",
+                sender: messageData.sender_type === "OPERATOR" ? "Оператор" : "Клиент",
                 text: messageData.content,
-                time: messageData.sentAt
-                    ? new Date(messageData.sentAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                time: messageData.sent_at
+                    ? new Date(messageData.sent_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
                     : "",
             };
 
