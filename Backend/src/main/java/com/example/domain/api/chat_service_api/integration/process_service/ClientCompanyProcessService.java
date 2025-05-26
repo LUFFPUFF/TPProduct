@@ -64,14 +64,14 @@ public class ClientCompanyProcessService {
                             return new ResourceNotFoundException("Telegram configuration not found for bot: " + telegramResponse.getBotUsername());
                         });
 
-        Company company = configuration.getCompany();
+        Company companyForThisBot  = configuration.getCompany();
         String telegramUsername = telegramResponse.getUsername();
-        String companyIdStr = company.getId() != null ? company.getId().toString() : "unknown_company";
+        String companyIdStr = companyForThisBot .getId() != null ? companyForThisBot .getId().toString() : "unknown_company";
 
-        Client client = clientService.findByName(telegramUsername)
+        Client client = clientService.findByNameAndCompanyId(telegramUsername, companyForThisBot.getId())
                 .orElseGet(() -> {
-                    log.info("Client with Telegram username '{}' not found for company ID {}. Creating new client.", telegramUsername, company.getId());
-                    return clientService.createClient(telegramUsername, company.getId(), null);
+                    log.info("Client with Telegram username '{}' not found for company ID {}. Creating new client.", telegramUsername, companyForThisBot .getId());
+                    return clientService.createClient(telegramUsername, companyForThisBot .getId(), null);
                 });
         log.debug("Using client ID {} for Telegram user '{}'", client.getId(), telegramUsername);
 
@@ -103,7 +103,7 @@ public class ClientCompanyProcessService {
             log.info("No existing open Telegram chat found for client ID {}. Creating new chat.", client.getId());
             CreateChatRequestDTO createChatRequest = new CreateChatRequestDTO();
             createChatRequest.setClientId(client.getId());
-            createChatRequest.setCompanyId(company.getId());
+            createChatRequest.setCompanyId(companyForThisBot .getId());
             createChatRequest.setChatChannel(ChatChannel.Telegram);
             createChatRequest.setInitialMessageContent(telegramResponse.getText());
 
