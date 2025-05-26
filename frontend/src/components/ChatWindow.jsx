@@ -10,7 +10,7 @@ const ChatWindow = ({ selectedDialog }) => {
     const [messageText, setMessageText] = useState("");
     const [messages, setMessages] = useState(
         (selectedDialog?.messages || []).map((msg) => ({
-            sender: msg.senderType === "OPERATOR" ? "Оператор" : "Клиент",
+            sender: msg.sender_type === "OPERATOR" ? "Оператор" : "Клиент",
             text: msg.content,
             time: Date.now()
                 ? new Date(msg.sentAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
