@@ -23,7 +23,7 @@ const ChatWindow = ({ selectedDialog }) => {
 
     // Обновление сообщений при изменении выбранного диалога
     useEffect(() => {
-        setMessages(prevMessages => {
+        setMessages((prevMessages, formattedNewMessage) => {
             if (formattedNewMessage.id && prevMessages.some(m => m.id === formattedNewMessage.id)) {
                 console.log("СООБЩЕНИЕ УЖЕ ЕСТЬ, ПОПЫТКА ОБНОВЛЕНИЯ/ДЕДУПЛИКАЦИИ:");
                 console.log("Сообщение с ID", formattedNewMessage.id, "уже существует (вероятно, от оптимистичного обновления). Обновляем его или игнорируем добавление.");
