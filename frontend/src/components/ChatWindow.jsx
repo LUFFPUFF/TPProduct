@@ -26,8 +26,20 @@ const ChatWindow = ({ selectedDialog }) => {
         setMessages(
             (selectedDialog?.messages || []).map((msg) => {
 
+                let senderName;
+
+                const type = msg.sender_type;
+
+                if (type === "OPERATOR") {
+                    senderName = "Оператор";
+                } else if (type === "AUTO_RESPONDER") {
+                    senderName = "Автоответчик";
+                } else {
+                    senderName = "Клиент";
+                }
+
                 return {
-                    sender: msg.sender_type === "OPERATOR" ? "Оператор" : "Клиент",
+                    sender: senderName,
                     text: msg.content,
                     time: msg.sentAt
                         ? new Date(msg.sentAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
