@@ -6,9 +6,9 @@ spring:
       enabled: false
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/ans_machine_db
+    url: jdbc:postgresql://postgres:5432/ans_machine_db
     username: postgres
-    password: nikita090504
+    password: p855060123d
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
@@ -78,7 +78,7 @@ jwt:
   secret: "sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3"
   access-expiration: 100000
   refresh-expiration: 86400000
-  isLocal: true
+  isLocal: false
 
 # Настройки чатов
 chat:
