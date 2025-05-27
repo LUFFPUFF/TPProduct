@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest
 -------------------------------------------------------------------------------
-Tests run: 8, Failures: 3, Errors: 1, Skipped: 0, Time elapsed: 1.522 s <<< FAILURE! -- in com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest
-com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.processQuery_ApiClientThrowsIOException_ShouldWrapInMLExceptionAndRetry -- Time elapsed: 0.040 s <<< FAILURE!
+Tests run: 8, Failures: 3, Errors: 1, Skipped: 0, Time elapsed: 2.108 s <<< FAILURE! -- in com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest
+com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.processQuery_ApiClientThrowsIOException_ShouldWrapInMLExceptionAndRetry -- Time elapsed: 0.145 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <com.example.domain.api.ans_api_module.correction_answer.exception.MLException> but was: <java.lang.NullPointerException>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
@@ -24,7 +24,7 @@ Caused by: java.lang.NullPointerException: Cannot invoke "com.example.domain.api
 	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
 	... 6 more
 
-com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.processQuery_ValidationFails_ShouldThrowMLExceptionWith400 -- Time elapsed: 0.067 s <<< FAILURE!
+com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.processQuery_ValidationFails_ShouldThrowMLExceptionWith400 -- Time elapsed: 0.205 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <com.example.domain.api.ans_api_module.correction_answer.exception.MLException> but was: <java.lang.NullPointerException>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
@@ -46,7 +46,7 @@ Caused by: java.lang.NullPointerException: Cannot invoke "com.example.domain.api
 	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
 	... 6 more
 
-com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.processQuery_ApiError_ShouldThrowMLExceptionAndRetry -- Time elapsed: 0.007 s <<< FAILURE!
+com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.processQuery_ApiError_ShouldThrowMLExceptionAndRetry -- Time elapsed: 0.009 s <<< FAILURE!
 org.opentest4j.AssertionFailedError: Unexpected exception type thrown, expected: <com.example.domain.api.ans_api_module.correction_answer.exception.MLException> but was: <java.lang.NullPointerException>
 	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
 	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:67)
@@ -68,7 +68,7 @@ Caused by: java.lang.NullPointerException: Cannot invoke "com.example.domain.api
 	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
 	... 6 more
 
-com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.processQuery_ApiClientReturnsResponseWithEmptyText_ShouldReturnTrimmedOriginalQuery -- Time elapsed: 0.005 s <<< ERROR!
+com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingServiceTest.processQuery_ApiClientReturnsResponseWithEmptyText_ShouldReturnTrimmedOriginalQuery -- Time elapsed: 0.010 s <<< ERROR!
 java.lang.NullPointerException: Cannot invoke "com.example.domain.api.statistics_module.metrics.service.ITextProcessingMetricsService.incrementApiRetries(String, String)" because "this.this$0.metricsService" is null
 	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService$1.onError(TextProcessingService.java:211)
 	at org.springframework.retry.support.RetryTemplate.doOnErrorInterceptors(RetryTemplate.java:646)

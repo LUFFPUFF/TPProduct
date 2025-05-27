@@ -36,6 +36,7 @@ import org.mockito.quality.Strictness;
 import org.springframework.context.ApplicationEventPublisher;
 
 
+import java.nio.file.AccessDeniedException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -80,7 +81,7 @@ class AutoResponderServiceImplTest {
 
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws AccessDeniedException {
         reset(answerSearchService, textProcessingService, chatMessageService, messageMapper,
                 externalMessagingService, eventPublisher);
 
@@ -123,7 +124,7 @@ class AutoResponderServiceImplTest {
     }
 
     @Test
-    void processNewPendingChat_ChatNotFound_ShouldThrowException() {
+    void processNewPendingChat_ChatNotFound_ShouldThrowException() throws AccessDeniedException {
         when(chatMessageService.findChatEntityById(CHAT_ID)).thenReturn(Optional.empty());
         AutoResponderException exception = assertThrows(AutoResponderException.class,
                 () -> autoResponderService.processNewPendingChat(CHAT_ID));
@@ -133,7 +134,7 @@ class AutoResponderServiceImplTest {
     }
 
     @Test
-    void processNewPendingChat_WrongStatus_ShouldLogAndReturn() throws AutoResponderException {
+    void processNewPendingChat_WrongStatus_ShouldLogAndReturn() throws AutoResponderException, AccessDeniedException {
         testChat.setStatus(ChatStatus.IN_PROGRESS);
         when(chatMessageService.findChatEntityById(CHAT_ID)).thenReturn(Optional.of(testChat));
 
@@ -147,7 +148,7 @@ class AutoResponderServiceImplTest {
 
 
     @Test
-    void processNewPendingChat_WhenNoFirstMessage_ShouldNotFailAndNotProcess() throws AutoResponderException {
+    void processNewPendingChat_WhenNoFirstMessage_ShouldNotFailAndNotProcess() throws AutoResponderException, AccessDeniedException {
         when(chatMessageService.findFirstMessageByChatId(CHAT_ID)).thenReturn(Optional.empty());
 
         autoResponderService.processNewPendingChat(CHAT_ID);

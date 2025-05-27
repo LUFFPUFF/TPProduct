@@ -5,6 +5,7 @@ import com.example.database.model.company_subscription_module.user_roles.user.Us
 import com.example.database.repository.company_subscription_module.UserRepository;
 import com.example.domain.api.chat_service_api.mapper.UserMapper;
 import com.example.domain.api.chat_service_api.model.dto.user.UserInfoDTO; // Нужен для маппера
+import com.example.domain.api.company_module.service.impl.UserServiceImpl;
 import com.example.domain.dto.CompanyDto; // Нужен для UserDto
 import com.example.domain.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;

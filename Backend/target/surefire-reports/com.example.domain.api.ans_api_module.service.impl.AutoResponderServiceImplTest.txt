@@ -1,4 +1,83 @@
 -------------------------------------------------------------------------------
 Test set: com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest
 -------------------------------------------------------------------------------
-Tests run: 13, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.320 s -- in com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest
+Tests run: 13, Failures: 5, Errors: 0, Skipped: 0, Time elapsed: 1.031 s <<< FAILURE! -- in com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ExternalMessagingFails_ShouldLogButNotThrow -- Time elapsed: 0.312 s <<< FAILURE!
+Argument(s) are different! Wanted:
+externalMessagingService.sendMessageToExternal(
+    1,
+    "Rewritten answer text"
+);
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ExternalMessagingFails_ShouldLogButNotThrow(AutoResponderServiceImplTest.java:269)
+Actual invocations have different arguments at position [1]:
+externalMessagingService.sendMessageToExternal(
+    1,
+    "Извините, я не смог найти ответ на ваш вопрос и сгенерировать подходящий ответ. Передаю ваш вопрос оператору."
+);
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.sendAutoResponderMessage(AutoResponderServiceImpl.java:264)
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ExternalMessagingFails_ShouldLogButNotThrow(AutoResponderServiceImplTest.java:269)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ShouldUseOriginalAnswer_WhenRewriteFails -- Time elapsed: 0.008 s <<< FAILURE!
+Wanted but not invoked:
+textProcessingService.processQuery(
+    "Test query",
+    CORRECTION
+);
+-> at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:76)
+Actually, there were zero interactions with this mock.
+
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:76)
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ShouldUseOriginalAnswer_WhenRewriteFails(AutoResponderServiceImplTest.java:207)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ShouldProcessCorrectAndSendRewrittenAnswer -- Time elapsed: 0.056 s <<< FAILURE!
+Wanted but not invoked:
+textProcessingService.processQuery(
+    "Test query",
+    CORRECTION
+);
+-> at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:76)
+Actually, there were zero interactions with this mock.
+
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:76)
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ShouldProcessCorrectAndSendRewrittenAnswer(AutoResponderServiceImplTest.java:185)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_InternalSaveFails_ShouldLogAndAttemptExternalSend -- Time elapsed: 0.013 s <<< FAILURE!
+Argument(s) are different! Wanted:
+externalMessagingService.sendMessageToExternal(
+    1,
+    "Rewritten answer text"
+);
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_InternalSaveFails_ShouldLogAndAttemptExternalSend(AutoResponderServiceImplTest.java:286)
+Actual invocations have different arguments at position [1]:
+externalMessagingService.sendMessageToExternal(
+    1,
+    "Извините, я не смог найти ответ на ваш вопрос и сгенерировать подходящий ответ. Передаю ваш вопрос оператору."
+);
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.sendAutoResponderMessage(AutoResponderServiceImpl.java:264)
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_InternalSaveFails_ShouldLogAndAttemptExternalSend(AutoResponderServiceImplTest.java:286)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_UnexpectedException_ShouldEscalateAndSendErrorMessage -- Time elapsed: 0.005 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: Expected com.example.domain.api.ans_api_module.exception.AutoResponderException to be thrown, but nothing was thrown.
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:73)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3128)
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_UnexpectedException_ShouldEscalateAndSendErrorMessage(AutoResponderServiceImplTest.java:243)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+

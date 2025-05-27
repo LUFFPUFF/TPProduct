@@ -1,4 +1,3 @@
-com\example\domain\api\chat_service_api\integration\dto\IncomingTelegramMessage$IncomingTelegramMessageBuilder.class
 com\example\domain\dto\ChatAttachmentDto.class
 com\example\domain\api\ans_api_module\template\exception\TextProcessingException.class
 com\example\domain\api\chat_service_api\model\rest\chat\CloseChatRequestDTO.class
@@ -15,6 +14,8 @@ com\example\database\repository\ai_module\AITrainingDataRepository.class
 com\example\domain\api\crm_module\dto\ChangeDealStageReq.class
 com\example\domain\api\ans_api_module\service\IAutoResponderService.class
 com\example\domain\api\subscription_module\service\mapper\SubscribeDataMapper.class
+com\example\domain\api\chat_service_api\service\impl\message\ChatMessageQueryServiceImpl.class
+com\example\domain\api\company_module\exception_handler_company\UserAlreadyInCompanyExeption.class
 com\example\domain\api\subscription_module\service\SubscriptionService.class
 com\example\database\repository\ai_module\PredefinedAnswerRepository.class
 com\example\domain\api\ans_api_module\template\services\answer\FileProcessorService.class
@@ -28,6 +29,8 @@ com\example\ui\mapper\chat\UiChatMapper.class
 com\example\domain\dto\CompanyWithMembersDto$CompanyWithMembersDtoBuilder.class
 com\example\database\model\integration_module\IntegrationType.class
 com\example\database\model\chats_messages_module\chat\Chat.class
+com\example\domain\api\chat_service_api\event\chat\ChatNotificationEvent.class
+com\example\domain\api\chat_service_api\util\ChatInitialMessageHelper.class
 com\example\domain\api\subscription_module\service\mapper\SubscribeDataMapper$1.class
 com\example\domain\api\chat_service_api\integration\mail\response\EmailResponse.class
 com\example\domain\api\ans_api_module\answer_finder\mapper\AnswerSearchMapper.class
@@ -44,6 +47,7 @@ com\example\domain\api\ans_api_module\template\batch\job\AnswerItemWriteListener
 com\example\domain\api\statistics_module\model\chat\ChatSummaryStatsDTO$ChatSummaryStatsDTOBuilder.class
 com\example\domain\api\chat_service_api\integration\telegram\TelegramResponse$TelegramResponseBuilder.class
 com\example\database\model\chats_messages_module\message\ChatMessage.class
+com\example\domain\api\chat_service_api\event\chat\ChatTypingEvent.class
 com\example\domain\api\ans_api_module\template\dto\job\JobStartDto.class
 com\example\ui\controller\ChatUiController.class
 com\example\domain\api\crm_module\exception_handler_crm\UpdateDealException.class
@@ -66,6 +70,7 @@ com\example\domain\api\ans_api_module\template\dto\job\JobExecutionDto$JobExecut
 com\example\domain\dto\UserRoleDto.class
 com\example\domain\api\company_module\controller\CompanyController.class
 com\example\domain\api\chat_service_api\config\WebSocketProperties$SecurityProperties$JwtProperties.class
+com\example\domain\api\chat_service_api\event\chat\OperatorAssignedEvent.class
 com\example\ui\dto\chat\rest\CreateUiTestChatRequest.class
 com\example\domain\api\chat_service_api\integration\whats_app\model\response\WhatsappResponse.class
 com\example\domain\api\statistics_module\model\auth\RegistrationSummaryStatsDTO.class
@@ -103,6 +108,7 @@ com\example\database\model\company_subscription_module\company\CompanyMailConfig
 com\example\domain\api\chat_service_api\mapper\ClientMapperImpl.class
 com\example\domain\api\ans_api_module\template\batch\reader\PredefinedAnswerItemReaderAdapter.class
 com\example\domain\api\chat_service_api\integration\telegram\TelegramBotManager.class
+com\example\domain\api\company_module\service\impl\ClientServiceImpl.class
 com\example\domain\api\ans_api_module\template\dto\request\UploadFileRequest.class
 com\example\domain\api\chat_service_api\event\chat\OperatorLinkedToChatEvent.class
 com\example\database\model\company_subscription_module\company\Company.class
@@ -111,11 +117,15 @@ com\example\domain\api\chat_service_api\service\impl\LeastBusyAssignmentService.
 com\example\domain\api\ans_api_module\answer_finder\exception\NlpException.class
 com\example\domain\api\chat_service_api\mapper\UserMapper.class
 com\example\domain\api\statistics_module\service\impl\AnswerSearchStatisticsServiceImpl.class
+com\example\domain\api\chat_service_api\service\message\IChatMessageStatusService.class
 com\example\domain\api\statistics_module\service\AbstractStatisticsService.class
 com\example\database\model\crm_module\ClientContacts.class
 com\example\domain\api\ans_api_module\template\batch\job\AnswerItemProcessListener$StepStatistics.class
 com\example\domain\api\chat_service_api\integration\service\IIntegrationService.class
+com\example\domain\api\chat_service_api\controller\ChatInteractionController.class
+com\example\domain\api\chat_service_api\service\impl\message\ChatMessageCreationServiceImpl$SenderInfo.class
 com\example\domain\api\ans_api_module\correction_answer\rule\TestRule.class
+com\example\domain\api\chat_service_api\event\payload\TypingPayload.class
 com\example\domain\api\subscription_module\service\SubscriptionPriceCalculateService.class
 com\example\domain\api\ans_api_module\answer_finder\dto\rest\AnswerSearchResponse.class
 com\example\domain\api\chat_service_api\exception_handler\GlobalChatExceptionHandler.class
@@ -128,7 +138,6 @@ com\example\database\model\chats_messages_module\message\MessageStatus.class
 com\example\domain\api\crm_module\dto\DealArchiveDto$DealArchiveDtoBuilder.class
 com\example\domain\api\authentication_module\controller\RegistrationController.class
 com\example\domain\api\chat_service_api\model\rest\chat\CreateChatRequestDTO.class
-com\example\domain\api\chat_service_api\service\impl\ChatServiceImpl.class
 com\example\domain\api\company_module\controller\CompanyAdminController.class
 com\example\domain\api\statistics_module\model\metric\StatisticsQueryRequestDTO.class
 com\example\domain\api\chat_service_api\exception_handler\exception\controller\ChatControllerException.class
@@ -142,7 +151,6 @@ com\example\ui\mapper\chat\UiUserMapper.class
 com\example\database\repository\crm_module\ClientNotesRepository.class
 com\example\domain\api\chat_service_api\service\WebSocketMessagingService.class
 com\example\domain\api\ans_api_module\template\mapper\JobExecutionMapper.class
-com\example\domain\api\chat_service_api\service\impl\ChatMessageServiceImpl.class
 com\example\domain\api\crm_module\dto\DealDto.class
 com\example\domain\api\statistics_module\model\autoresponder\AnswerSearchSummaryStatsDTO.class
 com\example\ui\dto\answer\UiPredefinedAnswerDto.class
@@ -154,7 +162,6 @@ com\example\domain\api\crm_module\dto\ChangeDealReqDto.class
 com\example\domain\dto\PriceDto.class
 com\example\domain\api\chat_service_api\integration\vk\reponse\VkLongPollUpdatesResponse.class
 com\example\domain\security\model\UserContext$UserContextBuilder.class
-com\example\domain\api\chat_service_api\service\impl\UserServiceImpl.class
 com\example\domain\api\crm_module\dto\CreateDealDtoReq.class
 com\example\domain\api\company_module\exception_handler_company\UserNotInCompanyException.class
 com\example\domain\api\subscription_module\exception_handler_subscription\AlreadyInCompanyException.class
@@ -171,9 +178,10 @@ com\example\domain\api\crm_module\exception_handler_crm\AccessDeniedFilterArchiv
 com\example\ui\dto\chat\UIChatDto$UIChatDtoBuilder.class
 com\example\domain\api\chat_service_api\event\message\ChatMessageSentEvent.class
 com\example\domain\api\chat_service_api\model\dto\client\ClientDTO.class
-com\example\domain\api\chat_service_api\integration\process_service\ClientCompanyProcessService.class
+com\example\domain\api\chat_service_api\util\ChatValidationUtil.class
 com\example\ui\dto\chat\notification\UiNotificationDto$UiNotificationDtoBuilder.class
 com\example\domain\api\authentication_module\testAuthService\TestController.class
+com\example\domain\api\chat_service_api\service\chat\ChatAttachmentService.class
 com\example\domain\security\context\UserContextInterceptor.class
 com\example\domain\api\crm_module\exception_handler_crm\NotFoundClientForDealException.class
 com\example\database\repository\company_subscription_module\CompanyTelegramConfigurationRepository.class
@@ -182,6 +190,7 @@ com\example\domain\dto\UserDto.class
 com\example\domain\api\company_module\dto\MemberRoleReqDto$MemberRoleReqDtoBuilder.class
 com\example\domain\api\ans_api_module\answer_finder\nlp\lemmatizer\dto\UdpipeResponse.class
 com\example\domain\security\util\UserContextHolder.class
+com\example\domain\api\chat_service_api\integration\service\impl\CompanyChannelConfigurationProviderImpl.class
 com\example\domain\exception\ExceptionDto$ExceptionDtoBuilder.class
 com\example\domain\api\ans_api_module\answer_finder\nlp\lemmatizer\dto\UdpipeRequest.class
 com\example\domain\api\authentication_module\dto\AnswerSettingsDto$AnswerSettingsDtoBuilder.class
@@ -190,8 +199,11 @@ com\example\domain\api\authentication_module\service\impl\AuthServiceImpl.class
 com\example\domain\api\ans_api_module\template\services\job\impl\JobMetricsServiceImpl.class
 com\example\domain\api\chat_service_api\event\chat\ChatStatusChangedEvent.class
 com\example\domain\api\ans_api_module\answer_finder\search\ranker\ScoreBasedAnswerRanker.class
+com\example\domain\api\company_module\service\IClientService.class
 com\example\domain\api\authentication_module\security\filter\SubscriptionCheckFilter.class
 com\example\domain\exception\GlobalExceptionHandler.class
+com\example\domain\api\chat_service_api\service\impl\message\ChatMessageStatusServiceImpl.class
+com\example\domain\api\chat_service_api\util\MdcUtil.class
 com\example\domain\api\chat_service_api\integration\mail\parser\YandexParser.class
 com\example\domain\api\chat_service_api\integration\vk\reponse\VkMessageSendResponse.class
 com\example\database\model\chats_messages_module\Notification.class
@@ -205,6 +217,7 @@ com\example\domain\api\statistics_module\model\chat\ChatsByStatusDTO$ChatsByStat
 com\example\ui\dto\chat\rest\CreateUiTestChatRequest$CreateUiTestChatRequestBuilder.class
 com\example\domain\api\ans_api_module\answer_finder\nlp\lemmatizer\impl\ExternalApiLemmatizer.class
 com\example\domain\api\ans_api_module\template\batch\processor\AnswerItemProcessor.class
+com\example\domain\api\chat_service_api\service\chat\IChatQueryService.class
 com\example\domain\api\ans_api_module\template\mapper\CompanyMapper.class
 com\example\domain\api\chat_service_api\config\WebSocketProperties.class
 com\example\domain\api\ans_api_module\answer_finder\search\score_combiner\WeightedSumScoreCombiner.class
@@ -227,6 +240,7 @@ com\example\ui\mapper\chat\UINotificationMapper.class
 com\example\domain\api\ans_api_module\template\dto\request\PredefinedAnswerUploadDto$PredefinedAnswerUploadDtoBuilder.class
 com\example\domain\api\ans_api_module\template\mapper\PredefinedAnswerMapper.class
 com\example\domain\api\authentication_module\dto\AnswerSettingsDto.class
+com\example\domain\api\chat_service_api\util\ChatMetricHelper.class
 com\example\domain\api\ans_api_module\template\batch\item\TxtAnswerReader.class
 com\example\domain\api\subscription_module\exception_handler_subscription\MaxOperatorsCountException.class
 com\example\domain\dto\RegistrationDto$RegistrationDtoBuilder.class
@@ -241,6 +255,7 @@ com\example\domain\api\chat_service_api\integration\vk\client\VkApiClient$2.clas
 com\example\domain\api\ans_api_module\template\dto\job\JobExecutionDto.class
 com\example\domain\api\company_module\dto\ChangeCompanyDataDto.class
 com\example\domain\api\ans_api_module\template\services\job\JobMetricsService.class
+com\example\domain\api\chat_service_api\util\MdcUtil$ThrowingSupplier.class
 com\example\database\model\ai_module\AIFeedback.class
 com\example\domain\api\company_module\service\CompanyService.class
 com\example\domain\api\statistics_module\model\metric\MetricTimeSeriesDTO$MetricTimeSeriesDTOBuilder.class
@@ -249,6 +264,7 @@ com\example\domain\api\ans_api_module\template\mapper\JobExecutionMapperImpl.cla
 com\example\domain\api\ans_api_module\answer_finder\search\score_combiner\ScoreCombiner.class
 com\example\domain\api\ans_api_module\template\exception\InvalidFileFormatException.class
 com\example\domain\api\crm_module\dto\DealTaskDto$DealTaskDtoBuilder.class
+com\example\domain\api\chat_service_api\service\chat\IChatAssignmentService.class
 com\example\domain\api\ans_api_module\answer_finder\controller\AnswerSearchController.class
 com\example\database\repository\ai_module\AIFeedbackRepository.class
 com\example\domain\api\ans_api_module\template\dto\request\PredefinedAnswerUploadDto.class
@@ -257,7 +273,7 @@ com\example\domain\api\ans_api_module\correction_answer\service\TextProcessingSe
 com\example\domain\api\crm_module\exception_handler_crm\NotFoundDealDataException.class
 com\example\domain\api\statistics_module\model\metric\StatisticsQueryRequestDTO$StatisticsQueryRequestDTOBuilder.class
 com\example\domain\api\ans_api_module\answer_finder\dto\AnswerSearchResultItem.class
-com\example\domain\api\chat_service_api\service\IAssignmentService.class
+com\example\domain\api\chat_service_api\util\ChatFactory.class
 com\example\domain\api\statistics_module\model\auth\RegistrationSummaryStatsDTO$RegistrationSummaryStatsDTOBuilder.class
 com\example\domain\dto\EmailDto.class
 com\example\domain\api\ans_api_module\template\exception\JsonProcessingException.class
@@ -268,6 +284,7 @@ com\example\domain\api\authentication_module\security\jwtUtils\AuthCookieService
 com\example\domain\api\chat_service_api\integration\vk\model\VkLongPollObject.class
 com\example\database\model\company_subscription_module\company\CompanyWhatsappConfiguration.class
 com\example\domain\api\authentication_module\service\impl\RegistrationServiceImpl.class
+com\example\domain\api\chat_service_api\service\impl\message\ChatMessageCreationServiceImpl$1.class
 com\example\domain\api\chat_service_api\config\WebSocketProperties$HeartbeatProperties.class
 com\example\domain\api\statistics_module\service\IChatStatisticsService.class
 com\example\domain\api\chat_service_api\integration\vk\client\VkApiClient.class
@@ -289,11 +306,13 @@ com\example\ui\controller\PredefinedAnswerUIController.class
 com\example\database\model\company_subscription_module\subscription\SubscriptionStatus.class
 com\example\domain\api\authentication_module\dto\AuthDataDto$AuthDataDtoBuilder.class
 com\example\database\model\crm_module\deal\DealStage.class
+com\example\domain\api\chat_service_api\integration\service\IIncomingMessageProcessorService.class
 com\example\domain\api\crm_module\dto\DealArchiveDto.class
 com\example\domain\api\subscription_module\controller\SubscriptionController.class
 com\example\domain\api\ans_api_module\correction_answer\service\TextProcessingService.class
 com\example\ui\dto\answer\UiPredefinedAnswerRequest$UiPredefinedAnswerRequestBuilder.class
 com\example\domain\api\ans_api_module\answer_finder\nlp\lemmatizer\config\NlpConfig.class
+com\example\domain\api\chat_service_api\service\IAssignmentStrategyService.class
 com\example\domain\api\authentication_module\exception_handler_auth\InvalidCodeException.class
 com\example\domain\api\ans_api_module\answer_finder\nlp\hf_similarity_client\HuggingFaceSentenceSimilarityClient.class
 com\example\domain\api\chat_service_api\model\dto\ChatDetailsDTO.class
@@ -315,11 +334,13 @@ com\example\domain\api\authentication_module\service\impl\CurrentUserDataService
 com\example\domain\api\chat_service_api\event\message\ChatMessageStatusUpdatedEvent.class
 com\example\database\model\ai_module\AIResponses.class
 com\example\domain\api\ans_api_module\answer_finder\nlp\hf_similarity_client\SentenceSimilarityClient.class
+com\example\domain\api\chat_service_api\util\ChatMessageFactory.class
 com\example\domain\api\authentication_module\dto\PasswordDto.class
 com\example\domain\api\ans_api_module\correction_answer\dto\GenerationResponse$GenerationResponseBuilder.class
 com\example\domain\api\chat_service_api\service\IChatMessageService.class
 com\example\ui\dto\chat\rest\UiSendUiMessageRequest.class
 com\example\domain\api\chat_service_api\service\impl\NotificationServiceImpl.class
+com\example\domain\api\chat_service_api\integration\service\impl\CompanyChannelConfigurationProviderImpl$1.class
 com\example\domain\api\statistics_module\metrics\service\impl\AnswerSearchMetricsServiceImpl.class
 com\example\domain\api\chat_service_api\integration\telegram\TelegramApiResponse.class
 com\example\domain\api\statistics_module\model\metric\TimeSeriesDataPointDTO.class
@@ -328,12 +349,14 @@ com\example\domain\api\statistics_module\aop\MetricsAspect.class
 com\example\domain\api\crm_module\dto\FilterDealsDto.class
 com\example\database\model\crm_module\task\TaskStatus.class
 com\example\domain\api\authentication_module\security\config\SecurityConfig.class
+com\example\domain\api\chat_service_api\service\message\IChatMessageCreationService.class
 com\example\domain\api\ans_api_module\answer_finder\domain\AnswerCandidate.class
 com\example\domain\api\statistics_module\metrics\service\IRoleMetricsService.class
 com\example\domain\dto\SubscribeExtendDataDto.class
 com\example\domain\api\statistics_module\model\auth\RoleSummaryStatsDTO.class
 com\example\domain\api\chat_service_api\integration\dto\rest\CreateVkConfigurationRequest.class
 com\example\cache\CacheConfig.class
+com\example\domain\api\chat_service_api\service\impl\message\ChatMessageCreationServiceImpl.class
 com\example\domain\api\authentication_module\controller\UserSettingsController.class
 com\example\domain\api\statistics_module\service\impl\AuthStatisticsServiceImpl.class
 com\example\domain\api\subscription_module\service\impl\SubscriptionPriceCalculateServiceImpl.class
@@ -346,6 +369,7 @@ com\example\domain\api\company_module\dto\ChangeCompanyDataDto$ChangeCompanyData
 com\example\domain\api\chat_service_api\integration\whats_app\model\WhatsappWebhookChange.class
 com\example\domain\api\statistics_module\metrics\service\IAnswerSearchMetricsService.class
 com\example\database\model\company_subscription_module\company\CompanyVkConfiguration.class
+com\example\domain\api\company_module\service\IUserService.class
 com\example\domain\api\ans_api_module\answer_finder\domain\TrustScore.class
 com\example\domain\api\ans_api_module\template\exception\JobParametersInvalidException.class
 com\example\domain\api\chat_service_api\integration\config\IntegrationConfig.class
@@ -359,11 +383,14 @@ com\example\domain\api\ans_api_module\template\dto\response\UploadResultResponse
 com\example\domain\api\ans_api_module\correction_answer\dto\textProcessingDto\TextProcessingResponse.class
 com\example\domain\api\company_module\controller\CompanySettingsController.class
 com\example\domain\api\crm_module\controller\impl\CrmController.class
+com\example\domain\api\chat_service_api\service\chat\IChatCreationService.class
+com\example\database\repository\chats_messages_module\ChatRepository$OperatorChatCount.class
 com\example\domain\api\authentication_module\service\interfaces\AuthService.class
 com\example\domain\dto\MemberDto.class
 com\example\database\repository\company_subscription_module\CompanyMailConfigurationRepository.class
 com\example\domain\api\chat_service_api\integration\telegram\TelegramApiClient.class
 com\example\domain\api\ans_api_module\template\dto\job\JobStatisticsDto.class
+com\example\domain\api\chat_service_api\service\impl\chat\ChatServiceImpl.class
 com\example\domain\api\chat_service_api\integration\whats_app\WhatsappWebhookProcessor.class
 com\example\domain\api\chat_service_api\config\WebSocketConfig.class
 com\example\database\model\company_subscription_module\user_roles\UserRole.class
@@ -379,7 +406,6 @@ com\example\domain\dto\TokenDto.class
 com\example\domain\api\statistics_module\model\auth\AuthSummaryStatsDTO.class
 com\example\domain\api\ans_api_module\answer_finder\nlp\lemmatizer\config\NlpProperties.class
 com\example\domain\api\chat_service_api\exception_handler\exception\service\ChatAttachmentServiceException.class
-com\example\domain\api\chat_service_api\service\ChatAttachmentService.class
 com\example\domain\api\statistics_module\model\MetricSummaryDto.class
 com\example\domain\api\ans_api_module\answer_finder\search\dto\ScoredAnswerCandidate.class
 com\example\domain\api\ans_api_module\template\services\job\impl\JobStatisticsCollectorImpl.class
@@ -397,7 +423,9 @@ com\example\domain\api\chat_service_api\model\dto\ChatDTO.class
 com\example\domain\api\ans_api_module\answer_finder\service\AnswerSearchServiceImpl.class
 com\example\domain\dto\SubscribeTariff.class
 com\example\domain\security\config\WebConfig.class
+com\example\domain\api\chat_service_api\service\chat\IChatLifecycleService.class
 com\example\domain\api\ans_api_module\template\services\answer\impl\PredefinedAnswerServiceImpl.class
+com\example\domain\api\chat_service_api\service\impl\chat\ChatLifecycleServiceImpl$1.class
 com\example\domain\api\company_api_test\service\CompanyService.class
 com\example\domain\api\authentication_module\cache\AuthCacheService.class
 com\example\domain\api\ans_api_module\template\dto\response\AnswerValidationResult$FieldError.class
@@ -407,7 +435,6 @@ com\example\domain\api\chat_service_api\integration\listener\SendMessageCommand.
 com\example\domain\api\statistics_module\metrics\client\PrometheusQueryClient.class
 com\example\database\model\crm_module\deal\Deal.class
 com\example\domain\api\ans_api_module\template\mapper\StatisticsMapperImpl.class
-com\example\domain\api\chat_service_api\integration\dto\IncomingTelegramMessage.class
 com\example\domain\api\authentication_module\security\jwtUtils\JwtRequestFilter.class
 com\example\domain\dto\mapper\ChatMapperHelper.class
 com\example\ui\dto\user\UiUserDto.class
@@ -422,7 +449,6 @@ com\example\domain\api\crm_module\dto\DealTaskDto.class
 com\example\domain\api\ans_api_module\template\batch\job\AnswerItemWriteListener$WriteStatistics.class
 com\example\database\model\ai_module\AITrainingData.class
 com\example\domain\dto\MemberDto$MemberDtoBuilder.class
-com\example\domain\api\chat_service_api\service\security\IChatSecurityService.class
 com\example\domain\dto\CompanyDto$CompanyDtoBuilder.class
 com\example\domain\api\ans_api_module\correction_answer\dto\textProcessingDto\Status.class
 com\example\domain\api\ans_api_module\template\batch\item\AnswerFileReader.class
@@ -439,6 +465,7 @@ com\example\domain\api\chat_service_api\event\chat\ChatClosedEvent.class
 com\example\domain\api\chat_service_api\integration\dto\rest\CreateMailConfigurationRequest.class
 com\example\domain\api\chat_service_api\integration\vk\model\VkMessage.class
 com\example\database\repository\crm_module\DealRepository.class
+com\example\domain\api\chat_service_api\service\message\IOperatorChatInteractionService.class
 com\example\domain\api\chat_service_api\exception_handler\VkLongPollFailedException.class
 com\example\domain\api\authentication_module\exception_handler_auth\EmailExistsException.class
 com\example\domain\api\ans_api_module\template\batch\reader\AnswerItemReader.class
@@ -447,10 +474,13 @@ com\example\domain\api\statistics_module\metrics\util\MetricsTagSanitizer.class
 com\example\domain\api\crm_module\dto\ChangeDealStageReq$ChangeDealStageReqBuilder.class
 com\example\domain\api\chat_service_api\config\WebSocketProperties$SecurityProperties.class
 com\example\domain\api\chat_service_api\exception_handler\exception\service\WebSocketServiceException.class
+com\example\domain\api\chat_service_api\service\impl\chat\ChatCreationServiceImpl.class
 com\example\database\model\chats_messages_module\chat\ChatStatus.class
+com\example\domain\api\chat_service_api\integration\service\impl\ClientCompanyProcessService.class
+com\example\domain\api\chat_service_api\service\impl\chat\ChatAssignmentServiceImpl.class
 com\example\domain\api\authentication_module\security\UserDetailsServiceImpl.class
 com\example\domain\api\chat_service_api\model\dto\notification\NotificationDTO.class
-com\example\domain\api\company_api_test\service\ClientService.class
+com\example\domain\api\chat_service_api\service\impl\message\OperatorChatInteractionServiceImpl.class
 com\example\domain\api\crm_module\mapper\DealReqDtoToDealMapper.class
 com\example\domain\api\chat_service_api\integration\dto\IntegrationMailDto.class
 com\example\domain\api\ans_api_module\template\dto\response\ApiErrorResponse.class
@@ -471,9 +501,9 @@ com\example\ui\dto\answer\UiPredefinedAnswerDto$UiPredefinedAnswerDtoBuilder.cla
 com\example\ui\mapper\chat\UiClientMapper.class
 com\example\domain\api\ans_api_module\answer_finder\search\similarity_calculator\SimilarityCalculator.class
 com\example\domain\api\company_module\service\impl\CompanyServiceImpl.class
-com\example\domain\api\chat_service_api\service\IClientService.class
 com\example\ui\mapper\chat\UIMessageMapper.class
 com\example\domain\api\ans_api_module\correction_answer\controller\TextProcessingController.class
+com\example\domain\api\chat_service_api\integration\service\impl\IncomingMessageProcessorServiceImpl.class
 com\example\database\model\integration_module\IntegrationStatus.class
 com\example\domain\api\statistics_module\aop\annotation\Timer.class
 com\example\domain\api\ans_api_module\template\controller\PredefinedAnswerController.class
@@ -484,9 +514,9 @@ com\example\domain\dto\SubscriptionPriceReqDto$SubscriptionPriceReqDtoBuilder.cl
 com\example\database\model\company_subscription_module\subscription\Subscription.class
 com\example\domain\api\crm_module\service\DealService.class
 com\example\domain\api\ans_api_module\correction_answer\config\promt\PromptTemplateProperties.class
+com\example\domain\api\chat_service_api\integration\dto\IncomingChannelMessage$IncomingChannelMessageBuilder.class
 com\example\domain\api\chat_service_api\integration\vk\reponse\VkResponse.class
 com\example\domain\api\chat_service_api\exception_handler\exception\service\ChatMessageServiceException.class
-com\example\domain\api\chat_service_api\service\IUserService.class
 com\example\ui\dto\user\UiUserDto$UiUserDtoBuilder.class
 com\example\domain\api\statistics_module\model\chat\ChatsByChannelDTO.class
 com\example\domain\api\authentication_module\security\jwtUtils\impl\JWTUtilsServiceImpl.class
@@ -502,10 +532,11 @@ com\example\domain\api\chat_service_api\exception_handler\ChatNotFoundException.
 com\example\database\model\crm_module\task\TaskPriority.class
 com\example\domain\api\ans_api_module\template\batch\listener\UploadJobListener.class
 com\example\domain\dto\CheckCodeDto.class
-com\example\domain\api\chat_service_api\service\impl\ClientServiceImpl.class
+com\example\domain\api\chat_service_api\service\impl\message\ChatMessageServiceImpl.class
 com\example\domain\dto\SubscribeDataDto.class
 com\example\database\repository\chats_messages_module\ChatAttachmentRepository.class
 com\example\domain\api\ans_api_module\service\impl\AutoResponderServiceImpl.class
+com\example\domain\api\chat_service_api\service\chat\IChatService.class
 com\example\domain\api\chat_service_api\exception_handler\exception\controller\ChatMessageControllerException.class
 com\example\domain\api\company_module\dto\MemberRoleReqDto.class
 com\example\domain\dto\SubscribeExtendDataDto$SubscribeExtendDataDtoBuilder.class
@@ -520,6 +551,7 @@ com\example\domain\api\ans_api_module\correction_answer\dto\textProcessingDto\Te
 com\example\domain\api\authentication_module\service\interfaces\RegistrationService.class
 com\example\domain\api\authentication_module\mapper\UserToUserDataMapper.class
 com\example\domain\api\ans_api_module\template\services\AnswerValidationService.class
+com\example\domain\api\company_module\service\impl\UserServiceImpl.class
 com\example\domain\api\chat_service_api\config\WebSocketProperties$StompProperties.class
 com\example\domain\api\ans_api_module\answer_finder\exception\AnswerSearchException.class
 com\example\domain\api\chat_service_api\mapper\NotificationMapper.class
@@ -539,6 +571,7 @@ com\example\domain\api\ans_api_module\correction_answer\service\GenerationType.c
 com\example\domain\api\authentication_module\exception_handler_auth\InvalidTokenSignException.class
 com\example\domain\api\statistics_module\metrics\service\IChatMetricsService.class
 com\example\domain\api\chat_service_api\integration\vk\model\VkLongPollUpdate.class
+com\example\domain\api\chat_service_api\service\impl\chat\ChatQueryServiceImpl.class
 com\example\domain\api\crm_module\controller\AdminController.class
 com\example\domain\api\statistics_module\service\impl\TextProcessingStatisticsServiceImpl.class
 com\example\domain\api\company_module\service\CompanyMembersService.class
@@ -546,13 +579,14 @@ com\example\domain\api\ans_api_module\answer_finder\dto\rest\AnswerSearchRespons
 com\example\domain\api\company_module\exception_handler_company\NotFoundCompanyException.class
 com\example\domain\api\statistics_module\metrics\service\ITextProcessingMetricsService.class
 com\example\domain\api\ans_api_module\answer_finder\search\dto\ScoredAnswerCandidate$ScoredAnswerCandidateBuilder.class
+com\example\domain\api\chat_service_api\service\message\IChatMessageQueryService.class
 com\example\domain\api\statistics_module\aop\annotation\Counter.class
 com\example\domain\api\chat_service_api\integration\telegram\TelegramApiUserResponse.class
 com\example\domain\api\chat_service_api\model\rest\chat\AssignChatRequestDTO.class
-com\example\domain\api\chat_service_api\service\IChatService.class
 com\example\ui\dto\chat\notification\UiNotificationDto.class
 com\example\domain\api\ans_api_module\template\util\FileType.class
 com\example\domain\api\ans_api_module\template\dto\response\UploadResultResponse.class
+com\example\domain\api\chat_service_api\integration\service\ICompanyChannelConfigurationProvider.class
 com\example\ui\dto\client\UiClientDto$UiClientDtoBuilder.class
 com\example\domain\api\chat_service_api\integration\vk\VkBotManager$1.class
 com\example\domain\api\chat_service_api\integration\whats_app\client\WhatsappApiClient.class
@@ -581,6 +615,8 @@ com\example\domain\api\subscription_module\exception_handler_subscription\Paymen
 com\example\domain\api\ans_api_module\correction_answer\service\TextProcessingApiClient.class
 com\example\domain\api\chat_service_api\model\dto\user\UserInfoDTO.class
 com\example\domain\api\chat_service_api\config\WebSocketProperties$MessageProperties.class
+com\example\domain\api\chat_service_api\service\impl\chat\ChatLifecycleServiceImpl.class
+com\example\domain\api\chat_service_api\integration\dto\IncomingChannelMessage.class
 com\example\domain\api\chat_service_api\service\INotificationService.class
 com\example\domain\api\crm_module\exception_handler_crm\NotFoundDealStageException.class
 com\example\domain\api\chat_service_api\integration\mail\manager\EmailParserFactory.class

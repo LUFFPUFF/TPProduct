@@ -48,6 +48,9 @@ public class User {
     @Column(name = "profile_picture")
     private String profilePicture;
 
+    @Column(name = "max_concurrent_chats")
+    private Integer maxConcurrentChats;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 

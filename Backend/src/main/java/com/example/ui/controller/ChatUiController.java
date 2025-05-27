@@ -1,19 +1,13 @@
 package com.example.ui.controller;
 
 import com.example.database.model.chats_messages_module.chat.ChatStatus;
-import com.example.database.model.company_subscription_module.company.Company;
-import com.example.database.model.company_subscription_module.user_roles.user.User;
-import com.example.database.model.crm_module.client.Client;
 import com.example.domain.api.authentication_module.service.interfaces.CurrentUserDataService;
-import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundException;
-import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
-import com.example.domain.api.chat_service_api.exception_handler.exception.service.ChatServiceException;
 import com.example.domain.api.chat_service_api.model.dto.ChatDTO;
 import com.example.domain.api.chat_service_api.model.dto.ChatDetailsDTO;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
 import com.example.domain.api.chat_service_api.model.rest.chat.AssignChatRequestDTO;
 import com.example.domain.api.chat_service_api.model.rest.chat.CreateChatRequestDTO;
-import com.example.domain.api.chat_service_api.service.*;
+import com.example.domain.api.chat_service_api.service.chat.IChatService;
 import com.example.ui.mapper.chat.UIMessageMapper;
 import com.example.ui.mapper.chat.UINotificationMapper;
 import com.example.ui.mapper.chat.UiChatMapper;
@@ -44,18 +38,13 @@ public class ChatUiController {
     private final UiChatMapper chatMapper;
     private final UIMessageMapper messageMapper;
     private final UINotificationMapper notificationMapper;
-    private final CurrentUserDataService userDataService;
-
-    private Integer getCurrentOperatorId() {
-        return userDataService.getUser().getId();
-    }
 
     /**
      * Получает полные детали конкретного чата по его ID.
      * <p>GET /api/ui/chats/{chatId}/details
      */
     @GetMapping("/{chatId}/details")
-    public ResponseEntity<ChatUIDetailsDTO> getChatDetails(@PathVariable Integer chatId) {
+    public ResponseEntity<ChatUIDetailsDTO> getChatDetails(@PathVariable Integer chatId) throws AccessDeniedException {
         ChatDetailsDTO chatDetails = chatService.getChatDetails(chatId);
         ChatUIDetailsDTO uiChatDetails = chatMapper.toUiDetailsDto(chatDetails);
         return ResponseEntity.ok(uiChatDetails);
@@ -119,7 +108,7 @@ public class ChatUiController {
      * @return Список UIChatDto.
      */
     @GetMapping("/client/{clientId}")
-    public ResponseEntity<List<UIChatDto>> getClientChats(@PathVariable Integer clientId) {
+    public ResponseEntity<List<UIChatDto>> getClientChats(@PathVariable Integer clientId) throws AccessDeniedException {
         List<ChatDTO> chats = chatService.getClientChats(clientId);
         List<UIChatDto> uiChats = chats.stream()
                 .map(chatMapper::toUiDto)
@@ -155,7 +144,7 @@ public class ChatUiController {
      * @return UiMessageDto отправленного сообщения.
      */
     @PostMapping("/messages")
-    public ResponseEntity<UiMessageDto> sendChatMessage(@RequestBody @Valid UiSendUiMessageRequest messageRequest) {
+    public ResponseEntity<UiMessageDto> sendChatMessage(@RequestBody @Valid UiSendUiMessageRequest messageRequest) throws AccessDeniedException {
         MessageDto sentMessageDto = chatService.sendOperatorMessage(
                 messageRequest.getChatId(),
                 messageRequest.getContent()
@@ -205,7 +194,7 @@ public class ChatUiController {
      */
     @PostMapping("/{chatId}/messages/read")
     public ResponseEntity<Void> markMessagesAsRead(@PathVariable Integer chatId,
-                                                   @RequestBody @Valid MarkUIMessagesAsReadRequestUI request) {
+                                                   @RequestBody @Valid MarkUIMessagesAsReadRequestUI request) throws AccessDeniedException {
 
         chatService.markClientMessagesAsReadByCurrentUser(chatId, request.getMessageIds());
         return ResponseEntity.noContent().build();
@@ -220,7 +209,7 @@ public class ChatUiController {
      * @return Детали закрытого чата.
      */
     @PostMapping("/{chatId}/close")
-    public ResponseEntity<ChatUIDetailsDTO> closeChat(@PathVariable Integer chatId) {
+    public ResponseEntity<ChatUIDetailsDTO> closeChat(@PathVariable Integer chatId) throws AccessDeniedException {
         ChatDetailsDTO closedChatDetails = chatService.closeChatByCurrentUser(chatId);
         ChatUIDetailsDTO uiChatDetails = chatMapper.toUiDetailsDto(closedChatDetails);
         return ResponseEntity.ok(uiChatDetails);
@@ -288,7 +277,7 @@ public class ChatUiController {
      * @return Статус 204 No Content.
      */
     @PostMapping("/{chatId}/link-operator/{operatorId}")
-    public ResponseEntity<Void> linkOperatorToChat(@PathVariable Integer chatId, @PathVariable Integer operatorId) {
+    public ResponseEntity<Void> linkOperatorToChat(@PathVariable Integer chatId, @PathVariable Integer operatorId) throws AccessDeniedException {
         chatService.linkOperatorToChat(chatId, operatorId);
         return ResponseEntity.noContent().build();
     }

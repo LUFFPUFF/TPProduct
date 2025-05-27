@@ -17,6 +17,9 @@ import com.example.domain.api.chat_service_api.model.dto.ChatDetailsDTO;
 import com.example.domain.api.chat_service_api.model.dto.client.ClientInfoDTO; // <--- Импортируем ClientInfoDTO
 import com.example.domain.api.chat_service_api.model.rest.chat.CreateChatRequestDTO;
 import com.example.domain.api.chat_service_api.service.*;
+import com.example.domain.api.chat_service_api.service.impl.chat.ChatServiceImpl;
+import com.example.domain.api.company_module.service.IClientService;
+import com.example.domain.api.company_module.service.IUserService;
 import com.example.domain.api.statistics_module.aop.MetricsAspect;
 import com.example.domain.api.statistics_module.metrics.service.IChatMetricsService;
 import com.example.domain.security.util.UserContextHolder;
@@ -83,7 +86,7 @@ class ChatServiceImplTest {
     @MockBean private IChatMessageService chatMessageService;
     @MockBean private ChatMapper chatMapper;
     @MockBean private ChatMessageRepository chatMessageRepository;
-    @MockBean private IAssignmentService assignmentService;
+    @MockBean private IAssignmentStrategyService assignmentService;
     @MockBean private WebSocketMessagingService messagingService;
     @MockBean private INotificationService notificationService;
     @MockBean private IAutoResponderService autoResponderService;

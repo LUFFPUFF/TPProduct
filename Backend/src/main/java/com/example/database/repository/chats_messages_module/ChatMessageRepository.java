@@ -22,27 +22,9 @@ import java.util.Optional;
 @Repository
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Integer> {
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT m FROM ChatMessage m WHERE m.id = :id")
-    ChatMessage findByIdForUpdate(@Param("id") Integer id);
-
     List<ChatMessage> findByChatIdOrderBySentAtAsc(Integer chatId);
 
     Optional<ChatMessage> findByIdAndExternalMessageId(Integer id, String externalMessageId);
-
-    @Modifying
-    @Query("UPDATE ChatMessage m SET m.status = :status WHERE m.id = :messageId")
-    int updateStatus(@Param("messageId") Integer messageId, @Param("status") MessageStatus status);
-
-    @Modifying
-    @Query("UPDATE ChatMessage m SET m.status = :status WHERE m.chat.id = :chatId AND m.senderType = com.example.database.model.chats_messages_module.chat.ChatMessageSenderType.CLIENT AND m.status <> :status AND m.id IN :messageIds")
-    int markClientMessagesAsRead(@Param("chatId") Integer chatId, @Param("status") MessageStatus status, @Param("messageIds") Collection<Integer> messageIds);
-
-    @Modifying
-    @Query("UPDATE ChatMessage m SET m.status = :status WHERE m.chat.id = :chatId AND m.senderType = com.example.database.model.chats_messages_module.chat.ChatMessageSenderType.OPERATOR AND m.status <> :status AND m.externalMessageId = :externalMessageId")
-    int updateOperatorMessageStatusByExternalId(@Param("chatId") Integer chatId, @Param("status") MessageStatus status, @Param("externalMessageId") String externalMessageId);
-
-    Optional<ChatMessage> findByExternalMessageId(String externalMessageId);
 
     Optional<ChatMessage> findFirstByChatIdOrderBySentAtAsc(Integer chatId);
 
@@ -58,9 +40,16 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Intege
             @Param("statuses") Collection<ChatStatus> statuses
     );
 
-    long countByChatAndSenderOperatorAndSenderType(
-            Chat chat,
-            User senderOperator,
+    List<ChatMessage> findAllByIdInAndChatIdAndSenderTypeAndStatusNot(
+            Collection<Integer> messageIds,
+            Integer chatId,
+            ChatMessageSenderType senderType,
+            MessageStatus excludedStatus
+    );
+
+    Optional<ChatMessage> findByChatIdAndExternalMessageIdAndSenderType(
+            Integer chatId,
+            String externalMessageId,
             ChatMessageSenderType senderType
     );
 

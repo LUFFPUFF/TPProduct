@@ -14,19 +14,10 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Integer> {
-
-    Optional<Chat> findByClientAndChatChannel(Client client, ChatChannel chatChannel);
-
-    @Query("SELECT c FROM Chat c WHERE c.client.id = :clientId AND c.chatChannel = :channel AND c.id = :id AND c.company.id = :companyId")
-    Optional<Chat> findByClientIdAndChatChannelAndId(@Param("companyId") Integer companyId,
-                                                                 @Param("clientId") Integer clientId,
-                                                                 @Param("channel") ChatChannel channel,
-                                                                 @Param("id") String externalChatId);
-
-    Optional<Chat> findByClientIdAndChatChannel(Integer clientId, ChatChannel channel);
 
     List<Chat> findByUserIdAndStatusIn(Integer userId, Collection<ChatStatus> statuses);
 
@@ -34,23 +25,11 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
 
     List<Chat> findByCompanyIdAndStatusInOrderByLastMessageAtDesc(Integer companyId, Collection<ChatStatus> openStatuses);
 
-    boolean existsByIdAndUserId(Integer chatId, Integer userId);
+    List<Chat> findByClientIdAndCompanyIdOrderByCreatedAtDesc(Integer clientId, Integer companyId);
 
     Optional<Chat> findFirstByClientIdAndChatChannelAndStatusInOrderByCreatedAtDesc(Integer clientId, ChatChannel channel, Collection<ChatStatus> statuses);
 
-    Optional<Chat> findByClientId(Integer clientId);
-
-    @Modifying
-    @Query("UPDATE Chat c SET c.status = :status, c.assignedAt = :assignedAt WHERE c.id = :chatId")
-    int updateStatus(@Param("chatId") Integer chatId,
-                     @Param("status") ChatStatus status,
-                     @Param("assignedAt") LocalDateTime assignedAt);
-
-    List<Chat> findByCompanyIdAndStatusIn(Integer companyId, Collection<ChatStatus> statuses);
-
     Optional<Chat> findFirstByClientIdAndCompanyIdAndChatChannelAndStatusInOrderByCreatedAtDesc(Integer clientId, Integer companyId, ChatChannel chatChannel, Collection<ChatStatus> statuses);
-
-    List<Chat> findByClientIdAndCompanyId(Integer clientId, Integer companyId);
 
     Optional<Chat> findFirstByClientIdAndChatChannelAndExternalChatIdAndStatusInOrderByCreatedAtDesc(
             Integer clientId,
@@ -58,4 +37,16 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
             String externalChatId,
             Collection<ChatStatus> statuses
     );
+
+    @Query("SELECT c.user.id as userId, COUNT(c.id) as chatCount " +
+            "FROM Chat c " +
+            "WHERE c.user.id IN :userIds AND c.status IN :statuses " +
+            "GROUP BY c.user.id")
+    List<OperatorChatCount> countChatsByUserIdInAndStatusIn(@Param("userIds") List<Integer> userIds,
+                                                            @Param("statuses") Set<ChatStatus> statuses);
+
+    interface OperatorChatCount {
+        Integer getUserId();
+        Long getChatCount();
+    }
 }

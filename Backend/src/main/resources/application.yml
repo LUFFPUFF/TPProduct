@@ -146,18 +146,6 @@ answersearch:
     similarity: 0.7
     trust: 0.3
 
-
-logging:
-  level:
-    org.springframework.web.socket: DEBUG
-    org.springframework.messaging: DEBUG
-    org.springframework.security: DEBUG
-    org.apache.tomcat.websocket: DEBUG
-    org.springframework.web.socket.sockjs: TRACE
-    org.springframework.web.socket.sockjs.transport: TRACE
-    org.springframework.web.socket.sockjs.support: TRACE
-    org.springframework.web.socket.server: TRACE
-
 ml:
   service:
     base-url: http://localhost:8000/generate

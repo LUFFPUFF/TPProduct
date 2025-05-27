@@ -24,7 +24,6 @@ public class NotificationServiceImpl implements INotificationService {
 
     private final NotificationRepository notificationRepository;
     private final NotificationMapper notificationMapper;
-    private final UserRepository userRepository;
     private final WebSocketMessagingService messagingService;
 
     @Override

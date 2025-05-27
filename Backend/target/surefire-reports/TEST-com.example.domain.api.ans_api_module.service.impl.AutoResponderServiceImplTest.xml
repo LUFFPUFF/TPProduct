@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.32" tests="13" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="1.031" tests="13" errors="0" skipped="0" failures="5">
   <properties>
     <property name="java.specification.version" value="21"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="RU"/>
     <property name="sun.boot.library.path" value="C:\Users\123\.jdks\ms-21.0.7\bin"/>
-    <property name="sun.java.command" value="C:\Users\123\AppData\Local\Temp\surefire5198082206965405438\surefirebooter-20250522201004833_3.jar C:\Users\123\AppData\Local\Temp\surefire5198082206965405438 2025-05-22T20-10-04_621-jvmRun1 surefire-20250522201004833_1tmp surefire_0-20250522201004833_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\123\AppData\Local\Temp\surefire2632595999060428648\surefirebooter-20250527212412746_3.jar C:\Users\123\AppData\Local\Temp\surefire2632595999060428648 2025-05-27T21-24-12_626-jvmRun1 surefire-20250527212412746_1tmp surefire_0-20250527212412746_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\123\IdeaProjects\TPProduct\Backend\target\test-classes;C:\Users\123\IdeaProjects\TPProduct\Backend\target\classes;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter-web\3.4.2\spring-boot-starter-web-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter-json\3.4.2\spring-boot-starter-json-3.4.2.jar;C:\Users\123\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.18.2\jackson-datatype-jdk8-2.18.2.jar;C:\Users\123\.m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.18.2\jackson-module-parameter-names-2.18.2.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter-tomcat\3.4.2\spring-boot-starter-tomcat-3.4.2.jar;C:\Users\123\.m2\repository\org\apache\tomcat\embed\tomcat-embed-core\10.1.34\tomcat-embed-core-10.1.34.jar;C:\Users\123\.m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\10.1.34\tomcat-embed-websocket-10.1.34.jar;C:\Users\123\.m2\repository\org\springframework\spring-web\6.2.2\spring-web-6.2.2.jar;C:\Users\123\.m2\repository\org\springframework\spring-beans\6.2.2\spring-beans-6.2.2.jar;C:\Users\123\.m2\repository\org\springframework\spring-webmvc\6.2.2\spring-webmvc-6.2.2.jar;C:\Users\123\.m2\repository\org\springframework\spring-context\6.2.2\spring-context-6.2.2.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter-validation\3.4.2\spring-boot-starter-validation-3.4.2.jar;C:\Users\123\.m2\repository\org\apache\tomcat\embed\tomcat-embed-el\10.1.34\tomcat-embed-el-10.1.34.jar;C:\Users\123\.m2\repository\org\hibernate\validator\hibernate-validator\8.0.2.Final\hibernate-validator-8.0.2.Final.jar;C:\Users\123\.m2\repository\jakarta\validation\jakarta.validation-api\3.0.2\jakarta.validation-api-3.0.2.jar;C:\Users\123\.m2\repository\org\jboss\logging\jboss-logging\3.6.1.Final\jboss-logging-3.6.1.Final.jar;C:\Users\123\.m2\repository\com\fasterxml\classmate\1.7.0\classmate-1.7.0.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter-websocket\3.4.2\spring-boot-starter-websocket-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\spring-messaging\6.2.2\spring-messaging-6.2.2.jar;C:\Users\123\.m2\repository\org\springframework\spring-websocket\6.2.2\spring-websocket-6.2.2.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter-actuator\3.4.2\spring-boot-starter-actuator-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-actuator-autoconfigure\3.4.2\spring-boot-actuator-autoconfigure-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-actuator\3.4.2\spring-boot-actuator-3.4.2.jar;C:\Users\123\.m2\repository\io\micrometer\micrometer-observation\1.14.3\micrometer-observation-1.14.3.jar;C:\Users\123\.m2\repository\io\micrometer\micrometer-commons\1.14.3\micrometer-commons-1.14.3.jar;C:\Users\123\.m2\repository\io\micrometer\micrometer-jakarta9\1.14.3\micrometer-jakarta9-1.14.3.jar;C:\Users\123\.m2\repository\io\micrometer\micrometer-registry-prometheus\1.14.3\micrometer-registry-prometheus-1.14.3.jar;C:\Users\123\.m2\repository\io\micrometer\micrometer-core\1.14.3\micrometer-core-1.14.3.jar;C:\Users\123\.m2\repository\org\hdrhistogram\HdrHistogram\2.2.2\HdrHistogram-2.2.2.jar;C:\Users\123\.m2\repository\org\latencyutils\LatencyUtils\2.0.3\LatencyUtils-2.0.3.jar;C:\Users\123\.m2\repository\io\prometheus\prometheus-metrics-core\1.3.5\prometheus-metrics-core-1.3.5.jar;C:\Users\123\.m2\repository\io\prometheus\prometheus-metrics-model\1.3.5\prometheus-metrics-model-1.3.5.jar;C:\Users\123\.m2\repository\io\prometheus\prometheus-metrics-config\1.3.5\prometheus-metrics-config-1.3.5.jar;C:\Users\123\.m2\repository\io\prometheus\prometheus-metrics-tracer-common\1.3.5\prometheus-metrics-tracer-common-1.3.5.jar;C:\Users\123\.m2\repository\io\prometheus\prometheus-metrics-exposition-formats\1.3.5\prometheus-metrics-exposition-formats-1.3.5.jar;C:\Users\123\.m2\repository\io\prometheus\prometheus-metrics-exposition-textformats\1.3.5\prometheus-metrics-exposition-textformats-1.3.5.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter-logging\3.4.2\spring-boot-starter-logging-3.4.2.jar;C:\Users\123\.m2\repository\ch\qos\logback\logback-classic\1.5.16\logback-classic-1.5.16.jar;C:\Users\123\.m2\repository\ch\qos\logback\logback-core\1.5.16\logback-core-1.5.16.jar;C:\Users\123\.m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.24.3\log4j-to-slf4j-2.24.3.jar;C:\Users\123\.m2\repository\org\apache\logging\log4j\log4j-api\2.24.3\log4j-api-2.24.3.jar;C:\Users\123\.m2\repository\org\slf4j\jul-to-slf4j\2.0.16\jul-to-slf4j-2.0.16.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter-mail\3.4.2\spring-boot-starter-mail-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\spring-context-support\6.2.2\spring-context-support-6.2.2.jar;C:\Users\123\.m2\repository\org\eclipse\angus\jakarta.mail\2.0.3\jakarta.mail-2.0.3.jar;C:\Users\123\.m2\repository\jakarta\activation\jakarta.activation-api\2.1.3\jakarta.activation-api-2.1.3.jar;C:\Users\123\.m2\repository\org\eclipse\angus\angus-activation\2.0.2\angus-activation-2.0.2.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter-security\3.4.2\spring-boot-starter-security-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\spring-aop\6.2.2\spring-aop-6.2.2.jar;C:\Users\123\.m2\repository\org\springframework\security\spring-security-config\6.4.2\spring-security-config-6.4.2.jar;C:\Users\123\.m2\repository\org\springframework\security\spring-security-web\6.4.2\spring-security-web-6.4.2.jar;C:\Users\123\.m2\repository\org\springframework\security\spring-security-oauth2-resource-server\6.4.2\spring-security-oauth2-resource-server-6.4.2.jar;C:\Users\123\.m2\repository\org\springframework\security\spring-security-core\6.4.2\spring-security-core-6.4.2.jar;C:\Users\123\.m2\repository\org\springframework\security\spring-security-crypto\6.4.2\spring-security-crypto-6.4.2.jar;C:\Users\123\.m2\repository\org\springframework\spring-core\6.2.2\spring-core-6.2.2.jar;C:\Users\123\.m2\repository\org\springframework\spring-jcl\6.2.2\spring-jcl-6.2.2.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter-webflux\3.4.2\spring-boot-starter-webflux-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter-reactor-netty\3.4.2\spring-boot-starter-reactor-netty-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\spring-webflux\6.2.2\spring-webflux-6.2.2.jar;C:\Users\123\.m2\repository\org\springframework\security\spring-security-oauth2-core\6.4.2\spring-security-oauth2-core-6.4.2.jar;C:\Users\123\.m2\repository\io\github\resilience4j\resilience4j-spring-boot3\2.1.0\resilience4j-spring-boot3-2.1.0.jar;C:\Users\123\.m2\repository\io\github\resilience4j\resilience4j-spring6\2.1.0\resilience4j-spring6-2.1.0.jar;C:\Users\123\.m2\repository\io\github\resilience4j\resilience4j-annotations\2.1.0\resilience4j-annotations-2.1.0.jar;C:\Users\123\.m2\repository\io\github\resilience4j\resilience4j-consumer\2.1.0\resilience4j-consumer-2.1.0.jar;C:\Users\123\.m2\repository\io\github\resilience4j\resilience4j-core\2.1.0\resilience4j-core-2.1.0.jar;C:\Users\123\.m2\repository\io\github\resilience4j\resilience4j-circularbuffer\2.1.0\resilience4j-circularbuffer-2.1.0.jar;C:\Users\123\.m2\repository\io\github\resilience4j\resilience4j-framework-common\2.1.0\resilience4j-framework-common-2.1.0.jar;C:\Users\123\.m2\repository\io\github\resilience4j\resilience4j-micrometer\2.1.0\resilience4j-micrometer-2.1.0.jar;C:\Users\123\.m2\repository\io\github\resilience4j\resilience4j-bulkhead\2.1.0\resilience4j-bulkhead-2.1.0.jar;C:\Users\123\.m2\repository\io\github\resilience4j\resilience4j-circuitbreaker\2.1.0\resilience4j-circuitbreaker-2.1.0.jar;C:\Users\123\.m2\repository\io\github\resilience4j\resilience4j-retry\2.1.0\resilience4j-retry-2.1.0.jar;C:\Users\123\.m2\repository\io\github\resilience4j\resilience4j-ratelimiter\2.1.0\resilience4j-ratelimiter-2.1.0.jar;C:\Users\123\.m2\repository\io\github\resilience4j\resilience4j-timelimiter\2.1.0\resilience4j-timelimiter-2.1.0.jar;C:\Users\123\.m2\repository\io\projectreactor\netty\reactor-netty-http\1.2.2\reactor-netty-http-1.2.2.jar;C:\Users\123\.m2\repository\io\netty\netty-codec-http\4.1.117.Final\netty-codec-http-4.1.117.Final.jar;C:\Users\123\.m2\repository\io\netty\netty-common\4.1.117.Final\netty-common-4.1.117.Final.jar;C:\Users\123\.m2\repository\io\netty\netty-buffer\4.1.117.Final\netty-buffer-4.1.117.Final.jar;C:\Users\123\.m2\repository\io\netty\netty-transport\4.1.117.Final\netty-transport-4.1.117.Final.jar;C:\Users\123\.m2\repository\io\netty\netty-codec\4.1.117.Final\netty-codec-4.1.117.Final.jar;C:\Users\123\.m2\repository\io\netty\netty-codec-http2\4.1.117.Final\netty-codec-http2-4.1.117.Final.jar;C:\Users\123\.m2\repository\io\netty\netty-resolver-dns\4.1.117.Final\netty-resolver-dns-4.1.117.Final.jar;C:\Users\123\.m2\repository\io\netty\netty-resolver\4.1.117.Final\netty-resolver-4.1.117.Final.jar;C:\Users\123\.m2\repository\io\netty\netty-codec-dns\4.1.117.Final\netty-codec-dns-4.1.117.Final.jar;C:\Users\123\.m2\repository\io\netty\netty-resolver-dns-native-macos\4.1.117.Final\netty-resolver-dns-native-macos-4.1.117.Final-osx-x86_64.jar;C:\Users\123\.m2\repository\io\netty\netty-resolver-dns-classes-macos\4.1.117.Final\netty-resolver-dns-classes-macos-4.1.117.Final.jar;C:\Users\123\.m2\repository\io\netty\netty-transport-native-epoll\4.1.117.Final\netty-transport-native-epoll-4.1.117.Final-linux-x86_64.jar;C:\Users\123\.m2\repository\io\netty\netty-transport-native-unix-common\4.1.117.Final\netty-transport-native-unix-common-4.1.117.Final.jar;C:\Users\123\.m2\repository\io\netty\netty-transport-classes-epoll\4.1.117.Final\netty-transport-classes-epoll-4.1.117.Final.jar;C:\Users\123\.m2\repository\io\projectreactor\netty\reactor-netty-core\1.2.2\reactor-netty-core-1.2.2.jar;C:\Users\123\.m2\repository\io\netty\netty-handler\4.1.117.Final\netty-handler-4.1.117.Final.jar;C:\Users\123\.m2\repository\io\netty\netty-handler-proxy\4.1.117.Final\netty-handler-proxy-4.1.117.Final.jar;C:\Users\123\.m2\repository\io\netty\netty-codec-socks\4.1.117.Final\netty-codec-socks-4.1.117.Final.jar;C:\Users\123\.m2\repository\org\jsoup\jsoup\1.17.2\jsoup-1.17.2.jar;C:\Users\123\.m2\repository\commons-fileupload\commons-fileupload\1.5\commons-fileupload-1.5.jar;C:\Users\123\.m2\repository\commons-io\commons-io\2.18.0\commons-io-2.18.0.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter\3.4.2\spring-boot-starter-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot\3.4.2\spring-boot-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-autoconfigure\3.4.2\spring-boot-autoconfigure-3.4.2.jar;C:\Users\123\.m2\repository\jakarta\annotation\jakarta.annotation-api\2.1.1\jakarta.annotation-api-2.1.1.jar;C:\Users\123\.m2\repository\org\yaml\snakeyaml\2.3\snakeyaml-2.3.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-devtools\3.4.2\spring-boot-devtools-3.4.2.jar;C:\Users\123\.m2\repository\org\projectlombok\lombok\1.18.36\lombok-1.18.36.jar;C:\Users\123\.m2\repository\org\mapstruct\mapstruct\1.6.0.Beta1\mapstruct-1.6.0.Beta1.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter-test\3.4.2\spring-boot-starter-test-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-test\3.4.2\spring-boot-test-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-test-autoconfigure\3.4.2\spring-boot-test-autoconfigure-3.4.2.jar;C:\Users\123\.m2\repository\com\jayway\jsonpath\json-path\2.9.0\json-path-2.9.0.jar;C:\Users\123\.m2\repository\jakarta\xml\bind\jakarta.xml.bind-api\4.0.2\jakarta.xml.bind-api-4.0.2.jar;C:\Users\123\.m2\repository\net\minidev\json-smart\2.5.1\json-smart-2.5.1.jar;C:\Users\123\.m2\repository\net\minidev\accessors-smart\2.5.1\accessors-smart-2.5.1.jar;C:\Users\123\.m2\repository\org\ow2\asm\asm\9.6\asm-9.6.jar;C:\Users\123\.m2\repository\org\assertj\assertj-core\3.26.3\assertj-core-3.26.3.jar;C:\Users\123\.m2\repository\net\bytebuddy\byte-buddy\1.15.11\byte-buddy-1.15.11.jar;C:\Users\123\.m2\repository\org\awaitility\awaitility\4.2.2\awaitility-4.2.2.jar;C:\Users\123\.m2\repository\org\hamcrest\hamcrest\2.2\hamcrest-2.2.jar;C:\Users\123\.m2\repository\org\junit\jupiter\junit-jupiter\5.11.4\junit-jupiter-5.11.4.jar;C:\Users\123\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.4\junit-jupiter-api-5.11.4.jar;C:\Users\123\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\123\.m2\repository\org\junit\platform\junit-platform-commons\1.11.4\junit-platform-commons-1.11.4.jar;C:\Users\123\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.11.4\junit-jupiter-params-5.11.4.jar;C:\Users\123\.m2\repository\org\mockito\mockito-core\5.14.2\mockito-core-5.14.2.jar;C:\Users\123\.m2\repository\net\bytebuddy\byte-buddy-agent\1.15.11\byte-buddy-agent-1.15.11.jar;C:\Users\123\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\123\.m2\repository\org\mockito\mockito-junit-jupiter\5.14.2\mockito-junit-jupiter-5.14.2.jar;C:\Users\123\.m2\repository\org\skyscreamer\jsonassert\1.5.3\jsonassert-1.5.3.jar;C:\Users\123\.m2\repository\com\vaadin\external\google\android-json\0.0.20131108.vaadin1\android-json-0.0.20131108.vaadin1.jar;C:\Users\123\.m2\repository\org\xmlunit\xmlunit-core\2.10.0\xmlunit-core-2.10.0.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter-data-redis\3.4.2\spring-boot-starter-data-redis-3.4.2.jar;C:\Users\123\.m2\repository\io\lettuce\lettuce-core\6.4.2.RELEASE\lettuce-core-6.4.2.RELEASE.jar;C:\Users\123\.m2\repository\org\springframework\data\spring-data-redis\3.4.2\spring-data-redis-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\data\spring-data-keyvalue\3.4.2\spring-data-keyvalue-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\spring-tx\6.2.2\spring-tx-6.2.2.jar;C:\Users\123\.m2\repository\org\springframework\spring-oxm\6.2.2\spring-oxm-6.2.2.jar;C:\Users\123\.m2\repository\redis\clients\jedis\4.2.3\jedis-4.2.3.jar;C:\Users\123\.m2\repository\org\apache\commons\commons-pool2\2.12.0\commons-pool2-2.12.0.jar;C:\Users\123\.m2\repository\org\json\json\20211205\json-20211205.jar;C:\Users\123\.m2\repository\org\postgresql\postgresql\42.7.3\postgresql-42.7.3.jar;C:\Users\123\.m2\repository\org\checkerframework\checker-qual\3.42.0\checker-qual-3.42.0.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter-data-jpa\3.4.2\spring-boot-starter-data-jpa-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter-jdbc\3.4.2\spring-boot-starter-jdbc-3.4.2.jar;C:\Users\123\.m2\repository\com\zaxxer\HikariCP\5.1.0\HikariCP-5.1.0.jar;C:\Users\123\.m2\repository\org\springframework\spring-jdbc\6.2.2\spring-jdbc-6.2.2.jar;C:\Users\123\.m2\repository\org\hibernate\orm\hibernate-core\6.6.5.Final\hibernate-core-6.6.5.Final.jar;C:\Users\123\.m2\repository\jakarta\persistence\jakarta.persistence-api\3.1.0\jakarta.persistence-api-3.1.0.jar;C:\Users\123\.m2\repository\jakarta\transaction\jakarta.transaction-api\2.0.1\jakarta.transaction-api-2.0.1.jar;C:\Users\123\.m2\repository\org\hibernate\common\hibernate-commons-annotations\7.0.3.Final\hibernate-commons-annotations-7.0.3.Final.jar;C:\Users\123\.m2\repository\io\smallrye\jandex\3.2.0\jandex-3.2.0.jar;C:\Users\123\.m2\repository\org\glassfish\jaxb\jaxb-runtime\4.0.5\jaxb-runtime-4.0.5.jar;C:\Users\123\.m2\repository\org\glassfish\jaxb\jaxb-core\4.0.5\jaxb-core-4.0.5.jar;C:\Users\123\.m2\repository\org\glassfish\jaxb\txw2\4.0.5\txw2-4.0.5.jar;C:\Users\123\.m2\repository\com\sun\istack\istack-commons-runtime\4.1.2\istack-commons-runtime-4.1.2.jar;C:\Users\123\.m2\repository\jakarta\inject\jakarta.inject-api\2.0.1\jakarta.inject-api-2.0.1.jar;C:\Users\123\.m2\repository\org\antlr\antlr4-runtime\4.13.0\antlr4-runtime-4.13.0.jar;C:\Users\123\.m2\repository\org\springframework\data\spring-data-jpa\3.4.2\spring-data-jpa-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\data\spring-data-commons\3.4.2\spring-data-commons-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\spring-orm\6.2.2\spring-orm-6.2.2.jar;C:\Users\123\.m2\repository\org\springframework\spring-aspects\6.2.2\spring-aspects-6.2.2.jar;C:\Users\123\.m2\repository\org\aspectj\aspectjweaver\1.9.22.1\aspectjweaver-1.9.22.1.jar;C:\Users\123\.m2\repository\com\h2database\h2\2.3.232\h2-2.3.232.jar;C:\Users\123\.m2\repository\io\jsonwebtoken\jjwt-api\0.11.5\jjwt-api-0.11.5.jar;C:\Users\123\.m2\repository\io\jsonwebtoken\jjwt-impl\0.11.5\jjwt-impl-0.11.5.jar;C:\Users\123\.m2\repository\io\jsonwebtoken\jjwt-jackson\0.11.5\jjwt-jackson-0.11.5.jar;C:\Users\123\.m2\repository\org\slf4j\slf4j-api\2.0.17\slf4j-api-2.0.17.jar;C:\Users\123\.m2\repository\fi\solita\clamav\clamav-client\1.0.0\clamav-client-1.0.0.jar;C:\Users\123\.m2\repository\org\glassfish\tyrus\tyrus-client\2.1.3\tyrus-client-2.1.3.jar;C:\Users\123\.m2\repository\org\glassfish\tyrus\tyrus-core\2.1.3\tyrus-core-2.1.3.jar;C:\Users\123\.m2\repository\org\glassfish\tyrus\tyrus-spi\2.1.3\tyrus-spi-2.1.3.jar;C:\Users\123\.m2\repository\jakarta\websocket\jakarta.websocket-client-api\2.1.1\jakarta.websocket-client-api-2.1.1.jar;C:\Users\123\.m2\repository\jakarta\websocket\jakarta.websocket-api\2.1.1\jakarta.websocket-api-2.1.1.jar;C:\Users\123\.m2\repository\org\telegram\telegrambots\6.8.0\telegrambots-6.8.0.jar;C:\Users\123\.m2\repository\org\telegram\telegrambots-meta\6.8.0\telegrambots-meta-6.8.0.jar;C:\Users\123\.m2\repository\org\apache\commons\commons-lang3\3.17.0\commons-lang3-3.17.0.jar;C:\Users\123\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.18.2\jackson-annotations-2.18.2.jar;C:\Users\123\.m2\repository\com\fasterxml\jackson\jaxrs\jackson-jaxrs-json-provider\2.18.2\jackson-jaxrs-json-provider-2.18.2.jar;C:\Users\123\.m2\repository\com\fasterxml\jackson\jaxrs\jackson-jaxrs-base\2.18.2\jackson-jaxrs-base-2.18.2.jar;C:\Users\123\.m2\repository\com\fasterxml\jackson\module\jackson-module-jaxb-annotations\2.18.2\jackson-module-jaxb-annotations-2.18.2.jar;C:\Users\123\.m2\repository\javax\xml\bind\jaxb-api\2.2.12\jaxb-api-2.2.12.jar;C:\Users\123\.m2\repository\org\glassfish\jersey\inject\jersey-hk2\3.1.10\jersey-hk2-3.1.10.jar;C:\Users\123\.m2\repository\org\glassfish\jersey\core\jersey-common\3.1.10\jersey-common-3.1.10.jar;C:\Users\123\.m2\repository\org\glassfish\hk2\osgi-resource-locator\1.0.3\osgi-resource-locator-1.0.3.jar;C:\Users\123\.m2\repository\org\glassfish\hk2\hk2-locator\3.0.6\hk2-locator-3.0.6.jar;C:\Users\123\.m2\repository\org\glassfish\hk2\external\aopalliance-repackaged\3.0.6\aopalliance-repackaged-3.0.6.jar;C:\Users\123\.m2\repository\org\glassfish\hk2\hk2-api\3.0.6\hk2-api-3.0.6.jar;C:\Users\123\.m2\repository\org\glassfish\hk2\hk2-utils\3.0.6\hk2-utils-3.0.6.jar;C:\Users\123\.m2\repository\org\javassist\javassist\3.30.2-GA\javassist-3.30.2-GA.jar;C:\Users\123\.m2\repository\org\glassfish\jersey\media\jersey-media-json-jackson\3.1.10\jersey-media-json-jackson-3.1.10.jar;C:\Users\123\.m2\repository\org\glassfish\jersey\ext\jersey-entity-filtering\3.1.10\jersey-entity-filtering-3.1.10.jar;C:\Users\123\.m2\repository\com\fasterxml\jackson\module\jackson-module-jakarta-xmlbind-annotations\2.18.2\jackson-module-jakarta-xmlbind-annotations-2.18.2.jar;C:\Users\123\.m2\repository\org\glassfish\jersey\containers\jersey-container-grizzly2-http\3.1.10\jersey-container-grizzly2-http-3.1.10.jar;C:\Users\123\.m2\repository\org\glassfish\grizzly\grizzly-http-server\4.0.2\grizzly-http-server-4.0.2.jar;C:\Users\123\.m2\repository\org\glassfish\grizzly\grizzly-http\4.0.2\grizzly-http-4.0.2.jar;C:\Users\123\.m2\repository\org\glassfish\grizzly\grizzly-framework\4.0.2\grizzly-framework-4.0.2.jar;C:\Users\123\.m2\repository\jakarta\ws\rs\jakarta.ws.rs-api\3.1.0\jakarta.ws.rs-api-3.1.0.jar;C:\Users\123\.m2\repository\org\glassfish\jersey\core\jersey-server\3.1.10\jersey-server-3.1.10.jar;C:\Users\123\.m2\repository\org\glassfish\jersey\core\jersey-client\3.1.10\jersey-client-3.1.10.jar;C:\Users\123\.m2\repository\org\apache\httpcomponents\httpclient\4.5.13\httpclient-4.5.13.jar;C:\Users\123\.m2\repository\org\apache\httpcomponents\httpcore\4.4.16\httpcore-4.4.16.jar;C:\Users\123\.m2\repository\commons-logging\commons-logging\1.2\commons-logging-1.2.jar;C:\Users\123\.m2\repository\commons-codec\commons-codec\1.17.2\commons-codec-1.17.2.jar;C:\Users\123\.m2\repository\org\apache\httpcomponents\httpmime\4.5.13\httpmime-4.5.13.jar;C:\Users\123\.m2\repository\org\telegram\telegrambots-spring-boot-starter\6.8.0\telegrambots-spring-boot-starter-6.8.0.jar;C:\Users\123\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.11.4\junit-jupiter-engine-5.11.4.jar;C:\Users\123\.m2\repository\org\junit\platform\junit-platform-engine\1.11.4\junit-platform-engine-1.11.4.jar;C:\Users\123\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\123\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.18.2\jackson-datatype-jsr310-2.18.2.jar;C:\Users\123\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.18.2\jackson-core-2.18.2.jar;C:\Users\123\.m2\repository\com\squareup\okhttp3\okhttp\4.10.0\okhttp-4.10.0.jar;C:\Users\123\.m2\repository\com\squareup\okio\okio-jvm\3.0.0\okio-jvm-3.0.0.jar;C:\Users\123\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-jdk8\1.9.25\kotlin-stdlib-jdk8-1.9.25.jar;C:\Users\123\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-jdk7\1.9.25\kotlin-stdlib-jdk7-1.9.25.jar;C:\Users\123\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib-common\1.9.25\kotlin-stdlib-common-1.9.25.jar;C:\Users\123\.m2\repository\org\jetbrains\kotlin\kotlin-stdlib\1.9.25\kotlin-stdlib-1.9.25.jar;C:\Users\123\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.18.2\jackson-databind-2.18.2.jar;C:\Users\123\.m2\repository\com\google\code\gson\gson\2.11.0\gson-2.11.0.jar;C:\Users\123\.m2\repository\com\google\errorprone\error_prone_annotations\2.27.0\error_prone_annotations-2.27.0.jar;C:\Users\123\.m2\repository\org\jetbrains\annotations\26.0.1\annotations-26.0.1.jar;C:\Users\123\.m2\repository\org\apache\commons\commons-csv\1.10.0\commons-csv-1.10.0.jar;C:\Users\123\.m2\repository\org\springframework\boot\spring-boot-starter-batch\3.4.2\spring-boot-starter-batch-3.4.2.jar;C:\Users\123\.m2\repository\org\springframework\batch\spring-batch-core\5.2.1\spring-batch-core-5.2.1.jar;C:\Users\123\.m2\repository\org\springframework\batch\spring-batch-infrastructure\5.2.1\spring-batch-infrastructure-5.2.1.jar;C:\Users\123\.m2\repository\org\springframework\retry\spring-retry\2.0.11\spring-retry-2.0.11.jar;C:\Users\123\.m2\repository\org\springframework\spring-expression\6.2.2\spring-expression-6.2.2.jar;C:\Users\123\.m2\repository\org\springframework\spring-test\6.2.2\spring-test-6.2.2.jar;C:\Users\123\.m2\repository\io\projectreactor\reactor-core\3.7.2\reactor-core-3.7.2.jar;C:\Users\123\.m2\repository\org\reactivestreams\reactive-streams\1.0.4\reactive-streams-1.0.4.jar;C:\Users\123\.m2\repository\org\springdoc\springdoc-openapi-starter-webmvc-ui\2.8.8\springdoc-openapi-starter-webmvc-ui-2.8.8.jar;C:\Users\123\.m2\repository\org\springdoc\springdoc-openapi-starter-webmvc-api\2.8.8\springdoc-openapi-starter-webmvc-api-2.8.8.jar;C:\Users\123\.m2\repository\org\springdoc\springdoc-openapi-starter-common\2.8.8\springdoc-openapi-starter-common-2.8.8.jar;C:\Users\123\.m2\repository\io\swagger\core\v3\swagger-core-jakarta\2.2.30\swagger-core-jakarta-2.2.30.jar;C:\Users\123\.m2\repository\io\swagger\core\v3\swagger-annotations-jakarta\2.2.30\swagger-annotations-jakarta-2.2.30.jar;C:\Users\123\.m2\repository\io\swagger\core\v3\swagger-models-jakarta\2.2.30\swagger-models-jakarta-2.2.30.jar;C:\Users\123\.m2\repository\com\fasterxml\jackson\dataformat\jackson-dataformat-yaml\2.18.2\jackson-dataformat-yaml-2.18.2.jar;C:\Users\123\.m2\repository\org\webjars\swagger-ui\5.21.0\swagger-ui-5.21.0.jar;C:\Users\123\.m2\repository\org\webjars\webjars-locator-lite\1.0.1\webjars-locator-lite-1.0.1.jar;C:\Users\123\.m2\repository\org\jspecify\jspecify\1.0.0\jspecify-1.0.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\123\AppData\Local\Temp\surefire5198082206965405438\surefirebooter-20250522201004833_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\123\AppData\Local\Temp\surefire2632595999060428648\surefirebooter-20250527212412746_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="21.0.7+6-LTS"/>
@@ -60,20 +60,20 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="65.0"/>
   </properties>
-  <testcase name="processIncomingMessage_EmptyQuery_ShouldDoNothing" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.175">
-    <system-out><![CDATA[20:10:07.311 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Processing incoming message ID 101 for chat ID 1
-20:10:07.313 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Received empty client query in message ID 101. Skipping processing.
+  <testcase name="processIncomingMessage_EmptyQuery_ShouldDoNothing" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.468">
+    <system-out><![CDATA[21:24:16.282 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Processing incoming message ID 101 for chat ID 1
+21:24:16.284 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Received empty client query in message ID 101. Skipping processing.
 ]]></system-out>
   </testcase>
-  <testcase name="processNewPendingChat_MessageMapperThrowsException_ShouldThrowAutoResponderException" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.014">
-    <system-out><![CDATA[20:10:07.321 [main] ERROR com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- Error during initial auto-responder processing for chat 1
+  <testcase name="processNewPendingChat_MessageMapperThrowsException_ShouldThrowAutoResponderException" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.018">
+    <system-out><![CDATA[21:24:16.292 [main] ERROR com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- Error during initial auto-responder processing for chat 1
 java.lang.RuntimeException: Mapping failed
 	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.processNewPendingChat(AutoResponderServiceImpl.java:68)
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.lambda$processNewPendingChat_MessageMapperThrowsException_ShouldThrowAutoResponderException$1(AutoResponderServiceImplTest.java:168)
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.lambda$processNewPendingChat_MessageMapperThrowsException_ShouldThrowAutoResponderException$1(AutoResponderServiceImplTest.java:169)
 	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
 	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
 	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3128)
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processNewPendingChat_MessageMapperThrowsException_ShouldThrowAutoResponderException(AutoResponderServiceImplTest.java:167)
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processNewPendingChat_MessageMapperThrowsException_ShouldThrowAutoResponderException(AutoResponderServiceImplTest.java:168)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:767)
@@ -143,212 +143,136 @@ java.lang.RuntimeException: Mapping failed
 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-20:10:07.326 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Publishing escalation event due to initial processing error for chat ID 1...
-20:10:07.328 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: System message saved internally for chat ID 1.
-20:10:07.328 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Message successfully sent to external channel for chat ID 1.
-20:10:07.329 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Escalation event published for chat ID 1 due to initial error.
+21:24:16.295 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Publishing escalation event due to initial processing error for chat ID 1...
+21:24:16.298 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: System message saved internally for chat ID 1.
+21:24:16.298 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Message successfully sent to external channel for chat ID 1.
+21:24:16.298 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Escalation event published for chat ID 1 due to initial error.
 ]]></system-out>
   </testcase>
-  <testcase name="processIncomingMessage_ExternalMessagingFails_ShouldLogButNotThrow" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.03">
-    <system-out><![CDATA[20:10:07.349 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Processing incoming message ID 101 for chat ID 1
-20:10:07.349 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Found relevant predefined answer (score 0.9) for chat ID 1.
-20:10:07.350 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: System message saved internally for chat ID 1.
-20:10:07.351 [main] ERROR com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Failed to send message to external channel for chat 1: Send failed
-com.example.domain.api.chat_service_api.exception_handler.exception.ExternalMessagingException: Send failed
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.sendAutoResponderMessage(AutoResponderServiceImpl.java:263)
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.processIncomingMessage(AutoResponderServiceImpl.java:191)
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.lambda$processIncomingMessage_ExternalMessagingFails_ShouldLogButNotThrow$3(AutoResponderServiceImplTest.java:265)
-	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:49)
-	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:36)
-	at org.junit.jupiter.api.Assertions.assertDoesNotThrow(Assertions.java:3199)
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ExternalMessagingFails_ShouldLogButNotThrow(AutoResponderServiceImplTest.java:265)
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+  <testcase name="processIncomingMessage_ExternalMessagingFails_ShouldLogButNotThrow" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.312">
+    <failure message="&#10;Argument(s) are different! Wanted:&#10;externalMessagingService.sendMessageToExternal(&#10;    1,&#10;    &quot;Rewritten answer text&quot;&#10;);&#10;-&gt; at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ExternalMessagingFails_ShouldLogButNotThrow(AutoResponderServiceImplTest.java:269)&#10;Actual invocations have different arguments at position [1]:&#10;externalMessagingService.sendMessageToExternal(&#10;    1,&#10;    &quot;Извините, я не смог найти ответ на ваш вопрос и сгенерировать подходящий ответ. Передаю ваш вопрос оператору.&quot;&#10;);&#10;-&gt; at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.sendAutoResponderMessage(AutoResponderServiceImpl.java:264)&#10;" type="Argument(s) are different! Wanted"><![CDATA[Argument(s) are different! Wanted:
+externalMessagingService.sendMessageToExternal(
+    1,
+    "Rewritten answer text"
+);
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ExternalMessagingFails_ShouldLogButNotThrow(AutoResponderServiceImplTest.java:269)
+Actual invocations have different arguments at position [1]:
+externalMessagingService.sendMessageToExternal(
+    1,
+    "Извините, я не смог найти ответ на ваш вопрос и сгенерировать подходящий ответ. Передаю ваш вопрос оператору."
+);
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.sendAutoResponderMessage(AutoResponderServiceImpl.java:264)
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ExternalMessagingFails_ShouldLogButNotThrow(AutoResponderServiceImplTest.java:269)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:767)
-	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$8(TestMethodTestDescriptor.java:217)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:213)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:138)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:156)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:160)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:160)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
-	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
-	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
-	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
-	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
-	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-20:10:07.351 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Finished message processing for message ID 101 in chat ID 1
+]]></failure>
+    <system-out><![CDATA[21:24:16.429 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Processing incoming message ID 101 for chat ID 1
+21:24:16.457 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: No relevant predefined answer found (or score < 0.6) for chat ID 1. Attempting general generation.
+21:24:16.458 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Company description is missing or empty for chat ID 1. Cannot generate general answer.
+21:24:16.458 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Could not find or generate a suitable answer for chat ID 1. Publishing escalation event.
+21:24:16.458 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: System message saved internally for chat ID 1.
+21:24:16.458 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Message successfully sent to external channel for chat ID 1.
+21:24:16.458 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Escalation event published for chat ID 1.
+21:24:16.458 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Finished message processing for message ID 101 in chat ID 1
 ]]></system-out>
   </testcase>
-  <testcase name="stopForChat_ShouldCompleteWithoutErrors" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.007"/>
-  <testcase name="processIncomingMessage_ShouldUseOriginalAnswer_WhenRewriteFails" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.014">
-    <system-out><![CDATA[20:10:07.379 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Processing incoming message ID 101 for chat ID 1
-20:10:07.380 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Found relevant predefined answer (score 0.9) for chat ID 1.
-20:10:07.380 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Failed to rewrite predefined answer for chat ID 1 due to TextProcessingService error. Using original answer. Error: Rewrite failed
-com.example.domain.api.ans_api_module.correction_answer.exception.MLException: Rewrite failed
+  <testcase name="stopForChat_ShouldCompleteWithoutErrors" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.037"/>
+  <testcase name="processIncomingMessage_ShouldUseOriginalAnswer_WhenRewriteFails" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.008">
+    <failure message="&#10;Wanted but not invoked:&#10;textProcessingService.processQuery(&#10;    &quot;Test query&quot;,&#10;    CORRECTION&#10;);&#10;-&gt; at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:76)&#10;Actually, there were zero interactions with this mock.&#10;" type="Wanted but not invoked"><![CDATA[Wanted but not invoked:
+textProcessingService.processQuery(
+    "Test query",
+    CORRECTION
+);
+-> at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:76)
+Actually, there were zero interactions with this mock.
+
 	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:76)
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.processIncomingMessage(AutoResponderServiceImpl.java:148)
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ShouldUseOriginalAnswer_WhenRewriteFails(AutoResponderServiceImplTest.java:204)
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ShouldUseOriginalAnswer_WhenRewriteFails(AutoResponderServiceImplTest.java:207)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:767)
-	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$8(TestMethodTestDescriptor.java:217)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:213)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:138)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:156)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:160)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:160)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
-	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
-	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
-	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
-	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
-	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-20:10:07.381 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: System message saved internally for chat ID 1.
-20:10:07.381 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Message successfully sent to external channel for chat ID 1.
-20:10:07.381 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Finished message processing for message ID 101 in chat ID 1
+]]></failure>
+    <system-out><![CDATA[21:24:16.660 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Processing incoming message ID 101 for chat ID 1
+21:24:16.660 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: No relevant predefined answer found (or score < 0.6) for chat ID 1. Attempting general generation.
+21:24:16.660 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Company description is missing or empty for chat ID 1. Cannot generate general answer.
+21:24:16.660 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Could not find or generate a suitable answer for chat ID 1. Publishing escalation event.
+21:24:16.661 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: System message saved internally for chat ID 1.
+21:24:16.661 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Message successfully sent to external channel for chat ID 1.
+21:24:16.661 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Escalation event published for chat ID 1.
+21:24:16.661 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Finished message processing for message ID 101 in chat ID 1
 ]]></system-out>
   </testcase>
-  <testcase name="processIncomingMessage_NotClientSender_ShouldDoNothing" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.012">
-    <system-out><![CDATA[20:10:07.394 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Processing incoming message ID 101 for chat ID 1
+  <testcase name="processIncomingMessage_NotClientSender_ShouldDoNothing" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.03">
+    <system-out><![CDATA[21:24:16.694 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Processing incoming message ID 101 for chat ID 1
 ]]></system-out>
   </testcase>
-  <testcase name="processNewPendingChat_WrongStatus_ShouldLogAndReturn" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.007">
-    <system-out><![CDATA[20:10:07.403 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Chat ID 1 is not in PENDING_AUTO_RESPONDER status (current status: IN_PROGRESS). Skipping.
+  <testcase name="processNewPendingChat_WrongStatus_ShouldLogAndReturn" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.005">
+    <system-out><![CDATA[21:24:16.700 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Chat ID 1 is not in PENDING_AUTO_RESPONDER status (current status: IN_PROGRESS). Skipping.
 ]]></system-out>
   </testcase>
-  <testcase name="processIncomingMessage_ShouldProcessCorrectAndSendRewrittenAnswer" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.008">
-    <system-out><![CDATA[20:10:07.410 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Processing incoming message ID 101 for chat ID 1
-20:10:07.410 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Found relevant predefined answer (score 0.9) for chat ID 1.
-20:10:07.411 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: System message saved internally for chat ID 1.
-20:10:07.411 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Message successfully sent to external channel for chat ID 1.
-20:10:07.411 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Finished message processing for message ID 101 in chat ID 1
+  <testcase name="processIncomingMessage_ShouldProcessCorrectAndSendRewrittenAnswer" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.056">
+    <failure message="&#10;Wanted but not invoked:&#10;textProcessingService.processQuery(&#10;    &quot;Test query&quot;,&#10;    CORRECTION&#10;);&#10;-&gt; at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:76)&#10;Actually, there were zero interactions with this mock.&#10;" type="Wanted but not invoked"><![CDATA[Wanted but not invoked:
+textProcessingService.processQuery(
+    "Test query",
+    CORRECTION
+);
+-> at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:76)
+Actually, there were zero interactions with this mock.
+
+	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:76)
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ShouldProcessCorrectAndSendRewrittenAnswer(AutoResponderServiceImplTest.java:185)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+    <system-out><![CDATA[21:24:16.755 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Processing incoming message ID 101 for chat ID 1
+21:24:16.756 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: No relevant predefined answer found (or score < 0.6) for chat ID 1. Attempting general generation.
+21:24:16.756 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Company description is missing or empty for chat ID 1. Cannot generate general answer.
+21:24:16.756 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Could not find or generate a suitable answer for chat ID 1. Publishing escalation event.
+21:24:16.757 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: System message saved internally for chat ID 1.
+21:24:16.757 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Message successfully sent to external channel for chat ID 1.
+21:24:16.757 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Escalation event published for chat ID 1.
+21:24:16.757 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Finished message processing for message ID 101 in chat ID 1
 ]]></system-out>
   </testcase>
-  <testcase name="processNewPendingChat_ChatNotFound_ShouldThrowException" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.006">
-    <system-out><![CDATA[20:10:07.419 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Chat ID 1 not found for processing.
+  <testcase name="processNewPendingChat_ChatNotFound_ShouldThrowException" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.045">
+    <system-out><![CDATA[21:24:16.803 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Chat ID 1 not found for processing.
 ]]></system-out>
   </testcase>
-  <testcase name="processIncomingMessage_InternalSaveFails_ShouldLogAndAttemptExternalSend" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.009">
-    <system-out><![CDATA[20:10:07.428 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Processing incoming message ID 101 for chat ID 1
-20:10:07.428 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Found relevant predefined answer (score 0.9) for chat ID 1.
-20:10:07.429 [main] ERROR com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Failed to save system message internally for chat 1: DB error
+  <testcase name="processIncomingMessage_InternalSaveFails_ShouldLogAndAttemptExternalSend" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.013">
+    <failure message="&#10;Argument(s) are different! Wanted:&#10;externalMessagingService.sendMessageToExternal(&#10;    1,&#10;    &quot;Rewritten answer text&quot;&#10;);&#10;-&gt; at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_InternalSaveFails_ShouldLogAndAttemptExternalSend(AutoResponderServiceImplTest.java:286)&#10;Actual invocations have different arguments at position [1]:&#10;externalMessagingService.sendMessageToExternal(&#10;    1,&#10;    &quot;Извините, я не смог найти ответ на ваш вопрос и сгенерировать подходящий ответ. Передаю ваш вопрос оператору.&quot;&#10;);&#10;-&gt; at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.sendAutoResponderMessage(AutoResponderServiceImpl.java:264)&#10;" type="Argument(s) are different! Wanted"><![CDATA[Argument(s) are different! Wanted:
+externalMessagingService.sendMessageToExternal(
+    1,
+    "Rewritten answer text"
+);
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_InternalSaveFails_ShouldLogAndAttemptExternalSend(AutoResponderServiceImplTest.java:286)
+Actual invocations have different arguments at position [1]:
+externalMessagingService.sendMessageToExternal(
+    1,
+    "Извините, я не смог найти ответ на ваш вопрос и сгенерировать подходящий ответ. Передаю ваш вопрос оператору."
+);
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.sendAutoResponderMessage(AutoResponderServiceImpl.java:264)
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_InternalSaveFails_ShouldLogAndAttemptExternalSend(AutoResponderServiceImplTest.java:286)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></failure>
+    <system-out><![CDATA[21:24:16.809 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Processing incoming message ID 101 for chat ID 1
+21:24:16.814 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: No relevant predefined answer found (or score < 0.6) for chat ID 1. Attempting general generation.
+21:24:16.815 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Company description is missing or empty for chat ID 1. Cannot generate general answer.
+21:24:16.815 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Could not find or generate a suitable answer for chat ID 1. Publishing escalation event.
+21:24:16.815 [main] ERROR com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Failed to save system message internally for chat 1: DB error
 java.lang.RuntimeException: DB error
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.sendAutoResponderMessage(AutoResponderServiceImpl.java:250)
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.processIncomingMessage(AutoResponderServiceImpl.java:191)
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.lambda$processIncomingMessage_InternalSaveFails_ShouldLogAndAttemptExternalSend$4(AutoResponderServiceImplTest.java:282)
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.sendAutoResponderMessage(AutoResponderServiceImpl.java:251)
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.processIncomingMessage(AutoResponderServiceImpl.java:197)
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.lambda$processIncomingMessage_InternalSaveFails_ShouldLogAndAttemptExternalSend$4(AutoResponderServiceImplTest.java:283)
 	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:49)
 	at org.junit.jupiter.api.AssertDoesNotThrow.assertDoesNotThrow(AssertDoesNotThrow.java:36)
 	at org.junit.jupiter.api.Assertions.assertDoesNotThrow(Assertions.java:3199)
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_InternalSaveFails_ShouldLogAndAttemptExternalSend(AutoResponderServiceImplTest.java:282)
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_InternalSaveFails_ShouldLogAndAttemptExternalSend(AutoResponderServiceImplTest.java:283)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:767)
@@ -418,101 +342,38 @@ java.lang.RuntimeException: DB error
 	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
 	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-20:10:07.429 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Message successfully sent to external channel for chat ID 1.
-20:10:07.429 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Finished message processing for message ID 101 in chat ID 1
+21:24:16.815 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Message successfully sent to external channel for chat ID 1.
+21:24:16.816 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Escalation event published for chat ID 1.
+21:24:16.816 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Finished message processing for message ID 101 in chat ID 1
 ]]></system-out>
   </testcase>
-  <testcase name="processIncomingMessage_UnexpectedException_ShouldEscalateAndSendErrorMessage" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.012">
-    <system-out><![CDATA[20:10:07.436 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Processing incoming message ID 101 for chat ID 1
-20:10:07.437 [main] ERROR com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Unexpected error processing message ID 101 for chat ID 1: Something went wrong
-java.lang.RuntimeException: Something went wrong
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.processIncomingMessage(AutoResponderServiceImpl.java:129)
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.lambda$processIncomingMessage_UnexpectedException_ShouldEscalateAndSendErrorMessage$2(AutoResponderServiceImplTest.java:243)
-	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
+  <testcase name="processIncomingMessage_UnexpectedException_ShouldEscalateAndSendErrorMessage" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.005">
+    <failure message="Expected com.example.domain.api.ans_api_module.exception.AutoResponderException to be thrown, but nothing was thrown." type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: Expected com.example.domain.api.ans_api_module.exception.AutoResponderException to be thrown, but nothing was thrown.
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:73)
 	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
 	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3128)
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_UnexpectedException_ShouldEscalateAndSendErrorMessage(AutoResponderServiceImplTest.java:242)
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_UnexpectedException_ShouldEscalateAndSendErrorMessage(AutoResponderServiceImplTest.java:243)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:767)
-	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
-	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
-	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
-	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$8(TestMethodTestDescriptor.java:217)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:213)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:138)
-	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:156)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:160)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:160)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146)
-	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144)
-	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143)
-	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100)
-	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
-	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
-	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
-	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
-	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
-	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
-	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
-	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
-	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
-	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
-	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
-20:10:07.437 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Publishing escalation event due to unexpected error for chat ID 1...
-20:10:07.438 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: System message saved internally for chat ID 1.
-20:10:07.438 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Message successfully sent to external channel for chat ID 1.
-20:10:07.438 [main] ERROR com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Escalation event published for chat ID 1 due to unexpected error.
+]]></failure>
+    <system-out><![CDATA[21:24:16.822 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Processing incoming message ID 101 for chat ID 1
+21:24:16.822 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: No relevant predefined answer found (or score < 0.6) for chat ID 1. Attempting general generation.
+21:24:16.822 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Company description is missing or empty for chat ID 1. Cannot generate general answer.
+21:24:16.822 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Could not find or generate a suitable answer for chat ID 1. Publishing escalation event.
+21:24:16.822 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: System message saved internally for chat ID 1.
+21:24:16.822 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Message successfully sent to external channel for chat ID 1.
+21:24:16.822 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Escalation event published for chat ID 1.
+21:24:16.822 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Finished message processing for message ID 101 in chat ID 1
 ]]></system-out>
   </testcase>
-  <testcase name="processNewPendingChat_WhenNoFirstMessage_ShouldNotFailAndNotProcess" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.008">
-    <system-out><![CDATA[20:10:07.451 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: No first message found in new pending chat ID 1
+  <testcase name="processNewPendingChat_WhenNoFirstMessage_ShouldNotFailAndNotProcess" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.006">
+    <system-out><![CDATA[21:24:16.830 [main] WARN com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: No first message found in new pending chat ID 1
 ]]></system-out>
   </testcase>
-  <testcase name="processIncomingMessage_WrongStatus_ShouldDoNothing" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.003">
-    <system-out><![CDATA[20:10:07.456 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Processing incoming message ID 101 for chat ID 1
+  <testcase name="processIncomingMessage_WrongStatus_ShouldDoNothing" classname="com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest" time="0.016">
+    <system-out><![CDATA[21:24:16.846 [main] INFO com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl -- AutoResponder: Processing incoming message ID 101 for chat ID 1
 ]]></system-out>
   </testcase>
 </testsuite>

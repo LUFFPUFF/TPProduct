@@ -5,10 +5,8 @@ C:\Users\123\IdeaProjects\TPProduct\Backend\src\test\java\com\example\domain\api
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\test\java\com\example\domain\api\authentication_module\service\impl\RegistrationServiceImplTest.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\test\java\com\example\domain\api\authentication_module\service\impl\RoleServiceImplTest.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\test\java\com\example\domain\api\chat_service_api\service\impl\ChatServiceImplTest.java
-C:\Users\123\IdeaProjects\TPProduct\Backend\src\test\java\com\example\domain\api\chat_service_api\service\impl\ClientServiceImplTest.java
-C:\Users\123\IdeaProjects\TPProduct\Backend\src\test\java\com\example\domain\api\chat_service_api\service\impl\LeastBusyAssignmentServiceTest.java
+C:\Users\123\IdeaProjects\TPProduct\Backend\src\test\java\com\example\domain\api\chat_service_api\service\impl\ClientServiceImplImplTest.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\test\java\com\example\domain\api\chat_service_api\service\impl\NotificationServiceImplTest.java
-C:\Users\123\IdeaProjects\TPProduct\Backend\src\test\java\com\example\domain\api\chat_service_api\service\impl\TestJpaConfig.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\test\java\com\example\domain\api\chat_service_api\service\impl\UserServiceImplTest.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\test\java\com\example\domain\api\subscription_module\service\impl\SubscriptionPriceCalculateServiceImplTest.java
 C:\Users\123\IdeaProjects\TPProduct\Backend\src\test\java\com\example\domain\api\subscription_module\service\impl\SubscriptionServiceImplTest.java

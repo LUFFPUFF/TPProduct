@@ -1,7 +1,7 @@
 package com.example.domain.api.chat_service_api.integration.listener;
 
 import com.example.domain.api.chat_service_api.integration.mail.response.EmailResponse;
-import com.example.domain.api.chat_service_api.integration.process_service.ClientCompanyProcessService;
+import com.example.domain.api.chat_service_api.integration.service.impl.ClientCompanyProcessService;
 import com.example.domain.api.chat_service_api.integration.telegram.TelegramResponse;
 import com.example.domain.api.chat_service_api.integration.vk.reponse.VkResponse;
 import com.example.domain.api.chat_service_api.integration.whats_app.model.response.WhatsappResponse;

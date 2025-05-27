@@ -25,5 +25,6 @@ public class ClientDto {
     private String tag;
 
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
 }

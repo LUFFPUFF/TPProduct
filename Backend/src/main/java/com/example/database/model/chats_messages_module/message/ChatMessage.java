@@ -34,7 +34,7 @@ public class ChatMessage {
     @JoinColumn(name = "sender_user_id")
     private User senderOperator;
 
-    @Column(name = "content")
+    @Column(name = "content", length = 4000)
     private String content;
 
     @Enumerated(EnumType.STRING)
