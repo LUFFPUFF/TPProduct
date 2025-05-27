@@ -117,7 +117,7 @@ DialogX - это интеллектуальный автоответчик но�
 - [Диаграммы и схемы](docs/Diagrams)
 - [Презентация проекта](docs/Documentation/presentation.pptx)
 - [Презентация проекта 2 аттестация](docs/Presentation)
-- [Презентация проекта 3 аттестация](https://drive.google.com/file/d/1fSG3RBAgQvRgEHnnnAHTyY9yN3u_n5WG/view)
+- [Презентация проекта 3 аттестация](docs/Presentation/presentation_3_аtta_pravki.pdf)
 - [Видеопрезентация защиты ТЗ](https://rutube.ru/video/32e6b72270bb88000cd0a0b1ea7d3aeb/)
 - [Видеопрезентация защиты MVP](https://rutube.ru/video/private/5d92d840d260134b2a14ddd03314140a/?p=FgEvBA6gXh-l8quqkTaX4Q)
 
