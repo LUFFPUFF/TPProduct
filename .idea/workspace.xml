@@ -7,15 +7,17 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="hotfix AutoResponderServiceImpl">
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="hotfix TextProcessingApiClient and nginx.conf">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/service/impl/AutoResponderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/ans_api_module/service/impl/AutoResponderServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/security/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/authentication_module/service/impl/RegistrationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/config/WebSocketTopicRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/config/WebSocketTopicRegistry.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/listener/ChatWebSocketListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/listener/ChatWebSocketListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/IUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/IUserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/WebSocketMessagingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/WebSocketMessagingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/domain/api/chat_service_api/service/impl/UserServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/answer/UIPredefinedAnswerMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/answer/UIPredefinedAnswerMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/test-classes/com/example/domain/api/subscription_module/service/impl/SubscriptionServiceImplTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/test-classes/com/example/domain/api/subscription_module/service/impl/SubscriptionServiceImplTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/config/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/config/api.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/config/websocketService.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/config/websocketService.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/DialogPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/DialogPage.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -359,15 +361,8 @@
       <workItem from="1747992637897" duration="4170000" />
       <workItem from="1748097079692" duration="2556000" />
       <workItem from="1748209575032" duration="2426000" />
-      <workItem from="1748217233292" duration="17450000" />
-    </task>
-    <task id="LOCAL-00001" summary="added activity diagram, usecase diagrams for operator and administrator">
-      <option name="closed" value="true" />
-      <created>1741277058963</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1741277058963</updated>
+      <workItem from="1748217233292" duration="25361000" />
+      <workItem from="1748352802792" duration="4636000" />
     </task>
     <task id="LOCAL-00002" summary="DX-91 DX-93 added company and subscription module">
       <option name="closed" value="true" />
@@ -721,7 +716,47 @@
       <option name="project" value="LOCAL" />
       <updated>1748233943648</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="hotfix AutoResponderServiceImpl">
+      <option name="closed" value="true" />
+      <created>1748234708971</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1748234708971</updated>
+    </task>
+    <task id="LOCAL-00047" summary="hotfix application.yml">
+      <option name="closed" value="true" />
+      <created>1748234945778</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1748234945778</updated>
+    </task>
+    <task id="LOCAL-00048" summary="hotfix ChatWindow">
+      <option name="closed" value="true" />
+      <created>1748235879361</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1748235879361</updated>
+    </task>
+    <task id="LOCAL-00049" summary="hotfix TextProcessingApiClient">
+      <option name="closed" value="true" />
+      <created>1748263628822</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1748263628822</updated>
+    </task>
+    <task id="LOCAL-00050" summary="hotfix TextProcessingApiClient and nginx.conf">
+      <option name="closed" value="true" />
+      <created>1748264634376</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1748264634376</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -739,8 +774,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Исправлены ошибки request для frontend части" />
-    <MESSAGE value="Доработан README.md и добавлен чек лист" />
     <MESSAGE value="fix security config" />
     <MESSAGE value="fix resp fetch" />
     <MESSAGE value="fix jwtfilter" />
@@ -760,10 +793,12 @@
     <MESSAGE value="hotfix ClientCompanyProcessService and ChatWindow" />
     <MESSAGE value="hotfix api.js" />
     <MESSAGE value="hotfix ChatWindow and DialogList" />
-    <MESSAGE value="hotfix ChatWindow" />
     <MESSAGE value="hotfix websocketService" />
-    <MESSAGE value="hotfix TextProcessingApiClient" />
     <MESSAGE value="hotfix AutoResponderServiceImpl" />
-    <option name="LAST_COMMIT_MESSAGE" value="hotfix AutoResponderServiceImpl" />
+    <MESSAGE value="hotfix application.yml" />
+    <MESSAGE value="hotfix ChatWindow" />
+    <MESSAGE value="hotfix TextProcessingApiClient" />
+    <MESSAGE value="hotfix TextProcessingApiClient and nginx.conf" />
+    <option name="LAST_COMMIT_MESSAGE" value="hotfix TextProcessingApiClient and nginx.conf" />
   </component>
 </project>

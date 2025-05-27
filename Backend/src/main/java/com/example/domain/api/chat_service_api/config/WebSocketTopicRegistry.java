@@ -31,6 +31,8 @@ public class WebSocketTopicRegistry {
     @NotBlank
     @Value("${websocket.topics.chat.typing}")
     private String chatTypingSuffix;
+    @Value("${websocket.topics.chat.notifications}")
+    private String chatNotificationsSuffix;
     @NotBlank
     @Value("${websocket.topics.user.base}")
     private String userBase;
@@ -62,6 +64,9 @@ public class WebSocketTopicRegistry {
 
     public String getChatTypingTopic(Object chatId) {
         return chatBase.replace("{chatId}", String.valueOf(chatId)) + chatTypingSuffix;
+    }
+    public String getChatNotificationsTopic(Object chatId) {
+        return chatBase.replace("{chatId}", String.valueOf(chatId)) + chatNotificationsSuffix;
     }
     public String getFullUserNotificationsTopic(Object userId) {
         return userBase.replace("{userId}", String.valueOf(userId)) + userNotificationsSuffix;

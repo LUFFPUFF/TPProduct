@@ -203,6 +203,7 @@ websocket:
       status: /status
       messages: /messages
       typing: /typing
+      notifications: /notifications
     user:
       base: /user/{userId}/queue
       notifications: /notifications

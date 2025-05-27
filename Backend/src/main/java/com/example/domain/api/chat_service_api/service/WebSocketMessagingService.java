@@ -72,6 +72,17 @@ public class WebSocketMessagingService {
     }
 
     /**
+     * Отправляет уведомление в указанный чат.
+     *
+     * @param chatId             ID чата.
+     * @param notificationPayload DTO уведомления.
+     */
+    public void sendChatNotification(Integer chatId, Object notificationPayload) {
+        log.info("Sending notification to chat ID {}.", chatId);
+        sendMessage(topicRegistry.getChatNotificationsTopic(chatId), notificationPayload);
+    }
+
+    /**
      * Отправляет обновление общего статуса чата.
      * Например, изменение статуса чата (PENDING, ASSIGNED, CLOSED), обновление времени последнего сообщения,
      * или назначение/изменение оператора.

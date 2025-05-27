@@ -22,6 +22,9 @@ public interface IUserService {
      */
     Optional<UserDto> findDtoById(Integer userId);
 
+
+    Optional<User> findByEmail(String name);
+
      List<UserDto> getAllUsers(Integer companyId);
      void updateOnlineStatus(Integer userId, boolean isOnline);
 }
