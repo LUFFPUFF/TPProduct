@@ -23,7 +23,6 @@ public class MessageDto {
     private ChatDTO chatDto;
 
     @NotBlank(message = "Содержание сообщения не может быть пустым")
-    @Size(max = 500, message = "Сообщение не должно превышать 500 символов")
     private String content;
 
     @NotNull(message = "Тип отправителя обязателен")

@@ -30,4 +30,6 @@ public interface IAutoResponderService {
      */
     void stopForChat(Integer chatId);
 
+    Integer findLastLoggedAiResponseIdForChat(Integer chatId);
+
 }

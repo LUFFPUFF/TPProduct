@@ -13,4 +13,8 @@ public interface IChatMessageQueryService {
     List<MessageDto> getMessagesByChatId(Integer chatId, UserContext userContext) throws AccessDeniedException;
 
     Optional<ChatMessage> findFirstMessageEntityByChatId(Integer chatId, UserContext userContext) throws AccessDeniedException;
+
+    List<MessageDto> getRecentClientMessages(Integer chatId, int limit, Integer excludeMessageId, UserContext userContext) throws AccessDeniedException;
+
+    Optional<ChatMessage> findMessageEntityById(Integer messageId, UserContext userContext) throws AccessDeniedException;
 }

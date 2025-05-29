@@ -36,6 +36,7 @@ import org.slf4j.MDC;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
@@ -95,7 +96,6 @@ public class ChatAssignmentServiceImpl implements IChatAssignmentService {
 
                     MDC.put(KEY_COMPANY_ID_MDC, metricHelper.getCompanyIdStr(chat.getCompany()));
                     MDC.put(KEY_CHAT_ID_MDC, String.valueOf(chat.getId()));
-
 
                     User operatorToAssign = determineOperatorForAssignment(chat, assignRequest.getOperatorId(), userContext.getCompanyId());
 
@@ -223,31 +223,32 @@ public class ChatAssignmentServiceImpl implements IChatAssignmentService {
         );
     }
 
-    @EventListener
-    @Transactional
-    public void handleAutoResponderEscalation(AutoResponderEscalationEvent event) {
-        MdcUtil.withContext(
-                () -> {
-                    log.info("Received AutoResponderEscalationEvent for chat ID: {}, client ID: {}", event.getChatId(), event.getClientId());
-                    try {
-                        escalateChatToOperatorInternal(event.getChatId(), event.getClientId());
-                        log.info("Handled auto-responder escalation event successfully for chat ID: {}", event.getChatId());
-                    } catch (ChatNotFoundException | ChatServiceException e) {
-                        log.error("Error handling auto-responder escalation for chat ID {}: {}", event.getChatId(), e.getMessage(), e);
-                        metricHelper.incrementChatOperationError(OPERATION_HANDLE_AUTO_ESCALATION,
-                                getCompanyIdFromChatOrUnknown(event.getChatId()), e.getClass().getSimpleName());
-                    } catch (Exception e) {
-                        log.error("Unexpected error handling auto-responder escalation for chat ID {}: {}", event.getChatId(), e.getMessage(), e);
-                        metricHelper.incrementChatOperationError(OPERATION_HANDLE_AUTO_ESCALATION,
-                                getCompanyIdFromChatOrUnknown(event.getChatId()), "UnexpectedException");
-                    }
-                    return null;
-                },
-                "operation", OPERATION_HANDLE_AUTO_ESCALATION,
-                KEY_CHAT_ID, event.getChatId(),
-                KEY_CLIENT_ID, event.getClientId()
-        );
-    }
+//    @EventListener
+//    @Transactional
+//    public void handleAutoResponderEscalation(AutoResponderEscalationEvent event) {
+//        log.info("handleAutoResponderEscalation run");
+//        MdcUtil.withContext(
+//                () -> {
+//                    log.info("Received AutoResponderEscalationEvent for chat ID: {}, client ID: {}", event.getChatId(), event.getClientId());
+//                    try {
+//                        escalateChatToOperatorInternal(event.getChatId(), event.getClientId());
+//                        log.info("Handled auto-responder escalation event successfully for chat ID: {}", event.getChatId());
+//                    } catch (ChatNotFoundException | ChatServiceException e) {
+//                        log.error("Error handling auto-responder escalation for chat ID {}: {}", event.getChatId(), e.getMessage(), e);
+//                        metricHelper.incrementChatOperationError(OPERATION_HANDLE_AUTO_ESCALATION,
+//                                getCompanyIdFromChatOrUnknown(event.getChatId()), e.getClass().getSimpleName());
+//                    } catch (Exception e) {
+//                        log.error("Unexpected error handling auto-responder escalation for chat ID {}: {}", event.getChatId(), e.getMessage(), e);
+//                        metricHelper.incrementChatOperationError(OPERATION_HANDLE_AUTO_ESCALATION,
+//                                getCompanyIdFromChatOrUnknown(event.getChatId()), "UnexpectedException");
+//                    }
+//                    return null;
+//                },
+//                "operation", OPERATION_HANDLE_AUTO_ESCALATION,
+//                KEY_CHAT_ID, event.getChatId(),
+//                KEY_CLIENT_ID, event.getClientId()
+//        );
+//    }
 
     private void escalateChatToOperatorInternal(Integer chatId, Integer clientId) {
         log.info("[{}] AutoResponder requesting operator escalation for chat ID {}", OPERATION_ESCALATE_CHAT_INTERNAL, chatId);
@@ -364,6 +365,7 @@ public class ChatAssignmentServiceImpl implements IChatAssignmentService {
     }
 
     private Chat updateChatAssignment(Chat chat, User operator, ChatStatus newStatus, LocalDateTime assignedAt) {
+        log.info("UPDATE_CHAT_ASSIGN: Attempting to set chat {} to operator {} and status {}", chat.getId(), operator.getId(), newStatus);
         chat.setUser(operator);
         chat.setStatus(newStatus);
         chat.setAssignedAt(assignedAt);

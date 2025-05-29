@@ -13,7 +13,4 @@ public interface IExternalMessagingService {
      */
     void sendMessageToExternal(Integer chatId, String messageContent) throws ExternalMessagingException;
 
-    // TODO: Возможно, добавить метод для отправки с внешним ID сообщения, если это нужно для статусов
-    // void sendMessageToExternal(Integer chatId, String messageContent, String replyToExternalMessageId);
-
 }

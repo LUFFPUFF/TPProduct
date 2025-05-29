@@ -3,9 +3,11 @@ package com.example.domain.api.chat_service_api.service.impl.chat;
 import com.example.database.model.chats_messages_module.chat.Chat;
 import com.example.database.model.chats_messages_module.chat.ChatChannel;
 import com.example.database.model.chats_messages_module.chat.ChatStatus;
+import com.example.database.model.chats_messages_module.message.ChatMessage;
 import com.example.database.model.company_subscription_module.user_roles.user.Role;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.model.crm_module.client.Client;
+import com.example.database.repository.chats_messages_module.ChatMessageRepository;
 import com.example.database.repository.chats_messages_module.ChatRepository;
 import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
@@ -36,6 +38,7 @@ import static com.example.domain.api.chat_service_api.service.impl.LeastBusyAssi
 public class ChatQueryServiceImpl implements IChatQueryService {
 
     private final ChatRepository chatRepository;
+    private final ChatMessageRepository chatMessageRepository;
     private final ChatMapper chatMapper;
     private final IUserService userService;
     private final ChatValidationUtil chatValidationUtil;
@@ -58,6 +61,7 @@ public class ChatQueryServiceImpl implements IChatQueryService {
     private static final String OPERATION_GET_CLIENT_CHATS = "getClientChats";
     private static final String OPERATION_GET_COMPANY_PENDING_CHATS = "getMyCompanyPendingOperatorChats";
     private static final String OPERATION_FIND_CHAT_EXTID = "findChatEntityByExternalId";
+    private static final String OPERATION_FIND_FIRST_MESSAGE = "findFirstMessageEntityByChatId";
 
     private static final Set<ChatStatus> DEFAULT_MANAGER_VIEWABLE_STATUSES = Set.of(
             ChatStatus.ASSIGNED, ChatStatus.IN_PROGRESS, ChatStatus.PENDING_OPERATOR, ChatStatus.PENDING_AUTO_RESPONDER
@@ -117,6 +121,35 @@ public class ChatQueryServiceImpl implements IChatQueryService {
                 KEY_CLIENT_ID, clientId,
                 "chatChannel", channel != null ? channel.name() : "null",
                 "externalChatId", externalChatId
+        );
+    }
+
+    @Override
+    public Optional<ChatMessage> findFirstMessageEntityByChatId(Integer chatId, UserContext userContext) throws AccessDeniedException {
+        return MdcUtil.withContext(
+                () -> {
+                    String requesterInfo = (userContext != null && userContext.getUserId() != null) ? "User " + userContext.getUserId() : "System";
+                    log.debug("{} requesting first message for chat ID {}", requesterInfo, chatId);
+
+                    if (userContext != null) {
+                        Chat chat = this.findChatEntityById(chatId)
+                                .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found when attempting to find its first message."));
+
+                        chatValidationUtil.ensureChatBelongsToCompany(chat, userContext.getCompanyId(), OPERATION_FIND_FIRST_MESSAGE);
+
+                    }
+
+                    Optional<ChatMessage> firstMessage = chatMessageRepository.findFirstByChatIdOrderBySentAtAsc(chatId);
+                    if (firstMessage.isPresent()) {
+                        log.info("Found first message ID {} for chat ID {}", firstMessage.get().getId(), chatId);
+                    } else {
+                        log.info("No messages found for chat ID {} when searching for the first message.", chatId);
+                    }
+                    return firstMessage;
+                },
+                "operation", OPERATION_FIND_FIRST_MESSAGE,
+                KEY_CHAT_ID, chatId,
+                KEY_USER_ID, (userContext != null ? userContext.getUserId() : "System")
         );
     }
 

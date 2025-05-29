@@ -3,6 +3,7 @@ package com.example.domain.api.chat_service_api.service.chat;
 import com.example.database.model.chats_messages_module.chat.Chat;
 import com.example.database.model.chats_messages_module.chat.ChatChannel;
 import com.example.database.model.chats_messages_module.chat.ChatStatus;
+import com.example.database.model.chats_messages_module.message.ChatMessage;
 import com.example.domain.api.chat_service_api.model.dto.ChatDTO;
 import com.example.domain.api.chat_service_api.model.dto.ChatDetailsDTO;
 import com.example.domain.security.model.UserContext;
@@ -19,6 +20,8 @@ public interface IChatQueryService {
     Optional<Chat> findOpenChatEntityByClientAndChannel(Integer clientId, ChatChannel channel);
 
     Optional<Chat> findOpenChatEntityByClientAndChannelAndExternalId(Integer clientId, ChatChannel channel, String externalChatId);
+
+    Optional<ChatMessage> findFirstMessageEntityByChatId(Integer chatId, UserContext userContext) throws AccessDeniedException;
 
     Optional<Chat> findChatEntityById(Integer chatId);
 

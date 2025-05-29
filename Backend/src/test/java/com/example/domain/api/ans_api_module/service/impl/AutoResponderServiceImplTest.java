@@ -8,13 +8,12 @@ import com.example.database.model.company_subscription_module.company.Company;
 import com.example.database.model.crm_module.client.Client;
 import com.example.domain.api.ans_api_module.answer_finder.domain.dto.PredefinedAnswerDto; // Правильный импорт
 import com.example.domain.api.ans_api_module.answer_finder.dto.AnswerSearchResultItem;
-import com.example.domain.api.ans_api_module.answer_finder.exception.AnswerSearchException;
 import com.example.domain.api.ans_api_module.answer_finder.service.AnswerSearchService;
-import com.example.domain.api.ans_api_module.correction_answer.exception.MLException;
-import com.example.domain.api.ans_api_module.correction_answer.service.GenerationType;
-import com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService;
+import com.example.domain.api.ans_api_module.generation.exception.MLException;
+import com.example.domain.api.ans_api_module.generation.model.enums.GenerationType;
 import com.example.domain.api.ans_api_module.event.AutoResponderEscalationEvent;
 import com.example.domain.api.ans_api_module.exception.AutoResponderException;
+import com.example.domain.api.ans_api_module.generation.service.ITextGenerationService;
 import com.example.domain.api.chat_service_api.exception_handler.exception.ExternalMessagingException;
 import com.example.domain.api.chat_service_api.integration.service.IExternalMessagingService;
 import com.example.domain.api.chat_service_api.mapper.ChatMessageMapper;
@@ -37,7 +36,6 @@ import org.springframework.context.ApplicationEventPublisher;
 
 
 import java.nio.file.AccessDeniedException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,7 +48,7 @@ import static org.mockito.Mockito.*;
 class AutoResponderServiceImplTest {
 
     @Mock private AnswerSearchService answerSearchService;
-    @Mock private TextProcessingService textProcessingService;
+    @Mock private ITextGenerationService textProcessingService;
     @Mock private IChatMessageService chatMessageService;
     @Mock private ChatMessageMapper messageMapper;
     @Mock private IExternalMessagingService externalMessagingService;
@@ -78,6 +76,7 @@ class AutoResponderServiceImplTest {
     private final String REWRITTEN_ANSWER = "Rewritten answer text";
     private final String ERROR_MESSAGE_FOR_CLIENT = "Извините, возникла проблема при обработке вашего запроса. Передаю ваш вопрос оператору.";
     private final String UNEXPECTED_ERROR_MESSAGE_FOR_CLIENT = "Извините, произошла непредвиденная ошибка. Передаю ваш вопрос оператору.";
+    private final String clientPreviousMessages = "Привет";
 
 
     @BeforeEach
@@ -117,9 +116,9 @@ class AutoResponderServiceImplTest {
         when(chatMessageService.findChatEntityById(CHAT_ID)).thenReturn(Optional.of(testChat));
         when(chatMessageService.findFirstMessageByChatId(CHAT_ID)).thenReturn(Optional.of(testChatMessage));
         when(messageMapper.toDto(testChatMessage)).thenReturn(testMessageDto);
-        when(textProcessingService.processQuery(eq(CLIENT_QUERY), eq(GenerationType.CORRECTION)))
+        when(textProcessingService.processQuery(eq(CLIENT_QUERY), eq(GenerationType.CORRECTION), clientPreviousMessages))
                 .thenReturn(CORRECTED_QUERY);
-        when(textProcessingService.processQuery(eq(ORIGINAL_ANSWER), eq(GenerationType.REWRITE)))
+        when(textProcessingService.processQuery(eq(ORIGINAL_ANSWER), eq(GenerationType.REWRITE), clientPreviousMessages))
                 .thenReturn(REWRITTEN_ANSWER);
     }
 
@@ -182,9 +181,9 @@ class AutoResponderServiceImplTest {
 
         autoResponderService.processIncomingMessage(testMessageDto, testChat);
 
-        verify(textProcessingService).processQuery(CLIENT_QUERY, GenerationType.CORRECTION);
+        verify(textProcessingService).processQuery(CLIENT_QUERY, GenerationType.CORRECTION, clientPreviousMessages);
         verify(answerSearchService).findRelevantAnswers(CORRECTED_QUERY, COMPANY_ID, null);
-        verify(textProcessingService).processQuery(ORIGINAL_ANSWER, GenerationType.REWRITE);
+        verify(textProcessingService).processQuery(ORIGINAL_ANSWER, GenerationType.REWRITE, clientPreviousMessages);
         verify(chatMessageService).processAndSaveMessage(saveMessageRequestCaptor.capture(), eq(CLIENT_ID), eq(ChatMessageSenderType.AUTO_RESPONDER));
         verify(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), externalMessageContentCaptor.capture());
         assertEquals(REWRITTEN_ANSWER, externalMessageContentCaptor.getValue());
@@ -200,13 +199,13 @@ class AutoResponderServiceImplTest {
         AnswerSearchResultItem searchResult = new AnswerSearchResultItem(answerDto, 0.9);
         when(answerSearchService.findRelevantAnswers(CORRECTED_QUERY, COMPANY_ID, null)).thenReturn(List.of(searchResult));
         MLException rewriteException = new MLException("Rewrite failed", 500);
-        when(textProcessingService.processQuery(eq(ORIGINAL_ANSWER), eq(GenerationType.REWRITE))).thenThrow(rewriteException);
+        when(textProcessingService.processQuery(eq(ORIGINAL_ANSWER), eq(GenerationType.REWRITE), clientPreviousMessages)).thenThrow(rewriteException);
 
         autoResponderService.processIncomingMessage(testMessageDto, testChat);
 
-        verify(textProcessingService).processQuery(CLIENT_QUERY, GenerationType.CORRECTION);
+        verify(textProcessingService).processQuery(CLIENT_QUERY, GenerationType.CORRECTION, clientPreviousMessages);
         verify(answerSearchService).findRelevantAnswers(CORRECTED_QUERY, COMPANY_ID, null);
-        verify(textProcessingService).processQuery(ORIGINAL_ANSWER, GenerationType.REWRITE);
+        verify(textProcessingService).processQuery(ORIGINAL_ANSWER, GenerationType.REWRITE, clientPreviousMessages);
         verify(chatMessageService).processAndSaveMessage(saveMessageRequestCaptor.capture(), eq(CLIENT_ID), eq(ChatMessageSenderType.AUTO_RESPONDER));
         verify(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), externalMessageContentCaptor.capture());
         assertEquals(ORIGINAL_ANSWER, externalMessageContentCaptor.getValue());
@@ -259,7 +258,7 @@ class AutoResponderServiceImplTest {
         answerDto.setAnswer(ORIGINAL_ANSWER);
         AnswerSearchResultItem searchResult = new AnswerSearchResultItem(answerDto, 0.9);
         when(answerSearchService.findRelevantAnswers(CORRECTED_QUERY, COMPANY_ID, null)).thenReturn(List.of(searchResult));
-        when(textProcessingService.processQuery(eq(ORIGINAL_ANSWER), eq(GenerationType.REWRITE))).thenReturn(REWRITTEN_ANSWER);
+        when(textProcessingService.processQuery(eq(ORIGINAL_ANSWER), eq(GenerationType.REWRITE), clientPreviousMessages)).thenReturn(REWRITTEN_ANSWER);
         ExternalMessagingException messagingException = new ExternalMessagingException("Send failed");
         doThrow(messagingException).when(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), eq(REWRITTEN_ANSWER));
 
@@ -276,7 +275,7 @@ class AutoResponderServiceImplTest {
         answerDto.setAnswer(ORIGINAL_ANSWER);
         AnswerSearchResultItem searchResult = new AnswerSearchResultItem(answerDto, 0.9);
         when(answerSearchService.findRelevantAnswers(CORRECTED_QUERY, COMPANY_ID, null)).thenReturn(List.of(searchResult));
-        when(textProcessingService.processQuery(eq(ORIGINAL_ANSWER), eq(GenerationType.REWRITE))).thenReturn(REWRITTEN_ANSWER);
+        when(textProcessingService.processQuery(eq(ORIGINAL_ANSWER), eq(GenerationType.REWRITE), clientPreviousMessages)).thenReturn(REWRITTEN_ANSWER);
         RuntimeException saveException = new RuntimeException("DB error");
         when(chatMessageService.processAndSaveMessage(any(), any(), any())).thenThrow(saveException);
 

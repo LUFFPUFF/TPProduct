@@ -48,6 +48,9 @@ public class Chat {
     @Column(name = "has_operator_responded")
     private Boolean hasOperatorResponded;
 
+    @Column(name = "awaiting_feedback_for_ai_response_id")
+    private Integer awaitingFeedbackForAiResponseId;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

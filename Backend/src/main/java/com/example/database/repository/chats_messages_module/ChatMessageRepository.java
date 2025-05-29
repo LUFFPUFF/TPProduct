@@ -8,6 +8,7 @@ import com.example.database.model.chats_messages_module.message.ChatMessage;
 import com.example.database.model.chats_messages_module.message.MessageStatus;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import jakarta.persistence.LockModeType;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
@@ -24,21 +25,7 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Intege
 
     List<ChatMessage> findByChatIdOrderBySentAtAsc(Integer chatId);
 
-    Optional<ChatMessage> findByIdAndExternalMessageId(Integer id, String externalMessageId);
-
     Optional<ChatMessage> findFirstByChatIdOrderBySentAtAsc(Integer chatId);
-
-    @Query("SELECT DISTINCT m.chat " +
-            "FROM ChatMessage m " +
-            "WHERE m.chat.client.id = :clientId " +
-            "AND m.chat.chatChannel = :channel " +
-            "AND m.chat.status IN (:statuses) " +
-            "ORDER BY m.chat.createdAt DESC")
-    Optional<Chat> findFirstChatByChatClient_IdAndChatChannelAndChatStatusInOrderByChatCreatedAtDesc(
-            @Param("clientId") Integer clientId,
-            @Param("channel") ChatChannel channel,
-            @Param("statuses") Collection<ChatStatus> statuses
-    );
 
     List<ChatMessage> findAllByIdInAndChatIdAndSenderTypeAndStatusNot(
             Collection<Integer> messageIds,
@@ -51,6 +38,17 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Intege
             Integer chatId,
             String externalMessageId,
             ChatMessageSenderType senderType
+    );
+
+    @Query("SELECT cm FROM ChatMessage cm WHERE cm.chat.id = :chatId " +
+            "AND cm.senderType = :senderType " +
+            "AND (:excludeId IS NULL OR cm.id <> :excludeId) " +
+            "ORDER BY cm.sentAt DESC")
+    List<ChatMessage> findLastNClientMessagesExcludingId(
+            @Param("chatId") Integer chatId,
+            @Param("senderType") ChatMessageSenderType senderType,
+            @Param("excludeId") Integer excludeId,
+            Pageable pageable
     );
 
 }
