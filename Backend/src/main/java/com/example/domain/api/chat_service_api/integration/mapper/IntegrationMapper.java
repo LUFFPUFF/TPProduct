@@ -1,13 +1,7 @@
 package com.example.domain.api.chat_service_api.integration.mapper;
 
-import com.example.database.model.company_subscription_module.company.CompanyMailConfiguration;
-import com.example.database.model.company_subscription_module.company.CompanyTelegramConfiguration;
-import com.example.database.model.company_subscription_module.company.CompanyVkConfiguration;
-import com.example.database.model.company_subscription_module.company.CompanyWhatsappConfiguration;
-import com.example.domain.api.chat_service_api.integration.dto.IntegrationMailDto;
-import com.example.domain.api.chat_service_api.integration.dto.IntegrationTelegramDto;
-import com.example.domain.api.chat_service_api.integration.dto.IntegrationVkDto;
-import com.example.domain.api.chat_service_api.integration.dto.IntegrationWhatsappDto;
+import com.example.database.model.company_subscription_module.company.*;
+import com.example.domain.api.chat_service_api.integration.dto.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -36,6 +30,9 @@ public interface IntegrationMapper {
     IntegrationVkDto toVkDto(CompanyVkConfiguration entity);
 
     List<IntegrationVkDto> toVkDtoList(List<CompanyVkConfiguration> entities);
+
+    @Mapping(source = "company.id", target = "companyId")
+    DialogXChatDto toDto(CompanyDialogXChatConfiguration configuration);
 
 
 }

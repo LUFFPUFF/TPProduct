@@ -5,7 +5,6 @@ com\example\domain\api\authentication_module\service\impl\RoleServiceImplTest$Te
 com\example\domain\api\chat_service_api\service\impl\ClientServiceImplImplTest$1.class
 com\example\domain\api\subscription_module\service\impl\SubscriptionServiceImplTest$2.class
 com\example\domain\api\authentication_module\service\impl\RegistrationServiceImplTest.class
-com\example\domain\api\ans_api_module\correction_answer\service\TextProcessingServiceTest.class
 com\example\domain\api\chat_service_api\service\impl\NotificationServiceImplTest$1.class
 com\example\domain\api\subscription_module\service\impl\SubscriptionServiceImplTest.class
 com\example\domain\api\chat_service_api\service\impl\UserServiceImplTest.class

@@ -8,7 +8,6 @@ import com.example.domain.api.authentication_module.exception_handler_auth.Email
 import com.example.domain.api.authentication_module.security.jwtUtils.JWTUtilsService;
 import com.example.domain.api.authentication_module.service.interfaces.RegistrationService;
 import com.example.domain.api.authentication_module.service.interfaces.RoleService;
-import com.example.domain.api.chat_service_api.integration.mail.manager.EmailDialogManager;
 import com.example.domain.api.statistics_module.aop.annotation.Counter;
 import com.example.domain.api.statistics_module.aop.annotation.MeteredOperation;
 import com.example.domain.api.statistics_module.aop.annotation.Timer;

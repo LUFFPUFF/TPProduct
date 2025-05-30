@@ -5,7 +5,6 @@ import com.example.database.model.chats_messages_module.chat.ChatMessageSenderTy
 import com.example.database.model.chats_messages_module.chat.ChatStatus;
 import com.example.database.model.crm_module.client.Client;
 import com.example.database.repository.chats_messages_module.ChatRepository;
-import com.example.domain.api.ans_api_module.event.AutoResponderEscalationEvent;
 import com.example.domain.api.ans_api_module.service.IAutoResponderService;
 import com.example.domain.api.ans_api_module.service.ai.IAIFeedbackService;
 import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundException;
@@ -15,7 +14,6 @@ import com.example.domain.api.chat_service_api.model.dto.ChatDetailsDTO;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
 import com.example.domain.api.chat_service_api.model.rest.chat.CreateChatRequestDTO;
 import com.example.domain.api.chat_service_api.model.rest.mesage.SendMessageRequestDTO;
-import com.example.domain.api.chat_service_api.service.IAssignmentStrategyService;
 import com.example.domain.api.chat_service_api.service.IChatMessageService;
 import com.example.domain.api.chat_service_api.service.chat.IChatService;
 import com.example.domain.api.chat_service_api.util.ChatMetricHelper;
@@ -25,7 +23,6 @@ import com.example.domain.api.statistics_module.metrics.service.IChatMetricsServ
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,20 +1,16 @@
 package com.example.domain.api.chat_service_api.integration.service.impl;
 
 import com.example.database.model.company_subscription_module.company.*;
-import com.example.database.model.company_subscription_module.user_roles.user.Role;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.repository.company_subscription_module.*;
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
-import com.example.domain.api.chat_service_api.integration.dto.rest.CreateMailConfigurationRequest;
-import com.example.domain.api.chat_service_api.integration.dto.rest.CreateTelegramConfigurationRequest;
-import com.example.domain.api.chat_service_api.integration.dto.rest.CreateVkConfigurationRequest;
-import com.example.domain.api.chat_service_api.integration.dto.rest.CreateWhatsappConfigurationRequest;
-import com.example.domain.api.chat_service_api.integration.mail.manager.EmailDialogManager;
+import com.example.domain.api.chat_service_api.integration.dto.rest.*;
+import com.example.domain.api.chat_service_api.integration.manager.mail.manager.EmailDialogManager;
+import com.example.domain.api.chat_service_api.integration.manager.widget.DialogXChatManager;
 import com.example.domain.api.chat_service_api.integration.service.IIntegrationService;
-import com.example.domain.api.chat_service_api.integration.telegram.TelegramBotManager;
+import com.example.domain.api.chat_service_api.integration.manager.telegram.TelegramBotManager;
 
-import com.example.domain.api.chat_service_api.integration.vk.VkBotManager;
-import com.example.domain.api.chat_service_api.integration.whats_app.WhatsappBotManager;
+import com.example.domain.api.chat_service_api.integration.manager.vk.VkBotManager;
 import com.example.domain.security.model.UserContext;
 import com.example.domain.security.util.UserContextHolder;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -35,10 +30,12 @@ public class IntegrationServiceImpl implements IIntegrationService {
     private final CompanyMailConfigurationRepository companyMailConfigurationRepository;
     private final CompanyWhatsappConfigurationRepository companyWhatsappConfigurationRepository;
     private final CompanyVkConfigurationRepository companyVkConfigurationRepository;
+    private final CompanyDialogXChatConfigurationRepository companyDialogXChatConfigurationRepository;
     private final UserRepository userRepository;
     private final TelegramBotManager telegramBotManager;
     private final EmailDialogManager emailDialogManager;
     private final VkBotManager vkBotManager;
+    private final DialogXChatManager dialogXChatManager;
 
     private User getUser() throws AccessDeniedException {
         UserContext userContext = UserContextHolder.getRequiredContext();
@@ -267,6 +264,56 @@ public class IntegrationServiceImpl implements IIntegrationService {
         Integer companyId = config.getCompany().getId();
         companyVkConfigurationRepository.delete(config);
         vkBotManager.stopPollingForCompany(companyId);
+    }
+
+    @Override
+    @Transactional
+    public CompanyDialogXChatConfiguration createOrUpdateCompanyDialogXChatConfiguration(CreateDialogXChatConfigurationRequest request) throws AccessDeniedException {
+        Company company = getCompanyFromContext();
+
+        CompanyDialogXChatConfiguration config = companyDialogXChatConfigurationRepository
+                .findByCompanyId(company.getId())
+                .orElseGet(() -> {
+                    CompanyDialogXChatConfiguration newConfig = new CompanyDialogXChatConfiguration();
+                    newConfig.setCompany(company);
+                    return newConfig;
+                });
+
+        if (request.getEnabled() != null) {
+            config.setEnabled(request.getEnabled());
+        }
+        if (request.getWelcomeMessage() != null) {
+            config.setWelcomeMessage(request.getWelcomeMessage().trim());
+        } else if (config.getId() == null) {
+            config.setWelcomeMessage("Привет! Чем могу помочь?");
+        }
+
+        if (request.getThemeColor() != null) {
+            config.setThemeColor(request.getThemeColor().trim());
+        } else if (config.getId() == null) {
+            config.setThemeColor("#5A38D9");
+        }
+
+        CompanyDialogXChatConfiguration savedConfig = companyDialogXChatConfigurationRepository.save(config);
+
+        dialogXChatManager.processConfigurationChange(company.getId());
+
+        return savedConfig;
+    }
+
+    @Override
+    public CompanyDialogXChatConfiguration getDialogXChatConfigurationForCompany() throws AccessDeniedException {
+        Company company = getCompanyFromContext();
+        return companyDialogXChatConfigurationRepository.findByCompanyId(company.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "DialogX Chat configuration not found for company ID: " + company.getId()));
+    }
+
+    @Override
+    @Transactional
+    public void deleteDialogXChatConfigurationForCompany(Integer id) throws AccessDeniedException {
+        CompanyDialogXChatConfiguration config = getDialogXChatConfigurationForCompany();
+        companyDialogXChatConfigurationRepository.delete(config);
     }
 
     private String getSmtpServer(String emailAddress) {

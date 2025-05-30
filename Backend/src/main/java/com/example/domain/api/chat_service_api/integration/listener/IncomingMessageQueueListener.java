@@ -1,10 +1,11 @@
 package com.example.domain.api.chat_service_api.integration.listener;
 
-import com.example.domain.api.chat_service_api.integration.mail.response.EmailResponse;
+import com.example.domain.api.chat_service_api.integration.dto.DialogXChatIncomingMessage;
+import com.example.domain.api.chat_service_api.integration.manager.mail.response.EmailResponse;
 import com.example.domain.api.chat_service_api.integration.service.impl.ClientCompanyProcessService;
-import com.example.domain.api.chat_service_api.integration.telegram.TelegramResponse;
-import com.example.domain.api.chat_service_api.integration.vk.reponse.VkResponse;
-import com.example.domain.api.chat_service_api.integration.whats_app.model.response.WhatsappResponse;
+import com.example.domain.api.chat_service_api.integration.manager.telegram.TelegramResponse;
+import com.example.domain.api.chat_service_api.integration.manager.vk.reponse.VkResponse;
+import com.example.domain.api.chat_service_api.integration.manager.whats_app.model.response.WhatsappResponse;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,8 @@ public class IncomingMessageQueueListener {
                     clientCompanyProcessService.processVk(vkMessage);
                 } else if (message instanceof WhatsappResponse whatsappResponse) {
                     clientCompanyProcessService.processWhatsapp(whatsappResponse);
+                } else if (message instanceof DialogXChatIncomingMessage dialogXMessage) {
+                    clientCompanyProcessService.processDialogXChat(dialogXMessage);
                 } else {
                     log.warn("Received unknown message type in queue: {}", message.getClass().getName());
                 }

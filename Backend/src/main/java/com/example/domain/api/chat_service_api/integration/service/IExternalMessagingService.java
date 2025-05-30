@@ -1,6 +1,7 @@
 package com.example.domain.api.chat_service_api.integration.service;
 
 import com.example.domain.api.chat_service_api.exception_handler.exception.ExternalMessagingException;
+import com.example.domain.api.chat_service_api.integration.manager.widget.model.SenderInfoWidgetChat;
 
 public interface IExternalMessagingService {
 
@@ -11,6 +12,6 @@ public interface IExternalMessagingService {
      * @throws ExternalMessagingException В случае ошибки при определении канала, получении данных
      *                                     или отправке во внешний сервис.
      */
-    void sendMessageToExternal(Integer chatId, String messageContent) throws ExternalMessagingException;
+    void sendMessageToExternal(Integer chatId, String messageContent, SenderInfoWidgetChat senderInfo) throws ExternalMessagingException;
 
 }

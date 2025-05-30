@@ -19,6 +19,7 @@ import com.example.domain.api.ans_api_module.model.AutoResponderResult;
 import com.example.domain.api.ans_api_module.service.IAutoResponderService;
 import com.example.domain.api.ans_api_module.service.ai.IAIFeedbackService;
 import com.example.domain.api.chat_service_api.exception_handler.exception.ExternalMessagingException;
+import com.example.domain.api.chat_service_api.integration.manager.widget.model.SenderInfoWidgetChat;
 import com.example.domain.api.chat_service_api.integration.service.IExternalMessagingService;
 import com.example.domain.api.chat_service_api.mapper.ChatMessageMapper;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
@@ -314,8 +315,16 @@ public class AutoResponderServiceImpl implements IAutoResponderService {
         }
 
         if (StringUtils.hasText(content)) {
+            String botName = "Бот поддержки";
+
+            SenderInfoWidgetChat senderInfoWidgetChat = SenderInfoWidgetChat.builder()
+                    .senderType(ChatMessageSenderType.AUTO_RESPONDER)
+                    .id("auto_responder_" + (chat.getCompany() != null ? chat.getCompany().getId() : "global"))
+                    .displayName(botName)
+                    .build();
+
             try {
-                externalMessagingService.sendMessageToExternal(chat.getId(), content);
+                externalMessagingService.sendMessageToExternal(chat.getId(), content, senderInfoWidgetChat);
                 log.info("AutoResponder: Message ID {} successfully placed for external sending for chat ID {}.", savedMessageEntity.getId(), chat.getId());
             } catch (ExternalMessagingException e) {
                 log.error("AutoResponder: Failed to send message ID {} to external channel for chat {}: {}", savedMessageEntity.getId(), chat.getId(), e.getMessage(), e);

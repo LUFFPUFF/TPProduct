@@ -2,10 +2,7 @@ package com.example.domain.api.chat_service_api.integration.service.impl;
 
 import com.example.database.model.chats_messages_module.chat.ChatChannel;
 import com.example.database.model.company_subscription_module.company.*;
-import com.example.database.repository.company_subscription_module.CompanyMailConfigurationRepository;
-import com.example.database.repository.company_subscription_module.CompanyTelegramConfigurationRepository;
-import com.example.database.repository.company_subscription_module.CompanyVkConfigurationRepository;
-import com.example.database.repository.company_subscription_module.CompanyWhatsappConfigurationRepository;
+import com.example.database.repository.company_subscription_module.*;
 import com.example.domain.api.chat_service_api.integration.service.ICompanyChannelConfigurationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +17,7 @@ public class CompanyChannelConfigurationProviderImpl implements ICompanyChannelC
     private final CompanyMailConfigurationRepository mailRepo;
     private final CompanyVkConfigurationRepository vkRepo;
     private final CompanyWhatsappConfigurationRepository whatsappRepo;
+    private final CompanyDialogXChatConfigurationRepository dialogXChatRepo;
 
     @Override
     public Optional<Company> findCompanyByChannelIdentifier(String channelIdentifier, ChatChannel channel) {
@@ -29,6 +27,7 @@ public class CompanyChannelConfigurationProviderImpl implements ICompanyChannelC
             case VK -> vkRepo.findByCommunityId(Long.parseLong(channelIdentifier))
                     .map(CompanyVkConfiguration::getCompany);
             case WhatsApp -> whatsappRepo.findByPhoneNumberId(Long.valueOf(channelIdentifier)).map(CompanyWhatsappConfiguration::getCompany);
+            case DialogX_Chat -> dialogXChatRepo.findByWidgetId(channelIdentifier).map(CompanyDialogXChatConfiguration::getCompany);
             default -> Optional.empty();
         };
     }

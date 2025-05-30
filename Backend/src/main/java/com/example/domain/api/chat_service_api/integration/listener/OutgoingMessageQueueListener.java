@@ -1,15 +1,17 @@
 package com.example.domain.api.chat_service_api.integration.listener;
 
-import com.example.domain.api.chat_service_api.integration.mail.manager.EmailDialogManager;
-import com.example.domain.api.chat_service_api.integration.telegram.TelegramBotManager;
-import com.example.domain.api.chat_service_api.integration.vk.VkBotManager;
-import com.example.domain.api.chat_service_api.integration.whats_app.WhatsappBotManager;
+import com.example.database.model.chats_messages_module.chat.ChatChannel;
+import com.example.domain.api.chat_service_api.integration.error.FailedMessageRouter;
+import com.example.domain.api.chat_service_api.integration.exception.ChannelSenderException;
+import com.example.domain.api.chat_service_api.integration.listener.model.SendMessageCommand;
+import com.example.domain.api.chat_service_api.integration.sender.ChannelSender;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -19,11 +21,8 @@ import java.util.concurrent.TimeUnit;
 public class OutgoingMessageQueueListener {
 
     private final BlockingQueue<Object> outgoingMessageQueue;
-
-    private final TelegramBotManager telegramBotManager;
-    private final EmailDialogManager emailDialogManager;
-    private final VkBotManager vkBotManager;
-    private final WhatsappBotManager whatsappBotManager;
+    private final Map<ChatChannel, ChannelSender> channelSenders;
+    private final FailedMessageRouter failedMessageRouter;
 
     private volatile boolean running = true;
     private Thread listenerThread;
@@ -40,104 +39,82 @@ public class OutgoingMessageQueueListener {
     public void stopListener() {
         log.info("Shutting down outgoing message queue listener...");
         running = false;
-        listenerThread.interrupt();
-        try {
-            listenerThread.join(5000);
-        } catch (InterruptedException e) {
-            log.warn("Outgoing message queue listener thread interrupted during shutdown.");
-            Thread.currentThread().interrupt();
+        if (listenerThread != null) {
+            listenerThread.interrupt();
+            try {
+                listenerThread.join(5000);
+                if (listenerThread.isAlive()) {
+                    log.warn("Outgoing listener thread did not terminate in time.");
+                }
+            } catch (InterruptedException e) {
+                log.warn("Outgoing message queue listener thread interrupted during shutdown.", e);
+                Thread.currentThread().interrupt();
+            }
         }
-
+        log.info("Outgoing message queue listener stopped.");
     }
 
     private void listenForMessages() {
         while (running || !outgoingMessageQueue.isEmpty()) {
             try {
-                Object command = outgoingMessageQueue.poll(100, TimeUnit.MILLISECONDS);
+                Object commandObject = outgoingMessageQueue.poll(100, TimeUnit.MILLISECONDS);
 
-                if (command == null) {
+                if (commandObject == null) {
                     continue;
                 }
 
-                log.debug("Outgoing Listener received command from queue: {}", command);
+                if (!(commandObject instanceof SendMessageCommand sendCommand)) {
+                    log.warn("Received unknown command type in outgoing queue: {}. Routing to failed message handler.",
+                            commandObject.getClass().getName());
+                    failedMessageRouter.routeUnknownObject(commandObject, "Unknown object in outgoing queue", SendMessageCommand.class);
+                    continue;
+                }
 
-                if (command instanceof SendMessageCommand sendCommand) {
-                    Integer companyId = sendCommand.getCompanyId();
-                    Integer chatId = sendCommand.getChatId();
+                if (sendCommand.getCompanyId() == null) {
+                    log.error("SendMessageCommand received without company ID. ChatID: {}. Channel: {}. Cannot route message.",
+                            sendCommand.getChatId(), sendCommand.getChannel());
+                    failedMessageRouter.routeFailedCommand(sendCommand, "Missing companyId in command", null);
+                    continue;
+                }
 
-                    if (companyId == null) {
-                        log.error("SendMessageCommand received without company ID. Cannot route message.");
-                        continue;
-                    }
+                log.info("Processing SendMessageCommand for chat ID {} on channel {} (company ID {})",
+                        sendCommand.getChatId(), sendCommand.getChannel(), sendCommand.getCompanyId());
 
-                    log.info("Processing SendMessageCommand for chat ID {} on channel {} (company ID {})",
-                            sendCommand.getChatId(), sendCommand.getChannel(), companyId);
+                ChannelSender sender = channelSenders.get(sendCommand.getChannel());
 
-                    try {
-                        switch (sendCommand.getChannel()) {
-                            case Telegram:
-                                Long telegramChatId = sendCommand.getTelegramChatId();
-                                if (telegramChatId != null) {
-                                    telegramBotManager.sendTelegramMessage(companyId, telegramChatId, sendCommand.getContent());
-                                    log.info("Message sent via TelegramBotManager for chat ID {} (company ID {})", telegramChatId, companyId);
-                                } else {
-                                    log.error("Telegram Chat ID not found in SendMessageCommand for company ID {}", companyId);
-                                }
-                                break;
+                if (sender == null) {
+                    String errorMsg = String.format("No ChannelSender configured for channel: %s. Command for chat ID %d.",
+                            sendCommand.getChannel(), sendCommand.getChatId());
+                    log.error(errorMsg);
+                    failedMessageRouter.routeFailedCommand(sendCommand, errorMsg, null);
+                    continue;
+                }
 
-                            case Email:
-                                String toEmailAddress = sendCommand.getToEmailAddress();
-                                String fromEmailAddress = sendCommand.getFromEmailAddress();
-                                String subject = sendCommand.getSubject();
-                                if (toEmailAddress != null && fromEmailAddress != null) {
-                                    emailDialogManager.sendMessage(companyId, toEmailAddress, subject, sendCommand.getContent());
-                                    log.info("Message sent via EmailDialogBot for chat ID {} (company ID {})", sendCommand.getChatId(), companyId);
-                                } else {
-                                    log.error("Email addresses not found in SendMessageCommand for chat ID {} (company ID {})", sendCommand.getChatId(), companyId);
-                                }
-                                break;
+                try {
 
-                            case VK:
-                                Long vkPeerId = sendCommand.getVkPeerId();
-                                vkBotManager.sendVkMessage(companyId, vkPeerId, sendCommand.getContent());
-                                log.info("Message sent via VkBotManager for peer ID {} (company ID {})", vkPeerId, companyId);
-                                break;
+                    sender.send(sendCommand);
 
-                            case WhatsApp:
-                                String whatsappRecipientPhoneNumber = sendCommand.getWhatsappRecipientPhoneNumber();
-
-                                if (whatsappRecipientPhoneNumber != null && !whatsappRecipientPhoneNumber.trim().isEmpty()) {
-                                    whatsappBotManager.sendWhatsappMessage(companyId, whatsappRecipientPhoneNumber, sendCommand.getContent());
-                                    log.info("Message sent via WhatsappBotManager to phone {} (company ID {})", whatsappRecipientPhoneNumber, companyId);
-                                } else {
-                                    log.error("WhatsApp recipient phone number not found in SendMessageCommand for chat ID {} " +
-                                            "(company ID {}). Attempting to resolve from chat...", chatId, companyId);
-                                }
-                                break;
-
-                            default:
-                                log.error("Unsupported channel in SendMessageCommand: {}", sendCommand.getChannel());
-                                // TODO: Возможно, положить команду в очередь ошибок
-                                break;
-                        }
-                    } catch (Exception e) {
-                        log.error("Error sending message via adapter for chat ID {} (company ID {}): {}", sendCommand.getChatId(), companyId, e.getMessage(), e);
-                        // TODO: Обработка ошибки: залогировать, возможно, положить команду обратно или в очередь ошибок
-                    }
-
-                } else {
-                    log.warn("Received unknown command type in outgoing queue: {}", command.getClass().getName());
-                    // TODO: Возможно, положить объект в очередь ошибок
+                } catch (ChannelSenderException e) {
+                    failedMessageRouter.routeFailedCommand(sendCommand, "ChannelSenderException: " + e.getMessage(), e.getCause());
+                } catch (Exception e) {
+                    String errorMsg = String.format("Unexpected error sending message via %s for chat ID %d: %s",
+                            sendCommand.getChannel(), sendCommand.getChatId(), e.getMessage());
+                    log.error(errorMsg, e);
+                    failedMessageRouter.routeFailedCommand(sendCommand, errorMsg, e);
                 }
 
             } catch (InterruptedException e) {
-                log.info("Outgoing message queue listener thread interrupted, shutting down.");
+                if (running) {
+                    log.warn("Outgoing message queue listener thread interrupted unexpectedly.", e);
+                } else {
+                    log.info("Outgoing message queue listener thread interrupted during shutdown process.");
+                }
                 Thread.currentThread().interrupt();
                 running = false;
             } catch (Exception e) {
-                log.error("Error processing command from outgoing queue: {}", e.getMessage(), e);
-                // TODO: Обработать ошибку обработки: залогировать, возможно, положить команду в очередь ошибок
+                log.error("Critical error in OutgoingMessageQueueListener while processing queue: {}", e.getMessage(), e);
             }
         }
+        log.info("Outgoing message queue listener processing loop finished.");
     }
 }

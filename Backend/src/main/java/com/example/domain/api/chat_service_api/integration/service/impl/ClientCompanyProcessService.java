@@ -3,13 +3,14 @@ package com.example.domain.api.chat_service_api.integration.service.impl;
 import com.example.database.model.chats_messages_module.chat.ChatChannel;
 import com.example.database.model.company_subscription_module.company.*;
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
+import com.example.domain.api.chat_service_api.integration.dto.DialogXChatIncomingMessage;
 import com.example.domain.api.chat_service_api.integration.dto.IncomingChannelMessage;
-import com.example.domain.api.chat_service_api.integration.mail.response.EmailResponse;
+import com.example.domain.api.chat_service_api.integration.manager.mail.response.EmailResponse;
 import com.example.domain.api.chat_service_api.integration.service.ICompanyChannelConfigurationProvider;
 import com.example.domain.api.chat_service_api.integration.service.IIncomingMessageProcessorService;
-import com.example.domain.api.chat_service_api.integration.telegram.TelegramResponse;
-import com.example.domain.api.chat_service_api.integration.vk.reponse.VkResponse;
-import com.example.domain.api.chat_service_api.integration.whats_app.model.response.WhatsappResponse;
+import com.example.domain.api.chat_service_api.integration.manager.telegram.TelegramResponse;
+import com.example.domain.api.chat_service_api.integration.manager.vk.reponse.VkResponse;
+import com.example.domain.api.chat_service_api.integration.manager.whats_app.model.response.WhatsappResponse;
 import com.example.domain.api.statistics_module.metrics.service.IChatMetricsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -116,6 +117,26 @@ public class ClientCompanyProcessService {
                 .channelSpecificUserId(whatsappResponse.getFromPhoneNumber())
                 .messageContent(whatsappResponse.getText())
                 .channel(ChatChannel.WhatsApp)
+                .build();
+
+        messageProcessorService.processIncomingMessage(company.getId(), message);
+    }
+
+    @Transactional
+    public void processDialogXChat(DialogXChatIncomingMessage dialogXMessage) {
+        log.info("Processing incoming DialogXChat message from widgetId: {}, sessionId: {}",
+                dialogXMessage.getWidgetId(), dialogXMessage.getSessionId());
+        Company company = configProvider.findCompanyByChannelIdentifier(dialogXMessage.getWidgetId(), ChatChannel.DialogX_Chat)
+                .orElseThrow(() -> {
+                    log.error("DialogXChat configuration not found for widgetId: {}", dialogXMessage.getWidgetId());
+
+                    return new ResourceNotFoundException("DialogXChat configuration not found for widgetId: " + dialogXMessage.getWidgetId());
+                });
+        IncomingChannelMessage message = IncomingChannelMessage.builder()
+                .channelSpecificUserId(dialogXMessage.getSessionId())
+                .messageContent(dialogXMessage.getText())
+                .channel(ChatChannel.DialogX_Chat)
+                .externalChatId(dialogXMessage.getSessionId())
                 .build();
 
         messageProcessorService.processIncomingMessage(company.getId(), message);

@@ -1,19 +1,12 @@
 package com.example.domain.api.chat_service_api.integration.controller;
 
-import com.example.database.model.company_subscription_module.company.CompanyMailConfiguration;
-import com.example.database.model.company_subscription_module.company.CompanyTelegramConfiguration;
-import com.example.database.model.company_subscription_module.company.CompanyVkConfiguration;
-import com.example.database.model.company_subscription_module.company.CompanyWhatsappConfiguration;
-import com.example.domain.api.chat_service_api.integration.dto.IntegrationMailDto;
-import com.example.domain.api.chat_service_api.integration.dto.IntegrationTelegramDto;
-import com.example.domain.api.chat_service_api.integration.dto.IntegrationVkDto;
-import com.example.domain.api.chat_service_api.integration.dto.IntegrationWhatsappDto;
-import com.example.domain.api.chat_service_api.integration.dto.rest.CreateMailConfigurationRequest;
-import com.example.domain.api.chat_service_api.integration.dto.rest.CreateTelegramConfigurationRequest;
-import com.example.domain.api.chat_service_api.integration.dto.rest.CreateVkConfigurationRequest;
-import com.example.domain.api.chat_service_api.integration.dto.rest.CreateWhatsappConfigurationRequest;
+import com.example.database.model.company_subscription_module.company.*;
+import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
+import com.example.domain.api.chat_service_api.integration.dto.*;
+import com.example.domain.api.chat_service_api.integration.dto.rest.*;
 import com.example.domain.api.chat_service_api.integration.mapper.IntegrationMapper;
 import com.example.domain.api.chat_service_api.integration.service.IIntegrationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -218,6 +211,47 @@ public class IntegrationController {
     public ResponseEntity<Void> deleteVkIntegration(@PathVariable Integer id) {
         try {
             integrationService.deleteVkConfiguration(id);
+            return ResponseEntity.noContent().build();
+        } catch (AccessDeniedException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access Denied", e);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
+    @PostMapping("/dialogx-chat")
+    public ResponseEntity<DialogXChatDto> createOrUpdateDialogXChat(
+            @Valid @RequestBody CreateDialogXChatConfigurationRequest request) {
+        try {
+            CompanyDialogXChatConfiguration config = integrationService.createOrUpdateCompanyDialogXChatConfiguration(request);
+            return ResponseEntity.ok(integrationMapper.toDto(config));
+        } catch (AccessDeniedException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access Denied", e);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", e);
+        }
+    }
+
+    @GetMapping("/dialogx-chat")
+    public ResponseEntity<DialogXChatDto> getDialogXChatConfiguration() {
+        try {
+            CompanyDialogXChatConfiguration config = integrationService.getDialogXChatConfigurationForCompany();
+            return ResponseEntity.ok(integrationMapper.toDto(config));
+        } catch (AccessDeniedException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access Denied", e);
+        } catch (ResourceNotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", e);
+        }
+    }
+
+    @DeleteMapping("/dialogx-chat/{id}")
+    public ResponseEntity<Void> deleteDialogXChatIntegration(@PathVariable Integer id) {
+        try {
+            integrationService.deleteDialogXChatConfigurationForCompany(id);
             return ResponseEntity.noContent().build();
         } catch (AccessDeniedException e) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access Denied", e);

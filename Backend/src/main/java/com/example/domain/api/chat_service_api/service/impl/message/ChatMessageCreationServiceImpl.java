@@ -18,6 +18,7 @@ import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundExc
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.exception.ExternalMessagingException;
 import com.example.domain.api.chat_service_api.exception_handler.exception.service.ChatServiceException;
+import com.example.domain.api.chat_service_api.integration.manager.widget.model.SenderInfoWidgetChat;
 import com.example.domain.api.chat_service_api.integration.service.IExternalMessagingService;
 import com.example.domain.api.chat_service_api.mapper.ChatMapper;
 import com.example.domain.api.chat_service_api.mapper.ChatMessageMapper;
@@ -102,8 +103,21 @@ public class ChatMessageCreationServiceImpl implements IChatMessageCreationServi
 
                     publishMessageEvents(savedMessage, chatRepository.findById(chat.getId()).orElse(chat), chatStateChangedByInteraction);
 
-                    if (senderType == ChatMessageSenderType.OPERATOR) {
-                        sendToExternalService(chat, savedMessage.getContent());
+                    if (senderType == ChatMessageSenderType.OPERATOR && senderInfo.operator() != null) {
+                        User operator = senderInfo.operator();
+                        String operatorDisplayName = operator.getEmail();
+
+                        if (operatorDisplayName == null || operatorDisplayName.isBlank()) {
+                            operatorDisplayName = "Оператор " + operator.getId();
+                        }
+
+                        SenderInfoWidgetChat senderInfoWidgetChat = SenderInfoWidgetChat.builder()
+                                .senderType(ChatMessageSenderType.OPERATOR)
+                                .id(String.valueOf(operator.getId()))
+                                .displayName(operatorDisplayName)
+                                .build();
+
+                        sendToExternalService(chat, savedMessage.getContent(), senderInfoWidgetChat);
                     }
 
                     return chatMessageMapper.toDto(savedMessage);
@@ -221,10 +235,10 @@ public class ChatMessageCreationServiceImpl implements IChatMessageCreationServi
         }
     }
 
-    private void sendToExternalService(Chat chat, String content) {
+    private void sendToExternalService(Chat chat, String content, SenderInfoWidgetChat senderInfoWidgetChat) {
         if (content != null && !content.trim().isEmpty()) {
             try {
-                externalMessagingService.sendMessageToExternal(chat.getId(), content);
+                externalMessagingService.sendMessageToExternal(chat.getId(), content, senderInfoWidgetChat);
                 log.info("Operator message for chat ID {} successfully placed for external sending.", chat.getId());
             } catch (ExternalMessagingException e) {
                 chatMetricHelper.incrementChatOperationError(OPERATION_PROCESS_MESSAGE + "_ExternalSendFail",

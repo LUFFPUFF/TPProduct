@@ -1,13 +1,7 @@
 package com.example.domain.api.chat_service_api.integration.service;
 
-import com.example.database.model.company_subscription_module.company.CompanyMailConfiguration;
-import com.example.database.model.company_subscription_module.company.CompanyTelegramConfiguration;
-import com.example.database.model.company_subscription_module.company.CompanyVkConfiguration;
-import com.example.database.model.company_subscription_module.company.CompanyWhatsappConfiguration;
-import com.example.domain.api.chat_service_api.integration.dto.rest.CreateMailConfigurationRequest;
-import com.example.domain.api.chat_service_api.integration.dto.rest.CreateTelegramConfigurationRequest;
-import com.example.domain.api.chat_service_api.integration.dto.rest.CreateVkConfigurationRequest;
-import com.example.domain.api.chat_service_api.integration.dto.rest.CreateWhatsappConfigurationRequest;
+import com.example.database.model.company_subscription_module.company.*;
+import com.example.domain.api.chat_service_api.integration.dto.rest.*;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
@@ -33,4 +27,8 @@ public interface IIntegrationService {
     List<CompanyVkConfiguration> getAllVkConfigurations() throws AccessDeniedException;
     CompanyVkConfiguration getVkConfigurationById(Integer id) throws AccessDeniedException;
     void deleteVkConfiguration(Integer id) throws AccessDeniedException;
+
+    CompanyDialogXChatConfiguration createOrUpdateCompanyDialogXChatConfiguration(CreateDialogXChatConfigurationRequest request) throws AccessDeniedException;
+    CompanyDialogXChatConfiguration getDialogXChatConfigurationForCompany() throws AccessDeniedException;
+    void deleteDialogXChatConfigurationForCompany(Integer id) throws AccessDeniedException;
 }

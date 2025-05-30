@@ -1,82 +1,302 @@
 -------------------------------------------------------------------------------
 Test set: com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest
 -------------------------------------------------------------------------------
-Tests run: 13, Failures: 5, Errors: 0, Skipped: 0, Time elapsed: 1.031 s <<< FAILURE! -- in com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest
-com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ExternalMessagingFails_ShouldLogButNotThrow -- Time elapsed: 0.312 s <<< FAILURE!
-Argument(s) are different! Wanted:
-externalMessagingService.sendMessageToExternal(
-    1,
-    "Rewritten answer text"
-);
--> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ExternalMessagingFails_ShouldLogButNotThrow(AutoResponderServiceImplTest.java:269)
-Actual invocations have different arguments at position [1]:
-externalMessagingService.sendMessageToExternal(
-    1,
-    "Извините, я не смог найти ответ на ваш вопрос и сгенерировать подходящий ответ. Передаю ваш вопрос оператору."
-);
--> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.sendAutoResponderMessage(AutoResponderServiceImpl.java:264)
+Tests run: 13, Failures: 0, Errors: 13, Skipped: 0, Time elapsed: 1.388 s <<< FAILURE! -- in com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_EmptyQuery_ShouldDoNothing -- Time elapsed: 1.288 s <<< ERROR!
+org.mockito.exceptions.misusing.InvalidUseOfMatchersException: 
 
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ExternalMessagingFails_ShouldLogButNotThrow(AutoResponderServiceImplTest.java:269)
+Invalid use of argument matchers!
+3 matchers expected, 2 recorded:
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+
+This exception may occur if matchers are combined with raw values:
+    //incorrect:
+    someMethod(any(), "raw String");
+When using matchers, all arguments have to be provided by matchers.
+For example:
+    //correct:
+    someMethod(any(), eq("String by matcher"));
+
+For more info see javadoc for Matchers class.
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 
-com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ShouldUseOriginalAnswer_WhenRewriteFails -- Time elapsed: 0.008 s <<< FAILURE!
-Wanted but not invoked:
-textProcessingService.processQuery(
-    "Test query",
-    CORRECTION
-);
--> at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:76)
-Actually, there were zero interactions with this mock.
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processNewPendingChat_MessageMapperThrowsException_ShouldThrowAutoResponderException -- Time elapsed: 0.007 s <<< ERROR!
+org.mockito.exceptions.misusing.InvalidUseOfMatchersException: 
 
-	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:76)
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ShouldUseOriginalAnswer_WhenRewriteFails(AutoResponderServiceImplTest.java:207)
+Invalid use of argument matchers!
+3 matchers expected, 2 recorded:
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+
+This exception may occur if matchers are combined with raw values:
+    //incorrect:
+    someMethod(any(), "raw String");
+When using matchers, all arguments have to be provided by matchers.
+For example:
+    //correct:
+    someMethod(any(), eq("String by matcher"));
+
+For more info see javadoc for Matchers class.
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 
-com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ShouldProcessCorrectAndSendRewrittenAnswer -- Time elapsed: 0.056 s <<< FAILURE!
-Wanted but not invoked:
-textProcessingService.processQuery(
-    "Test query",
-    CORRECTION
-);
--> at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:76)
-Actually, there were zero interactions with this mock.
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ExternalMessagingFails_ShouldLogButNotThrow -- Time elapsed: 0.006 s <<< ERROR!
+org.mockito.exceptions.misusing.InvalidUseOfMatchersException: 
 
-	at com.example.domain.api.ans_api_module.correction_answer.service.TextProcessingService.processQuery(TextProcessingService.java:76)
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ShouldProcessCorrectAndSendRewrittenAnswer(AutoResponderServiceImplTest.java:185)
+Invalid use of argument matchers!
+3 matchers expected, 2 recorded:
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+
+This exception may occur if matchers are combined with raw values:
+    //incorrect:
+    someMethod(any(), "raw String");
+When using matchers, all arguments have to be provided by matchers.
+For example:
+    //correct:
+    someMethod(any(), eq("String by matcher"));
+
+For more info see javadoc for Matchers class.
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 
-com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_InternalSaveFails_ShouldLogAndAttemptExternalSend -- Time elapsed: 0.013 s <<< FAILURE!
-Argument(s) are different! Wanted:
-externalMessagingService.sendMessageToExternal(
-    1,
-    "Rewritten answer text"
-);
--> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_InternalSaveFails_ShouldLogAndAttemptExternalSend(AutoResponderServiceImplTest.java:286)
-Actual invocations have different arguments at position [1]:
-externalMessagingService.sendMessageToExternal(
-    1,
-    "Извините, я не смог найти ответ на ваш вопрос и сгенерировать подходящий ответ. Передаю ваш вопрос оператору."
-);
--> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImpl.sendAutoResponderMessage(AutoResponderServiceImpl.java:264)
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.stopForChat_ShouldCompleteWithoutErrors -- Time elapsed: 0.005 s <<< ERROR!
+org.mockito.exceptions.misusing.InvalidUseOfMatchersException: 
 
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_InternalSaveFails_ShouldLogAndAttemptExternalSend(AutoResponderServiceImplTest.java:286)
+Invalid use of argument matchers!
+3 matchers expected, 2 recorded:
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+
+This exception may occur if matchers are combined with raw values:
+    //incorrect:
+    someMethod(any(), "raw String");
+When using matchers, all arguments have to be provided by matchers.
+For example:
+    //correct:
+    someMethod(any(), eq("String by matcher"));
+
+For more info see javadoc for Matchers class.
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 
-com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_UnexpectedException_ShouldEscalateAndSendErrorMessage -- Time elapsed: 0.005 s <<< FAILURE!
-org.opentest4j.AssertionFailedError: Expected com.example.domain.api.ans_api_module.exception.AutoResponderException to be thrown, but nothing was thrown.
-	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:152)
-	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:73)
-	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
-	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3128)
-	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_UnexpectedException_ShouldEscalateAndSendErrorMessage(AutoResponderServiceImplTest.java:243)
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ShouldUseOriginalAnswer_WhenRewriteFails -- Time elapsed: 0.006 s <<< ERROR!
+org.mockito.exceptions.misusing.InvalidUseOfMatchersException: 
+
+Invalid use of argument matchers!
+3 matchers expected, 2 recorded:
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+
+This exception may occur if matchers are combined with raw values:
+    //incorrect:
+    someMethod(any(), "raw String");
+When using matchers, all arguments have to be provided by matchers.
+For example:
+    //correct:
+    someMethod(any(), eq("String by matcher"));
+
+For more info see javadoc for Matchers class.
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_NotClientSender_ShouldDoNothing -- Time elapsed: 0.005 s <<< ERROR!
+org.mockito.exceptions.misusing.InvalidUseOfMatchersException: 
+
+Invalid use of argument matchers!
+3 matchers expected, 2 recorded:
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+
+This exception may occur if matchers are combined with raw values:
+    //incorrect:
+    someMethod(any(), "raw String");
+When using matchers, all arguments have to be provided by matchers.
+For example:
+    //correct:
+    someMethod(any(), eq("String by matcher"));
+
+For more info see javadoc for Matchers class.
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processNewPendingChat_WrongStatus_ShouldLogAndReturn -- Time elapsed: 0.004 s <<< ERROR!
+org.mockito.exceptions.misusing.InvalidUseOfMatchersException: 
+
+Invalid use of argument matchers!
+3 matchers expected, 2 recorded:
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+
+This exception may occur if matchers are combined with raw values:
+    //incorrect:
+    someMethod(any(), "raw String");
+When using matchers, all arguments have to be provided by matchers.
+For example:
+    //correct:
+    someMethod(any(), eq("String by matcher"));
+
+For more info see javadoc for Matchers class.
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_ShouldProcessCorrectAndSendRewrittenAnswer -- Time elapsed: 0.005 s <<< ERROR!
+org.mockito.exceptions.misusing.InvalidUseOfMatchersException: 
+
+Invalid use of argument matchers!
+3 matchers expected, 2 recorded:
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+
+This exception may occur if matchers are combined with raw values:
+    //incorrect:
+    someMethod(any(), "raw String");
+When using matchers, all arguments have to be provided by matchers.
+For example:
+    //correct:
+    someMethod(any(), eq("String by matcher"));
+
+For more info see javadoc for Matchers class.
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processNewPendingChat_ChatNotFound_ShouldThrowException -- Time elapsed: 0.003 s <<< ERROR!
+org.mockito.exceptions.misusing.InvalidUseOfMatchersException: 
+
+Invalid use of argument matchers!
+3 matchers expected, 2 recorded:
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+
+This exception may occur if matchers are combined with raw values:
+    //incorrect:
+    someMethod(any(), "raw String");
+When using matchers, all arguments have to be provided by matchers.
+For example:
+    //correct:
+    someMethod(any(), eq("String by matcher"));
+
+For more info see javadoc for Matchers class.
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_InternalSaveFails_ShouldLogAndAttemptExternalSend -- Time elapsed: 0.004 s <<< ERROR!
+org.mockito.exceptions.misusing.InvalidUseOfMatchersException: 
+
+Invalid use of argument matchers!
+3 matchers expected, 2 recorded:
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+
+This exception may occur if matchers are combined with raw values:
+    //incorrect:
+    someMethod(any(), "raw String");
+When using matchers, all arguments have to be provided by matchers.
+For example:
+    //correct:
+    someMethod(any(), eq("String by matcher"));
+
+For more info see javadoc for Matchers class.
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_UnexpectedException_ShouldEscalateAndSendErrorMessage -- Time elapsed: 0.004 s <<< ERROR!
+org.mockito.exceptions.misusing.InvalidUseOfMatchersException: 
+
+Invalid use of argument matchers!
+3 matchers expected, 2 recorded:
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+
+This exception may occur if matchers are combined with raw values:
+    //incorrect:
+    someMethod(any(), "raw String");
+When using matchers, all arguments have to be provided by matchers.
+For example:
+    //correct:
+    someMethod(any(), eq("String by matcher"));
+
+For more info see javadoc for Matchers class.
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processNewPendingChat_WhenNoFirstMessage_ShouldNotFailAndNotProcess -- Time elapsed: 0.004 s <<< ERROR!
+org.mockito.exceptions.misusing.InvalidUseOfMatchersException: 
+
+Invalid use of argument matchers!
+3 matchers expected, 2 recorded:
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+
+This exception may occur if matchers are combined with raw values:
+    //incorrect:
+    someMethod(any(), "raw String");
+When using matchers, all arguments have to be provided by matchers.
+For example:
+    //correct:
+    someMethod(any(), eq("String by matcher"));
+
+For more info see javadoc for Matchers class.
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.processIncomingMessage_WrongStatus_ShouldDoNothing -- Time elapsed: 0.004 s <<< ERROR!
+org.mockito.exceptions.misusing.InvalidUseOfMatchersException: 
+
+Invalid use of argument matchers!
+3 matchers expected, 2 recorded:
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+-> at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
+
+This exception may occur if matchers are combined with raw values:
+    //incorrect:
+    someMethod(any(), "raw String");
+When using matchers, all arguments have to be provided by matchers.
+For example:
+    //correct:
+    someMethod(any(), eq("String by matcher"));
+
+For more info see javadoc for Matchers class.
+
+	at com.example.domain.api.ans_api_module.service.impl.AutoResponderServiceImplTest.setUp(AutoResponderServiceImplTest.java:122)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
 	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)

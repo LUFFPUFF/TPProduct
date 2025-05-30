@@ -15,6 +15,7 @@ import com.example.domain.api.ans_api_module.event.AutoResponderEscalationEvent;
 import com.example.domain.api.ans_api_module.exception.AutoResponderException;
 import com.example.domain.api.ans_api_module.generation.service.ITextGenerationService;
 import com.example.domain.api.chat_service_api.exception_handler.exception.ExternalMessagingException;
+import com.example.domain.api.chat_service_api.integration.manager.widget.model.SenderInfoWidgetChat;
 import com.example.domain.api.chat_service_api.integration.service.IExternalMessagingService;
 import com.example.domain.api.chat_service_api.mapper.ChatMessageMapper;
 import com.example.domain.api.chat_service_api.model.dto.ChatDTO;
@@ -78,6 +79,8 @@ class AutoResponderServiceImplTest {
     private final String UNEXPECTED_ERROR_MESSAGE_FOR_CLIENT = "Извините, произошла непредвиденная ошибка. Передаю ваш вопрос оператору.";
     private final String clientPreviousMessages = "Привет";
 
+    private SenderInfoWidgetChat senderInfoWidgetChat;
+
 
     @BeforeEach
     void setUp() throws AccessDeniedException {
@@ -120,6 +123,12 @@ class AutoResponderServiceImplTest {
                 .thenReturn(CORRECTED_QUERY);
         when(textProcessingService.processQuery(eq(ORIGINAL_ANSWER), eq(GenerationType.REWRITE), clientPreviousMessages))
                 .thenReturn(REWRITTEN_ANSWER);
+
+        senderInfoWidgetChat = SenderInfoWidgetChat.builder()
+                .senderType(ChatMessageSenderType.OPERATOR)
+                .id(String.valueOf(testClient.getUser().getId()))
+                .displayName("Оператора")
+                .build();
     }
 
     @Test
@@ -185,7 +194,7 @@ class AutoResponderServiceImplTest {
         verify(answerSearchService).findRelevantAnswers(CORRECTED_QUERY, COMPANY_ID, null);
         verify(textProcessingService).processQuery(ORIGINAL_ANSWER, GenerationType.REWRITE, clientPreviousMessages);
         verify(chatMessageService).processAndSaveMessage(saveMessageRequestCaptor.capture(), eq(CLIENT_ID), eq(ChatMessageSenderType.AUTO_RESPONDER));
-        verify(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), externalMessageContentCaptor.capture());
+        verify(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), externalMessageContentCaptor.capture(), senderInfoWidgetChat);
         assertEquals(REWRITTEN_ANSWER, externalMessageContentCaptor.getValue());
         assertEquals(CLIENT_ID, saveMessageRequestCaptor.getValue().getSenderId());
         assertEquals(REWRITTEN_ANSWER, saveMessageRequestCaptor.getValue().getContent());
@@ -207,7 +216,7 @@ class AutoResponderServiceImplTest {
         verify(answerSearchService).findRelevantAnswers(CORRECTED_QUERY, COMPANY_ID, null);
         verify(textProcessingService).processQuery(ORIGINAL_ANSWER, GenerationType.REWRITE, clientPreviousMessages);
         verify(chatMessageService).processAndSaveMessage(saveMessageRequestCaptor.capture(), eq(CLIENT_ID), eq(ChatMessageSenderType.AUTO_RESPONDER));
-        verify(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), externalMessageContentCaptor.capture());
+        verify(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), externalMessageContentCaptor.capture(), senderInfoWidgetChat);
         assertEquals(ORIGINAL_ANSWER, externalMessageContentCaptor.getValue());
         assertEquals(ORIGINAL_ANSWER, saveMessageRequestCaptor.getValue().getContent());
         verify(eventPublisher, never()).publishEvent(any());
@@ -247,7 +256,7 @@ class AutoResponderServiceImplTest {
         assertEquals(CHAT_ID, escalationEventCaptor.getValue().getChatId());
         assertEquals(CLIENT_ID, escalationEventCaptor.getValue().getClientId());
         verify(chatMessageService).processAndSaveMessage(saveMessageRequestCaptor.capture(), eq(CLIENT_ID), eq(ChatMessageSenderType.AUTO_RESPONDER));
-        verify(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), externalMessageContentCaptor.capture());
+        verify(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), externalMessageContentCaptor.capture(), senderInfoWidgetChat);
         assertEquals(UNEXPECTED_ERROR_MESSAGE_FOR_CLIENT, externalMessageContentCaptor.getValue());
     }
 
@@ -260,12 +269,12 @@ class AutoResponderServiceImplTest {
         when(answerSearchService.findRelevantAnswers(CORRECTED_QUERY, COMPANY_ID, null)).thenReturn(List.of(searchResult));
         when(textProcessingService.processQuery(eq(ORIGINAL_ANSWER), eq(GenerationType.REWRITE), clientPreviousMessages)).thenReturn(REWRITTEN_ANSWER);
         ExternalMessagingException messagingException = new ExternalMessagingException("Send failed");
-        doThrow(messagingException).when(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), eq(REWRITTEN_ANSWER));
+        doThrow(messagingException).when(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), eq(REWRITTEN_ANSWER),eq(senderInfoWidgetChat));
 
         assertDoesNotThrow(() -> autoResponderService.processIncomingMessage(testMessageDto, testChat));
 
         verify(chatMessageService).processAndSaveMessage(any(), any(), any());
-        verify(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), eq(REWRITTEN_ANSWER));
+        verify(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), eq(REWRITTEN_ANSWER), eq(senderInfoWidgetChat));
         verify(eventPublisher, never()).publishEvent(any());
     }
 
@@ -282,7 +291,7 @@ class AutoResponderServiceImplTest {
         assertDoesNotThrow(() -> autoResponderService.processIncomingMessage(testMessageDto, testChat));
 
         verify(chatMessageService).processAndSaveMessage(any(), any(), any());
-        verify(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), eq(REWRITTEN_ANSWER));
+        verify(externalMessagingService).sendMessageToExternal(eq(CHAT_ID), eq(REWRITTEN_ANSWER), eq(senderInfoWidgetChat));
         verify(eventPublisher, never()).publishEvent(any());
     }
 

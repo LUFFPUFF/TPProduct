@@ -45,6 +45,18 @@ public class WebSocketTopicRegistry {
     @NotBlank
     @Value("${websocket.topics.user.chat-closed}")
     private String userChatClosedSuffix;
+    @NotBlank
+    @Value("${websocket.topics.widget.base}")
+    private String widgetSessionBase;
+    @NotBlank
+    @Value("${websocket.topics.widget.messages}")
+    private String widgetSessionMessagesSuffix;
+    @NotBlank
+    @Value("${websocket.topics.widget.config}")
+    private String widgetSessionConfigSuffix;
+    @NotBlank
+    @Value("${websocket.topics.widget.notifications}")
+    private String widgetSessionNotificationsSuffix;
 
     public String getCompanyPendingChatsTopic(Object companyId) {
         return companyPendingChats.replace("{companyId}", String.valueOf(companyId));
@@ -79,6 +91,18 @@ public class WebSocketTopicRegistry {
     public String getFullUserChatClosedTopic(Object userId) {
         return userBase.replace("{userId}", String.valueOf(userId)) + userChatClosedSuffix;
     }
+
+    public String getWidgetSessionMessagesDestinationSuffix() {
+        return "/widget" + widgetSessionMessagesSuffix;
+    }
+    public String getWidgetSessionConfigDestinationSuffix() {
+        return "/widget" + widgetSessionConfigSuffix;
+    }
+    public String getWidgetSessionNotificationsDestinationSuffix() {
+        return "/widget" + widgetSessionNotificationsSuffix;
+    }
+
+
     public String getUserNotificationsQueueSuffix() {
         return userNotificationsSuffix;
     }

@@ -14,6 +14,7 @@ import com.example.domain.api.ans_api_module.service.ai.IAIFeedbackService;
 import com.example.domain.api.chat_service_api.exception_handler.ChatNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.ResourceNotFoundException;
 import com.example.domain.api.chat_service_api.exception_handler.exception.ExternalMessagingException;
+import com.example.domain.api.chat_service_api.integration.manager.widget.model.SenderInfoWidgetChat;
 import com.example.domain.api.chat_service_api.integration.service.IExternalMessagingService;
 import com.example.domain.api.chat_service_api.model.dto.MessageDto;
 import com.example.domain.api.chat_service_api.model.rest.mesage.SendMessageRequestDTO;
@@ -105,9 +106,17 @@ public class AIFeedbackServiceImpl implements IAIFeedbackService {
                 log.warn("lastAiResponseId is null for chat {}, cannot mark for specific feedback.", chat.getId());
             }
 
+            String displayName = "Бот поддержки";
+
+            SenderInfoWidgetChat senderInfoWidgetChat = SenderInfoWidgetChat.builder()
+                    .senderType(ChatMessageSenderType.AUTO_RESPONDER)
+                    .id("auto_responder_" + (chat.getCompany() != null ? chat.getCompany().getId() : "global"))
+                    .displayName(displayName)
+                    .build();
+
             if (savedMessageDto != null && StringUtils.hasText(savedMessageDto.getContent())) {
                 try {
-                    externalMessagingService.sendMessageToExternal(chat.getId(), savedMessageDto.getContent());
+                    externalMessagingService.sendMessageToExternal(chat.getId(), savedMessageDto.getContent(), senderInfoWidgetChat);
                     log.info("Feedback request message (ID {}) successfully placed for external sending for chat ID {}.",
                             savedMessageDto.getId(), chat.getId());
                 } catch (ExternalMessagingException e) {

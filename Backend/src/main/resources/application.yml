@@ -61,60 +61,11 @@ management:
         include: "*"
 
 
-validation:
-  file-upload:
-    max-file-size: 10MB
-    allowed-file-types:
-      - "image/png"
-      - "image/jpeg"
-      - "application/pdf"
-
-file-upload:
-  location: /uploads
-  clamav-host: localhost
-  clamav-port: 3310
-
 jwt:
   secret: "sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3sgsVqPHW8JA36RhNDUD4b6V5u28BhzJX1rISYU2menKnwPTYy3"
   access-expiration: 100000
   refresh-expiration: 86400000
   isLocal: false
-
-# Настройки чатов
-chat:
-  limits:
-    max-messages-per-chat: 1000
-    max-attachments-per-message: 5
-    max-message-length: 1000
-    max-chats-per-user: 10
-    max-users-per-chat: 5
-    message-rate-limit: 60
-    attachment-max-size: 10MB
-  lifetime:
-    inactive-chat-close-time: PT24H
-  status:
-    active: ACTIVE
-    closed: CLOSED
-    pending: PENDING
-
-# Настройки уведомлений
-notification:
-  interval: 5s
-  templates:
-    new-message: "Новое сообщение от %s: %s"
-    operator-typing: "Оператор печатает..."
-
-telegram:
-  username: dialog_x_qanswer_bot
-  token: 7520341907:AAFkCZPkx7d676-qwLMuAhfL4jaXWlU_Blg
-
-vk:
-  bot:
-    token:
-  group:
-    id:
-  api:
-    version: 5.199
 
 email:
   imap_host:
@@ -125,7 +76,6 @@ email:
   imap_store: "imaps"
   imap_folder: "INBOX"
   polling_interval_ms: 10000
-
 
 nlp:
   lemmatizer:
@@ -147,19 +97,27 @@ answersearch:
     trust: 0.3
 
 ml:
-  service:
-    base-url: http://localhost:8000/generate
-  prompts:
-    correction-prompt-template: "Исправь орфографические, пунктуационные и грамматические ошибки в следующем предложении, строго соблюдая нормы современного русского языка. Дай только исправленный вариант без пояснений: %s"
-    rewrite-instruction-template: "Перепиши следующий корпоративный ответ, сделав его более дружелюбным, теплым и естественным, но при этом не перегруженным деталями. Сделай так, чтобы ответ звучал приветливо и было ощущение личного общения. Также убедись, что ответ остается коротким и по делу."
-    rewrite-prompt-template: "%sШаблонный ответ: %s. Дай только измененный вариант."
-  params:
-    temperature: 0.7
-    max-new-tokens: 150
-    top-p: 0.95
-    do-sample: false
-    stream: false
-    max-retries: 3
+  api:
+    params:
+      default-temperature: 0.7
+      default-max-new-tokens: 250
+      default-top-p: 0.9
+      default-do-sample: true
+      default-stream: false
+      max-retries: 3
+      retry-delay: 2s
+      correction:
+        temperature: 0.5
+        max-new-tokens: 100
+        is-text-generation: true
+      rewrite:
+        temperature: 0.75
+        max-new-tokens: 300
+        is-text-generation: true
+      general-answer:
+        temperature: 0.6
+        max-new-tokens: 500
+        is-text-generation: true
 
 websocket:
   endpoint: /ws
@@ -197,6 +155,12 @@ websocket:
       notifications: /notifications
       assigned-chats: /chats/assigned
       chat-closed: /chats/closed
+    widget:
+      base: /user/{widgetSessionId}/widget
+      messages: /messages
+      config: /config
+      notifications: /notifications
+
   security:
     jwt:
       header-name: Authorization

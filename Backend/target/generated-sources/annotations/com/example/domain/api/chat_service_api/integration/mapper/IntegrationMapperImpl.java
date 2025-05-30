@@ -1,10 +1,12 @@
 package com.example.domain.api.chat_service_api.integration.mapper;
 
 import com.example.database.model.company_subscription_module.company.Company;
+import com.example.database.model.company_subscription_module.company.CompanyDialogXChatConfiguration;
 import com.example.database.model.company_subscription_module.company.CompanyMailConfiguration;
 import com.example.database.model.company_subscription_module.company.CompanyTelegramConfiguration;
 import com.example.database.model.company_subscription_module.company.CompanyVkConfiguration;
 import com.example.database.model.company_subscription_module.company.CompanyWhatsappConfiguration;
+import com.example.domain.api.chat_service_api.integration.dto.DialogXChatDto;
 import com.example.domain.api.chat_service_api.integration.dto.IntegrationMailDto;
 import com.example.domain.api.chat_service_api.integration.dto.IntegrationTelegramDto;
 import com.example.domain.api.chat_service_api.integration.dto.IntegrationVkDto;
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-27T21:24:05+0300",
+    date = "2025-05-30T03:54:50+0300",
     comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 21.0.7 (Microsoft)"
 )
 @Component
@@ -152,6 +154,26 @@ public class IntegrationMapperImpl implements IntegrationMapper {
         return list;
     }
 
+    @Override
+    public DialogXChatDto toDto(CompanyDialogXChatConfiguration configuration) {
+        if ( configuration == null ) {
+            return null;
+        }
+
+        DialogXChatDto dialogXChatDto = new DialogXChatDto();
+
+        dialogXChatDto.setCompanyId( configurationCompanyId( configuration ) );
+        dialogXChatDto.setId( configuration.getId() );
+        dialogXChatDto.setWidgetId( configuration.getWidgetId() );
+        dialogXChatDto.setEnabled( configuration.isEnabled() );
+        dialogXChatDto.setWelcomeMessage( configuration.getWelcomeMessage() );
+        dialogXChatDto.setThemeColor( configuration.getThemeColor() );
+        dialogXChatDto.setCreatedAt( configuration.getCreatedAt() );
+        dialogXChatDto.setUpdatedAt( configuration.getUpdatedAt() );
+
+        return dialogXChatDto;
+    }
+
     protected CompanyDto companyToCompanyDto(Company company) {
         if ( company == null ) {
             return null;
@@ -167,5 +189,13 @@ public class IntegrationMapperImpl implements IntegrationMapper {
         companyDto.updatedAt( company.getUpdatedAt() );
 
         return companyDto.build();
+    }
+
+    private Integer configurationCompanyId(CompanyDialogXChatConfiguration companyDialogXChatConfiguration) {
+        Company company = companyDialogXChatConfiguration.getCompany();
+        if ( company == null ) {
+            return null;
+        }
+        return company.getId();
     }
 }
