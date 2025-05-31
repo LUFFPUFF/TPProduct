@@ -87,7 +87,7 @@ const ChatWindow = ({ selectedDialog }) => {
             chat_id: Number(selectedDialog.id),
             content: messageText,
         };
-        console.log("newMessage:", newMessage);
+        console.log("Отправка сообщения:", newMessage);
 
         try {
             const res = await fetch(API.dialogs.sendMessage, {
@@ -99,13 +99,24 @@ const ChatWindow = ({ selectedDialog }) => {
             });
 
             if (!res.ok) {
-                const data = await res.json();
-                console.error("Ошибка ошибка при отвравке сообщения (status:", res.status, "):", data);
-                throw new Error("Ошибка при отправке сообщения");
+                let errorData;
+                try {
+                    errorData = await res.json();
+                } catch {
+                    errorData = { message: "Не удалось распарсить тело ошибки", raw: await res.text() };
+                }
+                console.error(
+                    "Ошибка при отправке сообщения:",
+                    {
+                        status: res.status,
+                        statusText: res.statusText,
+                        errorData
+                    }
+                );
+                throw new Error(`Ошибка сервера: ${res.status} ${res.statusText}`);
             }
 
             setMessageText("");
-
 
         } catch (error) {
             console.error("Ошибка отправки сообщения:", error);
