@@ -110,15 +110,38 @@ const DroppableColumn = ({ stage, children }) => {
     );
 };
 
+const buildQueryParams = (filters) => {
+    const params = new URLSearchParams();
+
+    if (filters.email) params.append("email", filters.email);
+    if (filters.priority) params.append("priority", filters.priority.toUpperCase()); // LOW, MEDIUM, HIGH
+    if (filters.minAmount) params.append("minAmount", filters.minAmount);
+    if (filters.maxAmount) params.append("maxAmount", filters.maxAmount);
+    if (filters.stage) params.append("stage", stageKeyToId(filters.stage)); // Преобразуем в число
+
+    return params.toString();
+};
+
 const CrmPage = () => {
     const [stages, setStages] = useState([]);
     const [activeDeal, setActiveDeal] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [showFilters, setShowFilters] = useState(false); // добавь это в начало CrmPage
+    const [filters, setFilters] = useState({
+        email: "",
+        priority: "",
+        minAmount: "",
+        maxAmount: "",
+        stage: "",
+    });
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(API.crm.get)
+        const queryString = buildQueryParams(filters);
+        const url = `${API.crm.get}?${queryString}`;
+
+        fetch(url)
             .then(async (res) => {
                 console.log("Получен ответ от API crm.get, статус:", res.status);
                 if (!res.ok) {
@@ -398,8 +421,63 @@ const CrmPage = () => {
                         >
                             Добавить в архив
                         </button>
+                        <button
+                            onClick={() => setShowFilters(!showFilters)}
+                            className="px-4 py-2 border border-black rounded-md bg-white hover:bg-gray-100 transition w-fit text-sm"
+                        >
+                            {showFilters ? "Скрыть фильтры" : "Показать фильтры"}
+                        </button>
                     </div>
                 </header>
+                <div className="">
+                    {showFilters && (
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                            <select
+                                className="border bg-white rounded px-3 py-2 w-full"
+                                value={filters.stage}
+                                onChange={(e) => setFilters({ ...filters, stage: e.target.value })}
+                            >
+                                <option value="">Выбрать этап</option>
+                                <option value="new">Новая</option>
+                                <option value="pause">Пауза</option>
+                                <option value="in-progress">В работе</option>
+                                <option value="done">Завершена</option>
+                                <option value="fail">Провалена</option>
+                            </select>
+                            <input
+                                type="text"
+                                placeholder="Email исполнителя"
+                                className="border bg-white rounded px-3 py-2 w-full"
+                                value={filters.email}
+                                onChange={(e) => setFilters({ ...filters, fio: e.target.value })}
+                            />
+                            <select
+                                className="border bg-white rounded px-3 py-2 w-full"
+                                value={filters.priority}
+                                onChange={(e) => setFilters({ ...filters, priority: e.target.value })}
+                            >
+                                <option value="">Приоритет</option>
+                                <option value="низкий">Низкий</option>
+                                <option value="средний">Средний</option>
+                                <option value="высокий">Высокий</option>
+                            </select>
+                            <input
+                                type="number"
+                                placeholder="Минимальная цена"
+                                className="border bg-white rounded px-3 py-2 w-full"
+                                value={filters.minAmount}
+                                onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })}
+                            />
+                            <input
+                                type="number"
+                                placeholder="Максимальная цена"
+                                className="border bg-white rounded px-3 py-2 w-full"
+                                value={filters.maxAmount}
+                                onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
+                            />
+                        </div>
+                    )}
+                </div>
 
                 <DndContext
                     sensors={sensors}
