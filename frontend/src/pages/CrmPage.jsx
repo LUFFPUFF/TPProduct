@@ -114,10 +114,10 @@ const buildQueryParams = (filters) => {
     const params = new URLSearchParams();
 
     if (filters.email) params.append("email", filters.email);
-    if (filters.priority) params.append("priority", filters.priority.toUpperCase()); // LOW, MEDIUM, HIGH
+    if (filters.priority) params.append("priority", filters.priority.toUpperCase());
     if (filters.minAmount) params.append("minAmount", filters.minAmount);
     if (filters.maxAmount) params.append("maxAmount", filters.maxAmount);
-    if (filters.stage) params.append("stage", stageKeyToId(filters.stage)); // Преобразуем в число
+    if (filters.stage) params.append("stage", stageKeyToId(filters.stage));
 
     return params.toString();
 };
@@ -126,7 +126,7 @@ const CrmPage = () => {
     const [stages, setStages] = useState([]);
     const [activeDeal, setActiveDeal] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [showFilters, setShowFilters] = useState(false); // добавь это в начало CrmPage
+    const [showFilters, setShowFilters] = useState(false);
     const [filters, setFilters] = useState({
         email: "",
         priority: "",
@@ -195,7 +195,7 @@ const CrmPage = () => {
                     { id: "fail", title: "Провалена", deals: [] },
                 ]);
             });
-    }, []);
+    }, [filters]);
 
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -449,7 +449,7 @@ const CrmPage = () => {
                                 placeholder="Email исполнителя"
                                 className="border bg-white rounded px-3 py-2 w-full"
                                 value={filters.email}
-                                onChange={(e) => setFilters({ ...filters, fio: e.target.value })}
+                                onChange={(e) => setFilters({ ...filters, email: e.target.value })}
                             />
                             <select
                                 className="border bg-white rounded px-3 py-2 w-full"
