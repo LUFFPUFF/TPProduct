@@ -423,7 +423,7 @@ const CrmPage = () => {
                         </button>
                         <button
                             onClick={() => setShowFilters(!showFilters)}
-                            className="px-4 py-2 border border-black rounded-md bg-white hover:bg-gray-100 transition w-fit text-sm"
+                            className="px-4 py-1.5 text-sm font-medium border border-black text-black bg-white rounded-xl"
                         >
                             {showFilters ? "Скрыть фильтры" : "Показать фильтры"}
                         </button>

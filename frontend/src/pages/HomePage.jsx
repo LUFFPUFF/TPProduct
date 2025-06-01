@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import Footer from "../components/Footer.jsx";
 import useImage from "../assets/HomePageMan.jpg";
 import { useAuth } from "../utils/AuthContext";
@@ -106,9 +106,8 @@ export const HomePage = () => {
                 </section>
 
                 <section className="text-center my-12">
-                    <h2 className="text-2xl md:text-3xl font-bold mb-3">Свяжитесь с нами</h2>
-                    <p className="text-md md:text-lg max-w-md mx-auto mb-6">Свяжитесь с нами, и мы поможем вам настроить DialogX под ваши задачи</p>
-                    <a href="#" className="bg-white text-[#092155] text-md md:text-lg font-bold px-5 py-3 rounded-md shadow-[14px_14px_15px_rgba(0,0,0,0.32)]">Связаться</a>
+                    <h2 className="text-2xl md:text-3xl font-bold mb-3">Попробуйте</h2>
+                    <a href="/register" className="bg-white text-[#092155] text-md md:text-lg font-bold px-5 py-3 rounded-md shadow-[14px_14px_15px_rgba(0,0,0,0.32)]">Попробовать</a>
                 </section>
             </main>
 
