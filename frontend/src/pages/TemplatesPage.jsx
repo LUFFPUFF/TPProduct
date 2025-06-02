@@ -118,7 +118,6 @@ const TemplatesPage = () => {
             updatedTemplates.splice(editIndex, 1, createdTemplate);
             setTemplates(updatedTemplates);
 
-            // Сброс состояний редактирования
             setEditIndex(null);
             setEditedTitle("");
             setEditedCategory("");
@@ -170,7 +169,7 @@ const TemplatesPage = () => {
 
             const data = await res.json();
             console.log('Полученный джейсон' + data)
-            let message = `Обработано: ${data.processed_count}\nДубликатов: ${data.duplicates_count}`;
+            let message = `Обработано: ${data.processedCount}\nДубликатов: ${data.duplicatesCount}`;
             if (data.globalErrors?.length) {
                 message += `\nГлобальные ошибки:\n${data.globalErrors.join("\n")}`;
             }

@@ -85,8 +85,8 @@ export default function SubscriptionsPage() {
             }
 
             console.log("Успешный ответ при продлении подписки:", responseBody);
-            alert(`Подписка продлена до ${new Date(responseBody.end_subscription).toLocaleDateString()}`);
-            fetchSubscription(); // обновляем данные о подписке
+            alert(`Подписка продлена до ${new Date(responseBody.endSubscription).toLocaleDateString()}`);
+            fetchSubscription();
         } catch (error) {
             console.error("Ошибка при выполнении запроса:", error);
             alert("Ошибка соединения с сервером");
@@ -94,7 +94,7 @@ export default function SubscriptionsPage() {
     };
     useEffect(() => {
         if (subscriptionInfo) {
-            console.log("endSubscription value:", subscriptionInfo?.end_subscription);
+            console.log("endSubscription value:", subscriptionInfo?.endSubscription);
             console.log("Subscription Info обновлён:", subscriptionInfo);
         }
     }, [subscriptionInfo]);
@@ -168,7 +168,7 @@ export default function SubscriptionsPage() {
 
             const data = await response.json();
             console.log("Ответ от сервера при активации подписки:", data);
-            alert(`Подписка активирована до ${new Date(data.end_subscription).toLocaleDateString()}`);
+            alert(`Подписка активирована до ${new Date(data.endSubscription).toLocaleDateString()}`);
         } catch (error) {
             console.error("Ошибка при активации подписки:", error);
             alert("Не удалось подключить подписку");
@@ -368,8 +368,8 @@ export default function SubscriptionsPage() {
                         <div className="bg-white rounded-lg shadow-[14px_14px_15px_rgba(0,0,0,0.32)] p-4 sm:p-8 w-full overflow-hidden">
                             <h2 className="text-xl sm:text-2xl font-bold mb-4">Данные о подписке</h2>
                             <div className="mb-6">
-                                <p className="text-base sm:text-lg mb-2">Количество пользователей в подписке: {subscriptionInfo?.max_operators || 'Загрузка...'}</p>
-                                <p className="text-base sm:text-lg mb-6">Подписка действует до: {subscriptionInfo?.end_subscription ? new Date(subscriptionInfo.end_subscription).toLocaleDateString() : 'Загрузка...'}</p>
+                                <p className="text-base sm:text-lg mb-2">Количество пользователей в подписке: {subscriptionInfo?.maxOperators || 'Загрузка...'}</p>
+                                <p className="text-base sm:text-lg mb-6">Подписка действует до: {subscriptionInfo?.endSubscription ? new Date(subscriptionInfo.endSubscription).toLocaleDateString() : 'Загрузка...'}</p>
                             </div>
                             <div className="border-2 border-black rounded-lg p-4 sm:p-6 bg-gray-100">
                                 <h3 className="text-lg sm:text-xl font-bold mb-4 sm:mb-6 text-center">Управление</h3>
@@ -379,7 +379,7 @@ export default function SubscriptionsPage() {
                                         type="number"
                                         min="1"
                                         value={extendMonths}
-                                        onChange={(e) => setExtendMonths(Math.max(1, parseInt(e.target.value) || 1))}
+                                        onChange={(e) => setExtendMonths(Math.max(0, parseInt(e.target.value) || 1))}
                                         placeholder="Введите срок в месяцах"
                                         className="mt-1 p-2 bg-white border border-black rounded w-full md:col-span-2"
                                     />
@@ -392,7 +392,7 @@ export default function SubscriptionsPage() {
                                         type="number"
                                         min="1"
                                         value={addUsers}
-                                        onChange={(e) => setAddUsers(Math.max(1, parseInt(e.target.value) || 1))}
+                                        onChange={(e) => setAddUsers(Math.max(0, parseInt(e.target.value) || 1))}
                                         placeholder="Количество пользователей"
                                         className="mt-1 p-2 bg-white border border-black rounded w-full md:col-span-2"
                                     />
