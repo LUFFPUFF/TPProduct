@@ -24,6 +24,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.nio.file.AccessDeniedException;
@@ -197,6 +198,7 @@ public class ChatQueryServiceImpl implements IChatQueryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ChatDTO> getMyAssignedChats(Set<ChatStatus> statuses, UserContext userContext) {
         return MdcUtil.withContext(
                 () -> {
@@ -206,7 +208,7 @@ public class ChatQueryServiceImpl implements IChatQueryService {
                     Collection<ChatStatus> effectiveStatuses = CollectionUtils.isEmpty(statuses) ?
                             DEFAULT_OPERATOR_ASSIGNED_STATUSES : statuses;
 
-                    List<Chat> chats = chatRepository.findByUserIdAndStatusIn(userContext.getUserId(), effectiveStatuses);
+                    List<Chat> chats = chatRepository.findByUserIdAndStatusInWithMessages(userContext.getUserId(), effectiveStatuses);
                     return mapChatsToDtoWithSnippets(chats);
                 },
                 "operation", OPERATION_GET_MY_ASSIGNED_CHATS,
