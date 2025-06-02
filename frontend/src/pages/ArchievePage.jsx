@@ -70,7 +70,7 @@ const ArchivePage = () => {
     }, [filters]);
 
     return (
-        <div className="flex flex-col md:flex-row min-h-screen overflow-x-hidden bg-[#e6e5ea]">
+        <div className="flex flex-col md:flex-row h-screen overflow-hidden bg-[#e6e5ea]">
             <div className="md:hidden p-4">
                 <button
                     onClick={() => setIsSidebarOpen(true)}
@@ -112,7 +112,7 @@ const ArchivePage = () => {
                 </>
             )}
 
-            <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto w-full">
+            <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto h-full w-full">
                 <h1 className="text-2xl sm:text-3xl font-bold text-black mb-6">Архив сделок</h1>
 
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
