@@ -83,7 +83,7 @@ const ArchivePage = () => {
                 </button>
             </div>
 
-            <div className="hidden md:block">
+            <div className="hidden md:block w-64">
                 <Sidebar/>
             </div>
 
