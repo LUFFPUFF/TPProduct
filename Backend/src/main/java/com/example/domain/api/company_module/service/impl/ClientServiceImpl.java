@@ -57,6 +57,8 @@ public class ClientServiceImpl implements IClientService {
                     Client newTestClient = new Client();
                     newTestClient.setName(testClientName);
                     newTestClient.setCompany(operator.getCompany());
+                    newTestClient.setCreatedAt(LocalDateTime.now());
+                    newTestClient.setUpdatedAt(LocalDateTime.now());
                     return clientRepository.save(newTestClient);
                 });
     }
