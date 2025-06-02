@@ -18,7 +18,6 @@ const Sidebar = () => {
                 <span className="text-3xl font-bold">DialogX</span>
             </NavLink>
 
-            {/* Навигация */}
             <nav className="flex flex-col space-y-20">
                 <NavLink to="/dialogs" className="text-lg flex items-center space-x-3 p-2 hover:text-[#2a4992] font-bold">
                     <img src={iconDialogs} alt="Диалоги" className="w-5 h-5" />

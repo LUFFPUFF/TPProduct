@@ -70,7 +70,7 @@ const ArchivePage = () => {
     }, [filters]);
 
     return (
-        <div className="flex flex-col md:flex-row min-h-screen overflow-hidden">
+        <div className="flex flex-col md:flex-row min-h-screen overflow-x-hidden bg-[#e6e5ea]">
             <div className="md:hidden p-4">
                 <button
                     onClick={() => setIsSidebarOpen(true)}
@@ -78,23 +78,24 @@ const ArchivePage = () => {
                     aria-label="Открыть меню"
                 >
                     <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
                 </button>
             </div>
 
             <div className="hidden md:block">
-                <Sidebar />
+                <Sidebar/>
             </div>
 
             {isSidebarOpen && (
                 <>
                     <div
-                        className="fixed inset-0 z-40 bg-black bg-opacity-50"
+                        className="fixed inset-0 z-40"
+                        style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
                         onClick={() => setIsSidebarOpen(false)}
                     />
                     <div className="fixed top-0 left-0 w-64 h-full z-50 bg-white shadow-lg overflow-y-auto">
-                        <Sidebar />
+                        <Sidebar/>
                         <div className="absolute top-4 right-4">
                             <button
                                 onClick={() => setIsSidebarOpen(false)}
@@ -103,7 +104,7 @@ const ArchivePage = () => {
                             >
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2"
                                      viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
                                 </svg>
                             </button>
                         </div>
@@ -111,7 +112,7 @@ const ArchivePage = () => {
                 </>
             )}
 
-            <main className="flex-1 bg-[#e6e5ea] p-4 sm:p-6 md:p-8 overflow-y-auto max-w-screen-xl mx-auto w-full">
+            <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto w-full">
                 <h1 className="text-2xl sm:text-3xl font-bold text-black mb-6">Архив сделок</h1>
 
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
@@ -136,7 +137,7 @@ const ArchivePage = () => {
                             placeholder="Email исполнителя"
                             className="border bg-white rounded px-3 py-2 w-full"
                             value={filters.email || ""}
-                            onChange={(e) => setFilters({ ...filters, email: e.target.value })}
+                            onChange={(e) => setFilters({...filters, email: e.target.value})}
                         />
                         <div className="flex flex-col sm:flex-row items-center gap-2 md:col-span-2">
                             <span className="text-sm text-gray-700 whitespace-nowrap">С</span>
@@ -144,14 +145,14 @@ const ArchivePage = () => {
                                 type="date"
                                 className="border bg-white rounded px-3 py-2 w-full"
                                 value={filters.dateFrom}
-                                onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })}
+                                onChange={(e) => setFilters({...filters, dateFrom: e.target.value})}
                             />
                             <span className="text-sm text-gray-700 whitespace-nowrap">по</span>
                             <input
                                 type="date"
                                 className="border bg-white rounded px-3 py-2 w-full"
                                 value={filters.dateTo}
-                                onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
+                                onChange={(e) => setFilters({...filters, dateTo: e.target.value})}
                             />
                         </div>
                     </div>
@@ -162,12 +163,16 @@ const ArchivePage = () => {
 
                 <div className="grid gap-6">
                     {deals.map((deal) => (
-                        <div key={deal.id} className="bg-white rounded-2xl shadow-md p-4 sm:p-6 text-sm sm:text-base">
+                        <div key={deal.id}
+                             className="bg-white rounded-2xl shadow-md p-4 sm:p-6 text-sm sm:text-base overflow-hidden">
                             <h2 className="text-lg sm:text-xl font-semibold text-black mb-2">{deal.title}</h2>
-                            <p><span className="font-semibold">Сумма:</span> {deal.amount.toLocaleString("ru-RU", { style: "currency", currency: "RUB" })}</p>
+                            <p><span className="font-semibold">Сумма:</span> {deal.amount.toLocaleString("ru-RU", {
+                                style: "currency",
+                                currency: "RUB"
+                            })}</p>
                             <p><span className="font-semibold">Дата открытия:</span> {formatDate(deal.createdAt)}</p>
                             <p><span className="font-semibold">Дата закрытия:</span> {formatDate(deal.dueDate)}</p>
-                            <p><span className="font-semibold">Исполнитель:</span> {deal.fio}</p>
+                            <p><span className="font-semibold">Исполнитель:</span> {deal.email}</p>
                             <p><span className="font-semibold">Комментарий:</span> {deal.content}</p>
                             <p>
                                 <span className="font-semibold">Статус:</span>{" "}
@@ -176,8 +181,8 @@ const ArchivePage = () => {
                                         ? "text-green-600"
                                         : "text-red-600"
                                 }>
-                                    {mapStatus(deal.status)}
-                                </span>
+                                {mapStatus(deal.status)}
+                            </span>
                             </p>
                         </div>
                     ))}
@@ -185,6 +190,5 @@ const ArchivePage = () => {
             </main>
         </div>
     );
-};
-
+}
 export default ArchivePage;

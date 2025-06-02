@@ -82,7 +82,8 @@ const DialogPage = () => {
                 {isSidebarOpen && (
                     <>
                         <div
-                            className="fixed inset-0 z-40 bg-black bg-opacity-50"
+                            className="fixed inset-0 z-40"
+                            style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
                             onClick={() => setIsSidebarOpen(false)}
                         />
                         <div className="fixed top-0 left-0 w-64 h-full z-50 overflow-y-auto bg-white">

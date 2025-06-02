@@ -4,7 +4,7 @@ import useImage from "../assets/HomePageMan.jpg";
 import { useAuth } from "../utils/AuthContext";
 
 export const HomePage = () => {
-    const { user } = useAuth(); // получаем user из контекста
+    const { user } = useAuth();
     const email = user?.email || null;
 
     return (
