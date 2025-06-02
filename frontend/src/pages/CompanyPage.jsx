@@ -32,10 +32,10 @@ const CompanyPage = () => {
                 console.log("Полученные данные компании:", data);
 
                 setCompanyName(data.company.name);
-                setCompanyDescription(data.company.company_description);
+                setCompanyDescription(data.company.companyDescription);
                 setEmployees(
                     data.members.map((member) => ({
-                        name: member.full_name,
+                        name: member.fullName,
                         email: member.email,
                         role: mapRole(member.roles)
                     }))
@@ -71,7 +71,7 @@ const CompanyPage = () => {
             setEmployees([
                 ...employees,
                 {
-                    name: data.full_name || "",
+                    name: data.fullName || "",
                     email: newEmployeeEmail.trim(),
                     role: mapRole(data.roles || [])
                 }
