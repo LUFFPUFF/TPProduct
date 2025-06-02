@@ -168,7 +168,7 @@ const CrmPage = () => {
                         id: String(deal.id),
                         price: deal.amount,
                         title: deal.title,
-                        created_at: deal.createdAt,
+                        createdAt: deal.createdAt,
                         content: deal.content,
                         priority: deal.priority,
                         clientId: deal.client_id,
