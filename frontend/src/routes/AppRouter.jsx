@@ -14,6 +14,7 @@ import ForbiddenPage from "../pages/ForbiddenPage";
 import PrivateRoute from "../routes/PrivateRoute";
 import CrmPage from "../pages/CrmPage.jsx";
 import ArchivePage from "../pages/ArchievePage.jsx";
+import ResetPasswordPage from "../pages/ResetPasswordPage.jsx";
 
 const AppRouter = () => {
     return (
@@ -23,6 +24,7 @@ const AppRouter = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegistrationPage />} />
             <Route path="/forbidden" element={<ForbiddenPage />} />
+            <Route path="/reset" element={<ResetPasswordPage />} />
 
             {/* Защищённые маршруты */}
             <Route element={
