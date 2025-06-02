@@ -15,7 +15,7 @@ public interface ChatMapper {
     @Mapping(target = "client", source = "client")
     @Mapping(target = "operator", source = "user")
     @Mapping(target = "messages", source = "messages")
-    @Mapping(target = "companyId", source = "chat.company.id")
+    @Mapping(target = "companyId", source = "company.id")
     ChatDetailsDTO toDetailsDto(Chat chat);
 
      @Mapping(target = "id", ignore = true)

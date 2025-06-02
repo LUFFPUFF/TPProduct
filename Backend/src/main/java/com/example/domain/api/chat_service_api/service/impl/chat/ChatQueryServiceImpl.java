@@ -73,11 +73,12 @@ public class ChatQueryServiceImpl implements IChatQueryService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public ChatDetailsDTO getChatDetails(Integer chatId, UserContext userContext) throws AccessDeniedException {
         return MdcUtil.withContext(
                 () -> {
                     log.debug("Fetching details for chat ID {} by user {}", chatId, userContext.getUserId());
-                    Chat chat = chatRepository.findById(chatId)
+                    Chat chat = chatRepository.findByIdWithMessages(chatId)
                             .orElseThrow(() -> new ChatNotFoundException("Chat with ID " + chatId + " not found."));
 
                     chatValidationUtil.ensureChatBelongsToCompany(chat, userContext.getCompanyId(), OPERATION_GET_CHAT_DETAILS);
