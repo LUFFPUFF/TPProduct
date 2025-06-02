@@ -20,10 +20,10 @@ const DialogList = ({ dialogs, onSelect }) => {
                         <img src={Avatar} alt="avatar" className="w-10 h-10 rounded-full" />
                         <div>
                             <p className="font-bold">
-                                {dialog.client_name || "Без имени"}
+                                {dialog.clientName  || "Без имени"}
                             </p>
                             <p className="text-sm text-black">
-                                {dialog.last_message_content || "Нет сообщений"}
+                                {dialog.lastMessageContent  || "Нет сообщений"}
                             </p>
                         </div>
                     </div>
