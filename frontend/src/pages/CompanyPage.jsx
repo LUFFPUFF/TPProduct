@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import plus from "../assets/plus.png";
 import API from "../config/api.js";
+import { useAuth } from "../utils/AuthContext.jsx";
 
 const CompanyPage = () => {
+    const { user } = useAuth();
+    const isOperator = user?.roles?.includes("OPERATOR");
+
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [employees, setEmployees] = useState([]);
     const [editRoleIndex, setEditRoleIndex] = useState(null);
@@ -16,21 +20,18 @@ const CompanyPage = () => {
     const [tempName, setTempName] = useState(companyName);
     const [tempDescription, setTempDescription] = useState(companyDescription);
 
-    const handleAddClick = () => setShowInput(true);
     const mapRole = (roles) => {
         if (!roles || roles.length === 0) return "Неизвестно";
         if (roles.includes("MANAGER")) return "Администратор";
         if (roles.includes("OPERATOR")) return "Оператор";
         return "Неизвестно";
     };
+
     useEffect(() => {
         const fetchCompanyData = async () => {
             try {
                 const response = await fetch(API.company.get);
                 const data = await response.json();
-
-                console.log("Полученные данные компании:", data);
-
                 setCompanyName(data.company.name);
                 setCompanyDescription(data.company.companyDescription);
                 setEmployees(
@@ -47,25 +48,20 @@ const CompanyPage = () => {
 
         fetchCompanyData();
     }, []);
+
+    const handleAddClick = () => setShowInput(true);
+
     const handleAddEmployee = async () => {
         if (!newEmployeeEmail.trim()) return;
 
         try {
             const response = await fetch(API.company.addMember, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email: newEmployeeEmail.trim()
-                }),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: newEmployeeEmail.trim() }),
             });
 
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error("Ошибка при добавлении сотрудника:", response.status, errorText);
-                throw new Error("Ошибка при добавлении сотрудника");
-            }
+            if (!response.ok) throw new Error("Ошибка при добавлении сотрудника");
 
             const data = await response.json();
             setEmployees([
@@ -97,18 +93,11 @@ const CompanyPage = () => {
         try {
             const response = await fetch(API.company.editCompany, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    name: updatedName,
-                    description: updatedDescription
-                })
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: updatedName, description: updatedDescription }),
             });
 
-            if (!response.ok) {
-                throw new Error("Не удалось обновить данные компании");
-            }
+            if (!response.ok) throw new Error("Не удалось обновить данные компании");
 
             setCompanyName(updatedName);
             setCompanyDescription(updatedDescription);
@@ -143,42 +132,22 @@ const CompanyPage = () => {
             return;
         }
 
-        const isPromoting = mappedCurrentRole === "OPERATOR" && mappedNewRole === "MANAGER";
-        const isDemoting = mappedCurrentRole === "MANAGER" && mappedNewRole === "OPERATOR";
+        const endpoint = mappedCurrentRole === "OPERATOR" && mappedNewRole === "MANAGER"
+            ? API.company.giveRole
+            : mappedCurrentRole === "MANAGER" && mappedNewRole === "OPERATOR"
+                ? API.company.removeRole
+                : null;
 
-        const endpoint = isPromoting ? API.company.giveRole : isDemoting ? API.company.removeRole : null;
-
-        if (!endpoint) {
-            alert("Некорректное изменение роли");
-            return;
-        }
-
-        const payload = {
-            email: {
-                email: email
-            },
-            role: "MANAGER"
-        };
-
-        console.log("Отправка запроса на изменение роли:");
-        console.log("Endpoint:", endpoint);
-        console.log("Payload:", JSON.stringify(payload, null, 2));
+        if (!endpoint) return;
 
         try {
             const response = await fetch(endpoint, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(payload)
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: { email }, role: "MANAGER" }),
             });
 
-            const responseBody = await response.text();
-            console.log("Ответ от сервера:", responseBody);
-
-            if (!response.ok) {
-                throw new Error(`Ошибка при изменении роли: ${response.status}`);
-            }
+            if (!response.ok) throw new Error("Ошибка при изменении роли");
 
             const updatedEmployees = [...employees];
             updatedEmployees[index].role = newRole;
@@ -189,8 +158,6 @@ const CompanyPage = () => {
             alert("Не удалось изменить роль. Попробуйте снова.");
         }
     };
-
-
 
     return (
         <div className="flex flex-col md:flex-row min-h-screen bg-[#e6e5ea]">
@@ -213,8 +180,7 @@ const CompanyPage = () => {
             {isSidebarOpen && (
                 <>
                     <div
-                        className="fixed inset-0 z-40"
-                        style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+                        className="fixed inset-0 z-40 bg-black bg-opacity-50"
                         onClick={() => setIsSidebarOpen(false)}
                     />
                     <div className="fixed top-0 left-0 w-64 h-full z-50 bg-white shadow-lg overflow-y-auto">
@@ -236,71 +202,76 @@ const CompanyPage = () => {
 
             <main className="flex-1 md:ml-64 p-4 sm:p-6 md:p-10 pt-8 sm:pt-6 overflow-y-auto">
                 <h1 className="text-2xl sm:text-3xl font-bold mb-4">Страница компании</h1>
-                <div className="bg-white rounded-2xl shadow-[14px_14px_15px_rgba(0,0,0,0.32)] p-6 space-y-6 ">
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="bg-white rounded-2xl shadow p-6 space-y-6">
+                    <div className="flex flex-col sm:flex-row justify-between gap-4">
                         <div className="flex-1 space-y-4">
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                                <div className="text-xl font-semibold">Название компании:</div>
-                                {isEditingCompany ? (
-                                    <input
-                                        type="text"
-                                        value={tempName}
-                                        onChange={(e) => setTempName(e.target.value)}
-                                        className="border border-black rounded-xl shadow-[0px_4px_4px_rgba(0,0,0,0.25)] px-4 py-2 w-full sm:w-auto"
-                                    />
-                                ) : (
-                                    <input
-                                        type="text"
-                                        value={companyName}
-                                        readOnly
-                                        className="border border-black rounded-xl px-4 py-2 bg-[#f9f9f9] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] w-full sm:w-auto"
-                                    />
-                                )}
-                            </div>
-                            <div>
-                                <div className="text-xl font-semibold mb-2">Описание:</div>
-                                {isEditingCompany ? (
-                                    <textarea
-                                        value={tempDescription}
-                                        onChange={(e) => setTempDescription(e.target.value)}
-                                        className="border border-black shadow-[0px_4px_4px_rgba(0,0,0,0.25)] rounded-xl px-4 py-2 w-full"
-                                        rows={3}
-                                    />
-                                ) : (
-                                    <div className="bg-[#f9f9f9] border shadow-[0px_4px_4px_rgba(0,0,0,0.25)] border-black rounded-xl px-4 py-2">
-                                        {companyDescription}
-                                    </div>
-                                )}
-                            </div>
+                            <div className="text-xl font-semibold">Название компании:</div>
+                            {isEditingCompany ? (
+                                <input
+                                    type="text"
+                                    value={tempName}
+                                    onChange={(e) => setTempName(e.target.value)}
+                                    className="border border-black rounded-xl px-4 py-2 w-full"
+                                    disabled={isOperator}
+                                />
+                            ) : (
+                                <input
+                                    type="text"
+                                    value={companyName}
+                                    readOnly
+                                    className="border border-black bg-[#f9f9f9] rounded-xl px-4 py-2 w-full"
+                                />
+                            )}
+                            <div className="text-xl font-semibold">Описание:</div>
+                            {isEditingCompany ? (
+                                <textarea
+                                    value={tempDescription}
+                                    onChange={(e) => setTempDescription(e.target.value)}
+                                    className="border border-black rounded-xl px-4 py-2 w-full"
+                                    rows={3}
+                                    disabled={isOperator}
+                                />
+                            ) : (
+                                <div className="bg-[#f9f9f9] border border-black rounded-xl px-4 py-2">
+                                    {companyDescription}
+                                </div>
+                            )}
                         </div>
                         <div className="flex flex-col sm:items-end gap-2">
                             {isEditingCompany ? (
                                 <>
-                                    <button onClick={handleSaveCompany} className="bg-[#0d1b4c] text-white px-4 py-2 rounded-full shadow-[0px_4px_4px_rgba(0,0,0,0.25)] hover:opacity-90">
+                                    <button
+                                        onClick={handleSaveCompany}
+                                        className="bg-[#0d1b4c] text-white px-4 py-2 rounded-full shadow hover:opacity-90"
+                                        disabled={isOperator}
+                                    >
                                         Сохранить
                                     </button>
-                                    <button onClick={handleCancelEdit} className="bg-gray-300 text-black px-4 py-2 rounded-full shadow-[0px_4px_4px_rgba(0,0,0,0.25)] hover:bg-gray-400">
+                                    <button
+                                        onClick={handleCancelEdit}
+                                        className="bg-gray-300 text-black px-4 py-2 rounded-full hover:bg-gray-400"
+                                        disabled={isOperator}
+                                    >
                                         Отмена
                                     </button>
                                 </>
                             ) : (
-                                <button onClick={handleEditCompany} className="bg-white border border-black px-4 py-2 rounded-full shadow-[0px_4px_4px_rgba(0,0,0,0.25)] hover:bg-gray-100">
+                                <button
+                                    onClick={handleEditCompany}
+                                    className="bg-white border border-black px-4 py-2 rounded-full shadow hover:bg-gray-100"
+                                    disabled={isOperator}
+                                >
                                     Редактировать
                                 </button>
                             )}
                         </div>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row justify-between gap-3">
-                        <div className="text-lg">Сотрудников: {employees.length}</div>
-
-                    </div>
-
                     <div className="space-y-4">
                         {employees.map((employee, index) => (
                             <div
                                 key={index}
-                                className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 bg-[#f9fafb] rounded-xl border border-black px-4 py-4 shadow-[0px_4px_4px_rgba(0,0,0,0.25)]"
+                                className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-2 border border-black rounded-xl px-4 py-4 bg-[#f9fafb]"
                             >
                                 <div>
                                     <div className="text-lg font-semibold">{employee.name}</div>
@@ -311,6 +282,7 @@ const CompanyPage = () => {
                                                 value={newRole}
                                                 onChange={(e) => setNewRole(e.target.value)}
                                                 className="border rounded px-2 py-1"
+                                                disabled={isOperator}
                                             >
                                                 <option value="Оператор">Оператор</option>
                                                 <option value="Администратор">Администратор</option>
@@ -323,20 +295,25 @@ const CompanyPage = () => {
                                 <div className="flex gap-2 flex-wrap">
                                     {editRoleIndex === index ? (
                                         <button
-                                            className="bg-[#0d1b4c] text-white px-4 py-2 rounded-md shadow hover:opacity-90 text-sm"
+                                            className="bg-[#0d1b4c] text-white px-4 py-2 rounded-md text-sm"
                                             onClick={() => handleSaveRole(index)}
+                                            disabled={isOperator}
                                         >
                                             Сохранить
                                         </button>
                                     ) : (
                                         <button
-                                            className="bg-[#0d1b4c] text-white px-4 py-2 rounded-md shadow hover:opacity-90 text-sm"
+                                            className="bg-[#0d1b4c] text-white px-4 py-2 rounded-md text-sm"
                                             onClick={() => handleRoleChange(index)}
+                                            disabled={isOperator}
                                         >
                                             Изменить
                                         </button>
                                     )}
-                                    <button className="bg-[#b0b4be] text-white px-4 py-2 rounded-md shadow text-sm">
+                                    <button
+                                        className="bg-[#b0b4be] text-white px-4 py-2 rounded-md text-sm"
+                                        disabled={isOperator}
+                                    >
                                         Удалить
                                     </button>
                                 </div>
@@ -344,43 +321,36 @@ const CompanyPage = () => {
                         ))}
                     </div>
 
-                    <div className="flex items-center gap-2">
-                        {showInput ? (
-                            <>
-                                <input
-                                    type="email"
-                                    placeholder="Введите email"
-                                    value={newEmployeeEmail}
-                                    onChange={(e) => setNewEmployeeEmail(e.target.value)}
-                                    className="border border-black rounded-xl px-4 py-2 w-full sm:w-auto"
-                                />
-                                <button
-                                    onClick={handleAddEmployee}
-                                    className="bg-[#0d1b4c] text-white px-4 py-2 rounded-xl hover:opacity-90 shadow"
-                                >
-                                    Добавить
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setShowInput(false);
-                                        setNewEmployeeEmail("");
-                                    }}
-                                    className="bg-gray-300 text-black px-4 py-2 rounded-xl hover:bg-gray-400 shadow"
-                                >
-                                    Скрыть
-                                </button>
-                            </>
-                        ) : (
+                    {showInput && (
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="email"
+                                placeholder="Введите email"
+                                value={newEmployeeEmail}
+                                onChange={(e) => setNewEmployeeEmail(e.target.value)}
+                                className="border border-black rounded-xl px-4 py-2 w-full sm:w-auto"
+                                disabled={isOperator}
+                            />
                             <button
-                                onClick={handleAddClick}
-                                className="flex items-center gap-2 bg-white border border-black px-4 py-2 rounded-xl shadow hover:bg-gray-100"
+                                onClick={handleAddEmployee}
+                                className="bg-[#0d1b4c] text-white px-4 py-2 rounded-xl"
+                                disabled={isOperator}
                             >
-                                <img src={plus} alt="Добавить" className="w-5 h-5" />
-                                Добавить сотрудника
+                                Добавить
                             </button>
-                        )}
-                    </div>
+                        </div>
+                    )}
 
+                    {!showInput && (
+                        <button
+                            onClick={handleAddClick}
+                            className="flex items-center text-[#0d1b4c] font-semibold"
+                            disabled={isOperator}
+                        >
+                            <img src={plus} alt="Добавить" className="w-5 h-5 mr-2" />
+                            Добавить сотрудника
+                        </button>
+                    )}
                 </div>
             </main>
         </div>
