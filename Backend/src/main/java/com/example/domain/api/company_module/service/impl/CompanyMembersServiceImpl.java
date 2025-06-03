@@ -7,11 +7,8 @@ import com.example.database.repository.company_subscription_module.UserRepositor
 import com.example.domain.api.authentication_module.service.interfaces.CurrentUserDataService;
 import com.example.domain.api.authentication_module.service.interfaces.RoleService;
 import com.example.domain.api.company_module.dto.MemberRoleReqDto;
-import com.example.domain.api.company_module.exception_handler_company.NotFoundCompanyException;
-import com.example.domain.api.company_module.exception_handler_company.UserAlreadyInCompanyExeption;
-import com.example.domain.api.company_module.exception_handler_company.UserNotInCompanyException;
+import com.example.domain.api.company_module.exception_handler_company.*;
 import com.example.domain.api.company_module.service.CompanyMembersService;
-import com.example.domain.api.company_module.exception_handler_company.SelfMemberDisbandException;
 import com.example.domain.api.crm_module.service.DealService;
 import com.example.domain.api.subscription_module.service.SubscriptionService;
 import com.example.domain.dto.CompanyWithMembersDto;
@@ -51,7 +48,7 @@ public class CompanyMembersServiceImpl implements CompanyMembersService {
     public CompanyWithMembersDto addMember(String memberEmail, String myEmail) {
         Company company = userRepository.findByEmail(myEmail).map(User::getCompany).orElseThrow(NotFoundCompanyException::new);
         subscriptionService.addOperatorCount(company);
-        if(currentUserDataService.getUser(memberEmail).getCompany() != null){
+        if (currentUserDataService.getUser(memberEmail).getCompany() != null) {
             throw new UserAlreadyInCompanyExeption();
         }
         roleService.addRole(memberEmail, Role.OPERATOR);
@@ -65,10 +62,14 @@ public class CompanyMembersServiceImpl implements CompanyMembersService {
     @Override
     @Transactional
     public CompanyWithMembersDto removeMember(String memberEmail, String myEmail) {
-        if (Objects.equals(memberEmail, myEmail)) {
+        if (memberEmail.equals(myEmail)) {
             throw new SelfMemberDisbandException();
         }
+
         Company company = userRepository.findByEmail(myEmail).map(User::getCompany).orElseThrow(NotFoundCompanyException::new);
+        if (memberEmail.equals(company.getContactEmail())) {
+            throw new CompanyOwnerException();
+        }
         subscriptionService.subtractOperatorCount(company);
         roleService.removeRole(memberEmail, Role.OPERATOR);
         roleService.removeRole(memberEmail, Role.MANAGER);
@@ -85,20 +86,26 @@ public class CompanyMembersServiceImpl implements CompanyMembersService {
     @Override
     @Transactional
     public void addMemberRole(MemberRoleReqDto memberRoleReqDto) {
-             if(!currentUserDataService.getUser(memberRoleReqDto.getEmail().getEmail()).getCompany().equals(currentUserDataService.getUserCompany())){
-                 throw new UserNotInCompanyException();
-             }
-             roleService.addRole(memberRoleReqDto.getEmail().getEmail(), memberRoleReqDto.getRole());
+        if (!currentUserDataService.getUser(memberRoleReqDto.getEmail().getEmail()).getCompany().equals(currentUserDataService.getUserCompany())) {
+            throw new UserNotInCompanyException();
+        }
+        if (memberRoleReqDto.getEmail().getEmail().equals(currentUserDataService.getUserCompany().getContactEmail())) {
+            throw new CompanyOwnerException();
+        }
+        roleService.addRole(memberRoleReqDto.getEmail().getEmail(), memberRoleReqDto.getRole());
     }
 
     @Override
     public void removeMemberRole(MemberRoleReqDto memberRoleReqDto) {
-        if(!currentUserDataService.getUser(memberRoleReqDto.getEmail().getEmail()).getCompany().equals(currentUserDataService.getUserCompany())){
+        if (!currentUserDataService.getUser(memberRoleReqDto.getEmail().getEmail()).getCompany().equals(currentUserDataService.getUserCompany())) {
             throw new UserNotInCompanyException();
         }
-        roleService.removeRole(memberRoleReqDto.getEmail().getEmail(),memberRoleReqDto.getRole());
-    }
 
+        if (memberRoleReqDto.getEmail().getEmail().equals(currentUserDataService.getUserCompany().getContactEmail())) {
+            throw new CompanyOwnerException();
+        }
+        roleService.removeRole(memberRoleReqDto.getEmail().getEmail(), memberRoleReqDto.getRole());
+    }
 
 
 }

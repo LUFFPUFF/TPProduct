@@ -75,7 +75,7 @@ public class SecurityConfig  {
                         .requestMatchers("/api/ui/integration/**").permitAll()
                         .requestMatchers("/api/ui/predefined-answers/download-template").permitAll()
                         .requestMatchers("/api/answers/**").permitAll()
-                        .requestMatchers("/api/statistics/**").authenticated()
+                        .requestMatchers("/api/statistics/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/api/ui/chats/**").permitAll()
                         .requestMatchers("/api/subscription/extend","/api/company/add").authenticated()
@@ -83,6 +83,7 @@ public class SecurityConfig  {
                         .requestMatchers("/api/ui/**","/api/company/get").authenticated()
                         .requestMatchers("/test/no-perm").denyAll()
                         .requestMatchers("/test/auth-only").authenticated()
+                        .requestMatchers("/api/company/admin/**").hasAuthority(Role.MANAGER.getAuthority())
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exp -> exp

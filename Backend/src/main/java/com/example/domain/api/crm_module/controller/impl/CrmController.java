@@ -28,7 +28,7 @@ public class CrmController implements DealController {
     @Override
     @GetMapping("/get")
     public ResponseEntity<List<DealDto>> getDeals(@ModelAttribute FilterDealsDto filterDealsDto) {
-        return ResponseEntity.ok(dealService.getDeals(filterDealsDto));
+        return ResponseEntity.ok(dealService.getDeals(filterDealsDto,false));
     }
 
     @Override
