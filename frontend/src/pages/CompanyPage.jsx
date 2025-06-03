@@ -22,7 +22,7 @@ const CompanyPage = () => {
         return <div className="p-6">Загрузка...</div>;
     }
 
-    const isOperator = user?.roles?.includes("OPERATOR");
+    const isOperator = user?.roles?.includes("MANAGER");
 
     const handleAddClick = () => setShowInput(true);
     const mapRole = (roles) => {
