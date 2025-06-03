@@ -75,7 +75,7 @@ const DialogPage = () => {
                     </button>
                 </div>
 
-                <div className="fixed hidden md:block">
+                <div className="hidden md:block">
                     <Sidebar/>
                 </div>
 
