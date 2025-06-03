@@ -4,6 +4,7 @@ import DialogList from "../components/DialogList";
 import ChatWindow from "../components/ChatWindow";
 import ClientInfo from "../components/ClientInfo";
 import API from "../config/api";
+import { useNavigate, useParams } from "react-router-dom";
 
 const DialogPage = () => {
     const [dialogs, setDialogs] = useState([]);
@@ -11,6 +12,8 @@ const DialogPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [mobileView, setMobileView] = useState("dialogs");
+    const { id } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
         setIsLoading(true);
@@ -19,13 +22,19 @@ const DialogPage = () => {
             .then((data) => {
                 console.log("Полученные диалоги:", data)
                 setDialogs(data);
-                if (data.length > 0) {
+                if (id) {
+                    const existingDialog = data.find(d => d.id.toString() === id);
+                    if (existingDialog) {
+                        handleSelectDialog(id);
+                    }
+                } else if (data.length > 0) {
                     setSelectedDialog(data[0]);
+                    navigate(`/dialogs/${data[0].id}`);
                 }
             })
             .catch((err) => console.error("Ошибка загрузки диалогов:", err))
             .finally(() => setIsLoading(false));
-    }, []);
+    }, [id]);
 
     const handleSelectDialog = (dialogId) => {
         fetch(API.dialogs.getById(dialogId))
@@ -34,6 +43,7 @@ const DialogPage = () => {
                 console.log("Полученный диалог:", dialog);
                 setSelectedDialog(dialog);
                 setMobileView("chat");
+                navigate(`/dialogs/${dialogId}`);
             })
             .catch((err) => console.error("Ошибка загрузки диалога:", err));
     };

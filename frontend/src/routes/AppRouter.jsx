@@ -35,6 +35,7 @@ const AppRouter = () => {
                 <Route path="/archieve" element={<ArchivePage />} />
                 <Route path="/crm" element={<CrmPage />} />
                 <Route path="/dialogs" element={<DialogPage />} />
+                <Route path="/dialogs/:id" element={<DialogPage />} />
                 <Route path="/settings" element={<UserPage />} />
                 <Route path="/stats" element={<StatsPage />} />
                 <Route path="/company" element={<CompanyPage />} />
