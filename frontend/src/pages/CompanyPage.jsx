@@ -293,8 +293,9 @@ const CompanyPage = () => {
                                 </>
                             ) : (
                                 <button
-                                    onClick={!isOperator ? handleEditCompany : undefined}
+                                    onClick={handleEditCompany}
                                     className="bg-white border border-black px-4 py-2 rounded-full shadow-[0px_4px_4px_rgba(0,0,0,0.25)] hover:bg-gray-100"
+                                    disabled={!isOperator}
                                 >
                                     Редактировать
                                 </button>
