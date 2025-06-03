@@ -1,7 +1,9 @@
 package com.example.domain.api.statistics_module.service.impl;
 
+import com.example.database.model.chats_messages_module.chat.ChatChannel;
 import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.domain.api.statistics_module.metrics.client.PrometheusQueryClient;
+import com.example.domain.api.statistics_module.model.chat.ChannelSpecificStatsDTO;
 import com.example.domain.api.statistics_module.model.chat.ChatSummaryStatsDTO;
 import com.example.domain.api.statistics_module.model.metric.MetricTimeSeriesDTO;
 import com.example.domain.api.statistics_module.model.metric.StatisticsQueryRequestDTO;
@@ -59,65 +61,64 @@ public class ChatStatisticsServiceImpl extends AbstractStatisticsService impleme
                 String.format("sum(increase(%s%s%s))", CHATS_CREATED_TOTAL, companyFilter, rangeVectorSelector),
                 "Total Created Chats"
         );
-
         Mono<Long> totalClosedMono = querySingleScalarInternal(
-                String.format("sum(round(rate(%s%s%s) * %d))",
-                        CHATS_CLOSED_TOTAL,
-                        companyFilter,
-                        rangeVectorSelector,
-                        parseTimeRangeToSeconds(request.getTimeRange())),
+                String.format("sum(round(rate(%s%s%s) * %d))", CHATS_CLOSED_TOTAL, companyFilter, rangeVectorSelector, parseTimeRangeToSeconds(request.getTimeRange())),
                 "Total Closed Chats (via rate)"
         );
-
         Mono<Long> totalMessagesMono = querySingleScalarInternal(
                 String.format("sum(increase(%s%s%s))", MESSAGES_SENT_TOTAL, companyFilter, rangeVectorSelector),
                 "Total Messages Sent"
         );
+        Mono<Double> avgDurationMono = queryScalarDouble(
+                String.format("(sum(increase(%1$s%2$s%3$s)) OR on() vector(0)) / (sum(increase(%4$s%2$s%3$s)) > 0 OR on() vector(1))",
+                        CHAT_DURATION_SECONDS_SUM, companyFilter, rangeVectorSelector, CHAT_DURATION_SECONDS_COUNT),
+                "Average Chat Duration"
+        ).onErrorReturn(Double.NaN);
+        Mono<Double> avgAssignmentTimeMono = queryScalarDouble(
+                String.format("(sum(increase(%1$s%2$s%3$s)) OR on() vector(0)) / (sum(increase(%4$s%2$s%3$s)) > 0 OR on() vector(1))",
+                        CHAT_ASSIGNMENT_TIME_SECONDS_SUM, companyFilter, rangeVectorSelector, CHAT_ASSIGNMENT_TIME_SECONDS_COUNT),
+                "Average Assignment Time"
+        ).onErrorReturn(Double.NaN);
+        Mono<Double> avgFirstResponseTimeMono = queryScalarDouble(
+                String.format("(sum(increase(%1$s%2$s%3$s)) OR on() vector(0)) / (sum(increase(%4$s%2$s%3$s)) > 0 OR on() vector(1))",
+                        CHAT_FIRST_RESPONSE_TIME_SECONDS_SUM, companyFilter, rangeVectorSelector, CHAT_FIRST_RESPONSE_TIME_SECONDS_COUNT),
+                "Average First Operator Response Time"
+        ).onErrorReturn(Double.NaN);
+        Mono<Map<String, Long>> currentByStatusMono = queryVectorAndParseToMap(
+                String.format("sum by (%s) (%s%s)", TAG_STATUS, CURRENT_CHATS_GAUGE, companyFilter),
+                TAG_STATUS, "Current Chats By Status"
+        ).onErrorReturn(Collections.emptyMap());
 
-        String avgDurationQuery = String.format(
-                "(sum(increase(%s%s%s)) OR on() vector(0)) / (sum(increase(%s%s%s)) > 0 OR on() vector(1))",
-                CHAT_DURATION_SECONDS_SUM, companyFilter, rangeVectorSelector,
-                CHAT_DURATION_SECONDS_COUNT, companyFilter, rangeVectorSelector
-        );
-
-        Mono<Double> avgDurationMono = queryScalarDouble(avgDurationQuery, "Average Chat Duration")
-                .onErrorReturn(Double.NaN);
-
-        String avgAssignmentTimeQuery = String.format(
-                "(sum(increase(%s%s%s)) OR on() vector(0)) / (sum(increase(%s%s%s)) > 0 OR on() vector(1))",
-                CHAT_ASSIGNMENT_TIME_SECONDS_SUM, companyFilter, rangeVectorSelector,
-                CHAT_ASSIGNMENT_TIME_SECONDS_COUNT, companyFilter, rangeVectorSelector
-        );
-        Mono<Double> avgAssignmentTimeMono = queryScalarDouble(avgAssignmentTimeQuery, "Average Assignment Time")
-                .onErrorReturn(Double.NaN);
-
-        String avgFirstResponseTimeQuery = String.format(
-                "(sum(increase(%s%s%s)) OR on() vector(0)) / (sum(increase(%s%s%s)) > 0 OR on() vector(1))",
-                CHAT_FIRST_RESPONSE_TIME_SECONDS_SUM, companyFilter, rangeVectorSelector,
-                CHAT_FIRST_RESPONSE_TIME_SECONDS_COUNT, companyFilter, rangeVectorSelector
-        );
-        Mono<Double> avgFirstResponseTimeMono = queryScalarDouble(avgFirstResponseTimeQuery, "Average First Operator Response Time")
-                .onErrorReturn(Double.NaN);
 
         String createdByChannelQuery = String.format("sum by (%s) (increase(%s%s%s))",
-                TAG_CHANNEL,
-                CHATS_CREATED_TOTAL,
-                companyFilter,
-                rangeVectorSelector);
-        Mono<Map<String, Long>> createdByChannelMono = queryVectorAndParseToMap(createdByChannelQuery, TAG_CHANNEL, "Created Chats By Channel")
+                TAG_CHANNEL, CHATS_CREATED_TOTAL, companyFilter, rangeVectorSelector);
+        Mono<Map<String, Long>> createdByChannelMapMono = queryVectorAndParseToMap(createdByChannelQuery, TAG_CHANNEL, "Created Chats By Channel Map")
                 .onErrorReturn(Collections.emptyMap());
 
-        String currentByStatusQuery = String.format("sum by (%s) (%s%s)",
-                TAG_STATUS,
-                CURRENT_CHATS_GAUGE,
-                companyFilter
+        String messagesByChannelQuery = String.format("sum by (%s) (increase(%s%s%s))",
+                TAG_CHANNEL, MESSAGES_SENT_TOTAL, companyFilter, rangeVectorSelector);
+        Mono<Map<String, Long>> messagesByChannelMapMono = queryVectorAndParseToMap(messagesByChannelQuery, TAG_CHANNEL, "Messages Sent By Channel Map")
+                .onErrorReturn(Collections.emptyMap());
+
+        String avgDurationByChannelQuery = String.format(
+                "(sum by (%1$s) (increase(%2$s%3$s%4$s)) OR on(%1$s) vector(0)) / (sum by (%1$s) (increase(%5$s%3$s%4$s)) > 0 OR on(%1$s) vector(1))",
+                TAG_CHANNEL, CHAT_DURATION_SECONDS_SUM, companyFilter, rangeVectorSelector, CHAT_DURATION_SECONDS_COUNT
         );
-        Mono<Map<String, Long>> currentByStatusMono = queryVectorAndParseToMap(currentByStatusQuery, TAG_STATUS, "Current Chats By Status")
+        Mono<Map<String, Double>> avgDurationByChannelMapMono = queryVectorAndParseToMapDouble(avgDurationByChannelQuery, TAG_CHANNEL, "Avg Chat Duration By Channel Map")
+                .onErrorReturn(Collections.emptyMap());
+
+        String avgFirstResponseByChannelQuery = String.format(
+                "(sum by (%1$s) (increase(%2$s%3$s%4$s)) OR on(%1$s) vector(0)) / (sum by (%1$s) (increase(%5$s%3$s%4$s)) > 0 OR on(%1$s) vector(1))",
+                TAG_CHANNEL, CHAT_FIRST_RESPONSE_TIME_SECONDS_SUM, companyFilter, rangeVectorSelector, CHAT_FIRST_RESPONSE_TIME_SECONDS_COUNT
+        );
+        Mono<Map<String, Double>> avgFirstResponseByChannelMapMono = queryVectorAndParseToMapDouble(avgFirstResponseByChannelQuery, TAG_CHANNEL, "Avg First Response Time By Channel Map")
                 .onErrorReturn(Collections.emptyMap());
 
         List<Mono<?>> monos = Arrays.asList(
                 totalCreatedMono, totalClosedMono, totalMessagesMono, avgDurationMono,
-                avgAssignmentTimeMono, avgFirstResponseTimeMono, createdByChannelMono, currentByStatusMono
+                avgAssignmentTimeMono, avgFirstResponseTimeMono, currentByStatusMono,
+                createdByChannelMapMono, messagesByChannelMapMono,
+                avgDurationByChannelMapMono, avgFirstResponseByChannelMapMono
         );
 
 
@@ -125,26 +126,41 @@ public class ChatStatisticsServiceImpl extends AbstractStatisticsService impleme
                     Long totalCreated = (Long) results[0];
                     Long totalClosed = (Long) results[1];
                     Long totalMessages = (Long) results[2];
-                    Double avgDuration = (Double) results[3];
-                    Double avgAssignmentTime = (Double) results[4];
-                    Double avgFirstResponseTime = (Double) results[5];
+                    Double avgDurationOverall = (Double) results[3];
+                    Double avgAssignmentTimeOverall = (Double) results[4];
+                    Double avgFirstResponseTimeOverall = (Double) results[5];
                     @SuppressWarnings("unchecked")
-                    Map<String, Long> createdByChannel = (Map<String, Long>) results[6];
-                    @SuppressWarnings("unchecked")
-                    Map<String, Long> currentByStatus = (Map<String, Long>) results[7];
+                    Map<String, Long> currentByStatus = (Map<String, Long>) results[6];
 
-                    return ChatSummaryStatsDTO.builder()
+                    @SuppressWarnings("unchecked")
+                    Map<String, Long> createdByChannelMap = (Map<String, Long>) results[7];
+                    @SuppressWarnings("unchecked")
+                    Map<String, Long> messagesByChannelMap = (Map<String, Long>) results[8];
+                    @SuppressWarnings("unchecked")
+                    Map<String, Double> avgDurationByChannelMap = (Map<String, Double>) results[9];
+                    @SuppressWarnings("unchecked")
+                    Map<String, Double> avgFirstResponseByChannelMap = (Map<String, Double>) results[10];
+
+
+                    ChatSummaryStatsDTO summaryBuilder = ChatSummaryStatsDTO.builder()
                             .companyId(String.valueOf(userContext.getCompanyId()))
                             .timeRange(request.getTimeRange())
                             .totalChatsCreated(totalCreated)
                             .totalChatsClosed(totalClosed)
                             .totalMessagesSent(totalMessages)
-                            .averageChatDurationSeconds((avgDuration == null || avgDuration.isNaN() || avgDuration.isInfinite()) ? null : avgDuration)
-                            .averageAssignmentTimeSeconds((avgAssignmentTime == null || avgAssignmentTime.isNaN() || avgAssignmentTime.isInfinite()) ? null : avgAssignmentTime)
-                            .averageFirstResponseTimeSeconds((avgFirstResponseTime == null || avgFirstResponseTime.isNaN() || avgFirstResponseTime.isInfinite()) ? null : avgFirstResponseTime)
-                            .createdChatsByChannel(createdByChannel.isEmpty() ? null : createdByChannel)
+                            .averageChatDurationSeconds(orNull(avgDurationOverall))
+                            .averageAssignmentTimeSeconds(orNull(avgAssignmentTimeOverall))
+                            .averageFirstResponseTimeSeconds(orNull(avgFirstResponseTimeOverall))
                             .currentChatsByStatus(currentByStatus.isEmpty() ? null : currentByStatus)
                             .build();
+
+                    summaryBuilder.setTelegramStats(buildChannelStats(ChatChannel.Telegram, createdByChannelMap, messagesByChannelMap, avgDurationByChannelMap, avgFirstResponseByChannelMap));
+                    summaryBuilder.setVkStats(buildChannelStats(ChatChannel.VK, createdByChannelMap, messagesByChannelMap, avgDurationByChannelMap, avgFirstResponseByChannelMap));
+                    summaryBuilder.setEmailStats(buildChannelStats(ChatChannel.Email, createdByChannelMap, messagesByChannelMap, avgDurationByChannelMap, avgFirstResponseByChannelMap));
+                    summaryBuilder.setWhatsAppStats(buildChannelStats(ChatChannel.WhatsApp, createdByChannelMap, messagesByChannelMap, avgDurationByChannelMap, avgFirstResponseByChannelMap));
+                    summaryBuilder.setDialogXChatStats(buildChannelStats(ChatChannel.DialogX_Chat, createdByChannelMap, messagesByChannelMap, avgDurationByChannelMap, avgFirstResponseByChannelMap));
+
+                    return summaryBuilder;
                 })
                 .doOnSuccess(summary -> log.info("Built chat summary: {}", summary))
                 .doOnError(e -> log.error("Error building chat summary for request {}: {}", request, e.getMessage(), e));
@@ -309,10 +325,70 @@ public class ChatStatisticsServiceImpl extends AbstractStatisticsService impleme
                 });
     }
 
+    protected Mono<Map<String, Double>> queryVectorAndParseToMapDouble(String promqlQuery, String tagKeyForMap, String queryDescription) {
+        log.info("[STAT_QUERY_MAP_DBL] Executing Vector Query for [{}]: PromQL='{}'", queryDescription, promqlQuery);
+        return prometheusClient.query(promqlQuery)
+                .map(jsonNode -> {
+                    Map<String, Double> map = new HashMap<>();
+                    if (isResultEmptyInternal(jsonNode)) {
+                        log.warn("[STAT_QUERY_MAP_DBL] Result is considered empty for [{}]. Query: {}. Returning empty map.", queryDescription, promqlQuery);
+                        return map;
+                    }
+                    JsonNode resultDataArray = jsonNode.path("data").path("result");
+                    if (resultDataArray.isEmpty()){
+                        log.warn("[STAT_QUERY_MAP_DBL] Prometheus 'result' array is present but empty for [{}]. Query: {}. Returning empty map.", queryDescription, promqlQuery);
+                        return map;
+                    }
+
+                    for (JsonNode item : resultDataArray) {
+                        String key = item.path("metric").path(tagKeyForMap).asText("UNKNOWN_" + tagKeyForMap.toUpperCase());
+                        JsonNode valueNode = item.path("value").path(1);
+                        Double value = null;
+                        if (!valueNode.isMissingNode() && valueNode.isTextual()) {
+                            String valueStr = valueNode.asText();
+                            if (!"NaN".equalsIgnoreCase(valueStr) && !"Inf".equalsIgnoreCase(valueStr) && !"-Inf".equalsIgnoreCase(valueStr)) {
+                                try {
+                                    value = Double.parseDouble(valueStr);
+                                } catch (NumberFormatException e) {
+                                    log.warn("[STAT_QUERY_MAP_DBL] Could not parse value for [{}], key '{}', value '{}'", queryDescription, key, valueStr);
+                                }
+                            }
+                        }
+                        if (value != null) {
+                            map.put(key, value);
+                        }
+                    }
+                    log.info("[STAT_QUERY_MAP_DBL] Parsed map for [{}]: {}", queryDescription, map);
+                    return map;
+                })
+                .onErrorResume(e -> {
+                    log.error("[STAT_QUERY_MAP_DBL] Error executing Prometheus vector query for [{}]. Query: {}: {}", queryDescription, promqlQuery, e.getMessage(), e);
+                    return Mono.just(Collections.emptyMap());
+                });
+    }
+
+    private ChannelSpecificStatsDTO buildChannelStats(ChatChannel channel,
+                                                      Map<String, Long> createdMap,
+                                                      Map<String, Long> messagesMap,
+                                                      Map<String, Double> avgDurationMap,
+                                                      Map<String, Double> avgFirstResponseMap) {
+        String channelName = channel.name();
+        return ChannelSpecificStatsDTO.builder()
+                .chatsCreated(createdMap.getOrDefault(channelName, 0L))
+                .messagesSent(messagesMap.getOrDefault(channelName, 0L))
+                .averageChatDurationSeconds(orNull(avgDurationMap.get(channelName)))
+                .averageFirstResponseTimeSeconds(orNull(avgFirstResponseMap.get(channelName)))
+                .build();
+    }
+
     private String buildCompanyFilter(String companyId) {
         return (companyId == null || companyId.isBlank() || "all".equalsIgnoreCase(companyId))
                 ? ""
                 : String.format("{company_id=\"%s\"}", companyId);
+    }
+
+    private Double orNull(Double value) {
+        return (value == null || value.isNaN() || value.isInfinite()) ? null : value;
     }
 
     private long parseTimeRangeToSeconds(String timeRange) {

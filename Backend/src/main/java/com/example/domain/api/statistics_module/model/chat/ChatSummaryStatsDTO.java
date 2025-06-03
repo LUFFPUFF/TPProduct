@@ -11,12 +11,19 @@ import java.util.Map;
 public class ChatSummaryStatsDTO {
     private String companyId;
     private String timeRange;
+
     private Long totalChatsCreated;
     private Long totalChatsClosed;
     private Long totalMessagesSent;
     private Double averageChatDurationSeconds;
     private Double averageAssignmentTimeSeconds;
     private Double averageFirstResponseTimeSeconds;
+
     private Map<String, Long> currentChatsByStatus;
-    private Map<String, Long> createdChatsByChannel;
+
+    private ChannelSpecificStatsDTO telegramStats;
+    private ChannelSpecificStatsDTO vkStats;
+    private ChannelSpecificStatsDTO emailStats;
+    private ChannelSpecificStatsDTO whatsAppStats;
+    private ChannelSpecificStatsDTO dialogXChatStats;
 }

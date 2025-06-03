@@ -20,12 +20,6 @@ public abstract class AbstractStatisticsService {
         return querySingleScalarInternal(promqlQuery, queryDescription);
     }
 
-    protected Mono<Long> queryTotalScalar(String metricName, String rangeVectorSelector, String queryDescription) {
-        String promqlQuery = String.format("sum(increase(%s%s))", metricName, rangeVectorSelector);
-        return querySingleScalarInternal(promqlQuery, queryDescription);
-    }
-
-
     protected Mono<Double> queryScalarDouble(String promqlQuery, String queryDescription) {
         log.debug("Executing scalar double query for [{}]: {}", queryDescription, promqlQuery);
         return prometheusClient.query(promqlQuery)
