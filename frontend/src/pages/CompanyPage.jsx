@@ -6,7 +6,7 @@ import { useAuth } from "../utils/AuthContext.jsx";
 
 const CompanyPage = () => {
     const { user } = useAuth();
-    const isOperator = user?.roles?.includes("OPERATOR");
+    const isOperator = user?.roles?.includes("MANAGER");
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [employees, setEmployees] = useState([]);

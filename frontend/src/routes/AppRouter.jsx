@@ -37,6 +37,7 @@ const AppRouter = () => {
                 <Route path="/dialogs" element={<DialogPage />} />
                 <Route path="/settings" element={<UserPage />} />
                 <Route path="/stats" element={<StatsPage />} />
+                <Route path="/company" element={<CompanyPage />} />
             </Route>
 
             {/* Защищённые + ограниченные по ролям */}
@@ -51,7 +52,6 @@ const AppRouter = () => {
                 <Route path="/subscription" element={<SubscriptionsPage />} />
                 <Route path="/integration" element={<IntegrationsPage />} />
                 <Route path="/templates" element={<TemplatesPage />} />
-                <Route path="/company" element={<CompanyPage />} />
             </Route>
         </Routes>
     );
