@@ -471,14 +471,14 @@ const CrmPage = () => {
                                 placeholder="Минимальная цена"
                                 className="border bg-white rounded px-3 py-2 w-full"
                                 value={filters.minAmount}
-                                onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })}
+                                onChange={(e) => setFilters({ ...filters, minAmount: e.target.value })}
                             />
                             <input
                                 type="number"
                                 placeholder="Максимальная цена"
                                 className="border bg-white rounded px-3 py-2 w-full"
                                 value={filters.maxAmount}
-                                onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
+                                onChange={(e) => setFilters({ ...filters, maxAmount: e.target.value })}
                             />
                         </div>
                     )}
