@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Footer from "../components/Footer.jsx";
 import useImage from "../assets/HomePageMan.jpg";
 import { useAuth } from "../utils/AuthContext";
@@ -7,6 +7,35 @@ export const HomePage = () => {
     const { user } = useAuth();
     const email = user?.email || null;
 
+    useEffect(() => {
+        // Проверяем, не загружен ли уже скрипт
+        if (document.getElementById("yandex-metrika")) return;
+
+        const script = document.createElement("script");
+        script.id = "yandex-metrika";
+        script.type = "text/javascript";
+        script.innerHTML = `
+            (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {
+                if (document.scripts[j].src === r) { return; }
+            }
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],
+            k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+            })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+            ym(102385915, "init", {
+                clickmap:true,
+                trackLinks:true,
+                accurateTrackBounce:true
+            });
+        `;
+        document.head.appendChild(script);
+
+        const noscript = document.createElement("noscript");
+        noscript.innerHTML = `<div><img src="https://mc.yandex.ru/watch/102385915" style="position:absolute; left:-9999px;" alt="" /></div>`;
+        document.body.appendChild(noscript);
+    }, []);
     return (
         <div className="bg-[#E6E5EA]">
             <header className="bg-[#092155] text-white py-6 px-6 md:py-11 md:px-11 flex flex-col md:flex-row justify-between items-center text-center md:text-left shadow-md">
