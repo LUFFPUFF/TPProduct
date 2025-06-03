@@ -65,7 +65,7 @@ public class CompanyMembersServiceImpl implements CompanyMembersService {
     @Override
     @Transactional
     public CompanyWithMembersDto removeMember(String memberEmail, String myEmail) {
-        if (Objects.equals(memberEmail, myEmail)) {
+        if (memberEmail.equals(myEmail)) {
             throw new SelfMemberDisbandException();
         }
         Company company = userRepository.findByEmail(myEmail).map(User::getCompany).orElseThrow(NotFoundCompanyException::new);

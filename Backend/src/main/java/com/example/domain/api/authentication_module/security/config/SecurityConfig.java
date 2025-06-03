@@ -83,6 +83,7 @@ public class SecurityConfig  {
                         .requestMatchers("/api/ui/**","/api/company/get").authenticated()
                         .requestMatchers("/test/no-perm").denyAll()
                         .requestMatchers("/test/auth-only").authenticated()
+                        .requestMatchers("/api/company/admin/**").hasAuthority(Role.MANAGER.getAuthority())
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exp -> exp
