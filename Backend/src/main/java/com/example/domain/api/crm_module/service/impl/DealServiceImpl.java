@@ -67,7 +67,7 @@ public class DealServiceImpl implements DealService {
     }
     @Override
     @Transactional
-    public List<DealDto> getDeals(FilterDealsDto filterDealsDto) {
+    public List<DealDto> getDeals(FilterDealsDto filterDealsDto, boolean service) {
         boolean isManager = currentUserDataService.hasRole(Role.MANAGER);
         List<DealDto> deals;
         if(filterDealsDto.getEmail() == null && !isManager) {
@@ -78,8 +78,9 @@ public class DealServiceImpl implements DealService {
             throw new AccessDeniedFilterDeals();
         }else if(filterDealsDto.getEmail() == null){
             deals = dealRepository.findByCompany(currentUserDataService.getUser().getCompany().getId());
+
         } else {
-            if(!currentUserDataService.getUserCompany().equals(currentUserDataService.getUser(filterDealsDto.getEmail()).getCompany())){
+            if(!service && !currentUserDataService.getUserCompany().equals(currentUserDataService.getUser(filterDealsDto.getEmail()).getCompany())){
                 throw new UserNotInCompanyException();
             }
             deals = dealRepository.findDealDataByUserEmail(filterDealsDto.getEmail());
@@ -117,7 +118,7 @@ public class DealServiceImpl implements DealService {
            setDealsToArchive();
            List<User> users = userRepository.findByCompanyId(currentUserDataService.getUserCompany().getId());
            Random random = new Random();
-           getDeals(FilterDealsDto.builder().email(email).build())
+           getDeals(FilterDealsDto.builder().email(email).build(),true)
                    .forEach(deal ->{
                        User user = users.get(random.nextInt(users.size()));
                        dealRepository.updateDealUser(user,deal.getId());
@@ -128,14 +129,14 @@ public class DealServiceImpl implements DealService {
     public List<DealDto> setDealsToArchive() {
         dealRepository.setTasksToArchive(currentUserDataService.getUserEmail(), LocalDateTime.now());
         dealRepository.setDealsToArchive(currentUserDataService.getUserEmail());
-        return getDeals(FilterDealsDto.builder().build());
+        return getDeals(FilterDealsDto.builder().build(),false);
     }
     @Transactional
     @Override
     public List<DealDto> setAdminDealsToArchive(String email) {
         dealRepository.setTasksToArchive(email, LocalDateTime.now());
         dealRepository.setDealsToArchive(email);
-        return getDeals(FilterDealsDto.builder().email(email).build());
+        return getDeals(FilterDealsDto.builder().email(email).build(),false);
     }
 
     @Override

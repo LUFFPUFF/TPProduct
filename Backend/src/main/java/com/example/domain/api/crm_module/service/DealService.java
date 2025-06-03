@@ -11,7 +11,7 @@ import java.util.List;
 public interface DealService {
     DealDto createDeal(CreateDealDtoReq dealDto);
     DealDto getDeal(Integer id);
-    List<DealDto> getDeals(FilterDealsDto filterDealsDto);
+    List<DealDto> getDeals(FilterDealsDto filterDealsDto, boolean service);
     void changeDealUser(String email);
     DealDto changeDealStage(ChangeDealStageReq dealDto);
     List<DealDto> setDealsToArchive();
