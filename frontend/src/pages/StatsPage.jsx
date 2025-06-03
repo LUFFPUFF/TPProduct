@@ -1,7 +1,10 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar.jsx";
 import positive from "../assets/positive.png";
 import negative from "../assets/negative.png";
+import API from "../config/api.js";
+
+const DEFAULT_RANGE = "1h";
 
 const StatCard = ({ title, value, subtitle, trend, trendColor, note, iconSrc }) => (
     <div className="bg-[#f9fafb] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] rounded-xl px-6 py-4 border-black border-2 flex-1 min-w-[250px] max-w-full">
@@ -23,7 +26,7 @@ const StatCard = ({ title, value, subtitle, trend, trendColor, note, iconSrc }) 
 );
 
 const MessengerStat = ({ name, value, color }) => (
-    <div className="space-y-1 ">
+    <div className="space-y-1">
         <div className="flex justify-between">
             <span className="font-medium text-sm">{name}</span>
             <span className="text-sm font-semibold text-black">{value}</span>
@@ -36,9 +39,35 @@ const MessengerStat = ({ name, value, color }) => (
 
 const StatsPage = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [timeRange, setTimeRange] = useState(DEFAULT_RANGE);
+    const [statistics, setStatistics] = useState(null);
+
+    const fetchStatistics = async (range = DEFAULT_RANGE) => {
+        try {
+            const response = await fetch(API.stats.get(range));
+            const data = await response.json();
+            console.log("📊 Ответ от API:", data);
+            setStatistics(data);
+        } catch (error) {
+            console.error("Ошибка при загрузке статистики:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchStatistics(timeRange);
+    }, [timeRange]);
+
+    const timeRanges = [
+        { label: "30 минут", value: "30m" },
+        { label: "1 час", value: "1h" },
+        { label: "6 часов", value: "6h" },
+        { label: "1 день", value: "1d" },
+        { label: "7 дней", value: "7d" }
+    ];
 
     return (
         <div className="flex flex-col lg:flex-row">
+            {/* Sidebar toggle */}
             <div className="md:hidden fixed top-4 left-4 z-50">
                 <button
                     onClick={() => setIsSidebarOpen(true)}
@@ -46,15 +75,17 @@ const StatsPage = () => {
                     aria-label="Открыть меню"
                 >
                     <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
             </div>
 
+            {/* Sidebar for desktop */}
             <div className="hidden md:block fixed top-0 left-0 h-full w-64 z-40 bg-white shadow-lg border-r border-gray-200">
                 <Sidebar />
             </div>
 
+            {/* Sidebar for mobile */}
             {isSidebarOpen && (
                 <>
                     <div
@@ -78,6 +109,8 @@ const StatsPage = () => {
                     </div>
                 </>
             )}
+
+            {/* Main content */}
             <main className="flex-1 bg-[#e6e5ea] p-4 md:p-6 pt-16 sm:pt-6 lg:p-10 space-y-6 md:ml-64">
                 <h1 className="text-2xl md:text-3xl font-bold">Общая статистика</h1>
                 <p className="text-black max-w-3xl !text-lg md:text-base">
@@ -85,10 +118,15 @@ const StatsPage = () => {
                 </p>
 
                 <div className="flex flex-wrap gap-2">
-                    {["Сегодня", "Вчера", "Неделя", "Месяц", "Год"].map((label) => (
+                    {timeRanges.map(({ label, value }) => (
                         <button
-                            key={label}
-                            className="bg-[#f3f4f6] px-3 py-0.5 border-2 border-black rounded-2xl hover:bg-gray-50 text-sm md:text-base font-medium"
+                            key={value}
+                            onClick={() => setTimeRange(value)}
+                            className={`px-3 py-0.5 border-2 rounded-2xl text-sm md:text-base font-medium ${
+                                timeRange === value
+                                    ? "bg-black text-white border-black"
+                                    : "bg-[#f3f4f6] hover:bg-gray-100 border-black"
+                            }`}
                         >
                             {label}
                         </button>
@@ -97,42 +135,49 @@ const StatsPage = () => {
 
                 <div className="bg-[#f3f4f6] p-4 md:p-6 rounded-2xl space-y-6 border border-gray-300">
                     <div className="flex flex-col gap-4">
-                        <StatCard
-                            title="Пропущенные диалоги"
-                            value="48 диалогов из 2841"
-                            subtitle="3% → 2%"
-                            trend="+1%"
-                            trendColor="green"
-                            note="Пропущенные диалоги могли привести к потере клиентов."
-                            iconSrc={positive}
-                        />
-                        <StatCard
-                            title="Среднее время ответа операторов"
-                            value="27 сек."
-                            subtitle="Ухудшение на 7 сек."
-                            trend="34 сек. → 27 сек."
-                            trendColor="red"
-                            note="Оптимальное время ответа — до 15 секунд."
-                            iconSrc={negative}
-                        />
-                        <StatCard
-                            title="Отработанные чаты"
-                            value="Стало 412 чатов"
-                            subtitle="Было 375 чатов"
-                            trend="+9%"
-                            trendColor="green"
-                            note="Хороший рост!"
-                            iconSrc={positive}
-                        />
-                        <StatCard
-                            title="Рабочее время операторов"
-                            value="7 ч. 42 мин."
-                            subtitle="Средняя активность в сети"
-                            trend="+3%"
-                            trendColor="green"
-                            note="Если клиенты не берут трубку, попробуйте напоминания."
-                            iconSrc={positive}
-                        />
+                        {statistics && (
+                            <>
+                                <StatCard
+                                    title="Пропущенные диалоги"
+                                    value={`${statistics.chat.totalChatsCreated - statistics.chat.totalChatsClosed} из ${statistics.chat.totalChatsCreated}`}
+                                    subtitle="Сравнение с предыдущим периодом недоступно"
+                                    trend="Нет данных"
+                                    trendColor="red"
+                                    note="Пропущенные диалоги могли привести к потере клиентов."
+                                    iconSrc={positive}
+                                />
+
+                                <StatCard
+                                    title="Среднее время ответа операторов"
+                                    value={`${Math.round(statistics.chat.averageFirstResponseTimeSeconds)} сек.`}
+                                    subtitle="Предыдущие данные недоступны"
+                                    trend="Нет сравнения"
+                                    trendColor="green"
+                                    note="Оптимальное время ответа — до 15 секунд."
+                                    iconSrc={negative}
+                                />
+
+                                <StatCard
+                                    title="Отработанные чаты"
+                                    value={`${statistics.chat.totalChatsClosed} чатов`}
+                                    subtitle={`Создано: ${statistics.chat.totalChatsCreated}`}
+                                    trend={`${Math.round((statistics.chat.totalChatsClosed / (statistics.chat.totalChatsCreated || 1)) * 100)}% закрытых`}
+                                    trendColor="green"
+                                    note="Хороший результат при высокой закрываемости."
+                                    iconSrc={positive}
+                                />
+
+                                <StatCard
+                                    title="Рабочее время операторов"
+                                    value="—"
+                                    subtitle="Пока не рассчитывается"
+                                    trend="—"
+                                    trendColor="green"
+                                    note="Можно подключить расчёт по сессиям онлайн."
+                                    iconSrc={positive}
+                                />
+                            </>
+                        )}
                     </div>
 
                     <div className="bg-[#f9fafb] rounded-xl shadow-[0px_4px_4px_rgba(0,0,0,0.25)] p-4 md:p-6 space-y-6 border-2">
