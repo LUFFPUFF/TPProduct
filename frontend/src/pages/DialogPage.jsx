@@ -20,14 +20,19 @@ const DialogPage = () => {
         fetch(API.dialogs.getAll)
             .then((res) => res.json())
             .then((data) => {
-                console.log("Полученные диалоги:", data)
+                console.log("Полученные диалоги:", data);
                 setDialogs(data);
+
                 if (id) {
                     const existingDialog = data.find(d => d.id.toString() === id);
                     if (existingDialog) {
-                        handleSelectDialog(id);
+                        console.log(`Открыт чат из URL: dialogs/${id}`);
+                        setSelectedDialog(existingDialog);
+                    } else {
+                        console.warn(`Диалог с id ${id} не найден`);
                     }
                 } else if (data.length > 0) {
+                    console.log("Автовыбор первого диалога");
                     setSelectedDialog(data[0]);
                     navigate(`/dialogs/${data[0].id}`);
                 }
@@ -37,6 +42,12 @@ const DialogPage = () => {
     }, [id]);
 
     const handleSelectDialog = (dialogId) => {
+        if (selectedDialog?.id?.toString() === dialogId?.toString()) {
+            return;
+        }
+
+        console.log(`Выбран диалог вручную: dialogs/${dialogId}`);
+
         fetch(API.dialogs.getById(dialogId))
             .then((res) => res.json())
             .then((dialog) => {
