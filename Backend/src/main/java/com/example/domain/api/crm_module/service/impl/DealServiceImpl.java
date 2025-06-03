@@ -71,9 +71,7 @@ public class DealServiceImpl implements DealService {
         boolean isManager = currentUserDataService.hasRole(Role.MANAGER);
         List<DealDto> deals;
         if(filterDealsDto.getEmail() == null && !isManager) {
-            if(!currentUserDataService.getUserCompany().equals(currentUserDataService.getUser(filterDealsDto.getEmail()).getCompany())){
-                throw new UserNotInCompanyException();
-            }
+
             filterDealsDto.setEmail(currentUserDataService.getUserEmail());
             deals = dealRepository.findDealDataByUserEmail(filterDealsDto.getEmail());
         }else if(filterDealsDto.getEmail() != null && !isManager) {
@@ -81,6 +79,9 @@ public class DealServiceImpl implements DealService {
         }else if(filterDealsDto.getEmail() == null){
             deals = dealRepository.findByCompany(currentUserDataService.getUser().getCompany().getId());
         } else {
+            if(!currentUserDataService.getUserCompany().equals(currentUserDataService.getUser(filterDealsDto.getEmail()).getCompany())){
+                throw new UserNotInCompanyException();
+            }
             deals = dealRepository.findDealDataByUserEmail(filterDealsDto.getEmail());
         }
         return deals.stream()
@@ -142,9 +143,6 @@ public class DealServiceImpl implements DealService {
         boolean isManager = currentUserDataService.hasRole(Role.MANAGER);
         List<DealArchiveDto> deals;
         if(archiveDto.getEmail() == null && !isManager) {
-            if(!currentUserDataService.getUserCompany().equals(currentUserDataService.getUser(archiveDto.getEmail()).getCompany())){
-                throw new UserNotInCompanyException();
-            }
             archiveDto.setEmail(currentUserDataService.getUserEmail());
             deals = dealRepository.findArchiveDataByUserEmail(archiveDto.getEmail());
 
@@ -153,6 +151,10 @@ public class DealServiceImpl implements DealService {
         }else if(archiveDto.getEmail() == null){
             deals = dealRepository.findArchiveDataByCompany(currentUserDataService.getUser().getCompany().getId());
         } else {
+            if(!currentUserDataService.getUserCompany().getId()
+                    .equals(currentUserDataService.getUser(archiveDto.getEmail()).getCompany().getId())){
+                throw new UserNotInCompanyException();
+            }
             deals = dealRepository.findArchiveDataByUserEmail(archiveDto.getEmail());
         }
 
