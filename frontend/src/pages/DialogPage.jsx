@@ -62,7 +62,7 @@ const DialogPage = () => {
     }
 
         return (
-            <div className="flex flex-col md:flex-row min-h-screen bg-[#e6e5ea] overflow-auto">
+            <div className="flex flex-col md:pl-64 min-h-screen bg-[#e6e5ea] overflow-auto">
                 <div className="md:hidden p-4">
                     <button
                         onClick={() => setIsSidebarOpen(true)}
@@ -75,7 +75,7 @@ const DialogPage = () => {
                     </button>
                 </div>
 
-                <div className="hidden md:block">
+                <div className="hidden md:block fixed top-0 left-0 h-screen w-64 bg-white shadow z-30">
                     <Sidebar/>
                 </div>
 

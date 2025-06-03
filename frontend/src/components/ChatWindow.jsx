@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import { connectWebSocket, disconnectWebSocket } from '../config/websocketService';
+import React, {useEffect, useRef, useState} from "react";
+import {connectWebSocket, disconnectWebSocket} from '../config/websocketService';
 import sendMsg from "../assets/sendMsg.png";
 import OpAvatar from "../assets/OperatorAvatar.png";
 import Avatar from "../assets/ClientAvatar.png";
 import API from "../config/api";
 
-const ChatWindow = ({ selectedDialog }) => {
+const ChatWindow = ({selectedDialog}) => {
     const messagesEndRef = useRef(null);
     const [messageText, setMessageText] = useState("");
     const [messages, setMessages] = useState(
@@ -13,7 +13,7 @@ const ChatWindow = ({ selectedDialog }) => {
             sender: msg.senderType === "OPERATOR" ? "Оператор" : "Клиент",
             text: msg.content,
             time: Date.now()
-                ? new Date(msg.sentAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                ? new Date(msg.sentAt).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
                 : "",
         }))
     );
@@ -42,7 +42,7 @@ const ChatWindow = ({ selectedDialog }) => {
                     sender: senderName,
                     text: msg.content,
                     time: msg.sentAt
-                        ? new Date(msg.sentAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                        ? new Date(msg.sentAt).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})
                         : "",
                 };
             })
@@ -74,7 +74,7 @@ const ChatWindow = ({ selectedDialog }) => {
 
     // Прокрутка сообщений вниз при обновлении
     useEffect(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
     }, [messages]);
 
     // Отправка сообщения
@@ -103,7 +103,7 @@ const ChatWindow = ({ selectedDialog }) => {
                 try {
                     errorData = await res.json();
                 } catch {
-                    errorData = { message: "Не удалось распарсить тело ошибки", raw: await res.text() };
+                    errorData = {message: "Не удалось распарсить тело ошибки", raw: await res.text()};
                 }
                 console.error(
                     "Ошибка при отправке сообщения:",
@@ -154,7 +154,7 @@ const ChatWindow = ({ selectedDialog }) => {
                 {[...messages].reverse().map((msg, index) => (
                     <div
                         key={index}
-                        className={`flex items-start space-x-3 mb-3 ${msg.sender === "Оператор" ? "flex-row-reverse text-right" : ""}`}>
+                        className={`flex items-start space-x-3 mb-3 ${["Оператор", "Автоответчик"].includes(msg.sender) ? "flex-row-reverse text-right" : ""}`}>
                         <img
                             src={msg.sender === "Оператор" ? OpAvatar : Avatar}
                             alt="avatar"
@@ -184,14 +184,14 @@ const ChatWindow = ({ selectedDialog }) => {
                         e.target.style.height = (e.target.scrollHeight) + 'px';
                     }}
                     onKeyDown={handleKeyDown}
-                    style={{ maxHeight: '150px' }}
+                    style={{maxHeight: '150px'}}
                 />
                 <button
                     onClick={handleSendMessage}
                     className="p-2"
                     disabled={isSending || !selectedDialog?.id || !messageText.trim()}
                 >
-                    <img src={sendMsg} alt="send" className="w-6 h-6" />
+                    <img src={sendMsg} alt="send" className="w-6 h-6"/>
                 </button>
             </div>
         </div>
