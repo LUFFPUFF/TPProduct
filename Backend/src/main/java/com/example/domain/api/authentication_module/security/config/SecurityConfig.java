@@ -75,7 +75,7 @@ public class SecurityConfig  {
                         .requestMatchers("/api/ui/integration/**").permitAll()
                         .requestMatchers("/api/ui/predefined-answers/download-template").permitAll()
                         .requestMatchers("/api/answers/**").permitAll()
-                        .requestMatchers("/api/statistics/**").permitAll()
+                        .requestMatchers("/api/statistics/**").authenticated()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/api/ui/chats/**").permitAll()
                         .requestMatchers("/api/subscription/extend","/api/company/add").authenticated()
