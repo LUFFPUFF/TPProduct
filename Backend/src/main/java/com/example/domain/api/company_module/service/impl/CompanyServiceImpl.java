@@ -63,7 +63,7 @@ public class CompanyServiceImpl implements CompanyService {
                 .members(findMembers(company))
                 .build();
     }
-
+    @Override
     public List<MemberDto> findMembers(Company company) {
         return userRepository.getAllByCompanyId(company.getId()).stream()
                 .map(user -> MemberDto.builder()

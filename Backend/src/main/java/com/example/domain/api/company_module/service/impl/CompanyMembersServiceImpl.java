@@ -12,6 +12,7 @@ import com.example.domain.api.company_module.exception_handler_company.UserAlrea
 import com.example.domain.api.company_module.exception_handler_company.UserNotInCompanyException;
 import com.example.domain.api.company_module.service.CompanyMembersService;
 import com.example.domain.api.company_module.exception_handler_company.SelfMemberDisbandException;
+import com.example.domain.api.crm_module.service.DealService;
 import com.example.domain.api.subscription_module.service.SubscriptionService;
 import com.example.domain.dto.CompanyWithMembersDto;
 import com.example.domain.dto.MemberDto;
@@ -32,6 +33,7 @@ public class CompanyMembersServiceImpl implements CompanyMembersService {
     private final SubscriptionService subscriptionService;
     private final MapperDto mapperDto;
     private final CurrentUserDataService currentUserDataService;
+    private final DealService dealService;
 
     @Override
     @Transactional
@@ -69,6 +71,11 @@ public class CompanyMembersServiceImpl implements CompanyMembersService {
         Company company = userRepository.findByEmail(myEmail).map(User::getCompany).orElseThrow(NotFoundCompanyException::new);
         subscriptionService.subtractOperatorCount(company);
         roleService.removeRole(memberEmail, Role.OPERATOR);
+        roleService.removeRole(memberEmail, Role.MANAGER);
+        User user = currentUserDataService.getUser(memberEmail);
+        user.setCompany(null);
+        userRepository.save(user);
+        dealService.changeDealUser(memberEmail);
         return CompanyWithMembersDto.builder()
                 .company(mapperDto.toDtoCompany(company))
                 .members(findMembers(company))
