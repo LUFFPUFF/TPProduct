@@ -125,6 +125,7 @@ public class DealServiceImpl implements DealService {
     @Override
     @Transactional
     public List<DealDto> setDealsToArchive() {
+        dealRepository.setTasksToArchive(currentUserDataService.getUserEmail(), LocalDateTime.now());
         dealRepository.setDealsToArchive(currentUserDataService.getUserEmail());
         return getDeals(FilterDealsDto.builder().build());
     }
