@@ -128,20 +128,35 @@ const TemplatesPage = () => {
     };
 
 
-    const handleDownloadExample = async () => {
+    const handleDownloadExample = async (fileType = "JSON") => {
         try {
             const response = await fetch(API.templates.downloadExample);
             if (!response.ok) throw new Error("Ошибка при скачивании примера");
+
+            const contentDisposition = response.headers.get("Content-Disposition");
+            let filename = `template_example.${fileType.toLowerCase()}`;
+
+            if (contentDisposition) {
+                const filenameMatch = contentDisposition.match(/filename="?(.+)"?/i);
+                if (filenameMatch && filenameMatch.length === 2) {
+                    filename = filenameMatch[1];
+                }
+            }
 
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
 
             const a = document.createElement("a");
+            a.style.display = "none";
             a.href = url;
-            a.download = "example-templates.json";
+            a.download = filename;
+
+            document.body.appendChild(a);
             a.click();
 
             window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
         } catch (error) {
             alert("Не удалось скачать пример: " + error.message);
         }

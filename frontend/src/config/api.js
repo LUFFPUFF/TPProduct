@@ -33,7 +33,7 @@ const API = {
         delete: (id) => `${API_BASE_URL}/ui/predefined-answers/${id}`,
         update: `${API_BASE_URL}/templates/save`,
         uploadMany: `${API_BASE_URL}/templates/save`,
-        downloadExample: `${API_BASE_URL}/templates/example-download`,
+        downloadExample: (fileType = "JSON") => `${API_BASE_URL}/api/ui/predefined-answers/download-template?type=${fileType}`,
     },
     dialogs: {
         getAll: `${API_BASE_URL}/ui/chats/my`,
