@@ -101,13 +101,16 @@ const CompanyPage = () => {
         const confirmDelete = window.confirm("Вы уверены, что хотите удалить сотрудника?");
         if (!confirmDelete) return;
 
+        const payload = { email: emailToDelete };
+        console.log("Удаление сотрудника, отправляемый JSON:", JSON.stringify(payload, null, 2));
+
         try {
             const response = await fetch(API.company.removeMember, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ email: emailToDelete })
+                body: JSON.stringify(payload)
             });
 
             if (!response.ok) {
