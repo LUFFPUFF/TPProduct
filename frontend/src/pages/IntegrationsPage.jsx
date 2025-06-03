@@ -200,27 +200,29 @@ export default function IntegrationsPage() {
                     "Content-Type": "application/json",
                 },
             });
-            if (response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Сообщение 200");
-            }
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Ошибка при отключении");
-            }
 
-            setIntegrations((prev) =>
-                prev.map((item) =>
-                    item.name === integrationName
-                        ? { ...item, connected: false, id: null }
-                        : item
-                )
-            );
+            if (response.ok) {
+                const data = await response.json();
+                console.log("✅ Интеграция успешно отключена:", data);
+
+                setIntegrations((prev) =>
+                    prev.map((item) =>
+                        item.name === integrationName
+                            ? { ...item, connected: false, id: null }
+                            : item
+                    )
+                );
+            } else {
+                const errorData = await response.json();
+                console.error("❌ Ошибка при отключении:", errorData);
+                throw new Error(errorData.message || "Ошибка при отключении интеграции");
+            }
         } catch (err) {
-            console.error("Ошибка отключения интеграции:", err);
+            console.error("❌ Исключение в процессе отключения интеграции:", err);
             alert("Не удалось отключить интеграцию: " + err.message);
         }
     };
+
 
     useEffect(() => {
         const fetchConnectedIntegrations = async () => {
