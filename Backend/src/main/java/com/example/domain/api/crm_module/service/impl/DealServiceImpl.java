@@ -1,16 +1,20 @@
 package com.example.domain.api.crm_module.service.impl;
 
 import com.example.database.model.company_subscription_module.user_roles.user.Role;
+import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.model.crm_module.client.Client;
 import com.example.database.model.crm_module.deal.Deal;
 import com.example.database.model.crm_module.deal.DealStatus;
 import com.example.database.model.crm_module.task.Task;
 import com.example.database.repository.chats_messages_module.ChatRepository;
+import com.example.database.repository.company_subscription_module.UserRepository;
 import com.example.database.repository.crm_module.ClientRepository;
 import com.example.database.repository.crm_module.DealRepository;
 import com.example.database.repository.crm_module.DealStageRepository;
 import com.example.database.repository.crm_module.TaskRepository;
 import com.example.domain.api.authentication_module.service.interfaces.CurrentUserDataService;
+import com.example.domain.api.company_module.exception_handler_company.UserNotInCompanyException;
+import com.example.domain.api.company_module.service.CompanyService;
 import com.example.domain.api.crm_module.dto.*;
 import com.example.domain.api.crm_module.exception_handler_crm.*;
 import com.example.domain.api.crm_module.mapper.DealReqDtoToDealMapper;
@@ -22,9 +26,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +43,9 @@ public class DealServiceImpl implements DealService {
     private final TaskRepository taskRepository;
     private final DealStageRepository dealStageRepository;
     private final CurrentUserDataService currentUserDataService;
+    private final CompanyService companyService;
     private final ChatRepository chatRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -63,6 +71,9 @@ public class DealServiceImpl implements DealService {
         boolean isManager = currentUserDataService.hasRole(Role.MANAGER);
         List<DealDto> deals;
         if(filterDealsDto.getEmail() == null && !isManager) {
+            if(!currentUserDataService.getUserCompany().equals(currentUserDataService.getUser(filterDealsDto.getEmail()).getCompany())){
+                throw new UserNotInCompanyException();
+            }
             filterDealsDto.setEmail(currentUserDataService.getUserEmail());
             deals = dealRepository.findDealDataByUserEmail(filterDealsDto.getEmail());
         }else if(filterDealsDto.getEmail() != null && !isManager) {
@@ -99,6 +110,18 @@ public class DealServiceImpl implements DealService {
         }
     }
 
+    @Transactional
+    @Override
+    public void changeDealUser(String email){
+           setDealsToArchive();
+           List<User> users = userRepository.findByCompanyId(currentUserDataService.getUserCompany().getId());
+           Random random = new Random();
+           getDeals(FilterDealsDto.builder().email(email).build())
+                   .forEach(deal ->{
+                       User user = users.get(random.nextInt(users.size()));
+                       dealRepository.updateDealUser(user,deal.getId());
+                   });
+    }
     @Override
     @Transactional
     public List<DealDto> setDealsToArchive() {
@@ -108,6 +131,7 @@ public class DealServiceImpl implements DealService {
     @Transactional
     @Override
     public List<DealDto> setAdminDealsToArchive(String email) {
+        dealRepository.setTasksToArchive(email, LocalDateTime.now());
         dealRepository.setDealsToArchive(email);
         return getDeals(FilterDealsDto.builder().email(email).build());
     }
@@ -117,6 +141,9 @@ public class DealServiceImpl implements DealService {
         boolean isManager = currentUserDataService.hasRole(Role.MANAGER);
         List<DealArchiveDto> deals;
         if(archiveDto.getEmail() == null && !isManager) {
+            if(!currentUserDataService.getUserCompany().equals(currentUserDataService.getUser(archiveDto.getEmail()).getCompany())){
+                throw new UserNotInCompanyException();
+            }
             archiveDto.setEmail(currentUserDataService.getUserEmail());
             deals = dealRepository.findArchiveDataByUserEmail(archiveDto.getEmail());
 
