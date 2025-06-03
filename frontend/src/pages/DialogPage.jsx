@@ -1,7 +1,4 @@
 import React, {useState, useEffect} from "react";
-
-More
-actions
 import Sidebar from "../components/Sidebar";
 import DialogList from "../components/DialogList";
 import ChatWindow from "../components/ChatWindow";
