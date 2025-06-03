@@ -47,7 +47,7 @@ const API = {
         updateStatus: (id) => `${API_BASE_URL}/dialogs/${id}/status`,
     },
     stats: {
-        get: (timeRange) => `${API_BASE_URL}/statistics/summary/${timeRange}`,
+        get: (timeRange) => `${API_BASE_URL}/statistics/summary?timeRange=${timeRange}`,
     },
     settings: {
         get: `${API_BASE_URL}/settings/get`,
