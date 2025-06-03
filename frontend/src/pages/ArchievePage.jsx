@@ -51,6 +51,9 @@ const ArchivePage = () => {
                 }
 
                 const url = `${API.crm.getArchieve}?${params.toString()}`;
+
+                console.log("[Запрос] GET", url);
+
                 const response = await fetch(url);
 
                 if (!response.ok) {
@@ -58,8 +61,12 @@ const ArchivePage = () => {
                 }
 
                 const data = await response.json();
+
+                console.log("[Ответ] JSON", data);
+
                 setDeals(data);
             } catch (err) {
+                console.error("[Ошибка запроса]", err);
                 setError(err.message);
             } finally {
                 setLoading(false);
