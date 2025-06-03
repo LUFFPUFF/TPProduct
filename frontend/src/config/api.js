@@ -60,6 +60,7 @@ const API = {
         addMember: `${API_BASE_URL}/company/admin/add-member`,
         giveRole: `${API_BASE_URL}/company/admin/member/give-role`,
         removeRole: `${API_BASE_URL}/company/admin/member/remove-role`,
+        removeMember: `${API_BASE_URL}/company/admin/member/remove`,
     },
     crm: {
         create: `${API_BASE_URL}/crm/create`,

@@ -97,7 +97,31 @@ const CompanyPage = () => {
         setTempName(companyName);
         setTempDescription(companyDescription);
     };
+    const handleDeleteEmployee = async (emailToDelete) => {
+        const confirmDelete = window.confirm("Вы уверены, что хотите удалить сотрудника?");
+        if (!confirmDelete) return;
 
+        try {
+            const response = await fetch(API.company.removeMember, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email: emailToDelete })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error("Ошибка при удалении сотрудника:", response.status, errorText);
+                throw new Error("Ошибка при удалении сотрудника");
+            }
+
+            setEmployees(prev => prev.filter(emp => emp.email !== emailToDelete));
+        } catch (error) {
+            console.error("Ошибка при удалении сотрудника:", error);
+            alert("Не удалось удалить сотрудника. Попробуйте снова.");
+        }
+    };
     const handleSaveCompany = async () => {
         const updatedName = tempName.trim() || companyName;
         const updatedDescription = tempDescription.trim() || companyDescription;
@@ -351,7 +375,8 @@ const CompanyPage = () => {
                                         </button>
                                     )}
                                     <button
-                                        className="bg-[#b0b4be] text-white px-4 py-2 rounded-md shadow text-sm"
+                                        className="bg-red-600 text-white px-4 py-2 rounded-md shadow hover:bg-red-700 text-sm"
+                                        onClick={() => handleDeleteEmployee(employee.email)}
                                         disabled={!isOperator}
                                     >
                                         Удалить
