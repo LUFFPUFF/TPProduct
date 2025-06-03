@@ -23,14 +23,12 @@ public class StatisticsController {
     @GetMapping("/summary")
     public Mono<ResponseEntity<MetricSummaryDto>> getAllMetricsSummary(
             @RequestParam(name = "timeRange", defaultValue = "1h") String timeRange,
-            @RequestParam(name = "companyId", required = false) String companyId,
             @RequestParam(name = "startTimestamp", required = false) Long startTimestamp,
             @RequestParam(name = "endTimestamp", required = false) Long endTimestamp,
             @RequestParam(name = "step", required = false) String step
     ) {
         StatisticsQueryRequestDTO requestBuilder = StatisticsQueryRequestDTO.builder()
                 .timeRange(timeRange)
-                .companyId(companyId)
                 .step(step)
                 .build();
 

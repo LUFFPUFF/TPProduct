@@ -9,6 +9,8 @@ import com.example.domain.api.statistics_module.model.autoresponder.TextProcessi
 import com.example.domain.api.statistics_module.model.chat.ChatSummaryStatsDTO;
 import com.example.domain.api.statistics_module.model.metric.StatisticsQueryRequestDTO;
 import com.example.domain.api.statistics_module.service.*;
+import com.example.domain.security.model.UserContext;
+import com.example.domain.security.util.UserContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,9 @@ public class StatisticsServiceImpl implements IStatisticsService {
 
     @Override
     public Mono<MetricSummaryDto> getAllMetricsSummary(StatisticsQueryRequestDTO request) {
+
+        UserContext userContext = UserContextHolder.getRequiredContext();
+
         Mono<AuthSummaryStatsDTO> authSummaryMono = authStatisticsService.getAuthSummary(request)
                 .doOnError(e -> log.error("Error fetching auth summary for request {}: {}", request, e.getMessage()))
                 .onErrorResume(e -> {
@@ -43,7 +48,7 @@ public class StatisticsServiceImpl implements IStatisticsService {
                     log.warn("Returning empty ChatSummaryStatsDTO due to error: {}", e.getMessage());
                     return Mono.just(ChatSummaryStatsDTO.builder()
                             .timeRange(request.getTimeRange())
-                            .companyId(request.getCompanyId())
+                            .companyId(String.valueOf(userContext.getCompanyId()))
                             .build());
                 });
 
@@ -69,7 +74,7 @@ public class StatisticsServiceImpl implements IStatisticsService {
                 .doOnError(e -> log.error("Error fetching answer search summary for request {}: {}", request, e.getMessage(), e))
                 .onErrorResume(e -> {
                     log.warn("Returning empty AnswerSearchSummaryStatsDTO due to error: {}", e.getMessage());
-                    return Mono.just(AnswerSearchSummaryStatsDTO.builder().timeRange(request.getTimeRange()).companyId(request.getCompanyId()).build());
+                    return Mono.just(AnswerSearchSummaryStatsDTO.builder().timeRange(request.getTimeRange()).companyId(String.valueOf(userContext.getCompanyId())).build());
                 });
 
         Mono<TextProcessingSummaryStatsDTO> textProcessingSummaryMono = textProcessingStatisticsService.getTextProcessingSummary(request)
