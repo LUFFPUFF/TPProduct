@@ -1,5 +1,6 @@
 package com.example.database.repository.crm_module;
 
+import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.database.model.crm_module.deal.Deal;
 import com.example.database.model.crm_module.deal.DealStage;
 import com.example.database.model.crm_module.deal.DealStatus;
@@ -46,9 +47,17 @@ public interface DealRepository extends JpaRepository<Deal, Integer> {
             "AND d.status = com.example.database.model.crm_module.deal.DealStatus.CLOSED")
     List<DealArchiveDto> findArchiveDataByCompany(@Param("companyId") Integer companyId);
 
-
+    @Modifying
+    @Query("UPDATE Deal d SET d.user = :user WHERE d.id = :dealId")
+    void updateDealUser(@Param("user") User user, @Param("dealId") Integer dealId );
     @Modifying
     @Query("UPDATE Deal d Set d.status = com.example.database.model.crm_module.deal.DealStatus.CLOSED WHERE d.user.email = :email " +
-            "AND (d.stage.id = 4 OR d.stage.id = 3)")
+            "AND (d.stage.id = 4 OR d.stage.id = 3)" +
+            "AND d.status = com.example.database.model.crm_module.deal.DealStatus.OPENED")
     void setDealsToArchive(@Param("email") String email);
+    @Modifying
+    @Query("UPDATE Task t SET t.dueDate = :time_now " +
+            "WHERE t.deal IN (SELECT d FROM Deal d WHERE d.user.email = :email AND (d.stage.id = 4 OR d.stage.id = 3)" +
+            " AND d.status = com.example.database.model.crm_module.deal.DealStatus.OPENED)")
+    void setTasksToArchive(@Param("email") String email, @Param("time_now") LocalDateTime time_now);
 }
