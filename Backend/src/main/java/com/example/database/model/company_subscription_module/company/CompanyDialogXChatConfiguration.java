@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "company_dialogx_chat_configuration", indexes = {
-        @Index(name = "idx_dialogx_chat_config_company_id", columnList = "company_id", unique = true), // Assuming one config per company
+        @Index(name = "idx_dialogx_chat_config_company_id", columnList = "company_id", unique = true),
         @Index(name = "idx_dialogx_chat_config_widget_id", columnList = "widget_id", unique = true)
 })
 @Data
@@ -36,6 +36,9 @@ public class CompanyDialogXChatConfiguration {
     @Column(name = "theme_color", length = 20)
     private String themeColor;
 
+    @Column(name = "widget_script_code", columnDefinition = "TEXT")
+    private String widgetScriptCode;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -56,6 +59,7 @@ public class CompanyDialogXChatConfiguration {
         if (themeColor == null) {
             themeColor = "#5A38D9";
         }
+        this.widgetScriptCode = "<script src=\"https://dialogx.ru/dialogx-widget.js\"></script>";
     }
 
     @PreUpdate

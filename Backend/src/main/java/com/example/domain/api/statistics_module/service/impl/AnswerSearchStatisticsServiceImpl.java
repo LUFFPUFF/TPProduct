@@ -5,6 +5,8 @@ import com.example.domain.api.statistics_module.model.autoresponder.AnswerSearch
 import com.example.domain.api.statistics_module.model.metric.StatisticsQueryRequestDTO;
 import com.example.domain.api.statistics_module.service.AbstractStatisticsService;
 import com.example.domain.api.statistics_module.service.IAnswerSearchStatisticsService;
+import com.example.domain.security.model.UserContext;
+import com.example.domain.security.util.UserContextHolder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,8 +35,11 @@ public class AnswerSearchStatisticsServiceImpl extends AbstractStatisticsService
 
     @Override
     public Mono<AnswerSearchSummaryStatsDTO> getAnswerSearchSummary(StatisticsQueryRequestDTO request) {
+
+        UserContext userContext = UserContextHolder.getRequiredContext();
+
         String range = "[" + request.getTimeRange() + "]";
-        String companyFilter = buildOptionalTagFilter(request.getCompanyId());
+        String companyFilter = buildOptionalTagFilter(String.valueOf(userContext.getCompanyId()));
 
         String commonFilters = buildCommonFilters(companyFilter);
 
@@ -71,7 +76,7 @@ public class AnswerSearchStatisticsServiceImpl extends AbstractStatisticsService
 
                     return AnswerSearchSummaryStatsDTO.builder()
                             .timeRange(request.getTimeRange())
-                            .companyId(request.getCompanyId())
+                            .companyId(String.valueOf(userContext.getCompanyId()))
                             .totalRequests(totalRequests)
                             .emptyQueryRequests(tuple.getT2())
                             .longQueryRequests(tuple.getT3())

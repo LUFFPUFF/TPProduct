@@ -1,5 +1,6 @@
 package com.example.domain.api.statistics_module.service.impl;
 
+import com.example.database.model.company_subscription_module.user_roles.user.User;
 import com.example.domain.api.statistics_module.metrics.client.PrometheusQueryClient;
 import com.example.domain.api.statistics_module.model.chat.ChatSummaryStatsDTO;
 import com.example.domain.api.statistics_module.model.metric.MetricTimeSeriesDTO;
@@ -7,6 +8,8 @@ import com.example.domain.api.statistics_module.model.metric.StatisticsQueryRequ
 import com.example.domain.api.statistics_module.model.metric.TimeSeriesDataPointDTO;
 import com.example.domain.api.statistics_module.service.AbstractStatisticsService;
 import com.example.domain.api.statistics_module.service.IChatStatisticsService;
+import com.example.domain.security.model.UserContext;
+import com.example.domain.security.util.UserContextHolder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,10 +47,13 @@ public class ChatStatisticsServiceImpl extends AbstractStatisticsService impleme
 
     @Override
     public Mono<ChatSummaryStatsDTO> getChatSummary(StatisticsQueryRequestDTO request) {
-        String companyFilter = buildCompanyFilter(request.getCompanyId());
+
+        UserContext userContext = UserContextHolder.getRequiredContext();
+
+        String companyFilter = buildCompanyFilter(String.valueOf(userContext.getCompanyId()));
         String rangeVectorSelector = "[" + request.getTimeRange() + "]";
 
-        log.info("Requesting chat summary for company: {}, timeRange: {}", request.getCompanyId(), request.getTimeRange());
+        log.info("Requesting chat summary for company: {}, timeRange: {}", userContext.getCompanyId(), request.getTimeRange());
 
         Mono<Long> totalCreatedMono = querySingleScalarInternal(
                 String.format("sum(increase(%s%s%s))", CHATS_CREATED_TOTAL, companyFilter, rangeVectorSelector),
@@ -128,7 +134,7 @@ public class ChatStatisticsServiceImpl extends AbstractStatisticsService impleme
                     Map<String, Long> currentByStatus = (Map<String, Long>) results[7];
 
                     return ChatSummaryStatsDTO.builder()
-                            .companyId(request.getCompanyId())
+                            .companyId(String.valueOf(userContext.getCompanyId()))
                             .timeRange(request.getTimeRange())
                             .totalChatsCreated(totalCreated)
                             .totalChatsClosed(totalClosed)
@@ -146,7 +152,9 @@ public class ChatStatisticsServiceImpl extends AbstractStatisticsService impleme
 
     @Override
     public Mono<List<MetricTimeSeriesDTO>> getChatsCreatedTimeSeries(StatisticsQueryRequestDTO request) {
-        String companyFilter = buildCompanyFilter(request.getCompanyId());
+
+        UserContext userContext = UserContextHolder.getRequiredContext();
+        String companyFilter = buildCompanyFilter(String.valueOf(userContext.getCompanyId()));
         long start = request.getStartTimestamp() != null ? request.getStartTimestamp() : Instant.now().minusSeconds(parseTimeRangeToSeconds(request.getTimeRange())).getEpochSecond();
         long end = request.getEndTimestamp() != null ? request.getEndTimestamp() : Instant.now().getEpochSecond();
         String step = request.getStep() != null ? request.getStep() : determineStep(start, end);
@@ -171,7 +179,8 @@ public class ChatStatisticsServiceImpl extends AbstractStatisticsService impleme
 
     @Override
     public Mono<List<MetricTimeSeriesDTO>> getAverageChatDurationTimeSeries(StatisticsQueryRequestDTO request) {
-        String companyFilter = buildCompanyFilter(request.getCompanyId());
+        UserContext userContext = UserContextHolder.getRequiredContext();
+        String companyFilter = buildCompanyFilter(String.valueOf(userContext.getCompanyId()));
         long start = request.getStartTimestamp() != null ? request.getStartTimestamp() : Instant.now().minusSeconds(parseTimeRangeToSeconds(request.getTimeRange())).getEpochSecond();
         long end = request.getEndTimestamp() != null ? request.getEndTimestamp() : Instant.now().getEpochSecond();
         String step = request.getStep() != null ? request.getStep() : determineStep(start, end);

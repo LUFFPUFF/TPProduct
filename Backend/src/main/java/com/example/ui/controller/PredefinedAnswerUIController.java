@@ -21,13 +21,18 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -48,6 +53,8 @@ public class PredefinedAnswerUIController {
 
     private final JobLauncher jobLauncher;
     private final Job answerUploadJob;
+
+    private static final String TEMPLATE_DIRECTORY = "templates/";
 
     private Optional<User> getCurrentAppUser(String email) {
         return userRepository.findByEmail(email);
@@ -317,6 +324,63 @@ public class PredefinedAnswerUIController {
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+    }
+
+    @GetMapping("/download-template")
+    public ResponseEntity<Resource> downloadTemplate(
+            @RequestParam(name = "type", defaultValue = "JSON") String fileType) {
+
+        String resourcePath;
+        String contentType;
+        String filename;
+
+        switch (fileType.toUpperCase()) {
+            case "JSON":
+                resourcePath = TEMPLATE_DIRECTORY + "answer-json.json";
+                contentType = MediaType.APPLICATION_JSON_VALUE;
+                filename = "predefined_answers_template.json";
+                break;
+            case "CSV":
+                resourcePath = TEMPLATE_DIRECTORY + "answer-csv.csv";
+                contentType = "text/csv";
+                filename = "predefined_answers_template.csv";
+                break;
+            case "XML":
+                resourcePath = TEMPLATE_DIRECTORY + "answer-xml.xml";
+                contentType = MediaType.APPLICATION_XML_VALUE;
+                filename = "predefined_answers_template.xml";
+                break;
+            case "TXT":
+                resourcePath = TEMPLATE_DIRECTORY + "answer-txt.txt";
+                contentType = MediaType.TEXT_PLAIN_VALUE;
+                filename = "predefined_answers_template.txt";
+                break;
+            default:
+                log.warn("Invalid template type requested: {}", fileType);
+                return ResponseEntity.badRequest().build();
+        }
+
+        Resource resource = new ClassPathResource(resourcePath);
+
+        if (!resource.exists()) {
+            log.error("Template file not found at path: {}", resourcePath);
+            return ResponseEntity.notFound().build();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
+
+        try {
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .contentLength(resource.contentLength())
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(resource);
+        } catch (IOException e) {
+            log.error("Error reading template file: {}", resourcePath, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
     }
 
 }

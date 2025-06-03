@@ -18,12 +18,6 @@ public class StatisticsQueryRequestDTO {
     private String timeRange;
 
     /**
-     * Необязательный идентификатор компании для фильтрации соответствующей статистики (например, чата).
-     * 'all' или null для всех компаний.
-     */
-    private String companyId;
-
-    /**
      * Необязательная начальная временная метка в эпохальных секундах.
      * Переопределяет timeRange, если предоставлены и startTimestamp, и endTimestamp.
      */
