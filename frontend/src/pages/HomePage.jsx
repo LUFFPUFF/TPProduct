@@ -8,7 +8,6 @@ export const HomePage = () => {
     const email = user?.email || null;
 
     useEffect(() => {
-        // Проверяем, не загружен ли уже скрипт
         if (document.getElementById("yandex-metrika")) return;
 
         const script = document.createElement("script");
