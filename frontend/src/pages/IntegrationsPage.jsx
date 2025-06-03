@@ -7,11 +7,11 @@ import mailIcon from "../assets/mail.png";
 import API from "../config/api";
 
 const initialIntegrations = [
-    {name: "Telegram", icon: telegramIcon, connected: false},
-    {name: "WhatsApp", icon: whatsappIcon, connected: false},
-    {name: "VK", icon: vkIcon, connected: false},
-    {name: "Почту", icon: mailIcon, connected: false},
-    {name: "Виджет", icon: null, connected: false},
+    { name: "Telegram", icon: telegramIcon, connected: false, id: null },
+    { name: "WhatsApp", icon: whatsappIcon, connected: false, id: null },
+    { name: "VK", icon: vkIcon, connected: false, id: null },
+    { name: "Почту", icon: mailIcon, connected: false, id: null },
+    { name: "Виджет", icon: null, connected: false, id: null },
 ];
 
 export default function IntegrationsPage() {
@@ -169,25 +169,51 @@ export default function IntegrationsPage() {
 
     const handleDisconnect = async (integrationName) => {
         try {
-            console.log("Отключение интеграции:", integrationName);
+            const integration = integrations.find((item) => item.name === integrationName);
+            if (!integration || !integration.id) {
+                alert("Не удалось найти ID интеграции для удаления.");
+                return;
+            }
 
-            const response = await fetch(API.integrations.disconnect, {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({integration: integrationName}),
+            let deleteUrl = "";
+            switch (integrationName) {
+                case "Telegram":
+                    deleteUrl = API.integrations.DeleteTGIntegration(integration.id);
+                    break;
+                case "WhatsApp":
+                    deleteUrl = API.integrations.DeleteWhatsAppIntegration(integration.id);
+                    break;
+                case "VK":
+                    deleteUrl = API.integrations.DeleteVKIntegration(integration.id);
+                    break;
+                case "Почту":
+                    deleteUrl = API.integrations.DeleteMailIntegration(integration.id);
+                    break;
+                default:
+                    alert("Неизвестный тип интеграции.");
+                    return;
+            }
+
+            const response = await fetch(deleteUrl, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
             });
-
-            console.log("Статус ответа на отключение:", response.status);
-
+            if (response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Сообщение 200");
+            }
             if (!response.ok) {
                 const errorData = await response.json();
-                console.error("Ошибка от сервера при отключении:", errorData);
                 throw new Error(errorData.message || "Ошибка при отключении");
             }
 
             setIntegrations((prev) =>
                 prev.map((item) =>
-                    item.name === integrationName ? {...item, connected: false} : item
+                    item.name === integrationName
+                        ? { ...item, connected: false, id: null }
+                        : item
                 )
             );
         } catch (err) {
@@ -195,6 +221,7 @@ export default function IntegrationsPage() {
             alert("Не удалось отключить интеграцию: " + err.message);
         }
     };
+
     useEffect(() => {
         const fetchConnectedIntegrations = async () => {
             try {
@@ -253,13 +280,29 @@ export default function IntegrationsPage() {
                 setIntegrations((prev) =>
                     prev.map((item) => {
                         if (item.name === "Telegram") {
-                            return {...item, connected: Array.isArray(tgData) && tgData.length > 0};
+                            return {
+                                ...item,
+                                connected: Array.isArray(tgData) && tgData.length > 0,
+                                id: tgData.length > 0 ? tgData[0].id : null,
+                            };
                         } else if (item.name === "Почту") {
-                            return {...item, connected: Array.isArray(mailData) && mailData.length > 0};
+                            return {
+                                ...item,
+                                connected: Array.isArray(mailData) && mailData.length > 0,
+                                id: mailData.length > 0 ? mailData[0].id : null,
+                            };
                         } else if (item.name === "VK") {
-                            return {...item, connected: Array.isArray(vkData) && vkData.length > 0};
+                            return {
+                                ...item,
+                                connected: Array.isArray(vkData) && vkData.length > 0,
+                                id: vkData.length > 0 ? vkData[0].id : null,
+                            };
                         } else if (item.name === "WhatsApp") {
-                            return {...item, connected: Array.isArray(whatsappData) && whatsappData.length > 0};
+                            return {
+                                ...item,
+                                connected: Array.isArray(whatsappData) && whatsappData.length > 0,
+                                id: whatsappData.length > 0 ? whatsappData[0].id : null,
+                            };
                         }
                         return item;
                     })
@@ -502,7 +545,6 @@ export default function IntegrationsPage() {
                                 disabled={
                                     loading ||
                                     (selectedIntegration?.name === "Почту" && !(emailAddress && appPassword)) ||
-                                    (selectedIntegration?.name === "Почта" && !(email && emailPassword && imapHost)) ||
                                     (selectedIntegration?.name === "Telegram" && !(botToken && botUsername)) ||
                                     (selectedIntegration?.name === "VK" && !(communityId && accessTokenVK && communityName)) ||
                                     (selectedIntegration?.name === "WhatsApp" && !(phoneNumberId && accessTokenWA && verifyToken))

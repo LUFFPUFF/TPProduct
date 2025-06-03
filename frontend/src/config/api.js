@@ -7,6 +7,10 @@ const API = {
         MailIntegration: `${API_BASE_URL}/ui/integration/mail`,
         WhatsAppIntegration: `${API_BASE_URL}/ui/integration/whatsapp`,
         VKIntegration: `${API_BASE_URL}/ui/integration/vk`,
+        DeleteVKIntegration: (id) => `${API_BASE_URL}/ui/integration/vk/${id}`,
+        DeleteWhatsAppIntegration: (id) => `${API_BASE_URL}/ui/integration/whatsapp/${id}`,
+        DeleteMailIntegration: (id) => `${API_BASE_URL}/ui/integration/mail/${id}`,
+        DeleteTGIntegration: (id) => `${API_BASE_URL}/ui/integration/telegram/${id}`,
     },
     auth: {
         login: `${API_BASE_URL}/auth/login`,
