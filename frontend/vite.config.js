@@ -4,7 +4,10 @@ import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss()
+  ],
   server: {
     host: '0.0.0.0',
     port: 5173,
@@ -19,9 +22,16 @@ export default defineConfig({
       formats: ['iife'],
     },
     rollupOptions: {
+      external: ['react', 'react-dom'],
       output: {
-        assetFileNames: 'widget.css',
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+        },
+        assetFileNames: 'index.css',
       },
     },
+    outDir: 'dist',
+    emptyOutDir: true,
   },
 });

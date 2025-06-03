@@ -34,5 +34,8 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
     "vite": "^6.0.8"
+  },
+  "scripts": {
+    "build": "vite build && node copy-widget.js"
   }
 }
