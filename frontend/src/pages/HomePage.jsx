@@ -8,12 +8,11 @@ export const HomePage = () => {
     const email = user?.email || null;
 
     useEffect(() => {
-        if (document.getElementById("yandex-metrika")) return;
-
-        const script = document.createElement("script");
-        script.id = "yandex-metrika";
-        script.type = "text/javascript";
-        script.innerHTML = `
+        if (!document.getElementById("yandex-metrika")) {
+            const script = document.createElement("script");
+            script.id = "yandex-metrika";
+            script.type = "text/javascript";
+            script.innerHTML = `
             (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
             m[i].l=1*new Date();
             for (var j = 0; j < document.scripts.length; j++) {
@@ -29,11 +28,22 @@ export const HomePage = () => {
                 accurateTrackBounce:true
             });
         `;
-        document.head.appendChild(script);
+            document.head.appendChild(script);
 
-        const noscript = document.createElement("noscript");
-        noscript.innerHTML = `<div><img src="https://mc.yandex.ru/watch/102385915" style="position:absolute; left:-9999px;" alt="" /></div>`;
-        document.body.appendChild(noscript);
+            const noscript = document.createElement("noscript");
+            noscript.innerHTML = `<div><img src="https://mc.yandex.ru/watch/102385915" style="position:absolute; left:-9999px;" alt="" /></div>`;
+            document.body.appendChild(noscript);
+        }
+
+        // DialogX widget
+        if (!document.getElementById("dialogx-widget")) {
+            const widgetScript = document.createElement("script");
+            widgetScript.id = "dialogx-widget";
+            widgetScript.src = "https://dialogx.ru/widget.js";
+            widgetScript.async = true;
+            widgetScript.dataset.widgetToken = "demo-token";
+            document.body.appendChild(widgetScript);
+        }
     }, []);
     return (
         <div className="bg-[#E6E5EA]">
