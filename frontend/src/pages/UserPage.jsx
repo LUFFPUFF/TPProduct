@@ -39,7 +39,6 @@ const UserPage = () => {
                 setGender(data.gender || "");
             } catch (error) {
                 console.error("Ошибка при получении данных пользователя:", error);
-                setError("Ошибка при загрузке данных пользователя. Проверьте заполненность профиля.");
             }
         };
 
