@@ -128,13 +128,31 @@ const TemplatesPage = () => {
     };
 
 
-    const handleDownloadExample = async (fileType = "JSON") => {
+    const handleDownloadExample = async (typeOfFileToDownload) => {
+
+        const fileTypeForAPI = typeof typeOfFileToDownload === 'string' ? typeOfFileToDownload : "JSON";
+
         try {
-            const response = await fetch(API.templates.downloadExample);
-            if (!response.ok) throw new Error("Ошибка при скачивании примера");
+            const response = await fetch(API.templates.downloadExample(fileTypeForAPI));
+            if (!response.ok) {
+                let errorMessage = "Ошибка при скачивании примера.";
+                try {
+                    const errorData = await response.json();
+                    if (errorData && errorData.error) {
+                        errorMessage += ` Сервер ответил: ${errorData.error}`;
+                    } else if (errorData) {
+                        errorMessage += ` Сервер ответил: ${JSON.stringify(errorData)}`;
+                    } else {
+                        errorMessage += ` Статус: ${response.status}`;
+                    }
+                } catch (e) {
+                    errorMessage += ` Статус: ${response.status}`;
+                }
+                throw new Error(errorMessage);
+            }
 
             const contentDisposition = response.headers.get("Content-Disposition");
-            let filename = `template_example.${fileType.toLowerCase()}`;
+            let filename = `template_example.${fileTypeForAPI.toLowerCase()}`;
 
             if (contentDisposition) {
                 const filenameMatch = contentDisposition.match(/filename="?(.+)"?/i);
