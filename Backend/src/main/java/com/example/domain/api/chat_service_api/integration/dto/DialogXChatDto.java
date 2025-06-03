@@ -14,6 +14,7 @@ public class DialogXChatDto {
     private Integer companyId;
     private boolean enabled;
     private String welcomeMessage;
+    private String widgetScriptCode;
     private String themeColor;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

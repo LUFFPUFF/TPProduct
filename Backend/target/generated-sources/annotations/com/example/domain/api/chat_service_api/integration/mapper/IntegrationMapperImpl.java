@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-06-02T20:06:02+0300",
+    date = "2025-06-03T16:12:39+0300",
     comments = "version: 1.6.0.Beta1, compiler: javac, environment: Java 21.0.7 (Microsoft)"
 )
 @Component
@@ -167,6 +167,7 @@ public class IntegrationMapperImpl implements IntegrationMapper {
         dialogXChatDto.setWidgetId( configuration.getWidgetId() );
         dialogXChatDto.setEnabled( configuration.isEnabled() );
         dialogXChatDto.setWelcomeMessage( configuration.getWelcomeMessage() );
+        dialogXChatDto.setWidgetScriptCode( configuration.getWidgetScriptCode() );
         dialogXChatDto.setThemeColor( configuration.getThemeColor() );
         dialogXChatDto.setCreatedAt( configuration.getCreatedAt() );
         dialogXChatDto.setUpdatedAt( configuration.getUpdatedAt() );
