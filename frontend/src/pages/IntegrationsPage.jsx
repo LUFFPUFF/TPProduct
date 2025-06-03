@@ -140,12 +140,25 @@ export default function IntegrationsPage() {
                 throw new Error(errorData.message || "Ошибка подключения");
             }
 
+            let data = {};
+            try {
+                data = await response.json();
+                console.log("Ответ от сервера:", data);
+            } catch {
+                console.warn("⚠️ Сервер не вернул JSON");
+            }
+
+            const integrationId = data?.id || null;
+
             setIntegrations((prev) =>
                 prev.map((item) =>
-                    item.name === selectedIntegration.name ? {...item, connected: true} : item
+                    item.name === selectedIntegration.name
+                        ? { ...item, connected: true, id: integrationId }
+                        : item
                 )
             );
 
+            // Очистка формы
             setModalOpen(false);
             setBotToken("");
             setBotUsername("");
@@ -202,8 +215,14 @@ export default function IntegrationsPage() {
             });
 
             if (response.ok) {
-                const data = await response.json();
-                console.log("✅ Интеграция успешно отключена:", data);
+                let data = null;
+                try {
+                    data = await response.json();
+                } catch {
+                    console.log("ℹ️ Ответ без тела (JSON отсутствует)");
+                }
+
+                console.log("✅ Интеграция успешно отключена", data);
 
                 setIntegrations((prev) =>
                     prev.map((item) =>
@@ -213,9 +232,16 @@ export default function IntegrationsPage() {
                     )
                 );
             } else {
-                const errorData = await response.json();
-                console.error("❌ Ошибка при отключении:", errorData);
-                throw new Error(errorData.message || "Ошибка при отключении интеграции");
+                let errorText = `Ошибка ${response.status}`;
+                try {
+                    const errorData = await response.json();
+                    errorText = errorData.message || errorText;
+                    console.error("❌ Ошибка при отключении:", errorData);
+                } catch {
+                    console.error("❌ Ошибка при отключении: пустой ответ с кодом", response.status);
+                }
+
+                throw new Error(errorText);
             }
         } catch (err) {
             console.error("❌ Исключение в процессе отключения интеграции:", err);
