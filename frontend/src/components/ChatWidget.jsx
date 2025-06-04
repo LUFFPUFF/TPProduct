@@ -111,7 +111,7 @@ export default function ChatWidget({ widgetToken }) {
     if (!isOpen) {
         return (
             <div
-                style={{ fontFamily: "'Montserrat Alternates', ital" }}
+                style={{ fontFamily: "'Montserrat Alternates', sans-serif" }}
                 className="fixed bottom-4 right-4 w-14 h-14 bg-[#1E2A56] rounded-full flex items-center justify-center cursor-pointer shadow-lg transition-all duration-300 hover:scale-105"
                 onClick={() => setIsOpen(true)}
             >
@@ -127,7 +127,9 @@ export default function ChatWidget({ widgetToken }) {
             className={`
                 fixed bottom-4 right-4 w-[320px] h-[520px] shadow-lg rounded-2xl overflow-hidden font-sans text-sm flex flex-col transition-all duration-500 transform
                 ${isOpen ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"}
+                
             `}
+            style={{ fontFamily: "'Montserrat Alternates', sans-serif" }}
         >
             <div className="flex items-center justify-between text-white p-3 bg-gradient-to-r from-[#3e517a] to-[#8596bf]">
                 <div className="flex items-center gap-1 font-semibold text-lg">
