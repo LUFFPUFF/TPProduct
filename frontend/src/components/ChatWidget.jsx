@@ -12,7 +12,17 @@ export default function ChatWidget({ widgetToken }) {
     const [isOpen, setIsOpen] = useState(false);
     const ws = useRef(null);
     const bottomRef = useRef(null);
+// 🆕 Добавление шрифта в <head>
+    useEffect(() => {
+        const link = document.createElement("link");
+        link.href = "https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap";
+        link.rel = "stylesheet";
+        document.head.appendChild(link);
 
+        return () => {
+            document.head.removeChild(link);
+        };
+    }, []);
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
@@ -101,6 +111,7 @@ export default function ChatWidget({ widgetToken }) {
     if (!isOpen) {
         return (
             <div
+                style={{ fontFamily: "'Montserrat Alternates', ital" }}
                 className="fixed bottom-4 right-4 w-14 h-14 bg-[#1E2A56] rounded-full flex items-center justify-center cursor-pointer shadow-lg transition-all duration-300 hover:scale-105"
                 onClick={() => setIsOpen(true)}
             >

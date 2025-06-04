@@ -40,7 +40,7 @@ export const HomePage = () => {
             widgetScript.id = "dialogx-widget";
             widgetScript.src = "https://dialogx.ru/widget.js";
             widgetScript.async = true;
-            widgetScript.dataset.widgetToken = "demo-token";
+            widgetScript.dataset.widgetToken = "3efc7fea-28ee-4f74-9f63-f254e3030604";
             document.body.appendChild(widgetScript);
         }
     }, []);
