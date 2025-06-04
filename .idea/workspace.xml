@@ -7,28 +7,13 @@
     <option name="diagramMode" value="true" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="DX-189 Исправлена ошибка созданий тестового чата">
+    <list default="true" id="28d8b413-461b-4d0c-9302-ed64bf8a4c69" name="Changes" comment="Добавил вебсокеты">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/java/com/example/database/model/company_subscription_module/company/Company.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/java/com/example/database/model/company_subscription_module/company/Company.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/answer_finder/mapper/AnswerSearchMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/answer_finder/mapper/AnswerSearchMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/JobExecutionMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/JobExecutionMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/PredefinedAnswerMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/PredefinedAnswerMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/StatisticsMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/ans_api_module/template/mapper/StatisticsMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/integration/mapper/IntegrationMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/ChatMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/ChatMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/ChatMessageMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/ChatMessageMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/ClientMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/ClientMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/NotificationMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/NotificationMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/UserMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/api/chat_service_api/mapper/UserMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/dto/mapper/MapperDtoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/domain/dto/mapper/MapperDtoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/answer/UIPredefinedAnswerMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/answer/UIPredefinedAnswerMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UIMessageMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UIMessageMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UINotificationMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UINotificationMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiChatMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiChatMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiClientMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiClientMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiUserMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/target/generated-sources/annotations/com/example/ui/mapper/chat/UiUserMapperImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/node_modules/@esbuild/win32-x64/esbuild.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/node_modules/@rollup/rollup-win32-x64-msvc/rollup.win32-x64-msvc.node" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/node_modules/@tailwindcss/oxide-win32-x64-msvc/tailwindcss-oxide.win32-x64-msvc.node" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/node_modules/lightningcss-win32-x64-msvc/lightningcss.win32-x64-msvc.node" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,10 +46,13 @@
       </list>
     </option>
   </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="DX-169" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="main" />
+        <entry key="$PROJECT_DIR$" value="DX-169" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -103,69 +91,73 @@
     </option>
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
   <component name="ProjectId" id="2twuwXMjgGbn7JgWp1AyxdVeJ25" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <OptionsSetting value="false" id="Update" />
     <ConfirmationsSetting value="1" id="Add" />
   </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.SpringBootStartApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Docker/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.Docker: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.docker-compose.yml.ai_service: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.docker-compose.yml.backend: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.docker-compose.yml.frontend: Compose Deployment.executor&quot;: &quot;Run&quot;,
-    &quot;Docker.frontend/Dockerfile.executor&quot;: &quot;Run&quot;,
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;HTTP Request.generated-requests | #1.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ChatMessageServiceImplIT.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ChatMessageServiceImplTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.ChatServiceImplTest.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.java in Backend.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.Backend [clean,install].executor&quot;: &quot;Run&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;Spring Boot.SpringBootStartApplication.executor&quot;: &quot;Run&quot;,
-    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;DX-192&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Admin/Desktop/postgresql-42.7.3.jar&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.16113281&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.projectsettings.compiler.annotationProcessors&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.SpringBootStartApplication.executor": "Run",
+    "Docker.Docker/Dockerfile.executor": "Run",
+    "Docker.Docker: Compose Deployment.executor": "Run",
+    "Docker.docker-compose.yml.ai_service: Compose Deployment.executor": "Run",
+    "Docker.docker-compose.yml.backend: Compose Deployment.executor": "Run",
+    "Docker.docker-compose.yml.frontend: Compose Deployment.executor": "Run",
+    "Docker.frontend/Dockerfile.executor": "Run",
+    "Downloaded.Files.Path.Enabled": "false",
+    "HTTP Request.generated-requests | #1.executor": "Run",
+    "JUnit.ChatMessageServiceImplIT.executor": "Run",
+    "JUnit.ChatMessageServiceImplTest.executor": "Run",
+    "JUnit.ChatServiceImplTest.executor": "Run",
+    "JUnit.java in Backend.executor": "Run",
+    "Maven.Backend [clean,install].executor": "Run",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.SpringBootStartApplication.executor": "Run",
+    "disable.download.node.interpreter.editor.notification": "true",
+    "extract.method.default.visibility": "private",
+    "git-widget-placeholder": "DX-192",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/Admin/Desktop/postgresql-42.7.3.jar",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_interpreter_path": "C:/Users/sahas/AppData/Roaming/JetBrains/WebStorm2024.3/node/versions/20.15.0/node",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.16113281",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "settings.nodejs",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\WebStorm 2024.3.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;redis&quot;,
-      &quot;postgresql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "redis",
+      "postgresql"
     ]
   }
-}</component>
+}]]></component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
@@ -189,7 +181,7 @@
       <command value="mvn clean install" />
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.SpringBootStartApplication">
+  <component name="RunManager" selected="Docker.docker-compose.yml.backend: Compose Deployment">
     <configuration name="ExternalMessagingServiceImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="Backend" />
       <extension name="coverage">
@@ -267,21 +259,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.SpringBootStartApplication" />
-        <item itemvalue="JUnit.java in Backend" />
-        <item itemvalue="JUnit.ExternalMessagingServiceImplTest" />
         <item itemvalue="Docker.docker-compose.yml.frontend: Compose Deployment" />
         <item itemvalue="Docker.docker-compose.yml.backend: Compose Deployment" />
       </list>
     </recent_temporary>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26053.27" />
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26053.27" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -380,230 +361,8 @@
       <workItem from="1748684332448" duration="1288000" />
       <workItem from="1748857470284" duration="5352000" />
       <workItem from="1748881778409" duration="2682000" />
-    </task>
-    <task id="LOCAL-00005" summary="merge DX-43 from main">
-      <option name="closed" value="true" />
-      <created>1746130921679</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1746130921679</updated>
-    </task>
-    <task id="LOCAL-00006" summary="DX-43 исправлены ошибки при клонировании чатов, а также добавлена возможность назначать оператора">
-      <option name="closed" value="true" />
-      <created>1746150459666</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1746150459666</updated>
-    </task>
-    <task id="LOCAL-00007" summary="DX-43 исправлены ошибки TelegramBot и создание клиента">
-      <option name="closed" value="true" />
-      <created>1746194633470</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1746194633470</updated>
-    </task>
-    <task id="LOCAL-00008" summary="DX-43 исправлены ошибки TelegramBot и создание клиента">
-      <option name="closed" value="true" />
-      <created>1746214244063</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1746214244063</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Удалена директория stats">
-      <option name="closed" value="true" />
-      <created>1746514978454</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1746514978454</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Исправлены диаграммы">
-      <option name="closed" value="true" />
-      <created>1746515844752</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1746515844752</updated>
-    </task>
-    <task id="LOCAL-00011" summary="Доработан README.md">
-      <option name="closed" value="true" />
-      <created>1746515969493</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1746515969493</updated>
-    </task>
-    <task id="LOCAL-00012" summary="Доработан README.md и добавлен чек лист">
-      <option name="closed" value="true" />
-      <created>1746518645415</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1746518645415</updated>
-    </task>
-    <task id="LOCAL-00013" summary="Доработан README.md и добавлен чек лист">
-      <option name="closed" value="true" />
-      <created>1746518724295</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1746518724295</updated>
-    </task>
-    <task id="LOCAL-00014" summary="DX-155 Исправлена ошибка при регистрации нового пользователя">
-      <option name="closed" value="true" />
-      <created>1747150384776</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1747150384776</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Исправлена ошибка загрузки ролей пользователя">
-      <option name="closed" value="true" />
-      <created>1747153451974</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1747153451975</updated>
-    </task>
-    <task id="LOCAL-00016" summary="Исправлена ошибка TelegramApiClient">
-      <option name="closed" value="true" />
-      <created>1747158064592</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1747158064592</updated>
-    </task>
-    <task id="LOCAL-00017" summary="Исправлены ошибки request для frontend части">
-      <option name="closed" value="true" />
-      <created>1747159436988</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1747159436988</updated>
-    </task>
-    <task id="LOCAL-00018" summary="fix security config">
-      <option name="closed" value="true" />
-      <created>1747313416837</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1747313416837</updated>
-    </task>
-    <task id="LOCAL-00019" summary="fix security config">
-      <option name="closed" value="true" />
-      <created>1747318630506</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1747318630506</updated>
-    </task>
-    <task id="LOCAL-00020" summary="fix security config">
-      <option name="closed" value="true" />
-      <created>1747318682411</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1747318682411</updated>
-    </task>
-    <task id="LOCAL-00021" summary="fix resp fetch">
-      <option name="closed" value="true" />
-      <created>1747319527529</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1747319527529</updated>
-    </task>
-    <task id="LOCAL-00022" summary="fix jwtfilter">
-      <option name="closed" value="true" />
-      <created>1747319957688</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1747319957688</updated>
-    </task>
-    <task id="LOCAL-00023" summary="DX-178, 177 Исправлен application.yml">
-      <option name="closed" value="true" />
-      <created>1747679048095</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1747679048095</updated>
-    </task>
-    <task id="LOCAL-00024" summary="DX-174 Доработаны метрики при мердже">
-      <option name="closed" value="true" />
-      <created>1747927772273</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1747927772273</updated>
-    </task>
-    <task id="LOCAL-00025" summary="Исправлен application.yml">
-      <option name="closed" value="true" />
-      <created>1747927855436</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1747927855436</updated>
-    </task>
-    <task id="LOCAL-00026" summary="Исправлен application.yml">
-      <option name="closed" value="true" />
-      <created>1747933538127</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1747933538127</updated>
-    </task>
-    <task id="LOCAL-00027" summary="Исправлены тесты">
-      <option name="closed" value="true" />
-      <created>1747933835665</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1747933835665</updated>
-    </task>
-    <task id="LOCAL-00028" summary="Добавлены два эндпоинта проверки прав доступа">
-      <option name="closed" value="true" />
-      <created>1747998015564</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1747998015564</updated>
-    </task>
-    <task id="LOCAL-00029" summary="Исправлена ошибка делоя">
-      <option name="closed" value="true" />
-      <created>1747998260121</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1747998260121</updated>
-    </task>
-    <task id="LOCAL-00030" summary="Доработан SecurityConfig под работу WebSocket">
-      <option name="closed" value="true" />
-      <created>1748219791029</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1748219791029</updated>
-    </task>
-    <task id="LOCAL-00031" summary="hotfix WebSocket and sendMessage">
-      <option name="closed" value="true" />
-      <created>1748221272749</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1748221272749</updated>
-    </task>
-    <task id="LOCAL-00032" summary="hotfix nginx.conf">
-      <option name="closed" value="true" />
-      <created>1748222133731</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1748222133731</updated>
+      <workItem from="1748965425961" duration="16318000" />
+      <workItem from="1749022996649" duration="8756000" />
     </task>
     <task id="LOCAL-00033" summary="hotfix UiSendUiMessageRequest">
       <option name="closed" value="true" />
@@ -773,7 +532,231 @@
       <option name="project" value="LOCAL" />
       <updated>1748880909594</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="DX-148 добавил возможность удаления интеграций">
+      <option name="closed" value="true" />
+      <created>1748965815962</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1748965815962</updated>
+    </task>
+    <task id="LOCAL-00055" summary="DX-148 добавил логгирование">
+      <option name="closed" value="true" />
+      <created>1748967021874</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1748967021874</updated>
+    </task>
+    <task id="LOCAL-00056" summary="DX-148 поправил логику работы с id">
+      <option name="closed" value="true" />
+      <created>1748967707415</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1748967707415</updated>
+    </task>
+    <task id="LOCAL-00057" summary="DX-200 добавил подключение к API">
+      <option name="closed" value="true" />
+      <created>1748970639920</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1748970639920</updated>
+    </task>
+    <task id="LOCAL-00058" summary="hotfix statistics">
+      <option name="closed" value="true" />
+      <created>1748970892952</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1748970892952</updated>
+    </task>
+    <task id="LOCAL-00059" summary="добавил логгирование">
+      <option name="closed" value="true" />
+      <created>1748972464056</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1748972464056</updated>
+    </task>
+    <task id="LOCAL-00060" summary="DX-196 Добавил удаление сотрудника">
+      <option name="closed" value="true" />
+      <created>1748976777136</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1748976777136</updated>
+    </task>
+    <task id="LOCAL-00061" summary="hotfix">
+      <option name="closed" value="true" />
+      <created>1748977132021</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1748977132021</updated>
+    </task>
+    <task id="LOCAL-00062" summary="DX-196 добавил логгирование">
+      <option name="closed" value="true" />
+      <created>1748979521662</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1748979521662</updated>
+    </task>
+    <task id="LOCAL-00063" summary="DX-201 поправил урл для чатов">
+      <option name="closed" value="true" />
+      <created>1748987666589</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1748987666589</updated>
+    </task>
+    <task id="LOCAL-00064" summary="hotfix">
+      <option name="closed" value="true" />
+      <created>1748988425127</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1748988425128</updated>
+    </task>
+    <task id="LOCAL-00065" summary="DX-201 поправил редирект">
+      <option name="closed" value="true" />
+      <created>1748988864913</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1748988864913</updated>
+    </task>
+    <task id="LOCAL-00066" summary="DX-201 hotfix">
+      <option name="closed" value="true" />
+      <created>1748990096032</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1748990096032</updated>
+    </task>
+    <task id="LOCAL-00067" summary="hotfix">
+      <option name="closed" value="true" />
+      <created>1748990243669</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1748990243669</updated>
+    </task>
+    <task id="LOCAL-00068" summary="DX-169 поправил сборку виджета">
+      <option name="closed" value="true" />
+      <created>1749025054522</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1749025054522</updated>
+    </task>
+    <task id="LOCAL-00069" summary="фикс докерфайл">
+      <option name="closed" value="true" />
+      <created>1749025478400</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1749025478400</updated>
+    </task>
+    <task id="LOCAL-00070" summary="hotfix">
+      <option name="closed" value="true" />
+      <created>1749026026171</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1749026026171</updated>
+    </task>
+    <task id="LOCAL-00071" summary="hotfix">
+      <option name="closed" value="true" />
+      <created>1749026251747</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1749026251747</updated>
+    </task>
+    <task id="LOCAL-00072" summary="hotfix">
+      <option name="closed" value="true" />
+      <created>1749026495783</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1749026495783</updated>
+    </task>
+    <task id="LOCAL-00073" summary="hotfix">
+      <option name="closed" value="true" />
+      <created>1749027176730</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1749027176730</updated>
+    </task>
+    <task id="LOCAL-00074" summary="hotfix">
+      <option name="closed" value="true" />
+      <created>1749027353850</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1749027353850</updated>
+    </task>
+    <task id="LOCAL-00075" summary="DX-169 поправил виджет">
+      <option name="closed" value="true" />
+      <created>1749038833667</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1749038833667</updated>
+    </task>
+    <task id="LOCAL-00076" summary="DX-169 поправил копирование виджета">
+      <option name="closed" value="true" />
+      <created>1749039286254</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1749039286254</updated>
+    </task>
+    <task id="LOCAL-00077" summary="DX-169 поправил конфиг">
+      <option name="closed" value="true" />
+      <created>1749039394055</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1749039394055</updated>
+    </task>
+    <task id="LOCAL-00078" summary="hotfix config">
+      <option name="closed" value="true" />
+      <created>1749039670383</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1749039670383</updated>
+    </task>
+    <task id="LOCAL-00079" summary="hotfix widget">
+      <option name="closed" value="true" />
+      <created>1749040072199</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1749040072199</updated>
+    </task>
+    <task id="LOCAL-00080" summary="hotfix embed">
+      <option name="closed" value="true" />
+      <created>1749040329840</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1749040329840</updated>
+    </task>
+    <task id="LOCAL-00081" summary="Добавил вебсокеты">
+      <option name="closed" value="true" />
+      <created>1749042077223</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1749042077223</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -791,41 +774,31 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="DX-178, 177 Исправлен application.yml" />
-    <MESSAGE value="DX-174 Полностью доработана систему сборка технических метрик, настроен контроллер для сбора статистики" />
-    <MESSAGE value="DX-174 Доработаны метрики при мердже" />
-    <MESSAGE value="Исправлен application.yml" />
-    <MESSAGE value="Исправлены тесты" />
-    <MESSAGE value="Исправлены ошибки с регистрацией, добавлен контейнер prometheus" />
-    <MESSAGE value="Добавлены два эндпоинта проверки прав доступа" />
-    <MESSAGE value="Исправлена ошибка делоя" />
-    <MESSAGE value="Доработан SecurityConfig под работу WebSocket" />
-    <MESSAGE value="hotfix WebSocket and sendMessage" />
-    <MESSAGE value="hotfix nginx.conf" />
-    <MESSAGE value="hotfix UiSendUiMessageRequest" />
-    <MESSAGE value="hotfix ClientCompanyProcessService" />
-    <MESSAGE value="hotfix ClientCompanyProcessService and ChatWindow" />
-    <MESSAGE value="hotfix api.js" />
-    <MESSAGE value="hotfix ChatWindow and DialogList" />
-    <MESSAGE value="hotfix websocketService" />
-    <MESSAGE value="hotfix AutoResponderServiceImpl" />
-    <MESSAGE value="hotfix application.yml" />
-    <MESSAGE value="hotfix ChatWindow" />
-    <MESSAGE value="hotfix TextProcessingApiClient" />
     <MESSAGE value="hotfix TextProcessingApiClient and nginx.conf" />
     <MESSAGE value="DX-187 hotfix WebSocket" />
     <MESSAGE value="DX-185, 186, 178 Доработан сервис автоответчика, настроено общение с клиентом, настроен сбор статистики ответов AI" />
     <MESSAGE value="DX-189 Исправлена ошибка созданий тестового чата" />
-    <option name="LAST_COMMIT_MESSAGE" value="DX-189 Исправлена ошибка созданий тестового чата" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <breakpoint enabled="true" type="java-exception">
-          <properties class="java.nio.file.AccessDeniedException" package="java.nio.file" />
-          <option name="timeStamp" value="1" />
-        </breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="DX-148 добавил возможность удаления интеграций" />
+    <MESSAGE value="DX-148 добавил логгирование" />
+    <MESSAGE value="DX-148 поправил логику работы с id" />
+    <MESSAGE value="DX-200 добавил подключение к API" />
+    <MESSAGE value="hotfix statistics" />
+    <MESSAGE value="добавил логгирование" />
+    <MESSAGE value="DX-196 Добавил удаление сотрудника" />
+    <MESSAGE value="DX-196 добавил логгирование" />
+    <MESSAGE value="DX-201 поправил урл для чатов" />
+    <MESSAGE value="DX-201 поправил редирект" />
+    <MESSAGE value="DX-201 hotfix" />
+    <MESSAGE value="DX-169 поправил сборку виджета" />
+    <MESSAGE value="фикс докерфайл" />
+    <MESSAGE value="hotfix" />
+    <MESSAGE value="DX-169 поправил виджет" />
+    <MESSAGE value="DX-169 поправил копирование виджета" />
+    <MESSAGE value="DX-169 поправил конфиг" />
+    <MESSAGE value="hotfix config" />
+    <MESSAGE value="hotfix widget" />
+    <MESSAGE value="hotfix embed" />
+    <MESSAGE value="Добавил вебсокеты" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавил вебсокеты" />
   </component>
 </project>
