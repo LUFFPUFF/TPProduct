@@ -9,6 +9,7 @@ import com.example.domain.api.authentication_module.dto.PasswordDto;
 import com.example.domain.api.authentication_module.dto.UserDataDto;
 import com.example.domain.api.authentication_module.exception_handler_auth.InvalidCodeException;
 import com.example.domain.api.authentication_module.exception_handler_auth.NotFoundCodeException;
+import com.example.domain.api.authentication_module.exception_handler_auth.NotFoundUserException;
 import com.example.domain.api.authentication_module.exception_handler_auth.WrongPasswordException;
 import com.example.domain.api.authentication_module.mapper.UserToUserDataMapper;
 import com.example.domain.api.authentication_module.service.interfaces.CurrentUserDataService;
@@ -77,7 +78,7 @@ public class UserSettingsServiceImpl implements UserSettingsService {
         return  authCacheService.getChangePasswordCode(code.getEmail())
                 .map(cacheCode -> {
                     if(cacheCode.equals(code.getCode())){
-                        User user = currentUserDataService.getUser(code.getEmail());
+                        User user = userRepository.findByEmail(code.getEmail()).orElseThrow(NotFoundUserException::new);
                         user.setPassword(code.getCode());
                         return AnswerSettingsDto.builder().answer("Успешно").build();
                     }else{
