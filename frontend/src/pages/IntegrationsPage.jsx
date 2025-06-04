@@ -7,11 +7,11 @@ import mailIcon from "../assets/mail.png";
 import API from "../config/api";
 
 const initialIntegrations = [
-    { name: "Telegram", icon: telegramIcon, connected: false, id: null },
-    { name: "WhatsApp", icon: whatsappIcon, connected: false, id: null },
-    { name: "VK", icon: vkIcon, connected: false, id: null },
-    { name: "Почту", icon: mailIcon, connected: false, id: null },
-    { name: "Виджет", icon: null, connected: false, id: null, widgetId: null, widgetScriptCode: null },
+    {name: "Telegram", icon: telegramIcon, connected: false, id: null},
+    {name: "WhatsApp", icon: whatsappIcon, connected: false, id: null},
+    {name: "VK", icon: vkIcon, connected: false, id: null},
+    {name: "Почту", icon: mailIcon, connected: false, id: null},
+    {name: "Виджет", icon: null, connected: false, id: null, widgetId: null, widgetScriptCode: null},
 ];
 
 export default function IntegrationsPage() {
@@ -128,7 +128,7 @@ export default function IntegrationsPage() {
 
             const response = await fetch(url, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(payload),
             });
 
@@ -153,7 +153,7 @@ export default function IntegrationsPage() {
             setIntegrations((prev) =>
                 prev.map((item) =>
                     item.name === selectedIntegration.name
-                        ? { ...item, connected: true, id: integrationId }
+                        ? {...item, connected: true, id: integrationId}
                         : item
                 )
             );
@@ -412,7 +412,7 @@ export default function IntegrationsPage() {
                 <>
                     <div
                         className="fixed inset-0 z-40"
-                        style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+                        style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}
                         onClick={() => setIsSidebarOpen(false)}
                     />
                     <div className="fixed top-0 left-0 w-64 h-full z-50 bg-white shadow-lg overflow-y-auto">
@@ -443,8 +443,9 @@ export default function IntegrationsPage() {
 
                             <div className="flex-1 flex items-center justify-center">
                                 {item.icon ? (
-                                    <div className="bg-[#677daf] rounded-xl w-24 h-24 flex items-center justify-center mb-4">
-                                        <img src={item.icon} alt={item.name} className="w-16 h-16" />
+                                    <div
+                                        className="bg-[#677daf] rounded-xl w-24 h-24 flex items-center justify-center mb-4">
+                                        <img src={item.icon} alt={item.name} className="w-16 h-16"/>
                                     </div>
                                 ) : (
                                     <p className="text-base font-bold mt-4 mb-4">Подключи виджет на сайт</p>
@@ -470,12 +471,11 @@ export default function IntegrationsPage() {
                             {item.name === "Виджет" && item.connected && item.widgetId && (
                                 <div className="mt-4 text-left">
                                     <p className="font-semibold mb-2 text-sm">Код для вставки на сайт:</p>
-                                    <pre
-                                        className="bg-gray-100 p-2 rounded text-xs text-gray-800 whitespace-pre-wrap break-words max-w-full overflow-x-auto"
-                                        style={{fontFamily: "monospace"}}
-                                    >
-                                        {`<script src="https://dialogx.ru/widget.js" data-widget-token="${item.widgetId}"></script>`}
-                                    </pre>
+                                    <div className="bg-gray-100 p-2 rounded text-xs text-gray-800 overflow-x-auto">
+            <pre className="whitespace-pre break-all w-full" style={{fontFamily: "monospace"}}>
+                {`<script src="https://dialogx.ru/widget.js" data-widget-token="${item.widgetId}"></script>`}
+            </pre>
+                                    </div>
                                 </div>
                             )}
                         </div>
