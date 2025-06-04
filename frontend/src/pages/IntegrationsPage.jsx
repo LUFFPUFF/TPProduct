@@ -187,22 +187,30 @@ export default function IntegrationsPage() {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                })
+                body: JSON.stringify({})
             });
 
+            const rawText = await response.text();
+
+            console.group("🌐 Ответ от сервера на подключение виджета");
+            console.log("Статус:", response.status, response.statusText);
+            console.log("Raw response:", rawText);
+
+            let data = {};
+            try {
+                data = JSON.parse(rawText);
+                console.log("Parsed JSON:", data);
+            } catch (parseErr) {
+                console.warn("⚠️ Не удалось распарсить JSON:", parseErr);
+            }
+            console.groupEnd();
+
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || "Ошибка при подключении виджета");
+                throw new Error(data.message || "Ошибка при подключении виджета");
             }
 
-            const data = await response.json();
-            console.log("✅ Виджет успешно подключен:", data);
-
             const widgetScript = `<script src="https://dialogx.ru/widget.js" data-widget-token="${data.widgetId}"></script>`;
-
             setWidgetScriptCode(widgetScript);
-
         } catch (err) {
             console.error("❌ Ошибка подключения виджета:", err);
             alert("Не удалось подключить виджет: " + err.message);
@@ -288,6 +296,24 @@ export default function IntegrationsPage() {
 
 
     useEffect(() => {
+        const logAndParse = async (label, response) => {
+            console.group(`${label} — ответ от сервера`);
+            console.log("Статус:", response.status, response.statusText);
+
+            const text = await response.text();
+            console.log("Raw response:", text);
+
+            let json = null;
+            try {
+                json = JSON.parse(text);
+                console.log("Parsed JSON:", json);
+            } catch (err) {
+                console.error("Ошибка парсинга JSON:", err);
+            }
+            console.groupEnd();
+            return json;
+        };
+
         const fetchConnectedIntegrations = async () => {
             try {
                 const tgRes = await fetch(API.integrations.TGIntegration);
@@ -295,65 +321,12 @@ export default function IntegrationsPage() {
                 const vkRes = await fetch(API.integrations.VKIntegration);
                 const whatsappRes = await fetch(API.integrations.WhatsAppIntegration);
                 const widgetRes = await fetch(API.integrations.WidgetIntegration);
-                console.log("Widget — статус:", widgetRes.status, widgetRes.statusText);
-                let widgetData = null;
 
-                if (widgetRes.ok) {
-                    const widgetText = await widgetRes.text();
-                    console.log("Widget — raw response:", widgetText);
-                    try {
-                        widgetData = JSON.parse(widgetText);
-                        console.log("Widget — parsed JSON:", widgetData);
-                    } catch (e) {
-                        console.error("Ошибка парсинга JSON для Widget:", e);
-                    }
-                }
-                console.group("Ответ от API по интеграциям");
-
-                console.log("Telegram — статус:", tgRes.status, tgRes.statusText);
-                const tgText = await tgRes.text();
-                console.log("Telegram — raw response:", tgText);
-                let tgData = [];
-                try {
-                    tgData = JSON.parse(tgText);
-                    console.log("Telegram — parsed JSON:", tgData);
-                } catch (e) {
-                    console.error("Ошибка парсинга JSON для Telegram:", e);
-                }
-
-                console.log("Mail — статус:", mailRes.status, mailRes.statusText);
-                const mailText = await mailRes.text();
-                console.log("Mail — raw response:", mailText);
-                let mailData = [];
-                try {
-                    mailData = JSON.parse(mailText);
-                    console.log("Mail — parsed JSON:", mailData);
-                } catch (e) {
-                    console.error("Ошибка парсинга JSON для Mail:", e);
-                }
-
-                console.log("Vk — статус:", vkRes.status, vkRes.statusText);
-                const vkText = await vkRes.text();
-                console.log("Telegram — raw response:", vkText);
-                let vkData = [];
-                try {
-                    vkData = JSON.parse(vkText);
-                    console.log("Telegram — parsed JSON:", vkData);
-                } catch (e) {
-                    console.error("Ошибка парсинга JSON для Telegram:", e);
-                }
-
-                console.log("WhatsApp — статус:", whatsappRes.status, whatsappRes.statusText);
-                const whatsappText = await whatsappRes.text();
-                console.log("Telegram — raw response:", whatsappText);
-                let whatsappData = [];
-                try {
-                    whatsappData = JSON.parse(whatsappText);
-                    console.log("Telegram — parsed JSON:", whatsappData);
-                } catch (e) {
-                    console.error("Ошибка парсинга JSON для Telegram:", e);
-                }
-                console.groupEnd();
+                const tgData = await logAndParse("Telegram", tgRes) || [];
+                const mailData = await logAndParse("Mail", mailRes) || [];
+                const vkData = await logAndParse("VK", vkRes) || [];
+                const whatsappData = await logAndParse("WhatsApp", whatsappRes) || [];
+                const widgetData = await logAndParse("Widget", widgetRes);
 
                 setIntegrations((prev) =>
                     prev.map((item) => {
@@ -396,7 +369,7 @@ export default function IntegrationsPage() {
                     })
                 );
             } catch (err) {
-                console.error("Ошибка при загрузке статуса интеграций:", err);
+                console.error("❌ Ошибка при загрузке статуса интеграций:", err);
             }
         };
 
