@@ -11,7 +11,7 @@ const API = {
         DeleteWhatsAppIntegration: (id) => `${API_BASE_URL}/ui/integration/whatsapp/${id}`,
         DeleteMailIntegration: (id) => `${API_BASE_URL}/ui/integration/mail/${id}`,
         DeleteTGIntegration: (id) => `${API_BASE_URL}/ui/integration/telegram/${id}`,
-        WidgetIntegration: `${API_BASE_URL}//ui/integration/dialogx-chat`,
+        WidgetIntegration: `${API_BASE_URL}/ui/integration/dialogx-chat`,
         DeleteWidget: (id) => `${API_BASE_URL}/ui/integration/dialogx-chat/${id}`,
     },
     auth: {
