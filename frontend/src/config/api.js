@@ -71,6 +71,10 @@ const API = {
         archieve: `${API_BASE_URL}/crm/put-in-archive`,
         getArchieve: `${API_BASE_URL}/crm/get-archive`,
     },
+    resetPassword: {
+        SendEmailCode: `${API_BASE_URL}/settings/change-password/emailCode`,
+        checkCode: `${API_BASE_URL}/settings/check-code`,
+    },
     websocket: {
         updateStatus: (id) => `/topic/chat/${id}/status`,
         updateMessage: (id) => `/topic/chat/${id}/messages`,

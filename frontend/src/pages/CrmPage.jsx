@@ -85,14 +85,6 @@ const SortableDeal = ({ deal }) => {
             <div className="text-gray-700 mb-1">Дата создания: {new Date(deal.createdAt).toLocaleDateString()}</div>
             <div className="text-gray-700 mb-1">Комментарий: {deal.content}</div>
             <div className="text-gray-700 mb-1">Приоритет: {deal.priority}</div>
-            <div className="flex justify-between items-center mt-2">
-                <button
-                    className="text-sm text-[#111827] underline"
-                    onClick={() => navigate(`/dialog/${deal.clientId}`)}
-                >
-                    Написать
-                </button>
-            </div>
         </div>
     );
 };
