@@ -16,3 +16,4 @@ for (const file of filesToCopy) {
         console.warn(`File ${file} not found in dist/`);
     }
 }
+
