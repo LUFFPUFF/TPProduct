@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import "../index.css";
 import React from "react";
+import { Client } from "@stomp/stompjs";
 
 export default function ChatWidget({ widgetToken }) {
     const [messages, setMessages] = useState([
@@ -10,64 +11,77 @@ export default function ChatWidget({ widgetToken }) {
     const [isVisible, setIsVisible] = useState(false);
     const [input, setInput] = useState("");
     const [isOpen, setIsOpen] = useState(false);
-    const ws = useRef(null);
     const bottomRef = useRef(null);
+    useEffect(() => {
+        const link = document.createElement("link");
+        link.href = "https://fonts.googleapis.com/css2?family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap";
+        link.rel = "stylesheet";
+        document.head.appendChild(link);
 
+        return () => {
+            document.head.removeChild(link);
+        };
+    }, []);
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
-    // Подключение к WebSocket
+    const clientRef = useRef(null);
+
     useEffect(() => {
-        const socketUrl = "wss://dialogx.ru/ws/widget/message";
-        console.log(`[WS] Connecting to ${socketUrl} with widgetToken: ${widgetToken}`);
+        if (!widgetToken) return;
 
-        ws.current = new WebSocket(socketUrl);
+        const client = new Client({
+            brokerURL: "wss://dialogx.ru/ws",
+            connectHeaders: {
+                Authorization: `Bearer ${widgetToken}`,
+            },
+            debug: (str) => console.log("[STOMP]", str),
+            reconnectDelay: 5000,
+            heartbeatIncoming: 4000,
+            heartbeatOutgoing: 4000,
+        });
 
-        ws.current.onopen = () => {
-            console.log("[WS] ✅ Connected to WebSocket");
-        };
+        clientRef.current = client;
 
-        ws.current.onmessage = (event) => {
-            console.log("[WS] 📩 Raw message received:", event.data);
-            try {
-                const data = JSON.parse(event.data);
-                console.log("[WS] ✅ Parsed message:", data);
+        client.onConnect = () => {
+            console.log("[STOMP] ✅ Connected");
 
-                if (data && typeof data.text === "string") {
+            const destination = `/widget/message`;
+
+            client.subscribe(destination, (message) => {
+                const body = JSON.parse(message.body);
+                console.log("[STOMP] 📩 Message:", body);
+
+                if (body.text) {
                     setMessages((prev) => [
                         ...prev,
                         {
                             id: Date.now(),
-                            text: data.text,
+                            text: body.text,
                             from: "bot",
                         },
                     ]);
-                } else {
-                    console.warn("[WS] ⚠️ Unexpected message format:", data);
                 }
-            } catch (error) {
-                console.error("[WS] ❌ Failed to parse message:", error, event.data);
-            }
+            });
         };
 
-        ws.current.onerror = (error) => {
-            console.error("[WS] ❌ WebSocket error:", error);
+        client.onStompError = (frame) => {
+            console.error("[STOMP] ❌ Broker error:", frame.headers["message"]);
+            console.error("Details:", frame.body);
         };
 
-        ws.current.onclose = (event) => {
-            console.warn(`[WS] 🔌 Disconnected (code: ${event.code}, reason: ${event.reason || "no reason"})`);
-        };
+        client.activate();
 
         return () => {
-            console.log("[WS] 🔄 Cleaning up WebSocket connection...");
-            ws.current?.close();
+            console.log("[STOMP] 🔌 Disconnecting...");
+            client.deactivate();
         };
     }, [widgetToken]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsVisible(true);
-            setTimeout(() => setIsOpen(true), 5);
+            setTimeout(() => setIsOpen(true), 4);
         }, 2500);
         return () => clearTimeout(timer);
     }, []);
@@ -85,11 +99,17 @@ export default function ChatWidget({ widgetToken }) {
             clientTimestamp: Date.now(),
         };
 
-        if (ws.current?.readyState === WebSocket.OPEN) {
-            console.log("[WS] 🚀 Sending message:", payload);
-            ws.current.send(JSON.stringify(payload));
-        } else {
-            console.warn("[WS] ⚠️ Cannot send, WebSocket state:", ws.current?.readyState);
+        try {
+            if (clientRef.current?.connected) {
+                clientRef.current.publish({
+                    destination: "/widget/message",
+                    body: JSON.stringify(payload),
+                });
+            } else {
+                console.warn("[STOMP] ⚠️ Not connected to broker.");
+            }
+        } catch (error) {
+            console.error("[STOMP] ❌ Failed to send message:", error);
         }
 
         setInput("");
@@ -101,6 +121,7 @@ export default function ChatWidget({ widgetToken }) {
     if (!isOpen) {
         return (
             <div
+                style={{ fontFamily: "'Montserrat Alternates', sans-serif" }}
                 className="fixed bottom-4 right-4 w-14 h-14 bg-[#1E2A56] rounded-full flex items-center justify-center cursor-pointer shadow-lg transition-all duration-300 hover:scale-105"
                 onClick={() => setIsOpen(true)}
             >
@@ -116,7 +137,9 @@ export default function ChatWidget({ widgetToken }) {
             className={`
                 fixed bottom-4 right-4 w-[320px] h-[520px] shadow-lg rounded-2xl overflow-hidden font-sans text-sm flex flex-col transition-all duration-500 transform
                 ${isOpen ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"}
+                
             `}
+            style={{ fontFamily: "'Montserrat Alternates', sans-serif" }}
         >
             <div className="flex items-center justify-between text-white p-3 bg-gradient-to-r from-[#3e517a] to-[#8596bf]">
                 <div className="flex items-center gap-1 font-semibold text-lg">

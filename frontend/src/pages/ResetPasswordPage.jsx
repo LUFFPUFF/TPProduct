@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import API from "../config/api";
 
 export const ResetPasswordPage = () => {
-    const [step, setStep] = useState(1); // 1 - email, 2 - код, 3 - новый пароль
+    const [step, setStep] = useState(1);
     const [email, setEmail] = useState("");
     const [code, setCode] = useState("");
     const [password, setPassword] = useState("");
@@ -21,7 +21,7 @@ export const ResetPasswordPage = () => {
         }
 
         try {
-            const response = await fetch(API.auth.sendResetCode, {
+            const response = await fetch(API.resetPassword.SendEmailCode, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email }),
@@ -31,34 +31,14 @@ export const ResetPasswordPage = () => {
                 setStep(2);
                 setMessage("Код отправлен на вашу почту.");
             } else {
-                setMessage("Не удалось отправить код. Попробуйте позже.");
+                const data = await response.json();
+                setMessage(data.message || "Не удалось отправить код.");
             }
         } catch (error) {
             setMessage(`Ошибка соединения: ${error.message}`);
         }
     };
 
-    const handleVerifyCode = async (e) => {
-        e.preventDefault();
-        setMessage("");
-
-        try {
-            const response = await fetch(API.auth.verifyResetCode, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, code }),
-            });
-
-            if (response.ok) {
-                setStep(3);
-                setMessage("Код подтвержден.");
-            } else {
-                setMessage("Неверный код подтверждения.");
-            }
-        } catch (error) {
-            setMessage(`Ошибка соединения: ${error.message}`);
-        }
-    };
 
     const handleResetPassword = async (e) => {
         e.preventDefault();
@@ -75,7 +55,7 @@ export const ResetPasswordPage = () => {
         }
 
         try {
-            const response = await fetch(API.auth.resetPassword, {
+            const response = await fetch(API.resetPassword.checkCode, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, code, newPassword: password }),
@@ -85,7 +65,8 @@ export const ResetPasswordPage = () => {
                 setMessage("Пароль успешно изменен.");
                 setTimeout(() => navigate("/login"), 3000);
             } else {
-                setMessage("Не удалось изменить пароль. Попробуйте снова.");
+                const data = await response.json();
+                setMessage(data.message || "Не удалось изменить пароль.");
             }
         } catch (error) {
             setMessage(`Ошибка соединения: ${error.message}`);
@@ -127,8 +108,8 @@ export const ResetPasswordPage = () => {
                 )}
 
                 {step === 2 && (
-                    <form onSubmit={handleVerifyCode} className="flex flex-col items-center">
-                        <div className="mb-6 w-full">
+                    <form onSubmit={handleResetPassword} className="flex flex-col items-center">
+                        <div className="mb-4 w-full">
                             <label className="block text-lg text-gray-700 mb-2">Код подтверждения</label>
                             <input
                                 type="text"
@@ -138,17 +119,6 @@ export const ResetPasswordPage = () => {
                                 className="w-full p-3 border border-gray-300 rounded-md bg-white outline-none focus:ring-2 focus:ring-[#092155]"
                             />
                         </div>
-                        <button
-                            type="submit"
-                            className="w-full p-3 text-lg font-semibold bg-[#092155] text-white rounded-md hover:bg-[#2a4992] active:bg-[#dadee7] active:text-black transition-all"
-                        >
-                            Подтвердить код
-                        </button>
-                    </form>
-                )}
-
-                {step === 3 && (
-                    <form onSubmit={handleResetPassword} className="flex flex-col items-center">
                         <div className="mb-4 w-full">
                             <label className="block text-lg text-gray-700 mb-2">Новый пароль</label>
                             <input

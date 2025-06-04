@@ -7,11 +7,11 @@ import mailIcon from "../assets/mail.png";
 import API from "../config/api";
 
 const initialIntegrations = [
-    { name: "Telegram", icon: telegramIcon, connected: false, id: null },
-    { name: "WhatsApp", icon: whatsappIcon, connected: false, id: null },
-    { name: "VK", icon: vkIcon, connected: false, id: null },
-    { name: "Почту", icon: mailIcon, connected: false, id: null },
-    { name: "Виджет", icon: null, connected: false, id: null },
+    {name: "Telegram", icon: telegramIcon, connected: false, id: null},
+    {name: "WhatsApp", icon: whatsappIcon, connected: false, id: null},
+    {name: "VK", icon: vkIcon, connected: false, id: null},
+    {name: "Почту", icon: mailIcon, connected: false, id: null},
+    {name: "Виджет", icon: null, connected: false, id: null, widgetId: null, widgetScriptCode: null},
 ];
 
 export default function IntegrationsPage() {
@@ -31,7 +31,6 @@ export default function IntegrationsPage() {
     const [verifyToken, setVerifyToken] = useState("");
     const [communityId, setCommunityId] = useState("");
     const [phoneNumberId, setPhoneNumberId] = useState("");
-    const [setWidgetScriptCode] = useState("");
 
     useEffect(() => {
         document.body.style.overflow = modalOpen ? "hidden" : "auto";
@@ -129,7 +128,7 @@ export default function IntegrationsPage() {
 
             const response = await fetch(url, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(payload),
             });
 
@@ -154,7 +153,7 @@ export default function IntegrationsPage() {
             setIntegrations((prev) =>
                 prev.map((item) =>
                     item.name === selectedIntegration.name
-                        ? { ...item, connected: true, id: integrationId }
+                        ? {...item, connected: true, id: integrationId}
                         : item
                 )
             );
@@ -191,7 +190,6 @@ export default function IntegrationsPage() {
             });
 
             const rawText = await response.text();
-
             console.group("🌐 Ответ от сервера на подключение виджета");
             console.log("Статус:", response.status, response.statusText);
             console.log("Raw response:", rawText);
@@ -209,8 +207,21 @@ export default function IntegrationsPage() {
                 throw new Error(data.message || "Ошибка при подключении виджета");
             }
 
-            const widgetScript = `<script src="https://dialogx.ru/widget.js" data-widget-token="${data.widgetId}"></script>`;
-            setWidgetScriptCode(widgetScript);
+            const scriptCode = `<script src="https://dialogx.ru/widget.js" data-widget-token="${data.widgetId}"></script>`;
+
+            setIntegrations((prev) =>
+                prev.map((item) =>
+                    item.name === "Виджет"
+                        ? {
+                            ...item,
+                            connected: true,
+                            id: data.id || data.widgetId,
+                            widgetId: data.widgetId,
+                            widgetScriptCode: scriptCode,
+                        }
+                        : item
+                )
+            );
         } catch (err) {
             console.error("❌ Ошибка подключения виджета:", err);
             alert("Не удалось подключить виджет: " + err.message);
@@ -355,13 +366,17 @@ export default function IntegrationsPage() {
                                 id: whatsappData.length > 0 ? whatsappData[0].id : null,
                             };
                         } else if (item.name === "Виджет") {
+                            const isConnected = widgetData && typeof widgetData.widgetId === "string" && widgetData.widgetId.trim() !== "";
+                            const scriptCode = isConnected
+                                ? `<script src="https://dialogx.ru/widget.js" data-widget-token="${widgetData.widgetId}"></script>`
+                                : null;
+
                             return {
                                 ...item,
-                                connected: !!widgetData,
+                                connected: isConnected,
+                                id: widgetData?.id || widgetData?.widgetId || null,
                                 widgetId: widgetData?.widgetId || null,
-                                widgetScriptCode: widgetData?.widgetId
-                                    ? `<script src="https://dialogx.ru/widget.js" data-widget-token="${widgetData.widgetId}"></script>`
-                                    : null,
+                                widgetScriptCode: scriptCode,
                             };
                         }
 
@@ -397,7 +412,7 @@ export default function IntegrationsPage() {
                 <>
                     <div
                         className="fixed inset-0 z-40"
-                        style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+                        style={{backgroundColor: "rgba(0, 0, 0, 0.5)"}}
                         onClick={() => setIsSidebarOpen(false)}
                     />
                     <div className="fixed top-0 left-0 w-64 h-full z-50 bg-white shadow-lg overflow-y-auto">
@@ -428,8 +443,9 @@ export default function IntegrationsPage() {
 
                             <div className="flex-1 flex items-center justify-center">
                                 {item.icon ? (
-                                    <div className="bg-[#677daf] rounded-xl w-24 h-24 flex items-center justify-center mb-4">
-                                        <img src={item.icon} alt={item.name} className="w-16 h-16" />
+                                    <div
+                                        className="bg-[#677daf] rounded-xl w-24 h-24 flex items-center justify-center mb-4">
+                                        <img src={item.icon} alt={item.name} className="w-16 h-16"/>
                                     </div>
                                 ) : (
                                     <p className="text-base font-bold mt-4 mb-4">Подключи виджет на сайт</p>
@@ -453,11 +469,13 @@ export default function IntegrationsPage() {
                             </button>
 
                             {item.name === "Виджет" && item.connected && item.widgetId && (
-                                <div className="mt-4">
+                                <div className="mt-4 text-left">
                                     <p className="font-semibold mb-2 text-sm">Код для вставки на сайт:</p>
-                                    <pre className="bg-gray-100 p-2 rounded text-xs text-gray-800 whitespace-pre-wrap">
-                                        {`<script src="https://dialogx.ru/widget.js" data-widget-token="${item.widgetId}"></script>`}
-                                    </pre>
+                                    <div className="bg-gray-100 p-2 rounded text-xs text-gray-800 overflow-x-auto">
+            <pre className="whitespace-pre break-all w-full" style={{fontFamily: "monospace"}}>
+                {`<script src="https://dialogx.ru/widget.js" data-widget-token="${item.widgetId}"></script>`}
+            </pre>
+                                    </div>
                                 </div>
                             )}
                         </div>

@@ -11,7 +11,7 @@ const API = {
         DeleteWhatsAppIntegration: (id) => `${API_BASE_URL}/ui/integration/whatsapp/${id}`,
         DeleteMailIntegration: (id) => `${API_BASE_URL}/ui/integration/mail/${id}`,
         DeleteTGIntegration: (id) => `${API_BASE_URL}/ui/integration/telegram/${id}`,
-        WidgetIntegration: `${API_BASE_URL}//ui/integration/dialogx-chat`,
+        WidgetIntegration: `${API_BASE_URL}/ui/integration/dialogx-chat`,
         DeleteWidget: (id) => `${API_BASE_URL}/ui/integration/dialogx-chat/${id}`,
     },
     auth: {
@@ -70,6 +70,10 @@ const API = {
         updateStage: `${API_BASE_URL}/crm/change-stage`,
         archieve: `${API_BASE_URL}/crm/put-in-archive`,
         getArchieve: `${API_BASE_URL}/crm/get-archive`,
+    },
+    resetPassword: {
+        SendEmailCode: `${API_BASE_URL}/settings/change-password/emailCode`,
+        checkCode: `${API_BASE_URL}/settings/check-code`,
     },
     websocket: {
         updateStatus: (id) => `/topic/chat/${id}/status`,

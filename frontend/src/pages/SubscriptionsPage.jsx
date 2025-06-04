@@ -199,6 +199,7 @@ export default function SubscriptionsPage() {
             const data = await response.json();
             console.log("Ответ от сервера при активации подписки:", data);
             alert(`Подписка активирована до ${new Date(data.endSubscription).toLocaleDateString()}`);
+            window.location.reload();
         } catch (error) {
             console.error("Ошибка при активации подписки:", error);
             alert("Не удалось подключить подписку");
