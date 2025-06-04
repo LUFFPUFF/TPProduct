@@ -191,6 +191,68 @@ public class EmailDialogManager {
 
     }
 
+    public void sendEmailMessage(String fromEmailAddress,
+                                 String smtpHost,
+                            String appPassword,
+                            String toEmailAddress,
+                            String subject,
+                            String content) {
+
+
+        if (toEmailAddress == null || toEmailAddress.trim().isEmpty() || content == null || content.trim().isEmpty()) {
+            log.warn("Attempted to send email  with missing information: to={}, content empty={}",
+                     toEmailAddress, content != null && content.trim().isEmpty());
+            return;
+        }
+
+
+        int smtpPort = 587;
+
+        JavaMailSenderImpl dynamicMailSender = new JavaMailSenderImpl();
+        dynamicMailSender.setHost(smtpHost);
+        dynamicMailSender.setPort(smtpPort);
+        dynamicMailSender.setUsername(fromEmailAddress);
+        dynamicMailSender.setPassword(appPassword);
+
+        Properties props = dynamicMailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+
+        //TODO пока что так, в проде такое нельзя делать
+        props.put("mail.smtp.starttls.enable", "true");
+
+        props.put("mail.smtp.ssl.trust", smtpHost);
+
+        props.put("mail.smtp.connectiontimeout", "10000");
+        props.put("mail.smtp.timeout", "10000");
+        props.put("mail.smtp.writetimeout", "10000");
+
+        MimeMessage mimeMessage = dynamicMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+            mimeMessageHelper.setFrom(fromEmailAddress);
+            mimeMessageHelper.setTo(toEmailAddress);
+            mimeMessageHelper.setSubject(subject != null && !subject.trim().isEmpty() ? subject : "Без темы");
+            mimeMessageHelper.setText(content, false);
+
+            dynamicMailSender.send(mimeMessage);
+
+        } catch (MailSendException e) {
+            log.error("Failed to send email from {} to {} for company ID: {}. Cause: {}",
+                    fromEmailAddress, toEmailAddress, e.getMessage(),
+                    e.getRootCause() != null ? e.getRootCause().getMessage() : "N/A", e);
+        }
+        catch (MessagingException e) {
+            log.error("Failed to send email from {} to {} for company ID due to messaging error: {}",
+                    fromEmailAddress, toEmailAddress, e.getMessage(), e);
+        }
+        catch (Exception e) {
+            log.error("Unexpected error sending email from {} to {} for company ID: {}",
+                    fromEmailAddress, toEmailAddress, e.getMessage(), e);
+        }
+
+    }
     /**
      * Запускает или обновляет процесс поллинга для указанной компании (если у нее настроен Email).
      * Должен вызываться из сервисного слоя при сохранении/обновлении конфигурации почты пользователем.
