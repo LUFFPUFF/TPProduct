@@ -25,6 +25,8 @@ export default function ChatWidget({ widgetToken }) {
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
+    const clientRef = useRef(null);
+
     useEffect(() => {
         if (!widgetToken) return;
 
@@ -38,6 +40,8 @@ export default function ChatWidget({ widgetToken }) {
             heartbeatIncoming: 4000,
             heartbeatOutgoing: 4000,
         });
+
+        clientRef.current = client;
 
         client.onConnect = () => {
             console.log("[STOMP] ✅ Connected");
@@ -95,13 +99,17 @@ export default function ChatWidget({ widgetToken }) {
             clientTimestamp: Date.now(),
         };
 
-        if (Client.connected) {
-            Client.publish({
-                destination: "/widget/message",
-                body: JSON.stringify(payload),
-            });
-        } else {
-            console.warn("[STOMP] ⚠️ Not connected");
+        try {
+            if (clientRef.current?.connected) {
+                clientRef.current.publish({
+                    destination: "/widget/message",
+                    body: JSON.stringify(payload),
+                });
+            } else {
+                console.warn("[STOMP] ⚠️ Not connected to broker.");
+            }
+        } catch (error) {
+            console.error("[STOMP] ❌ Failed to send message:", error);
         }
 
         setInput("");
