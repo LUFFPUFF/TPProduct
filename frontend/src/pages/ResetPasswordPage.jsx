@@ -20,25 +20,30 @@ export const ResetPasswordPage = () => {
             return;
         }
 
+        const payload = { email };
+        console.log("➡️ Отправка запроса (send code):", payload);
+
         try {
             const response = await fetch(API.resetPassword.SendEmailCode, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email }),
+                body: JSON.stringify(payload),
             });
+
+            const responseData = await response.json();
+            console.log("⬅️ Ответ от сервера (send code):", responseData);
 
             if (response.ok) {
                 setStep(2);
                 setMessage("Код отправлен на вашу почту.");
             } else {
-                const data = await response.json();
-                setMessage(data.message || "Не удалось отправить код.");
+                setMessage(responseData.message || "Не удалось отправить код.");
             }
         } catch (error) {
+            console.error("❌ Ошибка при отправке кода:", error);
             setMessage(`Ошибка соединения: ${error.message}`);
         }
     };
-
 
     const handleResetPassword = async (e) => {
         e.preventDefault();
@@ -54,21 +59,27 @@ export const ResetPasswordPage = () => {
             return;
         }
 
+        const payload = { email, code, newPassword: password };
+        console.log("➡️ Отправка запроса (reset password):", payload);
+
         try {
             const response = await fetch(API.resetPassword.checkCode, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, code, newPassword: password }),
+                body: JSON.stringify(payload),
             });
+
+            const responseData = await response.json();
+            console.log("⬅️ Ответ от сервера (reset password):", responseData);
 
             if (response.ok) {
                 setMessage("Пароль успешно изменен.");
                 setTimeout(() => navigate("/login"), 3000);
             } else {
-                const data = await response.json();
-                setMessage(data.message || "Не удалось изменить пароль.");
+                setMessage(responseData.message || "Не удалось изменить пароль.");
             }
         } catch (error) {
+            console.error("❌ Ошибка при смене пароля:", error);
             setMessage(`Ошибка соединения: ${error.message}`);
         }
     };
