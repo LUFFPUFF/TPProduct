@@ -11,7 +11,7 @@ const initialIntegrations = [
     { name: "WhatsApp", icon: whatsappIcon, connected: false, id: null },
     { name: "VK", icon: vkIcon, connected: false, id: null },
     { name: "Почту", icon: mailIcon, connected: false, id: null },
-    { name: "Виджет", icon: null, connected: false, id: null },
+    { name: "Виджет", icon: null, connected: false, id: null, widgetId: null, widgetScriptCode: null },
 ];
 
 export default function IntegrationsPage() {
@@ -191,7 +191,6 @@ export default function IntegrationsPage() {
             });
 
             const rawText = await response.text();
-
             console.group("🌐 Ответ от сервера на подключение виджета");
             console.log("Статус:", response.status, response.statusText);
             console.log("Raw response:", rawText);
@@ -209,8 +208,22 @@ export default function IntegrationsPage() {
                 throw new Error(data.message || "Ошибка при подключении виджета");
             }
 
-            const widgetScript = `<script src="https://dialogx.ru/widget.js" data-widget-token="${data.widgetId}"></script>`;
-            setWidgetScriptCode(widgetScript);
+            const scriptCode = `<script src="https://dialogx.ru/widget.js" data-widget-token="${data.widgetId}"></script>`;
+            setWidgetScriptCode(scriptCode);
+
+            setIntegrations((prev) =>
+                prev.map((item) =>
+                    item.name === "Виджет"
+                        ? {
+                            ...item,
+                            connected: true,
+                            id: data.id || data.widgetId,
+                            widgetId: data.widgetId,
+                            widgetScriptCode: scriptCode,
+                        }
+                        : item
+                )
+            );
         } catch (err) {
             console.error("❌ Ошибка подключения виджета:", err);
             alert("Не удалось подключить виджет: " + err.message);
@@ -356,13 +369,16 @@ export default function IntegrationsPage() {
                             };
                         } else if (item.name === "Виджет") {
                             const isConnected = widgetData && typeof widgetData.widgetId === "string" && widgetData.widgetId.trim() !== "";
+                            const scriptCode = isConnected
+                                ? `<script src="https://dialogx.ru/widget.js" data-widget-token="${widgetData.widgetId}"></script>`
+                                : null;
+
                             return {
                                 ...item,
                                 connected: isConnected,
-                                id: isConnected ? widgetData.widgetId : null,
-                                widgetScriptCode: isConnected
-                                    ? `<script src="https://dialogx.ru/widget.js" data-widget-token="${widgetData.widgetId}"></script>`
-                                    : null,
+                                id: widgetData?.id || widgetData?.widgetId || null,
+                                widgetId: widgetData?.widgetId || null,
+                                widgetScriptCode: scriptCode,
                             };
                         }
 
@@ -450,18 +466,20 @@ export default function IntegrationsPage() {
                                         : "bg-[#0a2255] hover:bg-[#2a4992] active:bg-[#dadee7] active:text-black transition-all duration-150 ease-in-out transform active:scale-95"
                                 }`}
                             >
-                                {item.name === "Виджет" && item.connected && item.widgetId && (
-                                    <div className="mt-4">
-                                        <p className="font-semibold mb-2 text-sm">Код для вставки на сайт:</p>
-                                        <pre className="bg-gray-100 p-2 rounded text-xs text-gray-800 whitespace-pre-wrap">
-                                        {`<script src="https://dialogx.ru/widget.js" data-widget-token="${item.widgetId}"></script>`}
-                                    </pre>
-                                    </div>
-                                )}
                                 {item.connected ? "Подключено" : "Подключить"}
                             </button>
 
-
+                            {item.name === "Виджет" && item.connected && item.widgetId && (
+                                <div className="mt-4 text-left">
+                                    <p className="font-semibold mb-2 text-sm">Код для вставки на сайт:</p>
+                                    <pre
+                                        className="bg-gray-100 p-2 rounded text-xs text-gray-800 whitespace-pre-wrap break-words max-w-full overflow-x-auto"
+                                        style={{fontFamily: "monospace"}}
+                                    >
+                                        {`<script src="https://dialogx.ru/widget.js" data-widget-token="${item.widgetId}"></script>`}
+                                    </pre>
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
