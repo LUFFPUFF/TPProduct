@@ -359,7 +359,7 @@ export default function IntegrationsPage() {
                             return {
                                 ...item,
                                 connected: isConnected,
-                                widgetId: isConnected ? widgetData.widgetId : null,
+                                id: isConnected ? widgetData.widgetId : null,
                                 widgetScriptCode: isConnected
                                     ? `<script src="https://dialogx.ru/widget.js" data-widget-token="${widgetData.widgetId}"></script>`
                                     : null,
@@ -450,17 +450,18 @@ export default function IntegrationsPage() {
                                         : "bg-[#0a2255] hover:bg-[#2a4992] active:bg-[#dadee7] active:text-black transition-all duration-150 ease-in-out transform active:scale-95"
                                 }`}
                             >
+                                {item.name === "Виджет" && item.connected && item.widgetId && (
+                                    <div className="mt-4">
+                                        <p className="font-semibold mb-2 text-sm">Код для вставки на сайт:</p>
+                                        <pre className="bg-gray-100 p-2 rounded text-xs text-gray-800 whitespace-pre-wrap">
+                                        {`<script src="https://dialogx.ru/widget.js" data-widget-token="${item.widgetId}"></script>`}
+                                    </pre>
+                                    </div>
+                                )}
                                 {item.connected ? "Подключено" : "Подключить"}
                             </button>
 
-                            {item.name === "Виджет" && item.connected && item.widgetId && (
-                                <div className="mt-4">
-                                    <p className="font-semibold mb-2 text-sm">Код для вставки на сайт:</p>
-                                    <pre className="bg-gray-100 p-2 rounded text-xs text-gray-800 whitespace-pre-wrap">
-                                        {`<script src="https://dialogx.ru/widget.js" data-widget-token="${item.widgetId}"></script>`}
-                                    </pre>
-                                </div>
-                            )}
+
                         </div>
                     ))}
                 </div>
