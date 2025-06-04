@@ -34,6 +34,15 @@ export const HomePage = () => {
             noscript.innerHTML = `<div><img src="https://mc.yandex.ru/watch/102385915" style="position:absolute; left:-9999px;" alt="" /></div>`;
             document.body.appendChild(noscript);
         }
+
+        if (!document.getElementById("dialogx-widget")) {
+            const widgetScript = document.createElement("script");
+            widgetScript.id = "dialogx-widget";
+            widgetScript.src = "https://dialogx.ru/widget.js";
+            widgetScript.async = true;
+            widgetScript.dataset.widgetToken = "demo-token";
+            document.body.appendChild(widgetScript);
+        }
     }, []);
     return (
         <div className="bg-[#E6E5EA]">
