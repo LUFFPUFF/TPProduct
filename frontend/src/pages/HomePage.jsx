@@ -35,15 +35,15 @@ export const HomePage = () => {
             document.body.appendChild(noscript);
         }
 
-        // DialogX widget
-        if (!document.getElementById("dialogx-widget")) {
-            const widgetScript = document.createElement("script");
-            widgetScript.id = "dialogx-widget";
-            widgetScript.src = "https://dialogx.ru/widget.js";
-            widgetScript.async = true;
-            widgetScript.dataset.widgetToken = "demo-token";
-            document.body.appendChild(widgetScript);
-        }
+        // // DialogX widget
+        // if (!document.getElementById("dialogx-widget")) {
+        //     const widgetScript = document.createElement("script");
+        //     widgetScript.id = "dialogx-widget";
+        //     widgetScript.src = "https://dialogx.ru/widget.js";
+        //     widgetScript.async = true;
+        //     widgetScript.dataset.widgetToken = "demo-token";
+        //     document.body.appendChild(widgetScript);
+        // }
     }, []);
     return (
         <div className="bg-[#E6E5EA]">
