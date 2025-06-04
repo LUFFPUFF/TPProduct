@@ -13,6 +13,7 @@ import com.example.domain.api.authentication_module.exception_handler_auth.Wrong
 import com.example.domain.api.authentication_module.mapper.UserToUserDataMapper;
 import com.example.domain.api.authentication_module.service.interfaces.CurrentUserDataService;
 import com.example.domain.api.authentication_module.service.interfaces.UserSettingsService;
+import com.example.domain.api.chat_service_api.integration.manager.mail.manager.EmailDialogManager;
 import com.example.domain.dto.EmailDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class UserSettingsServiceImpl implements UserSettingsService {
     private final UserToUserDataMapper userToUserDataMapper;
     private final PasswordEncoder passwordEncoder;
     private final AuthCacheService authCacheService;
+    private final EmailDialogManager emailDialogManager;
 
     @Override
     public UserDataDto getUserData() {
@@ -61,8 +63,11 @@ public class UserSettingsServiceImpl implements UserSettingsService {
 
     @Override
     public AnswerSettingsDto changePassword(EmailDto emailDto) {
-        //TODO: отправка сообщения на email
-        authCacheService.putChangePasswordCode("000000", emailDto.getEmail());
+        String code = generateChangePasswordCode();
+        emailDialogManager.sendEmailMessage("dialogxcompany@gmail.com","smtp.gmail.com","ajss annz efsh kacm"
+                ,emailDto.getEmail(),"Восстановление пароля","Код: "+ code);
+
+        authCacheService.putChangePasswordCode(code, emailDto.getEmail());
         return null;
     }
 
