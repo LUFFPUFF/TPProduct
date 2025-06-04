@@ -35,7 +35,6 @@ export const HomePage = () => {
             document.body.appendChild(noscript);
         }
 
-        // DialogX widget
         if (!document.getElementById("dialogx-widget")) {
             const widgetScript = document.createElement("script");
             widgetScript.id = "dialogx-widget";
