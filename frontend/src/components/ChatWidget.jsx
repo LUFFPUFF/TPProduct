@@ -11,20 +11,27 @@ export default function ChatWidget({ widgetToken }) {
     const [input, setInput] = useState("");
     const [isOpen, setIsOpen] = useState(false);
     const ws = useRef(null);
-    const sessionId = widgetToken;
+    const bottomRef = useRef(null);
 
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages]);
     // Подключение к WebSocket
     useEffect(() => {
-        ws.current = new WebSocket("wss://dialogx.ru/ws/widget/message");
+        const socketUrl = "wss://dialogx.ru/ws/widget/message";
+        console.log(`[WS] Connecting to ${socketUrl} with widgetToken: ${widgetToken}`);
+
+        ws.current = new WebSocket(socketUrl);
 
         ws.current.onopen = () => {
-            console.log("WebSocket connected");
+            console.log("[WS] ✅ Connected to WebSocket");
         };
 
         ws.current.onmessage = (event) => {
-            console.log("WebSocket message received:", event.data);
+            console.log("[WS] 📩 Raw message received:", event.data);
             try {
                 const data = JSON.parse(event.data);
+                console.log("[WS] ✅ Parsed message:", data);
 
                 if (data && typeof data.text === "string") {
                     setMessages((prev) => [
@@ -35,24 +42,27 @@ export default function ChatWidget({ widgetToken }) {
                             from: "bot",
                         },
                     ]);
+                } else {
+                    console.warn("[WS] ⚠️ Unexpected message format:", data);
                 }
             } catch (error) {
-                console.error("Failed to parse WebSocket message:", error);
+                console.error("[WS] ❌ Failed to parse message:", error, event.data);
             }
         };
 
         ws.current.onerror = (error) => {
-            console.error("WebSocket error:", error);
+            console.error("[WS] ❌ WebSocket error:", error);
         };
 
-        ws.current.onclose = () => {
-            console.log("WebSocket disconnected");
+        ws.current.onclose = (event) => {
+            console.warn(`[WS] 🔌 Disconnected (code: ${event.code}, reason: ${event.reason || "no reason"})`);
         };
 
         return () => {
+            console.log("[WS] 🔄 Cleaning up WebSocket connection...");
             ws.current?.close();
         };
-    }, []);
+    }, [widgetToken]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -62,54 +72,27 @@ export default function ChatWidget({ widgetToken }) {
         return () => clearTimeout(timer);
     }, []);
 
-    const handleSend = async () => {
+    const handleSend = () => {
         if (!input.trim()) return;
 
         const newMessage = { id: Date.now(), text: input, from: "user" };
         setMessages((prev) => [...prev, newMessage]);
-        setInput("");
 
-        // Отправка в WebSocket
         const payload = {
             widgetId: widgetToken,
-            sessionId: sessionId.current,
+            sessionId: widgetToken,
             text: input,
             clientTimestamp: Date.now(),
         };
 
         if (ws.current?.readyState === WebSocket.OPEN) {
+            console.log("[WS] 🚀 Sending message:", payload);
             ws.current.send(JSON.stringify(payload));
-            console.log("Sent to WebSocket:", payload);
         } else {
-            console.warn("WebSocket is not connected.");
+            console.warn("[WS] ⚠️ Cannot send, WebSocket state:", ws.current?.readyState);
         }
 
-        // Также POST-запрос (оставляем, если нужен)
-        try {
-            const response = await fetch("https://yourdomain.com/api/chat", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: input, widgetToken }),
-            });
-            const data = await response.json();
-            setMessages((prev) => [
-                ...prev,
-                {
-                    id: Date.now() + 1,
-                    text: data.reply || "Извините, произошла ошибка.",
-                    from: "bot",
-                },
-            ]);
-        } catch {
-            setMessages((prev) => [
-                ...prev,
-                {
-                    id: Date.now() + 1,
-                    text: "Ошибка при отправке сообщения.",
-                    from: "bot",
-                },
-            ]);
-        }
+        setInput("");
     };
     if (!isVisible) {
         return null;
@@ -159,6 +142,7 @@ export default function ChatWidget({ widgetToken }) {
                         }`}
                     >
                         {msg.text}
+                        <div ref={bottomRef} />
                     </div>
                 ))}
             </div>
