@@ -31,6 +31,7 @@ export default function IntegrationsPage() {
     const [verifyToken, setVerifyToken] = useState("");
     const [communityId, setCommunityId] = useState("");
     const [phoneNumberId, setPhoneNumberId] = useState("");
+    const [setWidgetScriptCode] = useState("");
 
     useEffect(() => {
         document.body.style.overflow = modalOpen ? "hidden" : "auto";
@@ -179,7 +180,34 @@ export default function IntegrationsPage() {
         }
     };
 
+    const handleConnectWidget = async () => {
+        try {
+            const response = await fetch(API.integrations.WidgetIntegration, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                })
+            });
 
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || "Ошибка при подключении виджета");
+            }
+
+            const data = await response.json();
+            console.log("✅ Виджет успешно подключен:", data);
+
+            const widgetScript = `<script src="https://dialogx.ru/widget.js" data-widget-token="${data.widgetId}"></script>`;
+
+            setWidgetScriptCode(widgetScript);
+
+        } catch (err) {
+            console.error("❌ Ошибка подключения виджета:", err);
+            alert("Не удалось подключить виджет: " + err.message);
+        }
+    };
     const handleDisconnect = async (integrationName) => {
         try {
             const integration = integrations.find((item) => item.name === integrationName);
@@ -201,6 +229,9 @@ export default function IntegrationsPage() {
                     break;
                 case "Почту":
                     deleteUrl = API.integrations.DeleteMailIntegration(integration.id);
+                    break;
+                case "Виджет":
+                    deleteUrl = API.integrations.DeleteWidget(integration.id);
                     break;
                 default:
                     alert("Неизвестный тип интеграции.");
@@ -227,7 +258,13 @@ export default function IntegrationsPage() {
                 setIntegrations((prev) =>
                     prev.map((item) =>
                         item.name === integrationName
-                            ? { ...item, connected: false, id: null }
+                            ? {
+                                ...item,
+                                connected: false,
+                                id: null,
+                                widgetId: null,
+                                widgetScriptCode: null,
+                            }
                             : item
                     )
                 );
@@ -257,7 +294,20 @@ export default function IntegrationsPage() {
                 const mailRes = await fetch(API.integrations.MailIntegration);
                 const vkRes = await fetch(API.integrations.VKIntegration);
                 const whatsappRes = await fetch(API.integrations.WhatsAppIntegration);
+                const widgetRes = await fetch(API.integrations.WidgetIntegration);
+                console.log("Widget — статус:", widgetRes.status, widgetRes.statusText);
+                let widgetData = null;
 
+                if (widgetRes.ok) {
+                    const widgetText = await widgetRes.text();
+                    console.log("Widget — raw response:", widgetText);
+                    try {
+                        widgetData = JSON.parse(widgetText);
+                        console.log("Widget — parsed JSON:", widgetData);
+                    } catch (e) {
+                        console.error("Ошибка парсинга JSON для Widget:", e);
+                    }
+                }
                 console.group("Ответ от API по интеграциям");
 
                 console.log("Telegram — статус:", tgRes.status, tgRes.statusText);
@@ -331,7 +381,17 @@ export default function IntegrationsPage() {
                                 connected: Array.isArray(whatsappData) && whatsappData.length > 0,
                                 id: whatsappData.length > 0 ? whatsappData[0].id : null,
                             };
+                        } else if (item.name === "Виджет") {
+                            return {
+                                ...item,
+                                connected: !!widgetData,
+                                widgetId: widgetData?.widgetId || null,
+                                widgetScriptCode: widgetData?.widgetId
+                                    ? `<script src="https://dialogx.ru/widget.js" data-widget-token="${widgetData.widgetId}"></script>`
+                                    : null,
+                            };
                         }
+
                         return item;
                     })
                 );
@@ -392,19 +452,24 @@ export default function IntegrationsPage() {
                             <h2 className="font-semibold text-xl mb-2">
                                 {item.name === "Виджет" ? "Виджет" : `Подключить ${item.name}`}
                             </h2>
+
                             <div className="flex-1 flex items-center justify-center">
                                 {item.icon ? (
-                                    <div
-                                        className="bg-[#677daf] rounded-xl w-24 h-24 flex items-center justify-center mb-4">
-                                        <img src={item.icon} alt={item.name} className="w-16 h-16"/>
+                                    <div className="bg-[#677daf] rounded-xl w-24 h-24 flex items-center justify-center mb-4">
+                                        <img src={item.icon} alt={item.name} className="w-16 h-16" />
                                     </div>
                                 ) : (
                                     <p className="text-base font-bold mt-4 mb-4">Подключи виджет на сайт</p>
                                 )}
                             </div>
+
                             <button
                                 disabled={item.connected}
-                                onClick={() => handleConnectClick(item)}
+                                onClick={() =>
+                                    item.name === "Виджет"
+                                        ? handleConnectWidget()
+                                        : handleConnectClick(item)
+                                }
                                 className={`mt-4 py-2 px-4 rounded text-white font-semibold transition duration-200 ${
                                     item.connected
                                         ? "bg-gray-300 cursor-not-allowed"
@@ -413,6 +478,15 @@ export default function IntegrationsPage() {
                             >
                                 {item.connected ? "Подключено" : "Подключить"}
                             </button>
+
+                            {item.name === "Виджет" && item.connected && item.widgetId && (
+                                <div className="mt-4">
+                                    <p className="font-semibold mb-2 text-sm">Код для вставки на сайт:</p>
+                                    <pre className="bg-gray-100 p-2 rounded text-xs text-gray-800 whitespace-pre-wrap">
+                                        {`<script src="https://dialogx.ru/widget.js" data-widget-token="${item.widgetId}"></script>`}
+                                    </pre>
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
