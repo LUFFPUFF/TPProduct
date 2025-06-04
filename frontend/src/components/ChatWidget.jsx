@@ -67,7 +67,7 @@ export default function ChatWidget({ widgetToken }) {
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsVisible(true);
-            setTimeout(() => setIsOpen(true), 5);
+            setTimeout(() => setIsOpen(true), 4);
         }, 2500);
         return () => clearTimeout(timer);
     }, []);
