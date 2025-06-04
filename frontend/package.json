@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host ",
-    "build": "vite build",
+    "build": "vite build && node copy-widget.js",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -36,3 +36,5 @@
     "vite": "^6.0.8"
   }
 }
+
+

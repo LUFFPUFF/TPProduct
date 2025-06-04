@@ -31,6 +31,7 @@ export default function IntegrationsPage() {
     const [verifyToken, setVerifyToken] = useState("");
     const [communityId, setCommunityId] = useState("");
     const [phoneNumberId, setPhoneNumberId] = useState("");
+    const [setWidgetScriptCode] = useState("");
 
     useEffect(() => {
         document.body.style.overflow = modalOpen ? "hidden" : "auto";
@@ -179,7 +180,42 @@ export default function IntegrationsPage() {
         }
     };
 
+    const handleConnectWidget = async () => {
+        try {
+            const response = await fetch(API.integrations.WidgetIntegration, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({})
+            });
 
+            const rawText = await response.text();
+
+            console.group("🌐 Ответ от сервера на подключение виджета");
+            console.log("Статус:", response.status, response.statusText);
+            console.log("Raw response:", rawText);
+
+            let data = {};
+            try {
+                data = JSON.parse(rawText);
+                console.log("Parsed JSON:", data);
+            } catch (parseErr) {
+                console.warn("⚠️ Не удалось распарсить JSON:", parseErr);
+            }
+            console.groupEnd();
+
+            if (!response.ok) {
+                throw new Error(data.message || "Ошибка при подключении виджета");
+            }
+
+            const widgetScript = `<script src="https://dialogx.ru/widget.js" data-widget-token="${data.widgetId}"></script>`;
+            setWidgetScriptCode(widgetScript);
+        } catch (err) {
+            console.error("❌ Ошибка подключения виджета:", err);
+            alert("Не удалось подключить виджет: " + err.message);
+        }
+    };
     const handleDisconnect = async (integrationName) => {
         try {
             const integration = integrations.find((item) => item.name === integrationName);
@@ -201,6 +237,9 @@ export default function IntegrationsPage() {
                     break;
                 case "Почту":
                     deleteUrl = API.integrations.DeleteMailIntegration(integration.id);
+                    break;
+                case "Виджет":
+                    deleteUrl = API.integrations.DeleteWidget(integration.id);
                     break;
                 default:
                     alert("Неизвестный тип интеграции.");
@@ -227,7 +266,13 @@ export default function IntegrationsPage() {
                 setIntegrations((prev) =>
                     prev.map((item) =>
                         item.name === integrationName
-                            ? { ...item, connected: false, id: null }
+                            ? {
+                                ...item,
+                                connected: false,
+                                id: null,
+                                widgetId: null,
+                                widgetScriptCode: null,
+                            }
                             : item
                     )
                 );
@@ -251,59 +296,37 @@ export default function IntegrationsPage() {
 
 
     useEffect(() => {
+        const logAndParse = async (label, response) => {
+            console.group(`${label} — ответ от сервера`);
+            console.log("Статус:", response.status, response.statusText);
+
+            const text = await response.text();
+            console.log("Raw response:", text);
+
+            let json = null;
+            try {
+                json = JSON.parse(text);
+                console.log("Parsed JSON:", json);
+            } catch (err) {
+                console.error("Ошибка парсинга JSON:", err);
+            }
+            console.groupEnd();
+            return json;
+        };
+
         const fetchConnectedIntegrations = async () => {
             try {
                 const tgRes = await fetch(API.integrations.TGIntegration);
                 const mailRes = await fetch(API.integrations.MailIntegration);
                 const vkRes = await fetch(API.integrations.VKIntegration);
                 const whatsappRes = await fetch(API.integrations.WhatsAppIntegration);
+                const widgetRes = await fetch(API.integrations.WidgetIntegration);
 
-                console.group("Ответ от API по интеграциям");
-
-                console.log("Telegram — статус:", tgRes.status, tgRes.statusText);
-                const tgText = await tgRes.text();
-                console.log("Telegram — raw response:", tgText);
-                let tgData = [];
-                try {
-                    tgData = JSON.parse(tgText);
-                    console.log("Telegram — parsed JSON:", tgData);
-                } catch (e) {
-                    console.error("Ошибка парсинга JSON для Telegram:", e);
-                }
-
-                console.log("Mail — статус:", mailRes.status, mailRes.statusText);
-                const mailText = await mailRes.text();
-                console.log("Mail — raw response:", mailText);
-                let mailData = [];
-                try {
-                    mailData = JSON.parse(mailText);
-                    console.log("Mail — parsed JSON:", mailData);
-                } catch (e) {
-                    console.error("Ошибка парсинга JSON для Mail:", e);
-                }
-
-                console.log("Vk — статус:", vkRes.status, vkRes.statusText);
-                const vkText = await vkRes.text();
-                console.log("Telegram — raw response:", vkText);
-                let vkData = [];
-                try {
-                    vkData = JSON.parse(vkText);
-                    console.log("Telegram — parsed JSON:", vkData);
-                } catch (e) {
-                    console.error("Ошибка парсинга JSON для Telegram:", e);
-                }
-
-                console.log("WhatsApp — статус:", whatsappRes.status, whatsappRes.statusText);
-                const whatsappText = await whatsappRes.text();
-                console.log("Telegram — raw response:", whatsappText);
-                let whatsappData = [];
-                try {
-                    whatsappData = JSON.parse(whatsappText);
-                    console.log("Telegram — parsed JSON:", whatsappData);
-                } catch (e) {
-                    console.error("Ошибка парсинга JSON для Telegram:", e);
-                }
-                console.groupEnd();
+                const tgData = await logAndParse("Telegram", tgRes) || [];
+                const mailData = await logAndParse("Mail", mailRes) || [];
+                const vkData = await logAndParse("VK", vkRes) || [];
+                const whatsappData = await logAndParse("WhatsApp", whatsappRes) || [];
+                const widgetData = await logAndParse("Widget", widgetRes);
 
                 setIntegrations((prev) =>
                     prev.map((item) => {
@@ -331,12 +354,22 @@ export default function IntegrationsPage() {
                                 connected: Array.isArray(whatsappData) && whatsappData.length > 0,
                                 id: whatsappData.length > 0 ? whatsappData[0].id : null,
                             };
+                        } else if (item.name === "Виджет") {
+                            return {
+                                ...item,
+                                connected: !!widgetData,
+                                widgetId: widgetData?.widgetId || null,
+                                widgetScriptCode: widgetData?.widgetId
+                                    ? `<script src="https://dialogx.ru/widget.js" data-widget-token="${widgetData.widgetId}"></script>`
+                                    : null,
+                            };
                         }
+
                         return item;
                     })
                 );
             } catch (err) {
-                console.error("Ошибка при загрузке статуса интеграций:", err);
+                console.error("❌ Ошибка при загрузке статуса интеграций:", err);
             }
         };
 
@@ -392,19 +425,24 @@ export default function IntegrationsPage() {
                             <h2 className="font-semibold text-xl mb-2">
                                 {item.name === "Виджет" ? "Виджет" : `Подключить ${item.name}`}
                             </h2>
+
                             <div className="flex-1 flex items-center justify-center">
                                 {item.icon ? (
-                                    <div
-                                        className="bg-[#677daf] rounded-xl w-24 h-24 flex items-center justify-center mb-4">
-                                        <img src={item.icon} alt={item.name} className="w-16 h-16"/>
+                                    <div className="bg-[#677daf] rounded-xl w-24 h-24 flex items-center justify-center mb-4">
+                                        <img src={item.icon} alt={item.name} className="w-16 h-16" />
                                     </div>
                                 ) : (
                                     <p className="text-base font-bold mt-4 mb-4">Подключи виджет на сайт</p>
                                 )}
                             </div>
+
                             <button
                                 disabled={item.connected}
-                                onClick={() => handleConnectClick(item)}
+                                onClick={() =>
+                                    item.name === "Виджет"
+                                        ? handleConnectWidget()
+                                        : handleConnectClick(item)
+                                }
                                 className={`mt-4 py-2 px-4 rounded text-white font-semibold transition duration-200 ${
                                     item.connected
                                         ? "bg-gray-300 cursor-not-allowed"
@@ -413,6 +451,15 @@ export default function IntegrationsPage() {
                             >
                                 {item.connected ? "Подключено" : "Подключить"}
                             </button>
+
+                            {item.name === "Виджет" && item.connected && item.widgetId && (
+                                <div className="mt-4">
+                                    <p className="font-semibold mb-2 text-sm">Код для вставки на сайт:</p>
+                                    <pre className="bg-gray-100 p-2 rounded text-xs text-gray-800 whitespace-pre-wrap">
+                                        {`<script src="https://dialogx.ru/widget.js" data-widget-token="${item.widgetId}"></script>`}
+                                    </pre>
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
