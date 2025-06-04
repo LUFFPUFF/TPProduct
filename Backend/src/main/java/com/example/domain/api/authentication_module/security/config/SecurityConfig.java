@@ -78,6 +78,8 @@ public class SecurityConfig  {
                         .requestMatchers("/api/statistics/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/api/ui/chats/**").permitAll()
+                        .requestMatchers("/api/settings/change-password/emailCode").permitAll()
+                        .requestMatchers("/api/settings/check-code").permitAll()
                         .requestMatchers("/api/subscription/extend","/api/company/add").authenticated()
                         .requestMatchers("/test/operator-only").hasAuthority(Role.OPERATOR.getAuthority())
                         .requestMatchers("/api/ui/**","/api/company/get").authenticated()
