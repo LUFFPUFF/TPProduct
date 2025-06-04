@@ -90,6 +90,9 @@ public class SecurityConfig  {
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                             response.setContentType("application/json");
+                            System.out.println("Auth error:\n" +
+                                    "" + authException.getMessage()+"\n"+
+                                    "--------------------------");
                             response.getWriter().write("{\"error\": \"Unauthorized SCF\"}");
                         })
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
