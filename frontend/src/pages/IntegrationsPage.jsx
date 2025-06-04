@@ -31,7 +31,7 @@ export default function IntegrationsPage() {
     const [verifyToken, setVerifyToken] = useState("");
     const [communityId, setCommunityId] = useState("");
     const [phoneNumberId, setPhoneNumberId] = useState("");
-    const [setWidgetScriptCode] = useState("");
+    const [setWidgetScriptCode] = useState(null);
 
     useEffect(() => {
         document.body.style.overflow = modalOpen ? "hidden" : "auto";
