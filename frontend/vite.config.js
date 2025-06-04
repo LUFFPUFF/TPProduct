@@ -14,6 +14,9 @@ export default defineConfig({
     origin: 'http://dialogx.ru',
     cors: true,
   },
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
+  },
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/components/embed.jsx'),
@@ -22,7 +25,6 @@ export default defineConfig({
       formats: ['iife'],
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
       output: {
         globals: {
           react: 'React',

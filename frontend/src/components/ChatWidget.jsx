@@ -1,16 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import "../index.css";
+import React from "react";
 
 export default function ChatWidget({ widgetToken }) {
     const [messages, setMessages] = useState([
         { id: 1, text: "Привет! Чем могу помочь?", from: "bot" },
-        { id: 2, text: "Как подключить интеграцию?", from: "user" },
-        { id: 3, text: 'Вы можете настроить интеграции в разделе "Компании".', from: "bot" },
     ]);
+    const [isVisible, setIsVisible] = useState(false);
     const [input, setInput] = useState("");
-    const [isOpen, setIsOpen] = useState(true);
-
+    const [isOpen, setIsOpen] = useState(false);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsVisible(true);
+            setTimeout(() => setIsOpen(true), 10);
+        }, 3000);
+        return () => clearTimeout(timer);
+    }, []);
     const handleSend = async () => {
         if (!input.trim()) return;
 
@@ -44,11 +50,14 @@ export default function ChatWidget({ widgetToken }) {
             ]);
         }
     };
+    if (!isVisible) {
+        return null;
+    }
 
     if (!isOpen) {
         return (
             <div
-                className="w-14 h-14 bg-[#1E2A56] rounded-full flex items-center justify-center cursor-pointer shadow-lg"
+                className="fixed bottom-4 right-4 w-14 h-14 bg-[#1E2A56] rounded-full flex items-center justify-center cursor-pointer shadow-lg transition-all duration-300 hover:scale-105"
                 onClick={() => setIsOpen(true)}
             >
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -59,7 +68,12 @@ export default function ChatWidget({ widgetToken }) {
     }
 
     return (
-        <div className="w-[320px] h-[520px] shadow-lg flex flex-col text-sm rounded-2xl overflow-hidden font-sans">
+        <div
+            className={`
+                fixed bottom-4 right-4 w-[320px] h-[520px] shadow-lg rounded-2xl overflow-hidden font-sans text-sm flex flex-col transition-all duration-500 transform
+                ${isOpen ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"}
+            `}
+        >
             <div className="flex items-center justify-between text-white p-3 bg-gradient-to-r from-[#3e517a] to-[#8596bf]">
                 <div className="flex items-center gap-1 font-semibold text-lg">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
