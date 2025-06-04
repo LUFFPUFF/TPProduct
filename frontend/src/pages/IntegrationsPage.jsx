@@ -31,7 +31,6 @@ export default function IntegrationsPage() {
     const [verifyToken, setVerifyToken] = useState("");
     const [communityId, setCommunityId] = useState("");
     const [phoneNumberId, setPhoneNumberId] = useState("");
-    const [setWidgetScriptCode] = useState(null);
 
     useEffect(() => {
         document.body.style.overflow = modalOpen ? "hidden" : "auto";
@@ -209,7 +208,6 @@ export default function IntegrationsPage() {
             }
 
             const scriptCode = `<script src="https://dialogx.ru/widget.js" data-widget-token="${data.widgetId}"></script>`;
-            setWidgetScriptCode(scriptCode);
 
             setIntegrations((prev) =>
                 prev.map((item) =>
