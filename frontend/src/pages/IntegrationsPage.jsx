@@ -355,11 +355,12 @@ export default function IntegrationsPage() {
                                 id: whatsappData.length > 0 ? whatsappData[0].id : null,
                             };
                         } else if (item.name === "Виджет") {
+                            const isConnected = widgetData && typeof widgetData.widgetId === "string" && widgetData.widgetId.trim() !== "";
                             return {
                                 ...item,
-                                connected: !!widgetData,
-                                widgetId: widgetData?.widgetId || null,
-                                widgetScriptCode: widgetData?.widgetId
+                                connected: isConnected,
+                                widgetId: isConnected ? widgetData.widgetId : null,
+                                widgetScriptCode: isConnected
                                     ? `<script src="https://dialogx.ru/widget.js" data-widget-token="${widgetData.widgetId}"></script>`
                                     : null,
                             };
