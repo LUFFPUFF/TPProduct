@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import "../index.css";
 import React from "react";
@@ -10,13 +10,58 @@ export default function ChatWidget({ widgetToken }) {
     const [isVisible, setIsVisible] = useState(false);
     const [input, setInput] = useState("");
     const [isOpen, setIsOpen] = useState(false);
+    const ws = useRef(null);
+    const sessionId = widgetToken;
+
+    // Подключение к WebSocket
+    useEffect(() => {
+        ws.current = new WebSocket("wss://dialogx.ru/ws/widget/message");
+
+        ws.current.onopen = () => {
+            console.log("WebSocket connected");
+        };
+
+        ws.current.onmessage = (event) => {
+            console.log("WebSocket message received:", event.data);
+            try {
+                const data = JSON.parse(event.data);
+
+                if (data && typeof data.text === "string") {
+                    setMessages((prev) => [
+                        ...prev,
+                        {
+                            id: Date.now(),
+                            text: data.text,
+                            from: "bot",
+                        },
+                    ]);
+                }
+            } catch (error) {
+                console.error("Failed to parse WebSocket message:", error);
+            }
+        };
+
+        ws.current.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+
+        ws.current.onclose = () => {
+            console.log("WebSocket disconnected");
+        };
+
+        return () => {
+            ws.current?.close();
+        };
+    }, []);
+
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsVisible(true);
-            setTimeout(() => setIsOpen(true), 10);
-        }, 3000);
+            setTimeout(() => setIsOpen(true), 5);
+        }, 2500);
         return () => clearTimeout(timer);
     }, []);
+
     const handleSend = async () => {
         if (!input.trim()) return;
 
@@ -24,6 +69,22 @@ export default function ChatWidget({ widgetToken }) {
         setMessages((prev) => [...prev, newMessage]);
         setInput("");
 
+        // Отправка в WebSocket
+        const payload = {
+            widgetId: widgetToken,
+            sessionId: sessionId.current,
+            text: input,
+            clientTimestamp: Date.now(),
+        };
+
+        if (ws.current?.readyState === WebSocket.OPEN) {
+            ws.current.send(JSON.stringify(payload));
+            console.log("Sent to WebSocket:", payload);
+        } else {
+            console.warn("WebSocket is not connected.");
+        }
+
+        // Также POST-запрос (оставляем, если нужен)
         try {
             const response = await fetch("https://yourdomain.com/api/chat", {
                 method: "POST",
