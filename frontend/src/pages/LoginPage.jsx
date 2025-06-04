@@ -102,7 +102,7 @@ export const LoginPage = () => {
                 </form>
 
                 <div className="text-center mt-6">
-                    <a href="#" className="text-blue-600 hover:text-blue-800 hover:underline transition">
+                    <a href="/reset" className="text-blue-600 hover:text-blue-800 hover:underline transition">
                         Забыли пароль?
                     </a>
                 </div>
