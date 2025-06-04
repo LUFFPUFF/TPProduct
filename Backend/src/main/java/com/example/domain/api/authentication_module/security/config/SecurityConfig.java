@@ -72,7 +72,7 @@ public class SecurityConfig  {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/auth/**","/api/registration/**").permitAll()
-                        .requestMatchers("/api/ui/integration/**").permitAll()
+                        .requestMatchers("/api/ui/integration/**").authenticated()
                         .requestMatchers("/api/ui/predefined-answers/download-template").permitAll()
                         .requestMatchers("/api/answers/**").permitAll()
                         .requestMatchers("/api/statistics/**").permitAll()
