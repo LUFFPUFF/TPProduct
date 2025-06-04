@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.util.Properties;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -85,6 +86,7 @@ public class UserSettingsServiceImpl implements UserSettingsService {
                     if(cacheCode.equals(code.getCode())){
                         User user = userRepository.findByEmail(code.getEmail()).orElseThrow(NotFoundUserException::new);
                         user.setPassword(code.getCode());
+                        userRepository.save(user);
                         return AnswerSettingsDto.builder().answer("Успешно").build();
                     }else{
                         throw new InvalidCodeException();
@@ -95,7 +97,7 @@ public class UserSettingsServiceImpl implements UserSettingsService {
     }
 
     private String generateChangePasswordCode() {
-        SecureRandom secureRandom = new SecureRandom();
+        Random secureRandom = new Random();
         String code = String.valueOf(100000 + secureRandom.nextInt(900000));
         while (authCacheService.getRegistrationCode(code).isPresent()) {
             code = String.valueOf(100000 + secureRandom.nextInt(900000));
@@ -125,8 +127,6 @@ public class UserSettingsServiceImpl implements UserSettingsService {
         Properties props = dynamicMailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
-
-        //TODO пока что так, в проде такое нельзя делать
         props.put("mail.smtp.starttls.enable", "true");
 
         props.put("mail.smtp.ssl.trust", smtpHost);

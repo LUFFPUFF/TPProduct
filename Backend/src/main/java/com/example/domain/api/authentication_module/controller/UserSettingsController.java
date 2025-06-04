@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserSettingsController {
     private final UserSettingsService userSettingsService;
-    private final CurrentUserDataService currentUserDataService;
     @GetMapping("/get")
     public ResponseEntity<UserDataDto> getUserData(){
        return ResponseEntity.ok(userSettingsService.getUserData());
